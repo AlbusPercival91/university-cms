@@ -1,6 +1,5 @@
-package ua.foxminded.university.entity;
+package ua.foxminded.university.entities;
 
-import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -9,7 +8,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -25,25 +26,22 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "course", schema = "university")
-public class Course {
+@Table(name = "departments", schema = "university")
+public class Department {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "course_id")
+	@Column(name = "department_id")
 	private int id;
 
-	@Column(name = "course_name")
-	private String courseName;
+	@Column(name = "name")
+	private String name;
 
-	@Column(name = "course_description")
-	private String courseDescription;
-
-	@ToString.Exclude
-	@ManyToMany(mappedBy = "teacherCourses", cascade = { CascadeType.PERSIST }, fetch = FetchType.EAGER)
-	private Set<Teacher> teachers = new HashSet<>();
+	@ManyToOne
+	@JoinColumn(name = "faculty_id")
+	private Faculty faculty;
 
 	@ToString.Exclude
-	@ManyToMany(mappedBy = "studentCourses", cascade = { CascadeType.PERSIST }, fetch = FetchType.EAGER)
-	private Set<Student> students = new HashSet<>();
+	@OneToMany(mappedBy = "department", cascade = { CascadeType.PERSIST }, fetch = FetchType.EAGER)
+	private Set<Teacher> teachers;
 }

@@ -1,4 +1,4 @@
-package ua.foxminded.university.entity;
+package ua.foxminded.university.entities;
 
 import java.util.HashSet;
 import java.util.Set;

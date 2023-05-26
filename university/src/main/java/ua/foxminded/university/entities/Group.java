@@ -1,15 +1,12 @@
-package ua.foxminded.university.entity;
+package ua.foxminded.university.entities;
 
-import java.util.Set;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -25,18 +22,18 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "departments", schema = "university")
-public class Department {
+@Table(name = "groups", schema = "university")
+public class Group {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "group_id")
 	private int id;
 
-	@Column(name = "name")
-	private String name;
+	@Column(name = "group_name")
+	private String groupName;
 
-	@ToString.Exclude
-	@OneToMany(mappedBy = "department", cascade = { CascadeType.PERSIST }, fetch = FetchType.EAGER)
-	private Set<Teacher> teachers;
-
+	@ManyToOne
+	@JoinColumn(name = "faculty_id")
+	private Faculty faculty;
 }

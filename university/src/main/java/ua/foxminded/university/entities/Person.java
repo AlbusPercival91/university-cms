@@ -1,11 +1,10 @@
-package ua.foxminded.university.entity;
+package ua.foxminded.university.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -20,14 +19,24 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "groups", schema = "university")
-public class Group {
+public class Person {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "group_id")
 	private int id;
 
-	@Column(name = "group_name")
-	private String groupName;
+	@Column(name = "first_name")
+	private String firstName;
+
+	@Column(name = "last_name")
+	private String lastName;
+
+	@Column(name = "active")
+	private boolean isActive;
+
+	@Column(name = "email")
+	private String email;
+
+	@Column(name = "password")
+	private String password;
 }
