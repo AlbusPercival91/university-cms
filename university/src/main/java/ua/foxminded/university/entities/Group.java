@@ -41,5 +41,8 @@ public class Group {
 	private Faculty faculty;
 
 	@OneToMany(mappedBy = "group")
+	private Set<Student> students;
+
+	@OneToMany(mappedBy = "group")
 	private Set<TimeTable> timeTables;
 }

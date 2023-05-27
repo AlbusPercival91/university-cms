@@ -2,7 +2,6 @@ package ua.foxminded.university.entities;
 
 import java.util.Set;
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -28,12 +27,12 @@ import lombok.ToString;
 @Table(name = "teachers", schema = "university")
 public class Teacher extends Person {
 
-	@Column(name = "department_id")
 	@ManyToOne
 	@JoinColumn(name = "department_id")
 	private Department department;
 
-	@Column(name = "course")
+	@ManyToOne
+	@JoinColumn(name = "course_id")
 	private Course course;
 
 	@ToString.Exclude
@@ -43,4 +42,5 @@ public class Teacher extends Person {
 
 	@OneToMany(mappedBy = "teacher")
 	private Set<TimeTable> timeTables;
+
 }

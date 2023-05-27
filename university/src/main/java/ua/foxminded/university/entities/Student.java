@@ -33,10 +33,6 @@ public class Student extends Person {
 	private Group group;
 
 	@ToString.Exclude
-	@OneToMany(mappedBy = "group", cascade = { CascadeType.PERSIST }, fetch = FetchType.EAGER)
-	private Set<Group> groups;
-
-	@ToString.Exclude
 	@ManyToMany(cascade = { CascadeType.PERSIST }, fetch = FetchType.EAGER)
 	@JoinTable(name = "students_courses", joinColumns = @JoinColumn(name = "student_id"), inverseJoinColumns = @JoinColumn(name = "course_id"))
 	private Set<Course> studentCourses = new HashSet<>();
