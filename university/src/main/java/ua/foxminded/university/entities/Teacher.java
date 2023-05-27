@@ -40,6 +40,7 @@ public class Teacher extends Person {
 	@JoinTable(name = "teachers_courses", joinColumns = @JoinColumn(name = "teacher_id"), inverseJoinColumns = @JoinColumn(name = "course_id"))
 	private Set<Course> teachersCourses;
 
+	@ToString.Exclude
 	@OneToMany(mappedBy = "teacher")
 	private Set<TimeTable> timeTables;
 

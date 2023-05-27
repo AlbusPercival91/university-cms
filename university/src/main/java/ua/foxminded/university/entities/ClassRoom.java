@@ -40,6 +40,7 @@ public class ClassRoom {
 	@Column(name = "room_no")
 	private int roomNumber;
 	
+	@ToString.Exclude
 	@OneToMany(mappedBy = "classRoom")
 	private Set<TimeTable> timeTables;
 }

@@ -37,6 +37,7 @@ public class Student extends Person {
 	@JoinTable(name = "students_courses", joinColumns = @JoinColumn(name = "student_id"), inverseJoinColumns = @JoinColumn(name = "course_id"))
 	private Set<Course> studentsCourses = new HashSet<>();
 
+	@ToString.Exclude
 	@OneToMany(mappedBy = "student")
 	private Set<TimeTable> timeTables;
 }

@@ -48,6 +48,7 @@ public class Course {
 	@ManyToMany(mappedBy = "studentsCourses", cascade = { CascadeType.PERSIST }, fetch = FetchType.EAGER)
 	private Set<Student> students = new HashSet<>();
 
+	@ToString.Exclude
 	@OneToMany(mappedBy = "course")
 	private Set<TimeTable> timeTables;
 }
