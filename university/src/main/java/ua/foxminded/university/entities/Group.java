@@ -40,9 +40,11 @@ public class Group {
 	@JoinColumn(name = "faculty_id")
 	private Faculty faculty;
 
+	@ToString.Exclude
 	@OneToMany(mappedBy = "group")
 	private Set<Student> students;
 
+	@ToString.Exclude
 	@OneToMany(mappedBy = "group")
 	private Set<TimeTable> timeTables;
 }

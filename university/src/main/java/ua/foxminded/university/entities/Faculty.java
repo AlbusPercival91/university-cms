@@ -35,8 +35,9 @@ public class Faculty {
     @Column(name = "faculty_name")
     private String facultyName;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "faculty", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
-    private Set<Group> groupsInFacultySet;
+    private Set<Group> groups;
 
     @ToString.Exclude
     @OneToMany(mappedBy = "faculty", cascade = { CascadeType.PERSIST }, fetch = FetchType.EAGER)

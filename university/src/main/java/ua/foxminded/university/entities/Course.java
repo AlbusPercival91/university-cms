@@ -41,11 +41,11 @@ public class Course {
 	private String courseDescription;
 
 	@ToString.Exclude
-	@ManyToMany(mappedBy = "teacherCourses", cascade = { CascadeType.PERSIST }, fetch = FetchType.EAGER)
+	@ManyToMany(mappedBy = "teachersCourses", cascade = { CascadeType.PERSIST }, fetch = FetchType.EAGER)
 	private Set<Teacher> teachers = new HashSet<>();
 
 	@ToString.Exclude
-	@ManyToMany(mappedBy = "studentCourses", cascade = { CascadeType.PERSIST }, fetch = FetchType.EAGER)
+	@ManyToMany(mappedBy = "studentsCourses", cascade = { CascadeType.PERSIST }, fetch = FetchType.EAGER)
 	private Set<Student> students = new HashSet<>();
 
 	@OneToMany(mappedBy = "course")

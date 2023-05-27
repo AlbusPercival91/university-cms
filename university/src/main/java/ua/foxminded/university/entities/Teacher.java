@@ -38,7 +38,7 @@ public class Teacher extends Person {
 	@ToString.Exclude
 	@ManyToMany(cascade = { CascadeType.PERSIST }, fetch = FetchType.EAGER)
 	@JoinTable(name = "teachers_courses", joinColumns = @JoinColumn(name = "teacher_id"), inverseJoinColumns = @JoinColumn(name = "course_id"))
-	private Set<Course> teacherCourses;
+	private Set<Course> teachersCourses;
 
 	@OneToMany(mappedBy = "teacher")
 	private Set<TimeTable> timeTables;
