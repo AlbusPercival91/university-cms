@@ -7,8 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -25,21 +23,23 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "groups", schema = "university")
-public class Group {
+@Table(name = "classroom", schema = "university")
+public class ClassRoom {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "group_id")
+	@Column(name = "classroom_id")
 	private int id;
 
-	@Column(name = "group_name")
-	private String groupName;
+	@Column(name = "street")
+	private String street;
 
-	@ManyToOne
-	@JoinColumn(name = "faculty_id")
-	private Faculty faculty;
+	@Column(name = "build_no")
+	private int buildingNumber;
 
-	@OneToMany(mappedBy = "group")
+	@Column(name = "room_no")
+	private int roomNumber;
+	
+	@OneToMany(mappedBy = "classRoom")
 	private Set<TimeTable> timeTables;
 }

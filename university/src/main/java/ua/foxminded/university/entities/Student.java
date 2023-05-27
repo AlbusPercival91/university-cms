@@ -40,4 +40,7 @@ public class Student extends Person {
 	@ManyToMany(cascade = { CascadeType.PERSIST }, fetch = FetchType.EAGER)
 	@JoinTable(name = "students_courses", joinColumns = @JoinColumn(name = "student_id"), inverseJoinColumns = @JoinColumn(name = "course_id"))
 	private Set<Course> studentCourses = new HashSet<>();
+
+	@OneToMany(mappedBy = "student")
+	private Set<TimeTable> timeTables;
 }

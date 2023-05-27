@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -46,4 +47,7 @@ public class Course {
 	@ToString.Exclude
 	@ManyToMany(mappedBy = "studentCourses", cascade = { CascadeType.PERSIST }, fetch = FetchType.EAGER)
 	private Set<Student> students = new HashSet<>();
+
+	@OneToMany(mappedBy = "course")
+	private Set<TimeTable> timeTables;
 }
