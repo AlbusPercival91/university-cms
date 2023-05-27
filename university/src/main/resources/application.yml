@@ -1,0 +1,11 @@
+spring:
+  datasource:
+    main:
+      driver-class-name: org.postgresql.Driver
+      jdbc-url: jdbc:postgresql://localhost:5432/university
+      username: university_admin
+      password: '1234'
+      pool-size: 30
+  jpa:
+    hibernate:
+      ddl-auto: update
