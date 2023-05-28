@@ -1,3 +1,93 @@
-CREATE SCHEMA IF NOT EXISTS university
-    AUTHORIZATION university_admin;
-    
+CREATE SCHEMA IF NOT EXISTS university AUTHORIZATION university_admin;
+
+CREATE TABLE IF NOT EXISTS university.admin (
+    id SERIAL PRIMARY KEY,
+    first_name VARCHAR(70) NOT NULL,
+    last_name VARCHAR(90) NOT NULL,
+    active BOOLEAN NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    password VARCHAR(60) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS university.classroom (
+    classroom_id SERIAL PRIMARY KEY,
+    build_no INT NOT NULL,
+    room_no INT NOT NULL,
+    street VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE university.courses (
+    course_id SERIAL PRIMARY KEY,
+    course_name VARCHAR(255) NOT NULL,
+    course_description TEXT
+);
+
+CREATE TABLE university.faculties (
+    faculty_id SERIAL PRIMARY KEY,
+    faculty_name VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE university.departments (
+    department_id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    faculty_id INT,
+    FOREIGN KEY (faculty_id) REFERENCES university.faculties (faculty_id)
+);
+
+CREATE TABLE IF NOT EXISTS university.groups (
+    group_id SERIAL PRIMARY KEY,
+    group_name VARCHAR(30) NOT NULL,
+    faculty_id INT,
+    FOREIGN KEY (faculty_id) REFERENCES university.faculties (faculty_id)
+);
+
+CREATE TABLE IF NOT EXISTS university.staff (
+    id SERIAL PRIMARY KEY,
+    first_name VARCHAR(70) NOT NULL,
+    last_name VARCHAR(90) NOT NULL,
+    active BOOLEAN NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    password VARCHAR(60) NOT NULL,
+    position VARCHAR(150) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS university.students (
+    id SERIAL PRIMARY KEY,
+    first_name VARCHAR(70) NOT NULL,
+    last_name VARCHAR(90) NOT NULL,
+    active BOOLEAN NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    password VARCHAR(60) NOT NULL,
+    group_id INT,
+    FOREIGN KEY (group_id) REFERENCES university.groups (group_id)
+);
+
+CREATE TABLE IF NOT EXISTS university.teachers (
+    id SERIAL PRIMARY KEY,
+    first_name VARCHAR(70) NOT NULL,
+    last_name VARCHAR(90) NOT NULL,
+    active BOOLEAN NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    password VARCHAR(60) NOT NULL,
+    course_id INT,
+    department_id INT,
+    FOREIGN KEY (course_id) REFERENCES university.courses (course_id),
+    FOREIGN KEY (department_id) REFERENCES university.departments (department_id)
+);
+
+CREATE TABLE IF NOT EXISTS university.timetable (
+    timetable_id SERIAL PRIMARY KEY,
+    time_start TIMESTAMP NOT NULL,
+    time_end TIMESTAMP NOT NULL,
+    teacher_id INT,
+    student_id INT,
+    course_id INT,
+    group_id INT,
+    classroom_id INT,
+    FOREIGN KEY (teacher_id) REFERENCES university.teachers (id),
+    FOREIGN KEY (student_id) REFERENCES university.students (id),
+    FOREIGN KEY (course_id) REFERENCES university.courses (course_id),
+    FOREIGN KEY (group_id) REFERENCES university.groups (group_id),
+    FOREIGN KEY (classroom_id) REFERENCES university.classroom (classroom_id)
+);
+
