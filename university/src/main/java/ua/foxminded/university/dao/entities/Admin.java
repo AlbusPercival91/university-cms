@@ -1,4 +1,4 @@
-package ua.foxminded.university.entities;
+package ua.foxminded.university.dao.entities;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
