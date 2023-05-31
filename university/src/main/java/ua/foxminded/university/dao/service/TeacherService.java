@@ -41,9 +41,12 @@ public class TeacherService {
 			log.warn("Teacher with id {} not found", teacherId);
 			return new NoSuchElementException("Teacher not found");
 		});
-
 		existingTeacher.setFirstName(teacher.getFirstName());
 		existingTeacher.setLastName(teacher.getLastName());
+		existingTeacher.setCourse(teacher.getCourse());
+		existingTeacher.setActive(teacher.isActive());
+		existingTeacher.setEmail(teacher.getEmail());
+		existingTeacher.setPassword(teacher.getPassword());
 		return teacherRepository.save(existingTeacher);
 	}
 

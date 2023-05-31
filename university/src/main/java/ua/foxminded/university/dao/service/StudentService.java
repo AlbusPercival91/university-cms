@@ -41,9 +41,12 @@ public class StudentService {
 			log.warn("Student with id {} not found", studentId);
 			return new NoSuchElementException("Student not found");
 		});
-
 		existingStudent.setFirstName(student.getFirstName());
 		existingStudent.setLastName(student.getLastName());
+		existingStudent.setGroup(student.getGroup());
+		existingStudent.setActive(student.isActive());
+		existingStudent.setEmail(student.getEmail());
+		existingStudent.setPassword(student.getPassword());
 		return studentRepository.save(existingStudent);
 	}
 
