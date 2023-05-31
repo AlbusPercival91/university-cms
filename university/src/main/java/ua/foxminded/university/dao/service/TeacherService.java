@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import javax.transaction.Transactional;
+
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,12 +43,7 @@ public class TeacherService {
 			log.warn("Teacher with id {} not found", teacherId);
 			return new NoSuchElementException("Teacher not found");
 		});
-		existingTeacher.setFirstName(teacher.getFirstName());
-		existingTeacher.setLastName(teacher.getLastName());
-		existingTeacher.setCourse(teacher.getCourse());
-		existingTeacher.setActive(teacher.isActive());
-		existingTeacher.setEmail(teacher.getEmail());
-		existingTeacher.setPassword(teacher.getPassword());
+		BeanUtils.copyProperties(teacher, existingTeacher, "id");
 		return teacherRepository.save(existingTeacher);
 	}
 
