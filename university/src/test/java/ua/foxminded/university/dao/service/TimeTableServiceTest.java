@@ -1,9 +1,6 @@
 package ua.foxminded.university.dao.service;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -15,17 +12,12 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
-
 import ua.foxminded.university.dao.entities.ClassRoom;
 import ua.foxminded.university.dao.entities.Course;
 import ua.foxminded.university.dao.entities.Department;
 import ua.foxminded.university.dao.entities.Faculty;
 import ua.foxminded.university.dao.entities.Group;
-import ua.foxminded.university.dao.entities.Person;
 import ua.foxminded.university.dao.entities.Teacher;
-import ua.foxminded.university.dao.entities.TimeTable;
-import ua.foxminded.university.dao.interfaces.TeacherRepository;
-import ua.foxminded.university.dao.interfaces.TimeTableRepository;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
 		TimeTableService.class }))

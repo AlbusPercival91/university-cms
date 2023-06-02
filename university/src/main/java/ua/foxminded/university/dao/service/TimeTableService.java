@@ -2,7 +2,6 @@ package ua.foxminded.university.dao.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
 import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;

@@ -40,13 +40,10 @@ public class Person {
 	private String password;
 
 	public Person(String firstName, String lastName, boolean isActive, String email, String password) {
-		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.isActive = isActive;
 		this.email = email;
 		this.password = password;
 	}
-	
-	
 }

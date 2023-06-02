@@ -11,7 +11,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,7 +22,6 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "students", schema = "university")
 public class Student extends Person {
@@ -40,4 +38,9 @@ public class Student extends Person {
 	@ToString.Exclude
 	@OneToMany(mappedBy = "student")
 	private Set<TimeTable> timeTables;
+
+	public Student(String firstName, String lastName, boolean isActive, String email, String password, Group group) {
+		super(firstName, lastName, isActive, email, password);
+		this.group = group;
+	}
 }

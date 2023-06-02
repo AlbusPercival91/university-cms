@@ -17,4 +17,7 @@ import lombok.ToString;
 @Table(name = "admin", schema = "university")
 public class Admin extends Person {
 
+	public Admin(String firstName, String lastName, boolean isActive, String email, String password) {
+		super(firstName, lastName, isActive, email, password);
+	}
 }
