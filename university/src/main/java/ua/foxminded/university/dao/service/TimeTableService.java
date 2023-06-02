@@ -34,12 +34,23 @@ public class TimeTableService {
 		log.debug("Created timeTable for Student: {}", student.getFirstName() + " " + student.getLastName());
 		return timeTableRepository.save(timeTable);
 	}
-	
-	public List<TimeTable> getTeacherTimeTables(Teacher teacher) {
-        return timeTableRepository.findByTeacher(teacher);
-    }
 
-    public List<TimeTable> getStudentTimeTables(Student student) {
-        return timeTableRepository.findByStudent(student);
-    }
+	public TimeTable createGroupTimeTable(LocalDateTime timeStart, LocalDateTime timeEnd, Group group, Teacher teacher,
+			Course course, ClassRoom classRoom) {
+		TimeTable timeTable = new TimeTable(timeStart, timeEnd, group, teacher, course, classRoom);
+		log.debug("Created timeTable for Group: {}", group.getGroupName());
+		return timeTableRepository.save(timeTable);
+	}
+
+	public List<TimeTable> getTeacherTimeTable(Teacher teacher) {
+		return timeTableRepository.findByTeacher(teacher);
+	}
+
+	public List<TimeTable> getStudentTimeTable(Student student) {
+		return timeTableRepository.findByStudent(student);
+	}
+
+	public List<TimeTable> getGroupTimeTable(Group group) {
+		return timeTableRepository.findByGroup(group);
+	}
 }

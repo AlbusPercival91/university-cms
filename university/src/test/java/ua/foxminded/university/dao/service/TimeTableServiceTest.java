@@ -24,7 +24,7 @@ import ua.foxminded.university.dao.entities.Teacher;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ActiveProfiles("test-container")
 @Sql(scripts = { "/drop_data.sql", "/init_tables.sql",
-		"/insertTestData.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+		"/insert_test_data.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class TimeTableServiceTest {
 
@@ -32,7 +32,7 @@ class TimeTableServiceTest {
 	private TimeTableService timeTableService;
 
 	@Test
-	void testGetTeacherTimeTables_ShouldReturnTeacherTimeTable() {
+	void testGetTeacherTimeTable() {
 		Faculty science = new Faculty("Faculty of Science");
 		science.setId(1);
 		Department math = new Department("Mathematics Department", science);
@@ -51,7 +51,7 @@ class TimeTableServiceTest {
 		LocalDateTime timeEnd = timeStart.plusHours(2);
 
 		timeTableService.createTeacherTimeTable(timeStart, timeEnd, teacher, a, room);
-		System.out.println(timeTableService.getTeacherTimeTables(teacher));
-		Assertions.assertEquals("Hello", timeTableService.getTeacherTimeTables(teacher).toString());
+
+		Assertions.assertEquals("Hello", timeTableService.getTeacherTimeTable(teacher).toString());
 	}
 }

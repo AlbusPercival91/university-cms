@@ -78,7 +78,14 @@ public class TimeTable {
 		this.group = group;
 		this.classRoom = classRoom;
 	}
-	
-	
 
+	public TimeTable(LocalDateTime timeStart, LocalDateTime timeEnd, Group group, Teacher teacher, Course course,
+			ClassRoom classRoom) {
+		this.timeStart = timeStart;
+		this.timeEnd = timeEnd;
+		this.teacher = teacher;
+		this.course = course;
+		this.group = group;
+		this.classRoom = classRoom;
+	}
 }
