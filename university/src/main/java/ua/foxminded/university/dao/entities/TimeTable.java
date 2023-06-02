@@ -10,10 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
 import org.springframework.format.annotation.DateTimeFormat;
-
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,7 +22,6 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "timetable", schema = "university")
 public class TimeTable {
@@ -62,4 +58,27 @@ public class TimeTable {
 	@ManyToOne
 	@JoinColumn(name = "classroom_id")
 	private ClassRoom classRoom;
+
+	public TimeTable(LocalDateTime timeStart, LocalDateTime timeEnd, Teacher teacher, Group group,
+			ClassRoom classRoom) {
+		this.timeStart = timeStart;
+		this.timeEnd = timeEnd;
+		this.teacher = teacher;
+		this.group = group;
+		this.classRoom = classRoom;
+	}
+
+	public TimeTable(LocalDateTime timeStart, LocalDateTime timeEnd, Teacher teacher, Student student, Course course,
+			Group group, ClassRoom classRoom) {
+		this.timeStart = timeStart;
+		this.timeEnd = timeEnd;
+		this.teacher = teacher;
+		this.student = student;
+		this.course = course;
+		this.group = group;
+		this.classRoom = classRoom;
+	}
+	
+	
+
 }

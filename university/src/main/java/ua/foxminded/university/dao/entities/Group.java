@@ -11,7 +11,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,7 +22,6 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "groups", schema = "university")
 public class Group {
@@ -47,4 +45,9 @@ public class Group {
 	@ToString.Exclude
 	@OneToMany(mappedBy = "group")
 	private Set<TimeTable> timeTables;
+
+	public Group(String groupName, Faculty faculty) {
+		this.groupName = groupName;
+		this.faculty = faculty;
+	}	
 }

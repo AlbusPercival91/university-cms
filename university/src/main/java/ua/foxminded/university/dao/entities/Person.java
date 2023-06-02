@@ -5,7 +5,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +16,6 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 @NoArgsConstructor
-@AllArgsConstructor
 @MappedSuperclass
 public class Person {
 
@@ -40,4 +38,15 @@ public class Person {
 
 	@Column(name = "password")
 	private String password;
+
+	public Person(String firstName, String lastName, boolean isActive, String email, String password) {
+		super();
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.isActive = isActive;
+		this.email = email;
+		this.password = password;
+	}
+	
+	
 }

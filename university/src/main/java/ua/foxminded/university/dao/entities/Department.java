@@ -12,7 +12,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,7 +23,6 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "departments", schema = "university")
 public class Department {
@@ -44,4 +42,10 @@ public class Department {
 	@ToString.Exclude
 	@OneToMany(mappedBy = "department", cascade = { CascadeType.PERSIST }, fetch = FetchType.EAGER)
 	private Set<Teacher> teachers;
+
+	public Department(String name, Faculty faculty) {
+		this.name = name;
+		this.faculty = faculty;
+	}
+
 }

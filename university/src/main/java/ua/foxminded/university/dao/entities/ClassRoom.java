@@ -9,7 +9,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,7 +20,6 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "classroom", schema = "university")
 public class ClassRoom {
@@ -39,8 +37,14 @@ public class ClassRoom {
 
 	@Column(name = "room_no")
 	private int roomNumber;
-	
+
 	@ToString.Exclude
 	@OneToMany(mappedBy = "classRoom")
 	private Set<TimeTable> timeTables;
+
+	public ClassRoom(String street, int buildingNumber, int roomNumber) {
+		this.street = street;
+		this.buildingNumber = buildingNumber;
+		this.roomNumber = roomNumber;
+	}
 }

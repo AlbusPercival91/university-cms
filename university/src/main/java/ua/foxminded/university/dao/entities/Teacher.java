@@ -44,4 +44,10 @@ public class Teacher extends Person {
 	@OneToMany(mappedBy = "teacher")
 	private Set<TimeTable> timeTables;
 
+	public Teacher(String firstName, String lastName, boolean isActive, String email, String password,
+			Department department, Course course) {
+		super(firstName, lastName, isActive, email, password);
+		this.department = department;
+		this.course = course;
+	}
 }
