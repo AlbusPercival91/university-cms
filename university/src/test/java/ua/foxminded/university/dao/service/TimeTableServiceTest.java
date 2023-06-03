@@ -18,6 +18,8 @@ import ua.foxminded.university.dao.entities.Department;
 import ua.foxminded.university.dao.entities.Faculty;
 import ua.foxminded.university.dao.entities.Group;
 import ua.foxminded.university.dao.entities.Teacher;
+import ua.foxminded.university.dao.entities.TimeTable;
+import ua.foxminded.university.dao.interfaces.TimeTableRepository;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
 		TimeTableService.class }))
@@ -30,6 +32,9 @@ class TimeTableServiceTest {
 
 	@Autowired
 	private TimeTableService timeTableService;
+
+	@Autowired
+	private TimeTableRepository timeTableRepository;
 
 	@Test
 	void testGetTeacherTimeTable() {
@@ -49,9 +54,9 @@ class TimeTableServiceTest {
 		LocalDateTime timeStart = LocalDateTime.now();
 		LocalDateTime timeEnd = timeStart.plusHours(2);
 
-		timeTableService.createTeacherTimeTable(timeStart, timeEnd, teacher, a, room);
-
-		Assertions.assertEquals("Hello", timeTableService.getTeacherTimeTable(teacher));
+		TimeTable expected = new TimeTable(timeStart, timeEnd, teacher, a, room);
+		timeTableRepository.save(expected);
+		Assertions.assertSame(expected, timeTableService.getTeacherTimeTable(teacher));
 	}
 
 	@Test
@@ -72,8 +77,9 @@ class TimeTableServiceTest {
 		LocalDateTime timeStart = LocalDateTime.now();
 		LocalDateTime timeEnd = timeStart.plusHours(2);
 
-		timeTableService.createGroupTimeTable(timeStart, timeEnd, a, teacher, mathCourse, room);
+		TimeTable expected = new TimeTable(timeStart, timeEnd, a, teacher, mathCourse, room);
+		timeTableRepository.save(expected);
 
-		Assertions.assertEquals("Hello", timeTableService.getGroupTimeTable(a));
+		Assertions.assertEquals(expected, timeTableService.getGroupTimeTable(a));
 	}
 }
