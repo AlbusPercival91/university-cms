@@ -1,7 +1,6 @@
 package ua.foxminded.university.dao.entities;
 
 import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -24,6 +23,7 @@ import lombok.ToString;
 @Table(name = "classroom", schema = "university")
 public class ClassRoom {
 
+	@ToString.Exclude
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "classroom_id")

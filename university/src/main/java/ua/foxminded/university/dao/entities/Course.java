@@ -27,6 +27,7 @@ import lombok.ToString;
 @Table(name = "courses", schema = "university")
 public class Course {
 
+	@ToString.Exclude
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "course_id")

@@ -29,8 +29,8 @@ public class TimeTableService {
 	}
 
 	public TimeTable createStudentTimeTable(LocalDateTime timeStart, LocalDateTime timeEnd, Teacher teacher,
-			Student student, Course course, Group group, ClassRoom classRoom) {
-		TimeTable timeTable = new TimeTable(timeStart, timeEnd, teacher, student, course, group, classRoom);
+			Student student, Course course, ClassRoom classRoom) {
+		TimeTable timeTable = new TimeTable(timeStart, timeEnd, teacher, student, course, classRoom);
 		log.debug("Created timeTable for Student: {}", student.getFirstName() + " " + student.getLastName());
 		return timeTableRepository.save(timeTable);
 	}

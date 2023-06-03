@@ -59,6 +59,9 @@ public class TimeTable {
 	@JoinColumn(name = "classroom_id")
 	private ClassRoom classRoom;
 
+	/**
+	 * Constructor defined for Teacher timetable
+	 */
 	public TimeTable(LocalDateTime timeStart, LocalDateTime timeEnd, Teacher teacher, Group group,
 			ClassRoom classRoom) {
 		this.timeStart = timeStart;
@@ -68,17 +71,22 @@ public class TimeTable {
 		this.classRoom = classRoom;
 	}
 
+	/**
+	 * Constructor defined for Student timetable
+	 */
 	public TimeTable(LocalDateTime timeStart, LocalDateTime timeEnd, Teacher teacher, Student student, Course course,
-			Group group, ClassRoom classRoom) {
+			ClassRoom classRoom) {
 		this.timeStart = timeStart;
 		this.timeEnd = timeEnd;
 		this.teacher = teacher;
 		this.student = student;
 		this.course = course;
-		this.group = group;
 		this.classRoom = classRoom;
 	}
 
+	/**
+	 * Constructor defined for Group timetable
+	 */
 	public TimeTable(LocalDateTime timeStart, LocalDateTime timeEnd, Group group, Teacher teacher, Course course,
 			ClassRoom classRoom) {
 		this.timeStart = timeStart;
