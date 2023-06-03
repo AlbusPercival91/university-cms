@@ -33,25 +33,47 @@ class TimeTableServiceTest {
 
 	@Test
 	void testGetTeacherTimeTable() {
-		Faculty science = new Faculty("Faculty of Science");
-		science.setId(1);
-		Department math = new Department("Mathematics Department", science);
-		math.setId(1);
-		Course mathematics = new Course("Mathematics", "Advanced mathematics course");
-		mathematics.setId(1);
-		Teacher teacher = new Teacher("Jennifer", "Smith", true, "jennifer.smith@example.com", "password10", math,
-				mathematics);
+		Faculty scienceFaculty = new Faculty("Faculty of Science");
+		scienceFaculty.setId(1);
+		Department mathematicsDepartment = new Department("Mathematics Department", scienceFaculty);
+		mathematicsDepartment.setId(1);
+		Course mathCourse = new Course("Mathematics", "Advanced mathematics course");
+		mathCourse.setId(1);
+		Teacher teacher = new Teacher("Jennifer", "Smith", true, "jennifer.smith@example.com", "password10",
+				mathematicsDepartment, mathCourse);
 		teacher.setId(1);
-		Group a = new Group("Group A", science);
+		Group a = new Group("Group A", scienceFaculty);
 		a.setId(1);
 		ClassRoom room = new ClassRoom("Main Street", 1, 101);
 		room.setId(1);
-		// Create a sample time table for the teacher
 		LocalDateTime timeStart = LocalDateTime.now();
 		LocalDateTime timeEnd = timeStart.plusHours(2);
 
 		timeTableService.createTeacherTimeTable(timeStart, timeEnd, teacher, a, room);
 
-		Assertions.assertEquals("Hello", timeTableService.getTeacherTimeTable(teacher).toString());
+		Assertions.assertEquals("Hello", timeTableService.getTeacherTimeTable(teacher));
+	}
+
+	@Test
+	void testGetGroupTimeTable() {
+		Faculty scienceFaculty = new Faculty("Faculty of Science");
+		scienceFaculty.setId(1);
+		Department mathematicsDepartment = new Department("Mathematics Department", scienceFaculty);
+		mathematicsDepartment.setId(1);
+		Course mathCourse = new Course("Mathematics", "Advanced mathematics course");
+		mathCourse.setId(1);
+		Teacher teacher = new Teacher("James", "Wilson", true, "james.wilson@example.com", "password11",
+				mathematicsDepartment, mathCourse);
+		teacher.setId(1);
+		Group a = new Group("Group A", scienceFaculty);
+		a.setId(1);
+		ClassRoom room = new ClassRoom("Main Street", 1, 101);
+		room.setId(1);
+		LocalDateTime timeStart = LocalDateTime.now();
+		LocalDateTime timeEnd = timeStart.plusHours(2);
+
+		timeTableService.createGroupTimeTable(timeStart, timeEnd, a, teacher, mathCourse, room);
+
+		Assertions.assertEquals("Hello", timeTableService.getGroupTimeTable(a));
 	}
 }
