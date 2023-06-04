@@ -1,7 +1,7 @@
 package ua.foxminded.university.dao.service;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Optional;
 import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
@@ -42,15 +42,15 @@ public class TimeTableService {
 		return timeTableRepository.save(timeTable);
 	}
 
-	public List<TimeTable> getTeacherTimeTable(Teacher teacher) {
+	public Optional<TimeTable> getTeacherTimeTable(Teacher teacher) {
 		return timeTableRepository.findByTeacher(teacher);
 	}
 
-	public List<TimeTable> getStudentTimeTable(Student student) {
+	public Optional<TimeTable> getStudentTimeTable(Student student) {
 		return timeTableRepository.findByStudent(student);
 	}
 
-	public List<TimeTable> getGroupTimeTable(Group group) {
+	public Optional<TimeTable> getGroupTimeTable(Group group) {
 		return timeTableRepository.findByGroup(group);
 	}
 }
