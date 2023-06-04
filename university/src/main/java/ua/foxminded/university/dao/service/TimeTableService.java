@@ -21,24 +21,11 @@ import ua.foxminded.university.dao.interfaces.TimeTableRepository;
 public class TimeTableService {
 	private final TimeTableRepository timeTableRepository;
 
-	public TimeTable createTeacherTimeTable(LocalDateTime timeStart, LocalDateTime timeEnd, Teacher teacher,
-			Group group, ClassRoom classRoom) {
-		TimeTable timeTable = new TimeTable(timeStart, timeEnd, teacher, group, classRoom);
-		log.debug("Created timeTable for Teacher: {}", teacher.getFirstName() + " " + teacher.getLastName());
-		return timeTableRepository.save(timeTable);
-	}
-
-	public TimeTable createStudentTimeTable(LocalDateTime timeStart, LocalDateTime timeEnd, Teacher teacher,
-			Student student, Course course, ClassRoom classRoom) {
-		TimeTable timeTable = new TimeTable(timeStart, timeEnd, teacher, student, course, classRoom);
-		log.debug("Created timeTable for Student: {}", student.getFirstName() + " " + student.getLastName());
-		return timeTableRepository.save(timeTable);
-	}
-
-	public TimeTable createGroupTimeTable(LocalDateTime timeStart, LocalDateTime timeEnd, Group group, Teacher teacher,
-			Course course, ClassRoom classRoom) {
-		TimeTable timeTable = new TimeTable(timeStart, timeEnd, group, teacher, course, classRoom);
-		log.debug("Created timeTable for Group: {}", group.getGroupName());
+	public TimeTable createTimeTable(LocalDateTime timeStart, LocalDateTime timeEnd, Teacher teacher, Student student,
+			Course course, Group group, ClassRoom classRoom) {
+		TimeTable timeTable = new TimeTable(timeStart, timeEnd, teacher, student, course, group, classRoom);
+		log.info("Timetable [time start::{}, time end::{}] is scheduled successfully.", timeTable.getTimeStart(),
+				timeTable.getTimeEnd());
 		return timeTableRepository.save(timeTable);
 	}
 
