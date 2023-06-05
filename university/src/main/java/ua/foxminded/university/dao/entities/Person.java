@@ -5,6 +5,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,14 +38,27 @@ public class Person {
 	@Column(name = "email")
 	private String email;
 
+	@ToString.Exclude
+	@Getter(value = AccessLevel.NONE)
+	@Setter(value = AccessLevel.NONE)
 	@Column(name = "password")
-	private String password;
+	private String hashedPassword;
 
 	public Person(String firstName, String lastName, boolean isActive, String email, String password) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.isActive = isActive;
 		this.email = email;
-		this.password = password;
+		setPassword(password);
+	}
+
+	public void setPassword(String password) {
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		this.hashedPassword = passwordEncoder.encode(password);
+	}
+
+	public boolean isPasswordValid(String password) {
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		return passwordEncoder.matches(password, hashedPassword);
 	}
 }
