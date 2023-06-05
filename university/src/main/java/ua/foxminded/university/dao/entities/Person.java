@@ -16,7 +16,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(exclude = "hashedPassword")
 @NoArgsConstructor
 @MappedSuperclass
 public class Person {
