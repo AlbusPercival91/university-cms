@@ -46,6 +46,10 @@ public class TimeTableService {
 		return timeTableRepository.findByDateAndTeacher(dateStart, dateEnd, teacher);
 	}
 
+	public List<TimeTable> getStudentTimeTableByDate(LocalDate dateStart, LocalDate dateEnd, Student student) {
+		return timeTableRepository.findByDateAndGroup(dateStart, dateEnd, student.getGroup());
+	}
+
 	public List<TimeTable> getGroupTimeTableByDate(LocalDate dateStart, LocalDate dateEnd, Group group) {
 		return timeTableRepository.findByDateAndGroup(dateStart, dateEnd, group);
 	}
