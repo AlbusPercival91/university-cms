@@ -3,6 +3,7 @@ package ua.foxminded.university.dao.service;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,9 @@ import ua.foxminded.university.dao.entities.Group;
 import ua.foxminded.university.dao.entities.Student;
 import ua.foxminded.university.dao.entities.Teacher;
 import ua.foxminded.university.dao.entities.TimeTable;
+import ua.foxminded.university.dao.interfaces.GroupRepository;
+import ua.foxminded.university.dao.interfaces.StudentRepository;
+import ua.foxminded.university.dao.interfaces.TeacherRepository;
 import ua.foxminded.university.dao.interfaces.TimeTableRepository;
 
 @Slf4j
@@ -21,6 +25,9 @@ import ua.foxminded.university.dao.interfaces.TimeTableRepository;
 @Transactional
 public class TimeTableService {
 	private final TimeTableRepository timeTableRepository;
+	private final StudentRepository studentRepository;
+	private final TeacherRepository teacherRepository;
+	private final GroupRepository groupRepository;
 
 	public TimeTable createTimeTable(LocalDate date, LocalTime timeStart, LocalTime timeEnd, Teacher teacher,
 			Course course, Group group, ClassRoom classRoom) {
@@ -31,30 +38,54 @@ public class TimeTableService {
 	}
 
 	public List<TimeTable> getTeacherTimeTable(Teacher teacher) {
-		return timeTableRepository.findByTeacher(teacher);
+		Teacher existingTeacher = teacherRepository.findById(teacher.getId()).orElseThrow(() -> {
+			log.warn("Teacher with id {} not found", teacher.getId());
+			return new NoSuchElementException("Teacher not found");
+		});
+		return timeTableRepository.findByTeacher(existingTeacher);
 	}
 
 	public List<TimeTable> getStudentTimeTable(Student student) {
-		return timeTableRepository.findByStudent(student);
+		Student existingStudent = studentRepository.findById(student.getId()).orElseThrow(() -> {
+			log.warn("Student with id {} not found", student.getId());
+			return new NoSuchElementException("Student not found");
+		});
+		return timeTableRepository.findByStudent(existingStudent);
 	}
 
 	public List<TimeTable> getGroupTimeTable(Group group) {
-		return timeTableRepository.findByGroup(group);
+		Group existingGroup = groupRepository.findById(group.getId()).orElseThrow(() -> {
+			log.warn("Group with id {} not found", group.getId());
+			return new NoSuchElementException("Group not found");
+		});
+		return timeTableRepository.findByGroup(existingGroup);
 	}
 
-	public List<TimeTable> getTeacherTimeTableByDate(LocalDate dateStart, LocalDate dateEnd, Teacher teacher) {
-		return timeTableRepository.findByDateAndTeacher(dateStart, dateEnd, teacher);
+	public List<TimeTable> getTeacherTimeTableByDate(LocalDate dateFrom, LocalDate dateTo, Teacher teacher) {
+		Teacher existingTeacher = teacherRepository.findById(teacher.getId()).orElseThrow(() -> {
+			log.warn("Teacher with id {} not found", teacher.getId());
+			return new NoSuchElementException("Teacher not found");
+		});
+		return timeTableRepository.findByDateAndTeacher(dateFrom, dateTo, existingTeacher);
 	}
 
-	public List<TimeTable> getStudentTimeTableByDate(LocalDate dateStart, LocalDate dateEnd, Student student) {
-		return timeTableRepository.findByDateAndGroup(dateStart, dateEnd, student.getGroup());
+	public List<TimeTable> getStudentTimeTableByDate(LocalDate dateFrom, LocalDate dateTo, Student student) {
+		Student existingStudent = studentRepository.findById(student.getId()).orElseThrow(() -> {
+			log.warn("Student with id {} not found", student.getId());
+			return new NoSuchElementException("Student not found");
+		});
+		return timeTableRepository.findByDateAndGroup(dateFrom, dateTo, existingStudent.getGroup());
 	}
 
-	public List<TimeTable> getGroupTimeTableByDate(LocalDate dateStart, LocalDate dateEnd, Group group) {
-		return timeTableRepository.findByDateAndGroup(dateStart, dateEnd, group);
+	public List<TimeTable> getGroupTimeTableByDate(LocalDate dateFrom, LocalDate dateTo, Group group) {
+		Group existingGroup = groupRepository.findById(group.getId()).orElseThrow(() -> {
+			log.warn("Group with id {} not found", group.getId());
+			return new NoSuchElementException("Group not found");
+		});
+		return timeTableRepository.findByDateAndGroup(dateFrom, dateTo, existingGroup);
 	}
 
-	public List<TimeTable> getTimeTableByDate(LocalDate dateStart, LocalDate dateEnd) {
-		return timeTableRepository.findByDate(dateStart, dateEnd);
+	public List<TimeTable> getTimeTableByDate(LocalDate dateFrom, LocalDate dateEnd) {
+		return timeTableRepository.findByDate(dateFrom, dateEnd);
 	}
 }

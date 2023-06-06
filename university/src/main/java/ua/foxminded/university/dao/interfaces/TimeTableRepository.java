@@ -20,11 +20,11 @@ public interface TimeTableRepository extends JpaRepository<TimeTable, Integer> {
 	public List<TimeTable> findByGroup(Group group);
 
 	@Query("SELECT t FROM TimeTable t JOIN FETCH t.group JOIN FETCH t.classRoom JOIN FETCH t.teacher JOIN FETCH t.course WHERE t.date >= ?1 AND t.date <= ?2")
-	List<TimeTable> findByDate(LocalDate dateStart, LocalDate dateEnd);
+	List<TimeTable> findByDate(LocalDate dateFrom, LocalDate dateTo);
 
 	@Query("SELECT t FROM TimeTable t WHERE t.date>= ?1 AND t.date <= ?2 AND t.teacher = ?3")
-	List<TimeTable> findByDateAndTeacher(LocalDate dateStart, LocalDate dateEnd, Teacher teacher);
+	List<TimeTable> findByDateAndTeacher(LocalDate dateFrom, LocalDate dateTo, Teacher teacher);
 
 	@Query("SELECT t FROM TimeTable t WHERE t.date >= ?1 AND t.date <= ?2 AND t.group = ?3")
-	List<TimeTable> findByDateAndGroup(LocalDate dateStart, LocalDate dateEnd, Group group);
+	List<TimeTable> findByDateAndGroup(LocalDate dateFrom, LocalDate dateTo, Group group);
 }
