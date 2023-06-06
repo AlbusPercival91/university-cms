@@ -94,8 +94,9 @@ CREATE TABLE IF NOT EXISTS university.teachers_courses (
 
 CREATE TABLE IF NOT EXISTS university.timetable (
     timetable_id SERIAL PRIMARY KEY,
-    time_start TIMESTAMP NOT NULL,
-    time_end TIMESTAMP NOT NULL,
+    date DATE NOT NULL,
+    time_start TIME NOT NULL,
+    time_end TIME NOT NULL,
     teacher_id INT,
     student_id INT,
     course_id INT,

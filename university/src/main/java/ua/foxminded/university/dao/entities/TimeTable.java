@@ -1,7 +1,7 @@
 package ua.foxminded.university.dao.entities;
 
-import java.time.LocalDateTime;
-
+import java.time.LocalDate;
+import java.time.LocalTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,7 +10,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import org.springframework.format.annotation.DateTimeFormat;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,13 +30,14 @@ public class TimeTable {
 	@Column(name = "timetable_id")
 	private int id;
 
+	@Column(name = "date")
+	private LocalDate date;
+
 	@Column(name = "time_start")
-	@DateTimeFormat(pattern = "yyyy-MMM-dd HH:mm")
-	private LocalDateTime timeStart;
+	private LocalTime timeStart;
 
 	@Column(name = "time_end")
-	@DateTimeFormat(pattern = "yyyy-MMM-dd HH:mm")
-	private LocalDateTime timeEnd;
+	private LocalTime timeEnd;
 
 	@ManyToOne
 	@JoinColumn(name = "teacher_id")
@@ -59,16 +59,14 @@ public class TimeTable {
 	@JoinColumn(name = "classroom_id")
 	private ClassRoom classRoom;
 
-	public TimeTable(LocalDateTime timeStart, LocalDateTime timeEnd, Teacher teacher, Student student, Course course,
+	public TimeTable(LocalDate date, LocalTime timeStart, LocalTime timeEnd, Teacher teacher, Course course,
 			Group group, ClassRoom classRoom) {
-		super();
+		this.date = date;
 		this.timeStart = timeStart;
 		this.timeEnd = timeEnd;
 		this.teacher = teacher;
-		this.student = student;
 		this.course = course;
 		this.group = group;
 		this.classRoom = classRoom;
 	}
-
 }

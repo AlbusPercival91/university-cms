@@ -1,6 +1,7 @@
 package ua.foxminded.university.dao.service;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -21,11 +22,11 @@ import ua.foxminded.university.dao.interfaces.TimeTableRepository;
 public class TimeTableService {
 	private final TimeTableRepository timeTableRepository;
 
-	public TimeTable createTimeTable(LocalDateTime timeStart, LocalDateTime timeEnd, Teacher teacher, Student student,
+	public TimeTable createTimeTable(LocalDate date, LocalTime timeStart, LocalTime timeEnd, Teacher teacher,
 			Course course, Group group, ClassRoom classRoom) {
-		TimeTable timeTable = new TimeTable(timeStart, timeEnd, teacher, student, course, group, classRoom);
-		log.info("Timetable [time start::{}, time end::{}] is scheduled successfully.", timeTable.getTimeStart(),
-				timeTable.getTimeEnd());
+		TimeTable timeTable = new TimeTable(date, timeStart, timeEnd, teacher, course, group, classRoom);
+		log.info("Timetable [date::{}, time start::{}, time end::{}] is scheduled successfully.", timeTable.getDate(),
+				timeTable.getTimeStart(), timeTable.getTimeEnd());
 		return timeTableRepository.save(timeTable);
 	}
 
@@ -39,5 +40,17 @@ public class TimeTableService {
 
 	public List<TimeTable> getGroupTimeTable(Group group) {
 		return timeTableRepository.findByGroup(group);
+	}
+
+	public List<TimeTable> getTeacherTimeTableByDate(LocalDate dateStart, LocalDate dateEnd, Teacher teacher) {
+		return timeTableRepository.findByDateAndTeacher(dateStart, dateEnd, teacher);
+	}
+
+	public List<TimeTable> getGroupTimeTableByDate(LocalDate dateStart, LocalDate dateEnd, Group group) {
+		return timeTableRepository.findByDateAndGroup(dateStart, dateEnd, group);
+	}
+
+	public List<TimeTable> getTimeTableByDate(LocalDate dateStart, LocalDate dateEnd) {
+		return timeTableRepository.findByDate(dateStart, dateEnd);
 	}
 }
