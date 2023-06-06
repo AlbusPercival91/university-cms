@@ -68,6 +68,71 @@ class TimeTableServiceTest {
 	private StudentRepository studentRepository;
 
 	@Test
+	void testGetAllTimeTablesByDate() {
+		List<TimeTable> timeTableList = new ArrayList<>();
+
+		Faculty scienceFaculty = new Faculty("Faculty of Science");
+		facultyRepository.save(scienceFaculty);
+
+		Department mathematicsDepartment = new Department("Mathematics Department", scienceFaculty);
+		departmentRepository.save(mathematicsDepartment);
+
+		Course mathCourse = new Course("Mathematics", "Advanced mathematics course");
+		courseRepository.save(mathCourse);
+
+		Teacher teacher = new Teacher("James", "Wilson", true, "james.wilson@example.com", "password11",
+				mathematicsDepartment, mathCourse);
+		teacherRepository.save(teacher);
+
+		Group a = new Group("Group A", scienceFaculty);
+		groupRepository.save(a);
+
+		ClassRoom room = new ClassRoom("Main Street", 1, 101);
+		classRoomRepository.save(room);
+
+		LocalDate dateStart = LocalDate.now();
+		LocalTime timeStart = LocalTime.of(12, 00);
+		LocalTime timeEnd = LocalTime.of(13, 30);
+
+		TimeTable expectedFirst = new TimeTable(dateStart, timeStart, timeEnd, teacher, mathCourse, a, room);
+		timeTableList.add(expectedFirst);
+		timeTableRepository.save(expectedFirst);
+
+		// create second timetable
+
+		Faculty literatureFaculty = new Faculty("Faculty of Literature");
+		facultyRepository.save(literatureFaculty);
+
+		Department englishDepartment = new Department("English Department", literatureFaculty);
+		departmentRepository.save(englishDepartment);
+
+		Course englishCourse = new Course("English", "Advanced English course");
+		courseRepository.save(englishCourse);
+
+		Teacher teacherEnglish = new Teacher("Connor", "Tylor", true, "connor.ty@example.com", "1234",
+				englishDepartment, englishCourse);
+		teacherRepository.save(teacherEnglish);
+
+		Group b = new Group("Group b", literatureFaculty);
+		groupRepository.save(b);
+
+		ClassRoom room2 = new ClassRoom("Forest Street", 2, 21);
+		classRoomRepository.save(room2);
+
+		LocalDate dateEnd = dateStart.plusDays(2);
+		LocalTime timeStart2 = LocalTime.of(15, 30);
+		LocalTime timeEnd2 = LocalTime.of(17, 00);
+
+		TimeTable expectedSecond = new TimeTable(dateEnd, timeStart2, timeEnd2, teacher, englishCourse, b, room2);
+		timeTableList.add(expectedSecond);
+		timeTableRepository.save(expectedSecond);
+		
+		LocalDate dateFake = LocalDate.of(2023, 3, 28);
+
+		Assertions.assertEquals(timeTableList, timeTableService.getAllTimeTablesByDate(dateFake, dateFake));
+	}
+
+	@Test
 	void testGetStudentTimeTableByDate() {
 		List<TimeTable> timeTableList = new ArrayList<>();
 
