@@ -68,6 +68,37 @@ class TimeTableServiceTest {
 	private StudentRepository studentRepository;
 
 	@Test
+	void testDeleteTimeTableById() {
+		Faculty scienceFaculty = new Faculty("Faculty of Science");
+		facultyRepository.save(scienceFaculty);
+
+		Department mathematicsDepartment = new Department("Mathematics Department", scienceFaculty);
+		departmentRepository.save(mathematicsDepartment);
+
+		Course mathCourse = new Course("Mathematics", "Advanced mathematics course");
+		courseRepository.save(mathCourse);
+
+		Teacher teacher = new Teacher("James", "Wilson", true, "james.wilson@example.com", "password11",
+				mathematicsDepartment, mathCourse);
+		teacherRepository.save(teacher);
+
+		Group a = new Group("Group A", scienceFaculty);
+		groupRepository.save(a);
+
+		ClassRoom room = new ClassRoom("Main Street", 1, 101);
+		classRoomRepository.save(room);
+
+		LocalDate dateStart = LocalDate.now();
+		LocalTime timeStart = LocalTime.of(12, 00);
+		LocalTime timeEnd = LocalTime.of(13, 30);
+
+		TimeTable expectedFirst = new TimeTable(dateStart, timeStart, timeEnd, teacher, mathCourse, a, room);
+		timeTableRepository.save(expectedFirst);
+
+		Assertions.assertEquals(1, timeTableService.deleteTimeTableById(1));
+	}
+
+	@Test
 	void testGetAllTimeTablesByDate() {
 		List<TimeTable> timeTableList = new ArrayList<>();
 
@@ -126,7 +157,7 @@ class TimeTableServiceTest {
 		TimeTable expectedSecond = new TimeTable(dateEnd, timeStart2, timeEnd2, teacher, englishCourse, b, room2);
 		timeTableList.add(expectedSecond);
 		timeTableRepository.save(expectedSecond);
-		
+
 		LocalDate dateFake = LocalDate.of(2023, 3, 28);
 
 		Assertions.assertEquals(timeTableList, timeTableService.getAllTimeTablesByDate(dateFake, dateFake));
