@@ -5,8 +5,8 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-
 import javax.transaction.Transactional;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -89,6 +89,15 @@ public class TimeTableService {
 
 	public List<TimeTable> getAllTimeTablesByDate(LocalDate dateFrom, LocalDate dateTo) {
 		return timeTableRepository.findByDate(dateFrom, dateTo);
+	}
+
+	public TimeTable updateTimeTabletById(int timeTableId, TimeTable updateTimeTable) {
+		TimeTable existingTimeTable = timeTableRepository.findById(timeTableId).orElseThrow(() -> {
+			log.warn("TimeTable with id {} not found", timeTableId);
+			return new NoSuchElementException("TimeTable not found");
+		});
+		BeanUtils.copyProperties(updateTimeTable, existingTimeTable, "id");
+		return timeTableRepository.save(existingTimeTable);
 	}
 
 	public int deleteTimeTableById(int timeTableId) {
