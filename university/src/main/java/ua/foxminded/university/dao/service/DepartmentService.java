@@ -37,12 +37,12 @@ public class DepartmentService {
 		}
 	}
 
-	public Department updateDepartmentById(int departmentId, Department department) {
+	public Department updateDepartmentById(int departmentId, Department targetDepartment) {
 		Department existingDepartment = departmentRepository.findById(departmentId).orElseThrow(() -> {
 			log.warn("Department with id {} not found", departmentId);
 			return new NoSuchElementException("Department not found");
 		});
-		BeanUtils.copyProperties(department, existingDepartment, "id");
+		BeanUtils.copyProperties(targetDepartment, existingDepartment, "id");
 		return departmentRepository.save(existingDepartment);
 	}
 

@@ -37,12 +37,12 @@ public class AdminService {
 		}
 	}
 
-	public Admin updateAdminById(int adminId, Admin admin) {
+	public Admin updateAdminById(int adminId, Admin targetAdmin) {
 		Admin existingAdmin = adminRepository.findById(adminId).orElseThrow(() -> {
 			log.warn("Admin with id {} not found", adminId);
 			return new NoSuchElementException("Admin not found");
 		});
-		BeanUtils.copyProperties(admin, existingAdmin, "id");
+		BeanUtils.copyProperties(targetAdmin, existingAdmin, "id");
 		return adminRepository.save(existingAdmin);
 	}
 

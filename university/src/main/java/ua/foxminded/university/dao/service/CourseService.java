@@ -37,12 +37,12 @@ public class CourseService {
 		}
 	}
 
-	public Course updateCourseById(int courseId, Course course) {
+	public Course updateCourseById(int courseId, Course targetCourse) {
 		Course existingCourse = courseRepository.findById(courseId).orElseThrow(() -> {
 			log.warn("Course with id {} not found", courseId);
 			return new NoSuchElementException("Course not found");
 		});
-		BeanUtils.copyProperties(course, existingCourse, "id");
+		BeanUtils.copyProperties(targetCourse, existingCourse, "id");
 		return courseRepository.save(existingCourse);
 	}
 

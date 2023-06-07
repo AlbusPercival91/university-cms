@@ -37,12 +37,12 @@ public class StaffService {
 		}
 	}
 
-	public Staff updateStaffById(int staffId, Staff staff) {
+	public Staff updateStaffById(int staffId, Staff targetStaff) {
 		Staff existingStaff = staffRepository.findById(staffId).orElseThrow(() -> {
 			log.warn("Staff with id {} not found", staffId);
 			return new NoSuchElementException("Staff not found");
 		});
-		BeanUtils.copyProperties(staff, existingStaff, "id");
+		BeanUtils.copyProperties(targetStaff, existingStaff, "id");
 		return staffRepository.save(existingStaff);
 	}
 

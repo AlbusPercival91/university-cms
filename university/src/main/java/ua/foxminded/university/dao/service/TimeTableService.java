@@ -91,12 +91,12 @@ public class TimeTableService {
 		return timeTableRepository.findByDate(dateFrom, dateTo);
 	}
 
-	public TimeTable updateTimeTabletById(int timeTableId, TimeTable updateTimeTable) {
+	public TimeTable updateTimeTabletById(int timeTableId, TimeTable targetTimeTable) {
 		TimeTable existingTimeTable = timeTableRepository.findById(timeTableId).orElseThrow(() -> {
 			log.warn("TimeTable with id {} not found", timeTableId);
 			return new NoSuchElementException("TimeTable not found");
 		});
-		BeanUtils.copyProperties(updateTimeTable, existingTimeTable, "id");
+		BeanUtils.copyProperties(targetTimeTable, existingTimeTable, "id");
 		return timeTableRepository.save(existingTimeTable);
 	}
 

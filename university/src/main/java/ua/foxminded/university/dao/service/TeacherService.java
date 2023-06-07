@@ -38,12 +38,12 @@ public class TeacherService {
 		}
 	}
 
-	public Teacher updateTeacherById(int teacherId, Teacher teacher) {
+	public Teacher updateTeacherById(int teacherId, Teacher targetTeacher) {
 		Teacher existingTeacher = teacherRepository.findById(teacherId).orElseThrow(() -> {
 			log.warn("Teacher with id {} not found", teacherId);
 			return new NoSuchElementException("Teacher not found");
 		});
-		BeanUtils.copyProperties(teacher, existingTeacher, "id");
+		BeanUtils.copyProperties(targetTeacher, existingTeacher, "id");
 		return teacherRepository.save(existingTeacher);
 	}
 

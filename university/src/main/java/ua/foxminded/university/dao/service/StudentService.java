@@ -38,12 +38,12 @@ public class StudentService {
 		}
 	}
 
-	public Student updateStudentById(int studentId, Student student) {
+	public Student updateStudentById(int studentId, Student targetStudent) {
 		Student existingStudent = studentRepository.findById(studentId).orElseThrow(() -> {
 			log.warn("Student with id {} not found", studentId);
 			return new NoSuchElementException("Student not found");
 		});
-		BeanUtils.copyProperties(student, existingStudent, "id");
+		BeanUtils.copyProperties(targetStudent, existingStudent, "id");
 		return studentRepository.save(existingStudent);
 	}
 

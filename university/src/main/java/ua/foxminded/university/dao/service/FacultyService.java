@@ -37,12 +37,12 @@ public class FacultyService {
 		}
 	}
 
-	public Faculty updateFacultyById(int facultyId, Faculty faculty) {
+	public Faculty updateFacultyById(int facultyId, Faculty targetFaculty) {
 		Faculty existingFaculty = facultyRepository.findById(facultyId).orElseThrow(() -> {
 			log.warn("Faculty with id {} not found", facultyId);
 			return new NoSuchElementException("Faculty not found");
 		});
-		BeanUtils.copyProperties(faculty, existingFaculty, "id");
+		BeanUtils.copyProperties(targetFaculty, existingFaculty, "id");
 		return facultyRepository.save(existingFaculty);
 	}
 

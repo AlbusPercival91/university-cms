@@ -37,12 +37,12 @@ public class GroupService {
 		}
 	}
 
-	public Group updateGroupById(int groupId, Group group) {
+	public Group updateGroupById(int groupId, Group targetGroup) {
 		Group existingGroup = groupRepository.findById(groupId).orElseThrow(() -> {
 			log.warn("Group with id {} not found", groupId);
 			return new NoSuchElementException("Group not found");
 		});
-		BeanUtils.copyProperties(group, existingGroup, "id");
+		BeanUtils.copyProperties(targetGroup, existingGroup, "id");
 		return groupRepository.save(existingGroup);
 	}
 

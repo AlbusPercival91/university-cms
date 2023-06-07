@@ -37,12 +37,12 @@ public class ClassRoomService {
 		}
 	}
 
-	public ClassRoom updateClassRoomById(int classRoomId, ClassRoom classRoom) {
+	public ClassRoom updateClassRoomById(int classRoomId, ClassRoom targetClassRoom) {
 		ClassRoom existingClassRoom = classRoomRepository.findById(classRoomId).orElseThrow(() -> {
 			log.warn("Room with id {} not found", classRoomId);
 			return new NoSuchElementException("Class room not found");
 		});
-		BeanUtils.copyProperties(classRoom, existingClassRoom, "id");
+		BeanUtils.copyProperties(targetClassRoom, existingClassRoom, "id");
 		return classRoomRepository.save(existingClassRoom);
 	}
 

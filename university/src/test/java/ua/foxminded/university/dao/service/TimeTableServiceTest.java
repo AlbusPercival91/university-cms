@@ -98,10 +98,10 @@ class TimeTableServiceTest {
 		TimeTable expectedFirst = new TimeTable(dateStart, timeStart, timeEnd, teacher, mathCourse, a, room);
 		timeTableRepository.save(expectedFirst);
 
-		TimeTable editedTimeTable = new TimeTable(dateStart, timeStart, timeEnd, teacher, mathCourse, b, room);
-		editedTimeTable.setId(1);
+		TimeTable targetTimeTable = new TimeTable(dateStart, timeStart, timeEnd, teacher, mathCourse, b, room);
+		targetTimeTable.setId(1);
 		
-		Assertions.assertEquals(editedTimeTable, timeTableService.updateTimeTabletById(1, editedTimeTable));
+		Assertions.assertEquals(targetTimeTable, timeTableService.updateTimeTabletById(1, targetTimeTable));
 	}
 
 	@Test
