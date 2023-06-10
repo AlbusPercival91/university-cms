@@ -23,7 +23,7 @@ public class CourseMaker {
 
 	public Map<Integer, Set<Integer>> assignCourseId() {
 		Map<Integer, Set<Integer>> studentCourseID = new HashMap<>();
-		int studentsQtty = student.generateFullName(student.generateNames(20), student.generateSurnames(20)).size();
+		int studentsQtty = student.generateFullNames(student.generateNames(20), student.generateLastNames(20)).size();
 
 		IntStream.range(1, studentsQtty + 1).forEachOrdered(i -> {
 			Set<Integer> courseID = new HashSet<>();
