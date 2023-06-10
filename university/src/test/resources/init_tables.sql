@@ -48,7 +48,8 @@ CREATE TABLE IF NOT EXISTS university.staff (
     active BOOLEAN NOT NULL,
     email VARCHAR(100) NOT NULL,
     password VARCHAR(60) NOT NULL,
-    position VARCHAR(150) NOT NULL
+    position VARCHAR(150) NOT NULL,
+    function TEXT
 );
 
 CREATE TABLE IF NOT EXISTS university.students (
