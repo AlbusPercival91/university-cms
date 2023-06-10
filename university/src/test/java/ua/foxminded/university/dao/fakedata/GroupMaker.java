@@ -26,12 +26,8 @@ public class GroupMaker {
 		int studentsQtty = student.generateFullNames(student.generateNames(20), student.generateLastNames(20)).size();
 
 		for (int i = 0; i < studentsQtty; i++) {
-			Integer rand = ThreadLocalRandom.current().nextInt(0, 11);
+			Integer rand = ThreadLocalRandom.current().nextInt(1, 11);
 
-			if (rand == 0) {
-				rand = null;
-			}
-			
 			if (Collections.frequency(groupID, rand) < 30 && groupID.size() < studentsQtty) {
 				groupID.add(rand);
 
