@@ -14,7 +14,7 @@ import com.github.javafaker.Faker;
 @Component
 public class CourseMaker {
 	Faker faker = new Faker();
-	StudentMaker student = new StudentMaker();
+	PersonMaker student = new PersonMaker();
 
 	public Set<String> generateCourses(int quantity) {
 		return IntStream.range(0, quantity).<String>mapToObj(i -> faker.educator().course())
@@ -23,7 +23,7 @@ public class CourseMaker {
 
 	public Map<Integer, Set<Integer>> assignCourseId() {
 		Map<Integer, Set<Integer>> studentCourseID = new HashMap<>();
-		int studentsQtty = student.generateStudents(student.generateNames(20), student.generateSurnames(20)).size();
+		int studentsQtty = student.generateFullName(student.generateNames(20), student.generateSurnames(20)).size();
 
 		IntStream.range(1, studentsQtty + 1).forEachOrdered(i -> {
 			Set<Integer> courseID = new HashSet<>();

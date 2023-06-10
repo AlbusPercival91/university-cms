@@ -13,7 +13,7 @@ import com.github.javafaker.service.RandomService;
 
 @Component
 public class GroupMaker {
-	StudentMaker student = new StudentMaker();
+	PersonMaker student = new PersonMaker();
 
 	public List<String> generateGroups() {
 		FakeValuesService fakeValuesService = new FakeValuesService(new Locale("en-GB"), new RandomService());
@@ -23,7 +23,7 @@ public class GroupMaker {
 
 	public List<Integer> assignGroupId() {
 		List<Integer> groupID = new ArrayList<>();
-		int studentsQtty = student.generateStudents(student.generateNames(20), student.generateSurnames(20)).size();
+		int studentsQtty = student.generateFullName(student.generateNames(20), student.generateSurnames(20)).size();
 
 		for (int i = 0; i < studentsQtty; i++) {
 			Integer rand = ThreadLocalRandom.current().nextInt(0, 11);

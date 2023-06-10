@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import com.github.javafaker.Faker;
 
 @Component
-public class StudentMaker {
+public class PersonMaker {
 	Faker faker = new Faker();
 
 	public List<String> generateNames(int quantity) {
@@ -25,7 +25,7 @@ public class StudentMaker {
 				.collect(Collectors.toCollection(() -> new ArrayList<>(quantity)));
 	}
 
-	public Set<String> generateStudents(List<String> names, List<String> surnames) {
+	public Set<String> generateFullName(List<String> names, List<String> surnames) {
 		Set<String> list = new HashSet<>();
 		while (list.size() != 200) {
 			Arrays.asList(names, surnames).forEach(Collections::shuffle);
@@ -33,5 +33,7 @@ public class StudentMaker {
 		}
 		return list;
 	}
+	
+	
 
 }
