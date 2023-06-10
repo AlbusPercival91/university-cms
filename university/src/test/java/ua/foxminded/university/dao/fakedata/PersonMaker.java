@@ -13,7 +13,7 @@ import com.github.javafaker.Faker;
 
 @Component
 public class PersonMaker {
-	Faker faker = new Faker();
+	private Faker faker = new Faker();
 
 	public List<String> generateNames(int quantity) {
 		return IntStream.range(0, quantity).<String>mapToObj(i -> faker.name().firstName())

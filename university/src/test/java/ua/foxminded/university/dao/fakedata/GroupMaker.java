@@ -13,7 +13,7 @@ import com.github.javafaker.service.RandomService;
 
 @Component
 public class GroupMaker {
-	PersonMaker student = new PersonMaker();
+	private PersonMaker student = new PersonMaker();
 
 	public List<String> generateGroups() {
 		FakeValuesService fakeValuesService = new FakeValuesService(new Locale("en-GB"), new RandomService());
@@ -31,7 +31,7 @@ public class GroupMaker {
 			if (rand == 0) {
 				rand = null;
 			}
-
+			
 			if (Collections.frequency(groupID, rand) < 30 && groupID.size() < studentsQtty) {
 				groupID.add(rand);
 

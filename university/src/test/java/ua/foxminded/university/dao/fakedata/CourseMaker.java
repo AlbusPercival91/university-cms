@@ -13,8 +13,8 @@ import com.github.javafaker.Faker;
 
 @Component
 public class CourseMaker {
-	Faker faker = new Faker();
-	PersonMaker student = new PersonMaker();
+	private Faker faker = new Faker();
+	private PersonMaker student = new PersonMaker();
 
 	public Set<String> generateCourses(int quantity) {
 		return IntStream.range(0, quantity).<String>mapToObj(i -> faker.educator().course())

@@ -9,7 +9,7 @@ import java.util.stream.IntStream;
 import com.github.javafaker.Faker;
 
 public class ClassRoomMaker {
-	Faker faker = new Faker();
+	private Faker faker = new Faker();
 
 	public Set<String> generateStreet(int quantity) {
 		return IntStream.range(0, quantity).<String>mapToObj(i -> faker.address().streetName())
