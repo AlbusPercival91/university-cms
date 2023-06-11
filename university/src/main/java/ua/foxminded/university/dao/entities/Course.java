@@ -51,10 +51,12 @@ public class Course {
 	@OneToMany(mappedBy = "course")
 	private Set<TimeTable> timeTables;
 
+	public Course(String courseName) {
+		this.courseName = courseName;
+	}
+
 	public Course(String courseName, String courseDescription) {
 		this.courseName = courseName;
 		this.courseDescription = courseDescription;
 	}
-	
-	
 }
