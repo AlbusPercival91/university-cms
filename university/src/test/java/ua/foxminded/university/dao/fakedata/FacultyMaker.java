@@ -18,12 +18,12 @@ public class FacultyMaker {
 	}
 
 	public List<Faculty> generateFaculties() {
-		List<Faculty> list = new ArrayList<>();
+		List<Faculty> facultyList = new ArrayList<>();
 
 		for (String s : facultyNames()) {
 			Faculty faculty = new Faculty(s);
-			list.add(faculty);
+			facultyList.add(faculty);
 		}
-		return list;
+		return facultyList;
 	}
 }
