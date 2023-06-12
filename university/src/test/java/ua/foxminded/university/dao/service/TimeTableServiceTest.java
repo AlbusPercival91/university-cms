@@ -29,7 +29,7 @@ class TimeTableServiceTest {
 	private TimeTableService timeTableService;
 
 	@Test
-	void testGetAllTimeTablesByDate2() {
+	void testGetAllTimeTablesByDate() {
 		List<TimeTable> timeTableList = new ArrayList<>();
 
 		LocalDate dateStart = LocalDate.of(2023, 06, 13);
