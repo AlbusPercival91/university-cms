@@ -41,7 +41,7 @@ public class Department {
 	private Faculty faculty;
 
 	@ToString.Exclude
-	@OneToMany(mappedBy = "department", cascade = { CascadeType.PERSIST }, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "department", cascade = { CascadeType.PERSIST }, fetch = FetchType.LAZY)
 	private Set<Teacher> teachers;
 
 	public Department(String name, Faculty faculty) {
