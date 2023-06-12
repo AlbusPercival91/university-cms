@@ -1,10 +1,6 @@
 package ua.foxminded.university.dao.service;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -16,7 +12,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
-
 import ua.foxminded.university.dao.entities.Admin;
 import ua.foxminded.university.dao.entities.ClassRoom;
 import ua.foxminded.university.dao.entities.Course;
@@ -80,14 +75,11 @@ class TimeTableServiceTest {
 	@Autowired
 	private StaffRepository staffRepository;
 
-//	@Test
-//	void testGetAllTimeTablesByDate() {
-//		List<TimeTable> timeTableList = new ArrayList<>();
-//
-//		LocalDate dateStart = LocalDate.of(2023, 06, 13);
-//		LocalDate dateEnd = LocalDate.of(2023, 06, 14);
-//		Assertions.assertEquals(timeTableList, timeTableService.getAllTimeTablesByDate(dateStart, dateEnd));
-//	}
+	@Test
+	void testTimeTable() {
+		Optional<TimeTable> course = timeTableRepository.findById(3);
+		Assertions.assertEquals("Hello", course.toString());
+	}
 
 	@Test
 	void testClassRoom() {
