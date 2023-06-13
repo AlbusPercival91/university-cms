@@ -61,9 +61,3 @@ VALUES
     ('James', 'Wilson', true, 'james.wilson@example.com', 'password11', 2, 2),
     ('Sophia', 'Anderson', true, 'sophia.anderson@example.com', 'password12', 3, 3);
 
-INSERT INTO university.timetable (date, time_start, time_end, teacher_id, student_id, course_id, group_id, classroom_id)
-VALUES 
-    ('2023-06-12', '08:00', '10:00', 1, 1, 1, 1, 3),
-    ('2023-06-12', '10:30', '12:00', 2, 2, 2, 2, 2),
-    ('2023-06-13', '12:00', '14:00', 3, 3, 3, 3, 1);
-

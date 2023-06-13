@@ -1,10 +1,13 @@
 package ua.foxminded.university.dao.service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -75,64 +78,22 @@ class TimeTableServiceTest {
 	@Autowired
 	private StaffRepository staffRepository;
 
-	@Test
-	void testTimeTable() {
-		Optional<TimeTable> course = timeTableRepository.findById(3);
-		Assertions.assertEquals("Hello", course.toString());
-	}
+	@ParameterizedTest
+	@CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 1, 1", "2023-09-01, 12:00, 13:30, 2, 2, 2, 2",
+			"2023-09-02, 09:00, 10:30, 3, 3, 3, 3", "2023-09-02, 12:00, 13:30, 1, 1, 2, 3" })
+	void testCreateTimeTable_ShouldSaveTimeTableToDatabase(LocalDate date, LocalTime timeFrom, LocalTime timeTo,
+			int teacherId, int courseId, int groupId, int classRoomId) {
+		Optional<Teacher> teacher = teacherRepository.findById(teacherId);
+		Optional<Course> course = courseRepository.findById(courseId);
+		Optional<Group> group = groupRepository.findById(groupId);
+		Optional<ClassRoom> classRoom = classRoomRepository.findById(classRoomId);
 
-	@Test
-	void testClassRoom() {
-		Optional<ClassRoom> course = classRoomRepository.findById(3);
-		Assertions.assertEquals("Hello", course.toString());
-	}
+		TimeTable expectedTimeTable = new TimeTable(date, timeFrom, timeTo, teacher.get(), course.get(), group.get(),
+				classRoom.get());
+		expectedTimeTable.setId(1);
 
-	@Test
-	void testCourse() {
-		Optional<Course> course = courseRepository.findById(3);
-		Assertions.assertEquals("Hello", course.toString());
-	}
-
-	@Test
-	void testTeacher() {
-		Optional<Teacher> course = teacherRepository.findById(3);
-		Assertions.assertEquals("Hello", course.toString());
-	}
-
-	@Test
-	void testStudent() {
-		Optional<Student> course = studentRepository.findById(3);
-		Assertions.assertEquals("Hello", course.toString());
-	}
-
-	@Test
-	void testGroup() {
-		Optional<Group> course = groupRepository.findById(3);
-		Assertions.assertEquals("Hello", course.toString());
-	}
-
-	@Test
-	void testFaculty() {
-		Optional<Faculty> course = facultyRepository.findById(3);
-		Assertions.assertEquals("Hello", course.toString());
-	}
-
-	@Test
-	void testDep() {
-		Optional<Department> course = departmentRepository.findById(3);
-		Assertions.assertEquals("Hello", course.toString());
-	}
-
-	@Test
-	void testAdmin() {
-		Optional<Admin> course = adminRepository.findById(3);
-		Assertions.assertEquals("Hello", course.toString());
-	}
-
-	@Test
-	void testStaff() {
-		Optional<Staff> course = staffRepository.findById(3);
-		Assertions.assertEquals("Hello", course.toString());
+		Assertions.assertEquals(expectedTimeTable, timeTableService.createTimeTable(date, timeFrom, timeTo,
+				teacher.get(), course.get(), group.get(), classRoom.get()));
 	}
 
 }

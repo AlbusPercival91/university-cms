@@ -31,9 +31,9 @@ public class TimeTableService {
 	private final TeacherRepository teacherRepository;
 	private final GroupRepository groupRepository;
 
-	public TimeTable createTimeTable(LocalDate date, LocalTime timeStart, LocalTime timeEnd, Teacher teacher,
+	public TimeTable createTimeTable(LocalDate date, LocalTime timeFrom, LocalTime timeEnd, Teacher teacher,
 			Course course, Group group, ClassRoom classRoom) {
-		TimeTable timeTable = new TimeTable(date, timeStart, timeEnd, teacher, course, group, classRoom);
+		TimeTable timeTable = new TimeTable(date, timeFrom, timeEnd, teacher, course, group, classRoom);
 		log.info("Timetable [date::{}, time start::{}, time end::{}] is scheduled successfully.", timeTable.getDate(),
 				timeTable.getTimeStart(), timeTable.getTimeEnd());
 		return timeTableRepository.save(timeTable);
