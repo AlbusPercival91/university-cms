@@ -52,7 +52,7 @@ public class TimeTableService {
 			log.warn("Student with id {} not found", student.getId());
 			return new NoSuchElementException("Student not found");
 		});
-		return timeTableRepository.findByStudent(existingStudent);
+		return timeTableRepository.findByGroup(existingStudent.getGroup());
 	}
 
 	public List<TimeTable> getGroupTimeTable(Group group) {
