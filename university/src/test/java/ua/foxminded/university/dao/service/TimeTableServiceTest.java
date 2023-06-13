@@ -2,6 +2,8 @@ package ua.foxminded.university.dao.service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -66,18 +68,6 @@ class TimeTableServiceTest {
 	@Autowired
 	private ClassRoomRepository classRoomRepository;
 
-	@Autowired
-	private FacultyRepository facultyRepository;
-
-	@Autowired
-	private DepartmentRepository departmentRepository;
-
-	@Autowired
-	private AdminRepository adminRepository;
-
-	@Autowired
-	private StaffRepository staffRepository;
-
 	@ParameterizedTest
 	@CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 1, 1", "2023-09-01, 12:00, 13:30, 2, 2, 2, 2",
 			"2023-09-02, 09:00, 10:30, 3, 3, 3, 3", "2023-09-02, 12:00, 13:30, 1, 1, 2, 3" })
@@ -87,13 +77,31 @@ class TimeTableServiceTest {
 		Optional<Course> course = courseRepository.findById(courseId);
 		Optional<Group> group = groupRepository.findById(groupId);
 		Optional<ClassRoom> classRoom = classRoomRepository.findById(classRoomId);
-
 		TimeTable expectedTimeTable = new TimeTable(date, timeFrom, timeTo, teacher.get(), course.get(), group.get(),
 				classRoom.get());
 		expectedTimeTable.setId(1);
 
 		Assertions.assertEquals(expectedTimeTable, timeTableService.createTimeTable(date, timeFrom, timeTo,
 				teacher.get(), course.get(), group.get(), classRoom.get()));
+	}
+
+	@ParameterizedTest
+	@CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 1, 1 ", "2023-09-01, 12:00, 13:30, 2, 2, 2, 2",
+			"2023-09-02, 09:00, 10:30, 3, 3, 3, 3", "2023-09-02, 12:00, 13:30, 1, 1, 2, 3" })
+	void testGetTeacherTimeTable_ShouldReturnTeacherTimeTable(LocalDate date, LocalTime timeFrom, LocalTime timeTo,
+			int teacherId, int courseId, int groupId, int classRoomId) {
+		Optional<Teacher> teacher = teacherRepository.findById(teacherId);
+		Optional<Course> course = courseRepository.findById(courseId);
+		Optional<Group> group = groupRepository.findById(groupId);
+		Optional<ClassRoom> classRoom = classRoomRepository.findById(classRoomId);
+		TimeTable expectedTimeTable = new TimeTable(date, timeFrom, timeTo, teacher.get(), course.get(), group.get(),
+				classRoom.get());
+		expectedTimeTable.setId(1);
+		List<TimeTable> expectedTimeTableList = new ArrayList<TimeTable>();
+		expectedTimeTableList.add(expectedTimeTable);
+		timeTableRepository.save(expectedTimeTable);
+
+		Assertions.assertEquals(expectedTimeTableList, timeTableService.getTeacherTimeTable(teacher.get()));
 	}
 
 }
