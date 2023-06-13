@@ -99,8 +99,8 @@ class TimeTableServiceTest {
 	@ParameterizedTest
 	@CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 1, 1, 1", "2023-09-01, 12:00, 13:30, 2, 2, 2, 2, 2",
 			"2023-09-02, 09:00, 10:30, 3, 3, 3, 3, 3", "2023-09-02, 12:00, 13:30, 1, 1, 3, 1, 3" })
-	void testGetStudentTimeTable_ShouldReturnStudentTimeTable(LocalDate date, LocalTime timeFrom, LocalTime timeTo,
-			int teacherId, int courseId, int groupId, int classRoomId, int studentId) {
+	void testGetStudentTimeTable_ShouldReturnSameStudentAndHisGroupTimeTable(LocalDate date, LocalTime timeFrom,
+			LocalTime timeTo, int teacherId, int courseId, int groupId, int classRoomId, int studentId) {
 		Optional<Teacher> teacher = teacherRepository.findById(teacherId);
 		Optional<Course> course = courseRepository.findById(courseId);
 		Optional<Group> group = groupRepository.findById(groupId);
@@ -113,6 +113,25 @@ class TimeTableServiceTest {
 
 		Assertions.assertEquals(timeTableService.getGroupTimeTable(group.get()),
 				timeTableService.getStudentTimeTable(student.get()));
+	}
+
+	@ParameterizedTest
+	@CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 1, 1 ", "2023-09-01, 12:00, 13:30, 2, 2, 2, 2",
+			"2023-09-02, 09:00, 10:30, 3, 3, 3, 3", "2023-09-02, 12:00, 13:30, 1, 1, 2, 3" })
+	void testGetGroupTimeTable_ShouldReturnGroupTimeTable(LocalDate date, LocalTime timeFrom, LocalTime timeTo,
+			int teacherId, int courseId, int groupId, int classRoomId) {
+		Optional<Teacher> teacher = teacherRepository.findById(teacherId);
+		Optional<Course> course = courseRepository.findById(courseId);
+		Optional<Group> group = groupRepository.findById(groupId);
+		Optional<ClassRoom> classRoom = classRoomRepository.findById(classRoomId);
+		TimeTable expectedTimeTable = new TimeTable(date, timeFrom, timeTo, teacher.get(), course.get(), group.get(),
+				classRoom.get());
+		expectedTimeTable.setId(1);
+		List<TimeTable> expectedTimeTableList = new ArrayList<TimeTable>();
+		expectedTimeTableList.add(expectedTimeTable);
+		timeTableRepository.save(expectedTimeTable);
+
+		Assertions.assertEquals(expectedTimeTableList, timeTableService.getGroupTimeTable(group.get()));
 	}
 
 }
