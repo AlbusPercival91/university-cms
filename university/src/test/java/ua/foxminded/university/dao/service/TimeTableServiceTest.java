@@ -130,4 +130,17 @@ class TimeTableServiceTest {
 		Assertions.assertEquals(expectedTimeTableList, timeTableService.getAllTimeTablesByDate(date, date.plusDays(2)));
 	}
 
+	@ParameterizedTest
+	@CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 1, 1", "2023-09-01, 12:00, 13:30, 2, 2, 2, 2",
+			"2023-09-02, 09:00, 10:30, 3, 3, 3, 3", "2023-09-02, 12:00, 13:30, 1, 1, 2, 3" })
+	void testUpdateTimeTabletById_ShouldReturnUpdatedTimeTable(LocalDate date, LocalTime timeFrom, LocalTime timeTo,
+			int teacherId, int courseId, int groupId, int classRoomId) {
+		TimeTable timeTable = timeTableBuilder.saveTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId,
+				classRoomId);
+		TimeTable expectedTimeTable = new TimeTable(date.plusMonths(1), timeFrom.plusHours(1), timeTo.plusHours(1),
+				timeTable.getTeacher(), timeTable.getCourse(), timeTable.getGroup(), timeTable.getClassRoom());
+		expectedTimeTable.setId(1);
+
+		Assertions.assertEquals(expectedTimeTable, timeTableService.updateTimeTabletById(1, expectedTimeTable));
+	}
 }
