@@ -114,8 +114,20 @@ class TimeTableServiceTest {
 				timeTableService.getStudentTimeTableByDate(date, date, student.get()));
 	}
 
-	void testGetAllTimeTablesByDate_ShouldReturnAllTimeTablesForDate(LocalDate dateFrom, LocalDate dateTo) {
+	@ParameterizedTest
+	@CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 1, 1 " })
+	void testGetAllTimeTablesByDate_ShouldReturnAllTimeTablesBetweenDates(LocalDate date, LocalTime timeFrom,
+			LocalTime timeTo, int teacherId, int courseId, int groupId, int classRoomId) {
+		TimeTable timeTable = new TimeTable();
+		List<TimeTable> expectedTimeTableList = new ArrayList<>();
 
+		for (int i = 0; i < 3; i++) {
+			timeTable = timeTableBuilder.saveTimeTable(date.plusDays(i), timeFrom, timeTo, teacherId++, courseId++,
+					groupId++, classRoomId++);
+			expectedTimeTableList.add(timeTable);
+		}
+
+		Assertions.assertEquals(expectedTimeTableList, timeTableService.getAllTimeTablesByDate(date, date.plusDays(2)));
 	}
 
 }
