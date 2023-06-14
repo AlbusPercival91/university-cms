@@ -17,21 +17,13 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
-import ua.foxminded.university.dao.entities.ClassRoom;
-import ua.foxminded.university.dao.entities.Course;
-import ua.foxminded.university.dao.entities.Group;
 import ua.foxminded.university.dao.entities.Student;
-import ua.foxminded.university.dao.entities.Teacher;
 import ua.foxminded.university.dao.entities.TimeTable;
-import ua.foxminded.university.dao.interfaces.ClassRoomRepository;
-import ua.foxminded.university.dao.interfaces.CourseRepository;
-import ua.foxminded.university.dao.interfaces.GroupRepository;
 import ua.foxminded.university.dao.interfaces.StudentRepository;
-import ua.foxminded.university.dao.interfaces.TeacherRepository;
 import ua.foxminded.university.dao.interfaces.TimeTableRepository;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
-		TimeTableService.class }))
+		TimeTableService.class, TimeTableBuilder.class }))
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ActiveProfiles("test-container")
 @Sql(scripts = { "/drop_data.sql", "/init_tables.sql",
@@ -46,35 +38,20 @@ class TimeTableServiceTest {
 	private TimeTableRepository timeTableRepository;
 
 	@Autowired
-	private CourseRepository courseRepository;
-
-	@Autowired
-	private TeacherRepository teacherRepository;
+	private TimeTableBuilder timeTableBuilder;
 
 	@Autowired
 	private StudentRepository studentRepository;
-
-	@Autowired
-	private GroupRepository groupRepository;
-
-	@Autowired
-	private ClassRoomRepository classRoomRepository;
 
 	@ParameterizedTest
 	@CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 1, 1", "2023-09-01, 12:00, 13:30, 2, 2, 2, 2",
 			"2023-09-02, 09:00, 10:30, 3, 3, 3, 3", "2023-09-02, 12:00, 13:30, 1, 1, 2, 3" })
 	void testCreateTimeTable_ShouldSaveTimeTableToDatabase(LocalDate date, LocalTime timeFrom, LocalTime timeTo,
 			int teacherId, int courseId, int groupId, int classRoomId) {
-		Optional<Teacher> teacher = teacherRepository.findById(teacherId);
-		Optional<Course> course = courseRepository.findById(courseId);
-		Optional<Group> group = groupRepository.findById(groupId);
-		Optional<ClassRoom> classRoom = classRoomRepository.findById(classRoomId);
-		TimeTable expectedTimeTable = new TimeTable(date, timeFrom, timeTo, teacher.get(), course.get(), group.get(),
-				classRoom.get());
-		expectedTimeTable.setId(1);
+		TimeTable timeTable = timeTableBuilder.saveTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId,
+				classRoomId);
 
-		Assertions.assertEquals(expectedTimeTable, timeTableService.createTimeTable(date, timeFrom, timeTo,
-				teacher.get(), course.get(), group.get(), classRoom.get()));
+		Assertions.assertEquals(timeTableRepository.findById(1).get(), timeTable);
 	}
 
 	@ParameterizedTest
@@ -82,18 +59,12 @@ class TimeTableServiceTest {
 			"2023-09-02, 09:00, 10:30, 3, 3, 3, 3", "2023-09-02, 12:00, 13:30, 1, 1, 2, 3" })
 	void testGetTeacherTimeTable_ShouldReturnTeacherTimeTable(LocalDate date, LocalTime timeFrom, LocalTime timeTo,
 			int teacherId, int courseId, int groupId, int classRoomId) {
-		Optional<Teacher> teacher = teacherRepository.findById(teacherId);
-		Optional<Course> course = courseRepository.findById(courseId);
-		Optional<Group> group = groupRepository.findById(groupId);
-		Optional<ClassRoom> classRoom = classRoomRepository.findById(classRoomId);
-		TimeTable expectedTimeTable = new TimeTable(date, timeFrom, timeTo, teacher.get(), course.get(), group.get(),
-				classRoom.get());
-		expectedTimeTable.setId(1);
-		List<TimeTable> expectedTimeTableList = new ArrayList<TimeTable>();
-		expectedTimeTableList.add(expectedTimeTable);
-		timeTableRepository.save(expectedTimeTable);
+		List<TimeTable> expectedTimeTableList = new ArrayList<>();
+		TimeTable timeTable = timeTableBuilder.saveTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId,
+				classRoomId);
+		expectedTimeTableList.add(timeTable);
 
-		Assertions.assertEquals(expectedTimeTableList, timeTableService.getTeacherTimeTable(teacher.get()));
+		Assertions.assertEquals(expectedTimeTableList, timeTableService.getTeacherTimeTable(timeTable.getTeacher()));
 	}
 
 	@ParameterizedTest
@@ -101,61 +72,50 @@ class TimeTableServiceTest {
 			"2023-09-02, 09:00, 10:30, 3, 3, 3, 3, 3", "2023-09-02, 12:00, 13:30, 1, 1, 3, 1, 3" })
 	void testGetStudentTimeTable_ShouldReturnSameTimeTableForStudentAndHisGroup(LocalDate date, LocalTime timeFrom,
 			LocalTime timeTo, int teacherId, int courseId, int groupId, int classRoomId, int studentId) {
-		Optional<Teacher> teacher = teacherRepository.findById(teacherId);
-		Optional<Course> course = courseRepository.findById(courseId);
-		Optional<Group> group = groupRepository.findById(groupId);
-		Optional<ClassRoom> classRoom = classRoomRepository.findById(classRoomId);
 		Optional<Student> student = studentRepository.findById(studentId);
-		TimeTable expectedTimeTable = new TimeTable(date, timeFrom, timeTo, teacher.get(), course.get(), group.get(),
-				classRoom.get());
-		expectedTimeTable.setId(1);
-		timeTableRepository.save(expectedTimeTable);
+		TimeTable timeTable = timeTableBuilder.saveTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId,
+				classRoomId);
 
-		Assertions.assertEquals(timeTableService.getGroupTimeTable(group.get()),
+		Assertions.assertEquals(timeTableService.getGroupTimeTable(timeTable.getGroup()),
 				timeTableService.getStudentTimeTable(student.get()));
 	}
 
 	@ParameterizedTest
-	@CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 1, 1", "2023-09-01, 12:00, 13:30, 2, 2, 2, 2",
-			"2023-09-02, 09:00, 10:30, 3, 3, 3, 3", "2023-09-02, 12:00, 13:30, 1, 1, 3, 1" })
+	@CsvSource({ "2023-09-01, 09:00, 10:00, 1, 1, 1, 1" })
 	void testGetTeacherTimeTableByDate_ShouldReturnTeacherTimeTable(LocalDate date, LocalTime timeFrom,
 			LocalTime timeTo, int teacherId, int courseId, int groupId, int classRoomId) {
-		Optional<Teacher> teacher = teacherRepository.findById(teacherId);
-		Optional<Course> course = courseRepository.findById(courseId);
-		Optional<Group> group = groupRepository.findById(groupId);
-		Optional<ClassRoom> classRoom = classRoomRepository.findById(classRoomId);
-		TimeTable expectedTimeTable = new TimeTable(date, timeFrom, timeTo, teacher.get(), course.get(), group.get(),
-				classRoom.get());
-		expectedTimeTable.setId(1);
-		List<TimeTable> expectedTimeTableList = new ArrayList<TimeTable>();
-		expectedTimeTableList.add(expectedTimeTable);
-		timeTableRepository.save(expectedTimeTable);
+		TimeTable timeTable = new TimeTable();
+		List<TimeTable> expectedTimeTableList = new ArrayList<>();
+
+		for (int i = 0; i < 3; i++) {
+			timeTable = timeTableBuilder.saveTimeTable(date, timeFrom.plusHours(i), timeTo.plusHours(i), teacherId,
+					courseId, groupId++, classRoomId++);
+			expectedTimeTableList.add(timeTable);
+		}
 
 		Assertions.assertEquals(expectedTimeTableList,
-				timeTableService.getTeacherTimeTableByDate(date, date.plusDays(1), teacher.get()));
+				timeTableService.getTeacherTimeTableByDate(date, date, timeTable.getTeacher()));
 	}
 
 	@ParameterizedTest
-	@CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 1, 1, 1", "2023-09-01, 12:00, 13:30, 2, 2, 2, 2, 2",
-			"2023-09-02, 09:00, 10:30, 3, 3, 3, 3, 3", "2023-09-02, 12:00, 13:30, 1, 1, 3, 1, 3" })
+	@CsvSource({ "2023-09-01, 09:00, 10:00, 1, 1, 1, 1, 1" })
 	void testGetStudentTimeTableByDate_ShouldReturnSameTimeTableForStudentAndHisGroup(LocalDate date,
 			LocalTime timeFrom, LocalTime timeTo, int teacherId, int courseId, int groupId, int classRoomId,
 			int studentId) {
-		Optional<Teacher> teacher = teacherRepository.findById(teacherId);
-		Optional<Course> course = courseRepository.findById(courseId);
-		Optional<Group> group = groupRepository.findById(groupId);
-		Optional<ClassRoom> classRoom = classRoomRepository.findById(classRoomId);
+		TimeTable timeTable = new TimeTable();
 		Optional<Student> student = studentRepository.findById(studentId);
-		TimeTable expectedTimeTable = new TimeTable(date, timeFrom, timeTo, teacher.get(), course.get(), group.get(),
-				classRoom.get());
-		expectedTimeTable.setId(1);
-		timeTableRepository.save(expectedTimeTable);
 
-		Assertions.assertEquals(timeTableService.getGroupTimeTableByDate(date, date.plusDays(1), group.get()),
-				timeTableService.getStudentTimeTableByDate(date, date.plusDays(1), student.get()));
+		for (int i = 0; i < 3; i++) {
+			timeTable = timeTableBuilder.saveTimeTable(date, timeFrom.plusHours(i), timeTo.plusHours(i), teacherId++,
+					courseId++, groupId, classRoomId++);
+		}
+
+		Assertions.assertEquals(timeTableService.getGroupTimeTableByDate(date, date, timeTable.getGroup()),
+				timeTableService.getStudentTimeTableByDate(date, date, student.get()));
 	}
 
 	void testGetAllTimeTablesByDate_ShouldReturnAllTimeTablesForDate(LocalDate dateFrom, LocalDate dateTo) {
 
 	}
+
 }
