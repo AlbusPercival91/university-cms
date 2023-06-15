@@ -47,7 +47,7 @@ public class TimeTable {
 	private Teacher teacher;
 
 	@ManyToMany
-	@JoinTable(name = "student_timetable", joinColumns = @JoinColumn(name = "timetable_id"), inverseJoinColumns = @JoinColumn(name = "student_id"))
+	@JoinTable(schema = "university", name = "student_timetable", joinColumns = @JoinColumn(name = "timetable_id"), inverseJoinColumns = @JoinColumn(name = "student_id"))
 	private Set<Student> students;
 
 	@ManyToOne
