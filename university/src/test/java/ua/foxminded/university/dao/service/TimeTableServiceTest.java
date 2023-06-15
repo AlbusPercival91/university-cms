@@ -85,25 +85,26 @@ class TimeTableServiceTest {
 	@ParameterizedTest
 	@CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 1, 1, 1", "2023-09-01, 12:00, 13:30, 2, 2, 2, 2, 2",
 			"2023-09-02, 09:00, 10:30, 3, 3, 3, 3, 3", "2023-09-02, 12:00, 13:30, 1, 1, 3, 1, 3" })
-	void testGetStudentTimeTable_ShouldReturnSameTimeTableForStudentAndHisGroup(LocalDate date, LocalTime timeFrom,
-			LocalTime timeTo, int teacherId, int courseId, int groupId, int classRoomId, int studentId) {
+	void testGetStudentsGroupTimeTable_ShouldReturnSameTimeTableForStudentAndHisGroup(LocalDate date,
+			LocalTime timeFrom, LocalTime timeTo, int teacherId, int courseId, int groupId, int classRoomId,
+			int studentId) {
 		Optional<Student> student = studentRepository.findById(studentId);
 		TimeTable timeTable = timeTableBuilder.saveTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId,
 				classRoomId);
 
 		Assertions.assertEquals(timeTableService.getGroupTimeTable(timeTable.getGroup()),
-				timeTableService.getStudentTimeTable(student.get()));
+				timeTableService.getStudentsGroupTimeTable(student.get()));
 	}
 
 	@ParameterizedTest
 	@CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 1, 1 " })
-	void testGetStudentTimeTable_WhenStudentNotFound_ShouldThrowNoSuchElementException(LocalDate date,
+	void testGetStudentsGroupTimeTable_WhenStudentNotFound_ShouldThrowNoSuchElementException(LocalDate date,
 			LocalTime timeFrom, LocalTime timeTo, int teacherId, int courseId, int groupId, int classRoomId) {
 		timeTableBuilder.saveTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId, classRoomId);
 		Student fakeStudent = new Student("Kevin", "Kell", true, "faketeacher@fakemail.com", "1234", null);
 
 		Exception noSuchElementException = assertThrows(Exception.class,
-				() -> timeTableService.getStudentTimeTable(fakeStudent));
+				() -> timeTableService.getStudentsGroupTimeTable(fakeStudent));
 		Assertions.assertEquals("Student not found", noSuchElementException.getMessage());
 	}
 
@@ -150,7 +151,7 @@ class TimeTableServiceTest {
 
 	@ParameterizedTest
 	@CsvSource({ "2023-09-01, 09:00, 10:00, 1, 1, 1, 1, 1" })
-	void testGetStudentTimeTableByDate_ShouldReturnSameTimeTableForStudentAndHisGroup(LocalDate date,
+	void testGetStudentsGroupTimeTableByDate_ShouldReturnSameTimeTableForStudentAndHisGroup(LocalDate date,
 			LocalTime timeFrom, LocalTime timeTo, int teacherId, int courseId, int groupId, int classRoomId,
 			int studentId) {
 		TimeTable timeTable = new TimeTable();
@@ -162,18 +163,18 @@ class TimeTableServiceTest {
 		}
 
 		Assertions.assertEquals(timeTableService.getGroupTimeTableByDate(date, date, timeTable.getGroup()),
-				timeTableService.getStudentTimeTableByDate(date, date, student.get()));
+				timeTableService.getStudentsGroupTimeTableByDate(date, date, student.get()));
 	}
 
 	@ParameterizedTest
 	@CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 1, 1 " })
-	void testGetStudentTimeTableByDate_WhenStudentNotFound_ShouldThrowNoSuchElementException(LocalDate date,
+	void testGetStudentsGroupTimeTableByDate_WhenStudentNotFound_ShouldThrowNoSuchElementException(LocalDate date,
 			LocalTime timeFrom, LocalTime timeTo, int teacherId, int courseId, int groupId, int classRoomId) {
 		timeTableBuilder.saveTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId, classRoomId);
 		Student fakeStudent = new Student("Kevin", "Kell", true, "faketeacher@fakemail.com", "1234", null);
 
 		Exception noSuchElementException = assertThrows(Exception.class,
-				() -> timeTableService.getStudentTimeTableByDate(date, date, fakeStudent));
+				() -> timeTableService.getStudentsGroupTimeTableByDate(date, date, fakeStudent));
 		Assertions.assertEquals("Student not found", noSuchElementException.getMessage());
 	}
 

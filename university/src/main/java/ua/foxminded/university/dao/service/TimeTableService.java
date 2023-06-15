@@ -47,7 +47,7 @@ public class TimeTableService {
 		return timeTableRepository.findByTeacher(existingTeacher);
 	}
 
-	public List<TimeTable> getStudentTimeTable(Student student) {
+	public List<TimeTable> getStudentsGroupTimeTable(Student student) {
 		Student existingStudent = studentRepository.findById(student.getId()).orElseThrow(() -> {
 			log.warn("Student with id {} not found", student.getId());
 			return new NoSuchElementException("Student not found");
@@ -71,7 +71,7 @@ public class TimeTableService {
 		return timeTableRepository.findByDateAndTeacher(dateFrom, dateTo, existingTeacher);
 	}
 
-	public List<TimeTable> getStudentTimeTableByDate(LocalDate dateFrom, LocalDate dateTo, Student student) {
+	public List<TimeTable> getStudentsGroupTimeTableByDate(LocalDate dateFrom, LocalDate dateTo, Student student) {
 		Student existingStudent = studentRepository.findById(student.getId()).orElseThrow(() -> {
 			log.warn("Student with id {} not found", student.getId());
 			return new NoSuchElementException("Student not found");
