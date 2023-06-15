@@ -249,7 +249,7 @@ class TimeTableServiceTest {
 	@ParameterizedTest
 	@CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 1, 1", "2023-09-01, 12:00, 13:30, 2, 2, 2, 2",
 			"2023-09-02, 09:00, 10:30, 3, 3, 3, 3", "2023-09-02, 12:00, 13:30, 1, 1, 2, 3" })
-	void testDeleteTimeTabletById_ShouldReturnDeletedTimeTableId(LocalDate date, LocalTime timeFrom, LocalTime timeTo,
+	void testDeleteTimeTabletById_ShouldReturnTimeTableId(LocalDate date, LocalTime timeFrom, LocalTime timeTo,
 			int teacherId, int courseId, int groupId, int classRoomId) {
 		TimeTable timeTable = timeTableBuilder.saveTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId,
 				classRoomId);
