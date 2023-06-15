@@ -16,6 +16,8 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
+import ua.foxminded.university.dao.entities.Student;
+import ua.foxminded.university.dao.entities.TimeTable;
 import ua.foxminded.university.dao.interfaces.StudentRepository;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
@@ -45,4 +47,24 @@ class StudentServiceTest {
 		Exception noSuchElementException = assertThrows(Exception.class, () -> studentService.deleteStudentById(4));
 		Assertions.assertEquals("Student not found", noSuchElementException.getMessage());
 	}
+
+	@ParameterizedTest
+	@CsvSource({ "1", "2", "3" })
+	void testUpdateStudentById_ShouldReturnUpdatedStudent(int studentId) {
+		Student expectedStudent = new Student("John", "Connor", false, "johnconnor@fakemail.com", "1234", null);
+		expectedStudent.setId(studentId);
+
+		Assertions.assertEquals(expectedStudent, studentService.updateStudentById(studentId, expectedStudent));
+	}
+
+	@Test
+	void testUpdateStudentById_WhenIdNotFound_ShouldThrowNoSuchElementException() {
+		Student expectedStudent = new Student("John", "Connor", false, "johnconnor@fakemail.com", "1234", null);
+		expectedStudent.setId(1);
+
+		Exception noSuchElementException = assertThrows(Exception.class,
+				() -> studentService.updateStudentById(4, expectedStudent));
+		Assertions.assertEquals("Student not found", noSuchElementException.getMessage());
+	}
+
 }
