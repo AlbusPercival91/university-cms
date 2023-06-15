@@ -1,7 +1,6 @@
 package ua.foxminded.university.dao.service;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -15,9 +14,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
-
 import ua.foxminded.university.dao.entities.Student;
-import ua.foxminded.university.dao.entities.TimeTable;
 import ua.foxminded.university.dao.interfaces.StudentRepository;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
