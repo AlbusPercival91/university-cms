@@ -9,6 +9,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -33,6 +34,10 @@ public class Student extends Person {
 	@ManyToMany(cascade = { CascadeType.PERSIST }, fetch = FetchType.LAZY)
 	@JoinTable(schema = "university", name = "students_courses", joinColumns = @JoinColumn(name = "student_id"), inverseJoinColumns = @JoinColumn(name = "course_id"))
 	private Set<Course> studentsCourses = new HashSet<>();
+
+	@ToString.Exclude
+	@OneToMany(mappedBy = "students")
+	private Set<TimeTable> timeTables;
 
 	public Student(String firstName, String lastName, boolean isActive, String email, String password, Group group) {
 		super(firstName, lastName, isActive, email, password);
