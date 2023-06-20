@@ -49,4 +49,21 @@ public class StudentService {
 	public List<Student> getAllStudents() {
 		return studentRepository.findAll();
 	}
+
+	public int addStudentToTheCourse(Integer studentId, String courseName) {
+		int result = studentRepository.addStudentToTheCourse(studentId, courseName);
+
+		if (result != 1) {
+			throw new IllegalStateException("Something went wrong!");
+		}
+		return result;
+	}
+
+	public int removeStudentFromCourse(Integer studentId, String courseName) {
+		return studentRepository.removeStudentFromCourse(studentId, courseName);
+	}
+
+	public List<Student> findStudentsRelatedToCourse(String courseName) {
+		return studentRepository.findStudentsRelatedToCourse(courseName);
+	}
 }
