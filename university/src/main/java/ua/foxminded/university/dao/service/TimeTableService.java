@@ -39,15 +39,21 @@ public class TimeTableService {
 		return timeTableRepository.save(timeTable);
 	}
 
-	public TimeTable createTimeTableForStudentsInCourse(LocalDate date, LocalTime timeFrom, LocalTime timeTo,
+	public TimeTable createTimeTableForStudentsAtCourse(LocalDate date, LocalTime timeFrom, LocalTime timeTo,
 			Teacher teacher, Course course, ClassRoom classRoom) {
 		List<Student> studentsRelatedToCourse = studentRepository.findStudentsRelatedToCourse(course.getCourseName());
-		TimeTable timeTable = new TimeTable(date, timeFrom, timeTo, teacher, course, classRoom,
-				studentsRelatedToCourse);
 
-		log.info("Timetable [date::{}, time from::{}, time to::{}] is scheduled successfully.", timeTable.getDate(),
-				timeTable.getTimeFrom(), timeTable.getTimeTo());
-		return timeTableRepository.save(timeTable);
+		if (!studentsRelatedToCourse.isEmpty()) {
+			TimeTable timeTable = new TimeTable(date, timeFrom, timeTo, teacher, course, classRoom,
+					studentsRelatedToCourse);
+			log.info("Timetable [date::{}, time from::{}, time to::{}] is scheduled successfully.", timeTable.getDate(),
+					timeTable.getTimeFrom(), timeTable.getTimeTo());
+			return timeTableRepository.save(timeTable);
+		} else {
+			log.warn("Students assigned to course {} not found", course.getCourseName());
+			throw new NoSuchElementException("Students at this course not found");
+		}
+
 	}
 
 	public List<TimeTable> getTeacherTimeTable(Teacher teacher) {

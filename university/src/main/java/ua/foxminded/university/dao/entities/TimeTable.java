@@ -47,6 +47,7 @@ public class TimeTable {
 	@JoinColumn(name = "teacher_id")
 	private Teacher teacher;
 
+	@ToString.Exclude
 	@ManyToOne
 	@JoinColumn(name = "course_id")
 	private Course course;

@@ -60,15 +60,28 @@ class TimeTableServiceTest {
 	@ParameterizedTest
 	@CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 1", "2023-09-01, 12:00, 13:30, 2, 2, 2",
 			"2023-09-02, 09:00, 10:30, 3, 3, 3", "2023-09-02, 12:00, 13:30, 1, 1, 2" })
-	void testCreateTimeTableForStudentsInCourse_ShouldSaveTimeTableToDatabase(LocalDate date, LocalTime timeFrom,
+	void testCreateTimeTableForStudentsAtCourse_ShouldSaveTimeTableToDatabase(LocalDate date, LocalTime timeFrom,
 			LocalTime timeTo, int teacherId, int courseId, int classRoomId) {
 		studentRepository.addStudentToTheCourse(1, "Mathematics");
 		studentRepository.addStudentToTheCourse(2, "Mathematics");
+		studentRepository.addStudentToTheCourse(3, "Physics");
+		studentRepository.addStudentToTheCourse(1, "Chemistry");
 
-		TimeTable timeTable = timeTableBuilder.saveTimeTableForStudentsInCourse(date, timeFrom, timeTo, teacherId,
+		TimeTable timeTable = timeTableBuilder.saveTimeTableForStudentsAtCourse(date, timeFrom, timeTo, teacherId,
 				courseId, classRoomId);
-//		timeTableRepository.findById(1).get()
-		Assertions.assertEquals("", timeTable);
+
+		Assertions.assertEquals(timeTableRepository.findById(1).get(), timeTable);
+	}
+
+	@ParameterizedTest
+	@CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 1", "2023-09-01, 12:00, 13:30, 2, 2, 2",
+			"2023-09-02, 09:00, 10:30, 3, 3, 3", "2023-09-02, 12:00, 13:30, 1, 1, 2" })
+	void testCreateTimeTableForStudentsAtCourse_WhenStudentsNotFound_ShouldThrowNoSuchElementException(LocalDate date,
+			LocalTime timeFrom, LocalTime timeTo, int teacherId, int courseId, int classRoomId) {
+
+		Exception noSuchElementException = assertThrows(Exception.class, () -> timeTableBuilder
+				.saveTimeTableForStudentsAtCourse(date, timeFrom, timeTo, teacherId, courseId, classRoomId));
+		Assertions.assertEquals("Students at this course not found", noSuchElementException.getMessage());
 	}
 
 	@ParameterizedTest

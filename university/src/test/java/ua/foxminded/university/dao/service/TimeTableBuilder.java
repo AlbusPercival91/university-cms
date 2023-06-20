@@ -44,13 +44,13 @@ public class TimeTableBuilder {
 				classRoom.get());
 	}
 
-	public TimeTable saveTimeTableForStudentsInCourse(LocalDate date, LocalTime timeFrom, LocalTime timeTo,
+	public TimeTable saveTimeTableForStudentsAtCourse(LocalDate date, LocalTime timeFrom, LocalTime timeTo,
 			int teacherId, int courseId, int classRoomId) {
 		Optional<Teacher> teacher = teacherRepository.findById(teacherId);
 		Optional<Course> course = courseRepository.findById(courseId);
 		Optional<ClassRoom> classRoom = classRoomRepository.findById(classRoomId);
 
-		return timeTableService.createTimeTableForStudentsInCourse(date, timeFrom, timeTo, teacher.get(), course.get(),
+		return timeTableService.createTimeTableForStudentsAtCourse(date, timeFrom, timeTo, teacher.get(), course.get(),
 				classRoom.get());
 	}
 }
