@@ -35,7 +35,7 @@ public class TimeTableService {
 			Course course, Group group, ClassRoom classRoom) {
 		TimeTable timeTable = new TimeTable(date, timeFrom, timeTo, teacher, course, group, classRoom);
 		log.info("Timetable [date::{}, time start::{}, time end::{}] is scheduled successfully.", timeTable.getDate(),
-				timeTable.getTimeStart(), timeTable.getTimeEnd());
+				timeTable.getTimeFrom(), timeTable.getTimeTo());
 		return timeTableRepository.save(timeTable);
 	}
 

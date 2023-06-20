@@ -38,10 +38,10 @@ public class TimeTable {
 	private LocalDate date;
 
 	@Column(name = "time_start")
-	private LocalTime timeStart;
+	private LocalTime timeFrom;
 
 	@Column(name = "time_end")
-	private LocalTime timeEnd;
+	private LocalTime timeTo;
 
 	@ManyToOne
 	@JoinColumn(name = "teacher_id")
@@ -62,22 +62,22 @@ public class TimeTable {
 	@Transient
 	private List<Student> studentsRelatedToCourse;
 
-	public TimeTable(LocalDate date, LocalTime timeStart, LocalTime timeEnd, Teacher teacher, Course course,
+	public TimeTable(LocalDate date, LocalTime timeFrom, LocalTime timeTo, Teacher teacher, Course course,
 			ClassRoom classRoom, List<Student> studentsRelatedToCourse) {
 		this.date = date;
-		this.timeStart = timeStart;
-		this.timeEnd = timeEnd;
+		this.timeFrom = timeFrom;
+		this.timeTo = timeTo;
 		this.teacher = teacher;
 		this.course = course;
 		this.classRoom = classRoom;
 		this.studentsRelatedToCourse = studentsRelatedToCourse;
 	}
 
-	public TimeTable(LocalDate date, LocalTime timeStart, LocalTime timeEnd, Teacher teacher, Course course,
-			Group group, ClassRoom classRoom) {
+	public TimeTable(LocalDate date, LocalTime timeFrom, LocalTime timeTo, Teacher teacher, Course course, Group group,
+			ClassRoom classRoom) {
 		this.date = date;
-		this.timeStart = timeStart;
-		this.timeEnd = timeEnd;
+		this.timeFrom = timeFrom;
+		this.timeTo = timeTo;
 		this.teacher = teacher;
 		this.course = course;
 		this.group = group;
