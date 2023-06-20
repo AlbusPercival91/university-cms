@@ -64,4 +64,16 @@ class StudentServiceTest {
 		Assertions.assertEquals("Student not found", noSuchElementException.getMessage());
 	}
 
+	@ParameterizedTest
+	@CsvSource({ "1, Chemistry", "2, Chemistry", "3, Physics", "2, Physics" })
+	void testFindStudentsRelatedToCourse_ShouldReturnListOfStudentsAddedToCourse(int studentId, String courseName) {
+		int studentsAdded = studentService.addStudentToTheCourse(studentId, courseName);
+		Assertions.assertEquals(1, studentsAdded);
+		Assertions.assertEquals(1, studentService.findStudentsRelatedToCourse(courseName).size());
+
+		int studentsRemoved = studentService.removeStudentFromCourse(studentId, courseName);
+		Assertions.assertEquals(1, studentsRemoved);
+		Assertions.assertTrue(studentService.findStudentsRelatedToCourse(courseName).isEmpty());
+	}
+
 }
