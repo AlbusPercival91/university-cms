@@ -2,6 +2,8 @@ package ua.foxminded.university.dao.entities;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -55,6 +59,20 @@ public class TimeTable {
 	@JoinColumn(name = "classroom_id")
 	private ClassRoom classRoom;
 
+	@Transient
+	private List<Student> studentsRelatedToCourse;
+
+	public TimeTable(LocalDate date, LocalTime timeStart, LocalTime timeEnd, Teacher teacher, Course course,
+			ClassRoom classRoom, List<Student> studentsRelatedToCourse) {
+		this.date = date;
+		this.timeStart = timeStart;
+		this.timeEnd = timeEnd;
+		this.teacher = teacher;
+		this.course = course;
+		this.classRoom = classRoom;
+		this.studentsRelatedToCourse = studentsRelatedToCourse;
+	}
+
 	public TimeTable(LocalDate date, LocalTime timeStart, LocalTime timeEnd, Teacher teacher, Course course,
 			Group group, ClassRoom classRoom) {
 		this.date = date;
@@ -65,4 +83,5 @@ public class TimeTable {
 		this.group = group;
 		this.classRoom = classRoom;
 	}
+
 }
