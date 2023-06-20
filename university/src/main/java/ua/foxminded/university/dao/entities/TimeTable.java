@@ -2,17 +2,13 @@ package ua.foxminded.university.dao.entities;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -58,9 +54,6 @@ public class TimeTable {
 	@ManyToOne
 	@JoinColumn(name = "classroom_id")
 	private ClassRoom classRoom;
-
-	@OneToMany(mappedBy = "timetable")
-	private Set<StudentsCourses> studentsCourses;
 
 	public TimeTable(LocalDate date, LocalTime timeStart, LocalTime timeEnd, Teacher teacher, Course course,
 			Group group, ClassRoom classRoom) {
