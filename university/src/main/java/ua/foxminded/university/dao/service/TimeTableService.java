@@ -31,9 +31,20 @@ public class TimeTableService {
 	private final TeacherRepository teacherRepository;
 	private final GroupRepository groupRepository;
 
-	public TimeTable createTimeTable(LocalDate date, LocalTime timeFrom, LocalTime timeTo, Teacher teacher,
+	public TimeTable createGroupTimeTable(LocalDate date, LocalTime timeFrom, LocalTime timeTo, Teacher teacher,
 			Course course, Group group, ClassRoom classRoom) {
 		TimeTable timeTable = new TimeTable(date, timeFrom, timeTo, teacher, course, group, classRoom);
+		log.info("Timetable [date::{}, time from::{}, time to::{}] is scheduled successfully.", timeTable.getDate(),
+				timeTable.getTimeFrom(), timeTable.getTimeTo());
+		return timeTableRepository.save(timeTable);
+	}
+
+	public TimeTable createTimeTableForStudentsInCourse(LocalDate date, LocalTime timeFrom, LocalTime timeTo,
+			Teacher teacher, Course course, ClassRoom classRoom) {
+		List<Student> studentsRelatedToCourse = studentRepository.findStudentsRelatedToCourse(course.getCourseName());
+		TimeTable timeTable = new TimeTable(date, timeFrom, timeTo, teacher, course, classRoom,
+				studentsRelatedToCourse);
+
 		log.info("Timetable [date::{}, time from::{}, time to::{}] is scheduled successfully.", timeTable.getDate(),
 				timeTable.getTimeFrom(), timeTable.getTimeTo());
 		return timeTableRepository.save(timeTable);

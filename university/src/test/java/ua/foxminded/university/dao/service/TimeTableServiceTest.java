@@ -49,12 +49,26 @@ class TimeTableServiceTest {
 	@ParameterizedTest
 	@CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 1, 1", "2023-09-01, 12:00, 13:30, 2, 2, 2, 2",
 			"2023-09-02, 09:00, 10:30, 3, 3, 3, 3", "2023-09-02, 12:00, 13:30, 1, 1, 2, 3" })
-	void testCreateTimeTable_ShouldSaveTimeTableToDatabase(LocalDate date, LocalTime timeFrom, LocalTime timeTo,
+	void testCreateGroupTimeTable_ShouldSaveTimeTableToDatabase(LocalDate date, LocalTime timeFrom, LocalTime timeTo,
 			int teacherId, int courseId, int groupId, int classRoomId) {
-		TimeTable timeTable = timeTableBuilder.saveTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId,
+		TimeTable timeTable = timeTableBuilder.saveGroupTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId,
 				classRoomId);
 
 		Assertions.assertEquals(timeTableRepository.findById(1).get(), timeTable);
+	}
+
+	@ParameterizedTest
+	@CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 1", "2023-09-01, 12:00, 13:30, 2, 2, 2",
+			"2023-09-02, 09:00, 10:30, 3, 3, 3", "2023-09-02, 12:00, 13:30, 1, 1, 2" })
+	void testCreateTimeTableForStudentsInCourse_ShouldSaveTimeTableToDatabase(LocalDate date, LocalTime timeFrom,
+			LocalTime timeTo, int teacherId, int courseId, int classRoomId) {
+		studentRepository.addStudentToTheCourse(1, "Mathematics");
+		studentRepository.addStudentToTheCourse(2, "Mathematics");
+
+		TimeTable timeTable = timeTableBuilder.saveTimeTableForStudentsInCourse(date, timeFrom, timeTo, teacherId,
+				courseId, classRoomId);
+//		timeTableRepository.findById(1).get()
+		Assertions.assertEquals("", timeTable);
 	}
 
 	@ParameterizedTest
@@ -63,7 +77,7 @@ class TimeTableServiceTest {
 	void testGetTeacherTimeTable_ShouldReturnTeacherTimeTable(LocalDate date, LocalTime timeFrom, LocalTime timeTo,
 			int teacherId, int courseId, int groupId, int classRoomId) {
 		List<TimeTable> expectedTimeTableList = new ArrayList<>();
-		TimeTable timeTable = timeTableBuilder.saveTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId,
+		TimeTable timeTable = timeTableBuilder.saveGroupTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId,
 				classRoomId);
 		expectedTimeTableList.add(timeTable);
 
@@ -74,7 +88,7 @@ class TimeTableServiceTest {
 	@CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 1, 1 " })
 	void testGetTeacherTimeTable_WhenTeacherNotFound_ShouldThrowNoSuchElementException(LocalDate date,
 			LocalTime timeFrom, LocalTime timeTo, int teacherId, int courseId, int groupId, int classRoomId) {
-		timeTableBuilder.saveTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId, classRoomId);
+		timeTableBuilder.saveGroupTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId, classRoomId);
 		Teacher fakeTeacher = new Teacher("Kevin", "Kell", false, "faketeacher@fakemail.com", "1234", null, null);
 
 		Exception noSuchElementException = assertThrows(Exception.class,
@@ -89,7 +103,7 @@ class TimeTableServiceTest {
 			LocalTime timeFrom, LocalTime timeTo, int teacherId, int courseId, int groupId, int classRoomId,
 			int studentId) {
 		Optional<Student> student = studentRepository.findById(studentId);
-		TimeTable timeTable = timeTableBuilder.saveTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId,
+		TimeTable timeTable = timeTableBuilder.saveGroupTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId,
 				classRoomId);
 
 		Assertions.assertEquals(timeTableService.getGroupTimeTable(timeTable.getGroup()),
@@ -100,7 +114,7 @@ class TimeTableServiceTest {
 	@CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 1, 1 " })
 	void testGetStudentsGroupTimeTable_WhenStudentNotFound_ShouldThrowNoSuchElementException(LocalDate date,
 			LocalTime timeFrom, LocalTime timeTo, int teacherId, int courseId, int groupId, int classRoomId) {
-		timeTableBuilder.saveTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId, classRoomId);
+		timeTableBuilder.saveGroupTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId, classRoomId);
 		Student fakeStudent = new Student("Kevin", "Kell", true, "faketeacher@fakemail.com", "1234", null);
 
 		Exception noSuchElementException = assertThrows(Exception.class,
@@ -112,7 +126,7 @@ class TimeTableServiceTest {
 	@CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 1, 1 " })
 	void testGetGroupTimeTable_WhenGroupNotFound_ShouldThrowNoSuchElementException(LocalDate date, LocalTime timeFrom,
 			LocalTime timeTo, int teacherId, int courseId, int groupId, int classRoomId) {
-		timeTableBuilder.saveTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId, classRoomId);
+		timeTableBuilder.saveGroupTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId, classRoomId);
 		Group fakeGroup = new Group("fake-01", null);
 
 		Exception noSuchElementException = assertThrows(Exception.class,
@@ -128,7 +142,7 @@ class TimeTableServiceTest {
 		List<TimeTable> expectedTimeTableList = new ArrayList<>();
 
 		for (int i = 0; i < 3; i++) {
-			timeTable = timeTableBuilder.saveTimeTable(date, timeFrom.plusHours(i), timeTo.plusHours(i), teacherId,
+			timeTable = timeTableBuilder.saveGroupTimeTable(date, timeFrom.plusHours(i), timeTo.plusHours(i), teacherId,
 					courseId, groupId++, classRoomId++);
 			expectedTimeTableList.add(timeTable);
 		}
@@ -141,7 +155,7 @@ class TimeTableServiceTest {
 	@CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 1, 1 " })
 	void testGetTeacherTimeTableByDate_WhenTeacherNotFound_ShouldThrowNoSuchElementException(LocalDate date,
 			LocalTime timeFrom, LocalTime timeTo, int teacherId, int courseId, int groupId, int classRoomId) {
-		timeTableBuilder.saveTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId, classRoomId);
+		timeTableBuilder.saveGroupTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId, classRoomId);
 		Teacher fakeTeacher = new Teacher("Kevin", "Kell", false, "faketeacher@fakemail.com", "1234", null, null);
 
 		Exception noSuchElementException = assertThrows(Exception.class,
@@ -158,8 +172,8 @@ class TimeTableServiceTest {
 		Optional<Student> student = studentRepository.findById(studentId);
 
 		for (int i = 0; i < 3; i++) {
-			timeTable = timeTableBuilder.saveTimeTable(date, timeFrom.plusHours(i), timeTo.plusHours(i), teacherId++,
-					courseId++, groupId, classRoomId++);
+			timeTable = timeTableBuilder.saveGroupTimeTable(date, timeFrom.plusHours(i), timeTo.plusHours(i),
+					teacherId++, courseId++, groupId, classRoomId++);
 		}
 
 		Assertions.assertEquals(timeTableService.getGroupTimeTableByDate(date, date, timeTable.getGroup()),
@@ -170,7 +184,7 @@ class TimeTableServiceTest {
 	@CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 1, 1 " })
 	void testGetStudentsGroupTimeTableByDate_WhenStudentNotFound_ShouldThrowNoSuchElementException(LocalDate date,
 			LocalTime timeFrom, LocalTime timeTo, int teacherId, int courseId, int groupId, int classRoomId) {
-		timeTableBuilder.saveTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId, classRoomId);
+		timeTableBuilder.saveGroupTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId, classRoomId);
 		Student fakeStudent = new Student("Kevin", "Kell", true, "faketeacher@fakemail.com", "1234", null);
 
 		Exception noSuchElementException = assertThrows(Exception.class,
@@ -182,7 +196,7 @@ class TimeTableServiceTest {
 	@CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 1, 1 " })
 	void testGetGroupTimeTableByDate_WhenGroupNotFound_ShouldThrowNoSuchElementException(LocalDate date,
 			LocalTime timeFrom, LocalTime timeTo, int teacherId, int courseId, int groupId, int classRoomId) {
-		timeTableBuilder.saveTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId, classRoomId);
+		timeTableBuilder.saveGroupTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId, classRoomId);
 		Group fakeGroup = new Group("fake-01", null);
 
 		Exception noSuchElementException = assertThrows(Exception.class,
@@ -198,7 +212,7 @@ class TimeTableServiceTest {
 		List<TimeTable> expectedTimeTableList = new ArrayList<>();
 
 		for (int i = 0; i < 3; i++) {
-			timeTable = timeTableBuilder.saveTimeTable(date.plusDays(i), timeFrom, timeTo, teacherId++, courseId++,
+			timeTable = timeTableBuilder.saveGroupTimeTable(date.plusDays(i), timeFrom, timeTo, teacherId++, courseId++,
 					groupId++, classRoomId++);
 			expectedTimeTableList.add(timeTable);
 		}
@@ -211,7 +225,7 @@ class TimeTableServiceTest {
 	void testGetAllTimeTablesByDate_WhenDatesNotExists_ShouldReturnEmptyList(LocalDate date, LocalTime timeFrom,
 			LocalTime timeTo, int teacherId, int courseId, int groupId, int classRoomId) {
 		for (int i = 0; i < 3; i++) {
-			timeTableBuilder.saveTimeTable(date.plusDays(i), timeFrom, timeTo, teacherId++, courseId++, groupId++,
+			timeTableBuilder.saveGroupTimeTable(date.plusDays(i), timeFrom, timeTo, teacherId++, courseId++, groupId++,
 					classRoomId++);
 		}
 
@@ -223,7 +237,7 @@ class TimeTableServiceTest {
 			"2023-09-02, 09:00, 10:30, 3, 3, 3, 3", "2023-09-02, 12:00, 13:30, 1, 1, 2, 3" })
 	void testUpdateTimeTabletById_ShouldReturnUpdatedTimeTable(LocalDate date, LocalTime timeFrom, LocalTime timeTo,
 			int teacherId, int courseId, int groupId, int classRoomId) {
-		TimeTable timeTable = timeTableBuilder.saveTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId,
+		TimeTable timeTable = timeTableBuilder.saveGroupTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId,
 				classRoomId);
 		TimeTable expectedTimeTable = new TimeTable(date.plusMonths(1), timeFrom.plusHours(1), timeTo.plusHours(1),
 				timeTable.getTeacher(), timeTable.getCourse(), timeTable.getGroup(), timeTable.getClassRoom());
@@ -236,7 +250,7 @@ class TimeTableServiceTest {
 	@CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 1, 1" })
 	void testUpdateTimeTabletById_WhenIdNotFound_ShouldThrowNoSuchElementException(LocalDate date, LocalTime timeFrom,
 			LocalTime timeTo, int teacherId, int courseId, int groupId, int classRoomId) {
-		TimeTable timeTable = timeTableBuilder.saveTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId,
+		TimeTable timeTable = timeTableBuilder.saveGroupTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId,
 				classRoomId);
 		TimeTable expectedTimeTable = new TimeTable(date.plusMonths(1), timeFrom.plusHours(1), timeTo.plusHours(1),
 				timeTable.getTeacher(), timeTable.getCourse(), timeTable.getGroup(), timeTable.getClassRoom());
@@ -252,7 +266,7 @@ class TimeTableServiceTest {
 			"2023-09-02, 09:00, 10:30, 3, 3, 3, 3", "2023-09-02, 12:00, 13:30, 1, 1, 2, 3" })
 	void testDeleteTimeTabletById_ShouldReturnTimeTableId(LocalDate date, LocalTime timeFrom, LocalTime timeTo,
 			int teacherId, int courseId, int groupId, int classRoomId) {
-		TimeTable timeTable = timeTableBuilder.saveTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId,
+		TimeTable timeTable = timeTableBuilder.saveGroupTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId,
 				classRoomId);
 
 		Assertions.assertEquals(timeTableRepository.findById(1).get(), timeTable);
@@ -264,9 +278,10 @@ class TimeTableServiceTest {
 	@CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 1, 1" })
 	void testDeleteTimeTabletById_WhenIdNotFound_ShouldThrowNoSuchElementException(LocalDate date, LocalTime timeFrom,
 			LocalTime timeTo, int teacherId, int courseId, int groupId, int classRoomId) {
-		timeTableBuilder.saveTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId, classRoomId);
+		timeTableBuilder.saveGroupTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId, classRoomId);
 
 		Exception noSuchElementException = assertThrows(Exception.class, () -> timeTableService.deleteTimeTableById(2));
 		Assertions.assertEquals("TimeTable not found", noSuchElementException.getMessage());
 	}
+
 }

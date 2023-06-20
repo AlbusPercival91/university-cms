@@ -33,14 +33,24 @@ public class TimeTableBuilder {
 	@Autowired
 	private ClassRoomRepository classRoomRepository;
 
-	public TimeTable saveTimeTable(LocalDate date, LocalTime timeFrom, LocalTime timeTo, int teacherId, int courseId,
-			int groupId, int classRoomId) {
+	public TimeTable saveGroupTimeTable(LocalDate date, LocalTime timeFrom, LocalTime timeTo, int teacherId,
+			int courseId, int groupId, int classRoomId) {
 		Optional<Teacher> teacher = teacherRepository.findById(teacherId);
 		Optional<Course> course = courseRepository.findById(courseId);
 		Optional<Group> group = groupRepository.findById(groupId);
 		Optional<ClassRoom> classRoom = classRoomRepository.findById(classRoomId);
 
-		return timeTableService.createTimeTable(date, timeFrom, timeTo, teacher.get(), course.get(), group.get(),
+		return timeTableService.createGroupTimeTable(date, timeFrom, timeTo, teacher.get(), course.get(), group.get(),
+				classRoom.get());
+	}
+
+	public TimeTable saveTimeTableForStudentsInCourse(LocalDate date, LocalTime timeFrom, LocalTime timeTo,
+			int teacherId, int courseId, int classRoomId) {
+		Optional<Teacher> teacher = teacherRepository.findById(teacherId);
+		Optional<Course> course = courseRepository.findById(courseId);
+		Optional<ClassRoom> classRoom = classRoomRepository.findById(classRoomId);
+
+		return timeTableService.createTimeTableForStudentsInCourse(date, timeFrom, timeTo, teacher.get(), course.get(),
 				classRoom.get());
 	}
 }
