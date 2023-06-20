@@ -82,12 +82,10 @@ CREATE TABLE IF NOT EXISTS university.timetable (
     time_start TIME NOT NULL,
     time_end TIME NOT NULL,
     teacher_id INT,
-    student_id INT,
     course_id INT,
     group_id INT,
     classroom_id INT,
     FOREIGN KEY (teacher_id) REFERENCES university.teachers (id),
-    FOREIGN KEY (student_id) REFERENCES university.students (id),
     FOREIGN KEY (course_id) REFERENCES university.courses (course_id),
     FOREIGN KEY (group_id) REFERENCES university.groups (group_id),
     FOREIGN KEY (classroom_id) REFERENCES university.classroom (classroom_id)
