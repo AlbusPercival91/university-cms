@@ -47,10 +47,6 @@ public class TimeTable {
 	@JoinColumn(name = "teacher_id")
 	private Teacher teacher;
 
-	@ManyToMany
-	@JoinTable(schema = "university", name = "student_timetable", joinColumns = @JoinColumn(name = "timetable_id"), inverseJoinColumns = @JoinColumn(name = "student_id"))
-	private Set<Student> students;
-
 	@ManyToOne
 	@JoinColumn(name = "course_id")
 	private Course course;
