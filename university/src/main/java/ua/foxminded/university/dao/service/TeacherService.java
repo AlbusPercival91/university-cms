@@ -61,6 +61,9 @@ public class TeacherService {
 	}
 
 	public int removeTeacherFromCourse(int teacherId, String courseName) {
+		if (teacherRepository.findTeachersRelatedToCourse(courseName).size() == 1) {
+			throw new IllegalStateException("Teacher must be assigned at least at one Course!");
+		}
 		return teacherRepository.removeTeacherFromCourse(teacherId, courseName);
 	}
 
