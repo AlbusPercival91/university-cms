@@ -1,7 +1,6 @@
 package ua.foxminded.university.dao.service;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
