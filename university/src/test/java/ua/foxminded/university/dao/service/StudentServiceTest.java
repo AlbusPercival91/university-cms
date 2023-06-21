@@ -1,6 +1,7 @@
 package ua.foxminded.university.dao.service;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -14,7 +15,9 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
+import ua.foxminded.university.dao.entities.Course;
 import ua.foxminded.university.dao.entities.Student;
+import ua.foxminded.university.dao.interfaces.CourseRepository;
 import ua.foxminded.university.dao.interfaces.StudentRepository;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
@@ -27,10 +30,13 @@ import ua.foxminded.university.dao.interfaces.StudentRepository;
 class StudentServiceTest {
 
 	@Autowired
+	private StudentService studentService;
+
+	@Autowired
 	private StudentRepository studentRepository;
 
 	@Autowired
-	private StudentService studentService;
+	private CourseRepository courseRepository;
 
 	@ParameterizedTest
 	@CsvSource({ "1", "2", "3" })
@@ -74,6 +80,15 @@ class StudentServiceTest {
 		int studentsRemoved = studentService.removeStudentFromCourse(studentId, courseName);
 		Assertions.assertEquals(1, studentsRemoved);
 		Assertions.assertTrue(studentService.findStudentsRelatedToCourse(courseName).isEmpty());
+	}
+
+	@Test
+	void testRemoveStudentFromCourse_WhenStudentIsNotRelatedToCourse_ShouldThrowIllegalStateException() {
+		Optional<Course> course = courseRepository.findById(1);
+
+		Exception illegalStateException = assertThrows(Exception.class,
+				() -> studentService.removeStudentFromCourse(1, course.get().getCourseName()));
+		Assertions.assertEquals("Student is not related with this Course!", illegalStateException.getMessage());
 	}
 
 }
