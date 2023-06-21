@@ -2,8 +2,9 @@ package ua.foxminded.university.dao.service;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -17,7 +18,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
-
 import ua.foxminded.university.dao.entities.Course;
 import ua.foxminded.university.dao.entities.Department;
 import ua.foxminded.university.dao.entities.Teacher;
@@ -81,13 +81,16 @@ class TeacherServiceTest {
 	@ParameterizedTest
 	@CsvSource({ "3, 3", "2, 2", "1, 1" })
 	void testFindTeachersRelatedToCourse_ShouldReturnListOfTeachersRelatdToCourse(int courseId, int departmentId) {
+		List<Teacher> expectedTeachersList = new ArrayList<>();
 		Optional<Course> course = courseRepository.findById(courseId);
 		Optional<Department> department = departmentRepository.findById(departmentId);
 		Teacher teacher = new Teacher("Albus", "Dumbledore", true, "albus@gmail.com", "1234", department.get(),
 				course.get());
-		teacherService.createTeacher(teacher);
+		expectedTeachersList.add(teacher);
+		teacherService.createAndAssignTeacherToCourse(teacher);
 
-		Assertions.assertEquals("", teacherService.findTeachersRelatedToCourse(course.get().getCourseName()));
+		Assertions.assertEquals(expectedTeachersList,
+				teacherService.findTeachersRelatedToCourse(course.get().getCourseName()));
 
 	}
 }

@@ -18,7 +18,7 @@ import ua.foxminded.university.dao.interfaces.TeacherRepository;
 public class TeacherService {
 	private final TeacherRepository teacherRepository;
 
-	public int createTeacher(Teacher teacher) {
+	public int createAndAssignTeacherToCourse(Teacher teacher) {
 		Teacher newTeacher = teacherRepository.save(teacher);
 		teacherRepository.addTeacherToTheCourse(teacher.getId(), teacher.getCourse().getCourseName());
 		log.info("Created teacher with id: {}", newTeacher.getId());
