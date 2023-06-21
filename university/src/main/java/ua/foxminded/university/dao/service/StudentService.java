@@ -66,7 +66,19 @@ public class StudentService {
 	}
 
 	public int removeStudentFromCourse(int studentId, String courseName) {
-		return studentRepository.removeStudentFromCourse(studentId, courseName);
+		Student existingStudent = studentRepository.findById(studentId).orElseThrow(() -> {
+			log.warn("Student with id {} not found", studentId);
+			return new NoSuchElementException("Student not found");
+		});
+		Course existingCourse = courseRepository.findByCourseName(courseName).orElseThrow(() -> {
+			log.warn("Course with name {} not found", courseName);
+			return new NoSuchElementException("Course not found");
+		});
+
+		if (!findStudentsRelatedToCourse(courseName).contains(existingStudent)) {
+			throw new IllegalStateException("Student is not related with this Course!");
+		}
+		return studentRepository.removeStudentFromCourse(studentId, existingCourse.getCourseName());
 	}
 
 	public List<Student> findStudentsRelatedToCourse(String courseName) {
