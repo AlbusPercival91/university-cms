@@ -55,12 +55,12 @@ public class TeacherService {
 	}
 
 	public int addTeacherToTheCourse(int teacherId, String courseName) {
-		int result = teacherRepository.addTeacherToTheCourse(teacherId, courseName);
+		Teacher teacher = teacherRepository.findById(teacherId)
+				.orElseThrow(() -> new NoSuchElementException("Teacher not found"));
 
-		if (result != 1) {
-			throw new IllegalStateException("Something went wrong!");
-		}
-		return result;
+		Course course = courseRepository.findByCourseName(courseName)
+				.orElseThrow(() -> new NoSuchElementException("Course not found"));
+		return teacherRepository.addTeacherToTheCourse(teacher.getId(), course.getCourseName());
 	}
 
 	public int removeTeacherFromCourse(int teacherId, String courseName) {
@@ -73,6 +73,11 @@ public class TeacherService {
 		if (teacher.getCourse().getCourseName().equals(courseName)) {
 			throw new IllegalStateException("Teacher can't be removed from his main Course!");
 		}
+
+		if (!findTeachersRelatedToCourse(courseName).contains(teacher)) {
+			throw new IllegalStateException("Teacher is not related with this Course");
+		}
+
 		return teacherRepository.removeTeacherFromCourse(teacherId, course.getCourseName());
 	}
 

@@ -96,9 +96,8 @@ class TeacherServiceTest {
 	@Test
 	void testRemoveTeacherFromCourse_ShouldReturnOneTeacherRemovedFromCourse() {
 		Optional<Course> course = courseRepository.findById(1);
-		Optional<Course> additionalCourse = courseRepository.findById(2);
+		Optional<Course> additionalCourse = courseRepository.findById(3);
 		Optional<Department> department = departmentRepository.findById(1);
-
 		Teacher teacher = new Teacher("Albus", "Dumbledore", true, "albus@gmail.com", "1234", department.get(),
 				course.get());
 		teacherService.createAndAssignTeacherToCourse(teacher);
