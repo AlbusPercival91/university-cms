@@ -49,4 +49,8 @@ public class TeacherService {
 	public List<Teacher> getAllTeachers() {
 		return teacherRepository.findAll();
 	}
+
+	public List<Teacher> findTeachersRelatedToCourse(String courseName) {
+		return teacherRepository.findTeachersRelatedToCourse(courseName);
+	}
 }
