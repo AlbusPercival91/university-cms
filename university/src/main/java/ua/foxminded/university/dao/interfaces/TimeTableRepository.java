@@ -12,9 +12,9 @@ import ua.foxminded.university.dao.entities.TimeTable;
 @Repository
 public interface TimeTableRepository extends JpaRepository<TimeTable, Integer> {
 
-	public List<TimeTable> findByTeacher(Teacher teacher);
+	List<TimeTable> findByTeacher(Teacher teacher);
 
-	public List<TimeTable> findByGroup(Group group);
+	List<TimeTable> findByGroup(Group group);
 
 	@Query("SELECT t FROM TimeTable t JOIN FETCH t.group JOIN FETCH t.classRoom JOIN FETCH t.teacher JOIN FETCH t.course WHERE t.date >= ?1 AND t.date <= ?2")
 	List<TimeTable> findByDate(LocalDate dateFrom, LocalDate dateTo);

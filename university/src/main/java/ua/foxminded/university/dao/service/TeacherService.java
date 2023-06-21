@@ -8,7 +8,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import ua.foxminded.university.dao.entities.Course;
 import ua.foxminded.university.dao.entities.Teacher;
+import ua.foxminded.university.dao.interfaces.CourseRepository;
 import ua.foxminded.university.dao.interfaces.TeacherRepository;
 
 @Slf4j
@@ -17,6 +19,7 @@ import ua.foxminded.university.dao.interfaces.TeacherRepository;
 @Transactional
 public class TeacherService {
 	private final TeacherRepository teacherRepository;
+	private final CourseRepository courseRepository;
 
 	public int createAndAssignTeacherToCourse(Teacher teacher) {
 		Teacher newTeacher = teacherRepository.save(teacher);
@@ -64,10 +67,13 @@ public class TeacherService {
 		Teacher teacher = teacherRepository.findById(teacherId)
 				.orElseThrow(() -> new NoSuchElementException("Teacher not found"));
 
+		Course course = courseRepository.findByCourseName(courseName)
+				.orElseThrow(() -> new NoSuchElementException("Course not found"));
+
 		if (teacher.getCourse().getCourseName().equals(courseName)) {
 			throw new IllegalStateException("Teacher can't be removed from his main Course!");
 		}
-		return teacherRepository.removeTeacherFromCourse(teacherId, courseName);
+		return teacherRepository.removeTeacherFromCourse(teacherId, course.getCourseName());
 	}
 
 	public List<Teacher> findTeachersRelatedToCourse(String courseName) {
