@@ -101,13 +101,11 @@ class TeacherServiceTest {
 
 		Teacher teacher = new Teacher("Albus", "Dumbledore", true, "albus@gmail.com", "1234", department.get(),
 				course.get());
-
 		teacherService.createAndAssignTeacherToCourse(teacher);
-		teacherService.addTeacherToTheCourse(teacher.getId(), course.get().getCourseName());
+		teacherService.addTeacherToTheCourse(teacher.getId(), additionalCourse.get().getCourseName());
 
-		Assertions.assertEquals("",
+		Assertions.assertEquals(1,
 				teacherService.removeTeacherFromCourse(teacher.getId(), additionalCourse.get().getCourseName()));
-
 	}
 
 	@ParameterizedTest
