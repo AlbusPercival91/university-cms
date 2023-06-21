@@ -61,8 +61,11 @@ public class TeacherService {
 	}
 
 	public int removeTeacherFromCourse(int teacherId, String courseName) {
-		if (teacherRepository.findTeachersRelatedToCourse(courseName).size() == 1) {
-			throw new IllegalStateException("Teacher must be assigned at least at one Course!");
+		Teacher teacher = teacherRepository.findById(teacherId)
+				.orElseThrow(() -> new NoSuchElementException("Teacher not found"));
+
+		if (teacher.getCourses().size() == 1) {
+			throw new IllegalStateException("Teacher must be assigned at least one Course!");
 		}
 		return teacherRepository.removeTeacherFromCourse(teacherId, courseName);
 	}

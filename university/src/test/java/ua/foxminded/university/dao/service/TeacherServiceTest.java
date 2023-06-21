@@ -93,19 +93,22 @@ class TeacherServiceTest {
 
 	}
 
-//	@ParameterizedTest
-//	@CsvSource({ "3, 3", "2, 2", "1, 1" })
-//	void testRemoveTeacherFromCourse_(int courseId, int departmentId) {
-//		Optional<Course> course = courseRepository.findById(courseId);
-//		Optional<Department> department = departmentRepository.findById(departmentId);
-//		Teacher teacher = new Teacher("Albus", "Dumbledore", true, "albus@gmail.com", "1234", department.get(),
-//				course.get());
-//		teacherService.createAndAssignTeacherToCourse(teacher);
-//
-//		Assertions.assertEquals("",
-//				teacherService.removeTeacherFromCourse(teacher.getId(), course.get().getCourseName()));
-//
-//	}
+	@Test
+	void testRemoveTeacherFromCourse_ShouldReturnOneTeacherRemovedFromCourse() {
+		Optional<Course> course = courseRepository.findById(1);
+		Optional<Course> additionalCourse = courseRepository.findById(2);
+		Optional<Department> department = departmentRepository.findById(1);
+
+		Teacher teacher = new Teacher("Albus", "Dumbledore", true, "albus@gmail.com", "1234", department.get(),
+				course.get());
+
+		teacherService.createAndAssignTeacherToCourse(teacher);
+		teacherService.addTeacherToTheCourse(teacher.getId(), course.get().getCourseName());
+
+		Assertions.assertEquals("",
+				teacherService.removeTeacherFromCourse(teacher.getId(), additionalCourse.get().getCourseName()));
+
+	}
 
 	@ParameterizedTest
 	@CsvSource({ "3, 3", "2, 2", "1, 1" })
