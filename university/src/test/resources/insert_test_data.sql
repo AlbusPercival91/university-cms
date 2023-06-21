@@ -61,11 +61,7 @@ VALUES
     ('James', 'Wilson', true, 'james.wilson@example.com', 'password11', 2, 2),
     ('Sophia', 'Anderson', true, 'sophia.anderson@example.com', 'password12', 3, 3);
 
-INSERT INTO university.teachers_courses (teacher_id, course_id)
-VALUES
-    (1, 1),
-    (2, 2),
-    (3, 3);
+
     
     
     

@@ -1,6 +1,9 @@
 package ua.foxminded.university.dao.service;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.util.Optional;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -14,7 +17,12 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
+
+import ua.foxminded.university.dao.entities.Course;
+import ua.foxminded.university.dao.entities.Department;
 import ua.foxminded.university.dao.entities.Teacher;
+import ua.foxminded.university.dao.interfaces.CourseRepository;
+import ua.foxminded.university.dao.interfaces.DepartmentRepository;
 import ua.foxminded.university.dao.interfaces.TeacherRepository;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
@@ -27,10 +35,16 @@ import ua.foxminded.university.dao.interfaces.TeacherRepository;
 class TeacherServiceTest {
 
 	@Autowired
+	private TeacherService teacherService;
+
+	@Autowired
 	private TeacherRepository teacherRepository;
 
 	@Autowired
-	private TeacherService teacherService;
+	private CourseRepository courseRepository;
+
+	@Autowired
+	private DepartmentRepository departmentRepository;
 
 	@ParameterizedTest
 	@CsvSource({ "1", "2", "3" })
@@ -65,9 +79,15 @@ class TeacherServiceTest {
 	}
 
 	@ParameterizedTest
-	@CsvSource({ "Chemistry", "Physics", "Mathematics" })
-	void testFindTeachersRelatedToCourse_ShouldReturnListOfTeachersRelatdToCourse(String courseName) {
-		Assertions.assertEquals("", teacherService.findTeachersRelatedToCourse(courseName));
+	@CsvSource({ "3, 3", "2, 2", "1, 1" })
+	void testFindTeachersRelatedToCourse_ShouldReturnListOfTeachersRelatdToCourse(int courseId, int departmentId) {
+		Optional<Course> course = courseRepository.findById(courseId);
+		Optional<Department> department = departmentRepository.findById(departmentId);
+		Teacher teacher = new Teacher("Albus", "Dumbledore", true, "albus@gmail.com", "1234", department.get(),
+				course.get());
+		teacherService.createTeacher(teacher);
+
+		Assertions.assertEquals("", teacherService.findTeachersRelatedToCourse(course.get().getCourseName()));
 
 	}
 }

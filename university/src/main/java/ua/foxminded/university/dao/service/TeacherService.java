@@ -20,6 +20,7 @@ public class TeacherService {
 
 	public int createTeacher(Teacher teacher) {
 		Teacher newTeacher = teacherRepository.save(teacher);
+		teacherRepository.addTeacherToTheCourse(teacher.getId(), teacher.getCourse().getCourseName());
 		log.info("Created teacher with id: {}", newTeacher.getId());
 		return newTeacher.getId();
 	}
@@ -48,6 +49,19 @@ public class TeacherService {
 
 	public List<Teacher> getAllTeachers() {
 		return teacherRepository.findAll();
+	}
+
+	public int addTeacherToTheCourse(Integer teacherId, String courseName) {
+		int result = teacherRepository.addTeacherToTheCourse(teacherId, courseName);
+
+		if (result != 1) {
+			throw new IllegalStateException("Something went wrong!");
+		}
+		return result;
+	}
+
+	public int removeTeacherFromCourse(Integer teacherId, String courseName) {
+		return teacherRepository.removeTeacherFromCourse(teacherId, courseName);
 	}
 
 	public List<Teacher> findTeachersRelatedToCourse(String courseName) {
