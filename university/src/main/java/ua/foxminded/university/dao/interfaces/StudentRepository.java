@@ -19,7 +19,7 @@ public interface StudentRepository extends JpaRepository<Student, Integer> {
 			     SELECT s.id, c.id FROM Student s, Course c
 			     WHERE s.id = :studentId AND c.courseName = :courseName
 			""")
-	int addStudentToTheCourse(@Param("studentId") Integer studentId, @Param("courseName") String courseName);
+	int addStudentToTheCourse(@Param("studentId") int studentId, @Param("courseName") String courseName);
 
 	@Modifying
 	@Query("""
@@ -27,7 +27,7 @@ public interface StudentRepository extends JpaRepository<Student, Integer> {
 			     WHERE sc.studentId = :studentId
 			     AND sc.courseId IN (SELECT c.id FROM Course c WHERE c.courseName = :courseName)
 			""")
-	int removeStudentFromCourse(@Param("studentId") Integer studentId, @Param("courseName") String courseName);
+	int removeStudentFromCourse(@Param("studentId") int studentId, @Param("courseName") String courseName);
 
 	@Query("""
 			SELECT s FROM Student s

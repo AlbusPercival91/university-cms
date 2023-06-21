@@ -51,7 +51,7 @@ public class TeacherService {
 		return teacherRepository.findAll();
 	}
 
-	public int addTeacherToTheCourse(Integer teacherId, String courseName) {
+	public int addTeacherToTheCourse(int teacherId, String courseName) {
 		int result = teacherRepository.addTeacherToTheCourse(teacherId, courseName);
 
 		if (result != 1) {
@@ -60,7 +60,7 @@ public class TeacherService {
 		return result;
 	}
 
-	public int removeTeacherFromCourse(Integer teacherId, String courseName) {
+	public int removeTeacherFromCourse(int teacherId, String courseName) {
 		return teacherRepository.removeTeacherFromCourse(teacherId, courseName);
 	}
 

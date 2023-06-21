@@ -17,7 +17,7 @@ public interface TeacherRepository extends JpaRepository<Teacher, Integer> {
 			     SELECT t.id, c.id FROM Teacher t, Course c
 			     WHERE t.id = :teacherId AND c.courseName = :courseName
 			""")
-	int addTeacherToTheCourse(@Param("teacherId") Integer teacherId, @Param("courseName") String courseName);
+	int addTeacherToTheCourse(@Param("teacherId") int teacherId, @Param("courseName") String courseName);
 
 	@Modifying
 	@Query("""
@@ -25,7 +25,7 @@ public interface TeacherRepository extends JpaRepository<Teacher, Integer> {
 			     WHERE tc.teacherId = :teacherId
 			     AND tc.courseId IN (SELECT c.id FROM Course c WHERE c.courseName = :courseName)
 			""")
-	int removeTeacherFromCourse(@Param("teacherId") Integer teacherId, @Param("courseName") String courseName);
+	int removeTeacherFromCourse(@Param("teacherId") int teacherId, @Param("courseName") String courseName);
 
 	@Query("""
 			SELECT t FROM Teacher t

@@ -50,7 +50,7 @@ public class StudentService {
 		return studentRepository.findAll();
 	}
 
-	public int addStudentToTheCourse(Integer studentId, String courseName) {
+	public int addStudentToTheCourse(int studentId, String courseName) {
 		int result = studentRepository.addStudentToTheCourse(studentId, courseName);
 
 		if (result != 1) {
@@ -59,7 +59,7 @@ public class StudentService {
 		return result;
 	}
 
-	public int removeStudentFromCourse(Integer studentId, String courseName) {
+	public int removeStudentFromCourse(int studentId, String courseName) {
 		return studentRepository.removeStudentFromCourse(studentId, courseName);
 	}
 
