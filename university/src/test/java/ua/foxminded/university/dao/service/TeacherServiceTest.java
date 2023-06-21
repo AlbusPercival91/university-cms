@@ -92,4 +92,33 @@ class TeacherServiceTest {
 				teacherService.findTeachersRelatedToCourse(course.get().getCourseName()));
 
 	}
+
+//	@ParameterizedTest
+//	@CsvSource({ "3, 3", "2, 2", "1, 1" })
+//	void testRemoveTeacherFromCourse_(int courseId, int departmentId) {
+//		Optional<Course> course = courseRepository.findById(courseId);
+//		Optional<Department> department = departmentRepository.findById(departmentId);
+//		Teacher teacher = new Teacher("Albus", "Dumbledore", true, "albus@gmail.com", "1234", department.get(),
+//				course.get());
+//		teacherService.createAndAssignTeacherToCourse(teacher);
+//
+//		Assertions.assertEquals("",
+//				teacherService.removeTeacherFromCourse(teacher.getId(), course.get().getCourseName()));
+//
+//	}
+
+	@ParameterizedTest
+	@CsvSource({ "3, 3", "2, 2", "1, 1" })
+	void testRemoveTeacherFromCourse_WhenTeacherAssignedAtOneCourse_ShouldThrowIllegalStateException(int courseId,
+			int departmentId) {
+		Optional<Course> course = courseRepository.findById(courseId);
+		Optional<Department> department = departmentRepository.findById(departmentId);
+		Teacher teacher = new Teacher("Albus", "Dumbledore", true, "albus_dumb@gmail.com", "1234", department.get(),
+				course.get());
+		teacherService.createAndAssignTeacherToCourse(teacher);
+
+		Exception illegalStateException = assertThrows(Exception.class,
+				() -> teacherService.removeTeacherFromCourse(teacher.getId(), course.get().getCourseName()));
+		Assertions.assertEquals("Teacher must be assigned at least at one Course!", illegalStateException.getMessage());
+	}
 }
