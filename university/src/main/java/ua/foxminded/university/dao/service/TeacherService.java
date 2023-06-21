@@ -55,28 +55,34 @@ public class TeacherService {
 	}
 
 	public int addTeacherToTheCourse(int teacherId, String courseName) {
-		Teacher teacher = teacherRepository.findById(teacherId)
-				.orElseThrow(() -> new NoSuchElementException("Teacher not found"));
-
-		Course course = courseRepository.findByCourseName(courseName)
-				.orElseThrow(() -> new NoSuchElementException("Course not found"));
-		return teacherRepository.addTeacherToTheCourse(teacher.getId(), course.getCourseName());
+		Teacher existingTeacher = teacherRepository.findById(teacherId).orElseThrow(() -> {
+			log.warn("Teacher with id {} not found", teacherId);
+			return new NoSuchElementException("Teacher not found");
+		});
+		Course existingCourse = courseRepository.findByCourseName(courseName).orElseThrow(() -> {
+			log.warn("Course with name {} not found", courseName);
+			return new NoSuchElementException("Course not found");
+		});
+		return teacherRepository.addTeacherToTheCourse(existingTeacher.getId(), existingCourse.getCourseName());
 	}
 
 	public int removeTeacherFromCourse(int teacherId, String courseName) {
-		Teacher teacher = teacherRepository.findById(teacherId)
-				.orElseThrow(() -> new NoSuchElementException("Teacher not found"));
+		Teacher existingTeacher = teacherRepository.findById(teacherId).orElseThrow(() -> {
+			log.warn("Teacher with id {} not found", teacherId);
+			return new NoSuchElementException("Teacher not found");
+		});
+		Course existingCourse = courseRepository.findByCourseName(courseName).orElseThrow(() -> {
+			log.warn("Course with name {} not found", courseName);
+			return new NoSuchElementException("Course not found");
+		});
 
-		Course course = courseRepository.findByCourseName(courseName)
-				.orElseThrow(() -> new NoSuchElementException("Course not found"));
-
-		if (teacher.getCourse().getCourseName().equals(courseName)) {
+		if (existingTeacher.getCourse().getCourseName().equals(courseName)) {
 			throw new IllegalStateException("Teacher can't be removed from his main Course!");
 		}
-		if (!findTeachersRelatedToCourse(courseName).contains(teacher)) {
+		if (!findTeachersRelatedToCourse(courseName).contains(existingTeacher)) {
 			throw new IllegalStateException("Teacher is not related with this Course!");
 		}
-		return teacherRepository.removeTeacherFromCourse(teacherId, course.getCourseName());
+		return teacherRepository.removeTeacherFromCourse(teacherId, existingCourse.getCourseName());
 	}
 
 	public List<Teacher> findTeachersRelatedToCourse(String courseName) {
