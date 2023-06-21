@@ -121,4 +121,18 @@ class TeacherServiceTest {
 				() -> teacherService.removeTeacherFromCourse(teacher.getId(), course.get().getCourseName()));
 		Assertions.assertEquals("Teacher can't be removed from his main Course!", illegalStateException.getMessage());
 	}
+
+	@Test
+	void testRemoveTeacherFromCourse_WhenTeacherIsNotRelatedToCourse_ShouldThrowIllegalStateException() {
+		Optional<Course> course = courseRepository.findById(1);
+		Optional<Course> additionalCourse = courseRepository.findById(3);
+		Optional<Department> department = departmentRepository.findById(1);
+		Teacher teacher = new Teacher("Albus", "Dumbledore", true, "albus@gmail.com", "1234", department.get(),
+				course.get());
+		teacherService.createAndAssignTeacherToCourse(teacher);
+
+		Exception illegalStateException = assertThrows(Exception.class,
+				() -> teacherService.removeTeacherFromCourse(teacher.getId(), additionalCourse.get().getCourseName()));
+		Assertions.assertEquals("Teacher is not related with this Course!", illegalStateException.getMessage());
+	}
 }

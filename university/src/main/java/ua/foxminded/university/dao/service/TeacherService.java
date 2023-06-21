@@ -73,11 +73,9 @@ public class TeacherService {
 		if (teacher.getCourse().getCourseName().equals(courseName)) {
 			throw new IllegalStateException("Teacher can't be removed from his main Course!");
 		}
-
 		if (!findTeachersRelatedToCourse(courseName).contains(teacher)) {
-			throw new IllegalStateException("Teacher is not related with this Course");
+			throw new IllegalStateException("Teacher is not related with this Course!");
 		}
-
 		return teacherRepository.removeTeacherFromCourse(teacherId, course.getCourseName());
 	}
 
