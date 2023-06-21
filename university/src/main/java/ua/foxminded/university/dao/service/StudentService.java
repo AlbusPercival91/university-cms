@@ -8,7 +8,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import ua.foxminded.university.dao.entities.Course;
 import ua.foxminded.university.dao.entities.Student;
+import ua.foxminded.university.dao.interfaces.CourseRepository;
 import ua.foxminded.university.dao.interfaces.StudentRepository;
 
 @Slf4j
@@ -17,6 +19,7 @@ import ua.foxminded.university.dao.interfaces.StudentRepository;
 @Transactional
 public class StudentService {
 	private final StudentRepository studentRepository;
+	private final CourseRepository courseRepository;
 
 	public int createStudent(Student student) {
 		Student newStudent = studentRepository.save(student);
@@ -51,12 +54,15 @@ public class StudentService {
 	}
 
 	public int addStudentToTheCourse(int studentId, String courseName) {
-		int result = studentRepository.addStudentToTheCourse(studentId, courseName);
-
-		if (result != 1) {
-			throw new IllegalStateException("Something went wrong!");
-		}
-		return result;
+		Student existingStudent = studentRepository.findById(studentId).orElseThrow(() -> {
+			log.warn("Student with id {} not found", studentId);
+			return new NoSuchElementException("Student not found");
+		});
+		Course existingCourse = courseRepository.findByCourseName(courseName).orElseThrow(() -> {
+			log.warn("Course with name {} not found", courseName);
+			return new NoSuchElementException("Course not found");
+		});
+		return studentRepository.addStudentToTheCourse(existingStudent.getId(), existingCourse.getCourseName());
 	}
 
 	public int removeStudentFromCourse(int studentId, String courseName) {
