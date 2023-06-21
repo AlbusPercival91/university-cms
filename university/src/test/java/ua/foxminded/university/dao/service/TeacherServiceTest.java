@@ -63,4 +63,11 @@ class TeacherServiceTest {
 				() -> teacherService.updateTeacherById(4, expectedTeacher));
 		Assertions.assertEquals("Teacher not found", noSuchElementException.getMessage());
 	}
+
+	@ParameterizedTest
+	@CsvSource({ "Chemistry", "Physics", "Mathematics" })
+	void testFindTeachersRelatedToCourse_ShouldReturnListOfTeachersRelatdToCourse(String courseName) {
+		Assertions.assertEquals("", teacherService.findTeachersRelatedToCourse(courseName));
+
+	}
 }
