@@ -112,7 +112,7 @@ class TeacherServiceTest {
 
 	@ParameterizedTest
 	@CsvSource({ "3, 3", "2, 2", "1, 1" })
-	void testRemoveTeacherFromCourse_WhenTeacherAssignedAtOneCourse_ShouldThrowIllegalStateException(int courseId,
+	void testRemoveTeacherFromCourse_WhenTeacherRemoveFromMainCourse_ShouldThrowIllegalStateException(int courseId,
 			int departmentId) {
 		Optional<Course> course = courseRepository.findById(courseId);
 		Optional<Department> department = departmentRepository.findById(departmentId);
@@ -122,6 +122,6 @@ class TeacherServiceTest {
 
 		Exception illegalStateException = assertThrows(Exception.class,
 				() -> teacherService.removeTeacherFromCourse(teacher.getId(), course.get().getCourseName()));
-		Assertions.assertEquals("Teacher must be assigned at least at one Course!", illegalStateException.getMessage());
+		Assertions.assertEquals("Teacher can't be removed from his main Course!", illegalStateException.getMessage());
 	}
 }

@@ -64,8 +64,8 @@ public class TeacherService {
 		Teacher teacher = teacherRepository.findById(teacherId)
 				.orElseThrow(() -> new NoSuchElementException("Teacher not found"));
 
-		if (teacher.getCourses().size() == 1) {
-			throw new IllegalStateException("Teacher must be assigned at least one Course!");
+		if (teacher.getCourse().getCourseName().equals(courseName)) {
+			throw new IllegalStateException("Teacher can't be removed from his main Course!");
 		}
 		return teacherRepository.removeTeacherFromCourse(teacherId, courseName);
 	}
