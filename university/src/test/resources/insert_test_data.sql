@@ -31,7 +31,7 @@ INSERT INTO university.departments (name, faculty_id)
 VALUES
     ('Mathematics Department', 1),
     ('Physics Department', 2),
-    ('Chemistry Department', 1);
+    ('Chemistry Department', 3);
 
 -- Generate test data for university.groups
 INSERT INTO university.groups (group_name, faculty_id)

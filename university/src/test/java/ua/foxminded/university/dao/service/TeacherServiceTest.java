@@ -135,4 +135,5 @@ class TeacherServiceTest {
 				() -> teacherService.removeTeacherFromCourse(teacher.getId(), additionalCourse.get().getCourseName()));
 		Assertions.assertEquals("Teacher is not related with this Course!", illegalStateException.getMessage());
 	}
+
 }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ua.foxminded.university.dao.entities.Department;
+import ua.foxminded.university.dao.entities.Faculty;
 import ua.foxminded.university.dao.interfaces.DepartmentRepository;
 
 @Slf4j
@@ -48,5 +49,9 @@ public class DepartmentService {
 
 	public List<Department> getAllDepartments() {
 		return departmentRepository.findAll();
+	}
+
+	List<Department> findAllByFaculty(Faculty faculty) {
+		return departmentRepository.findAllByFaculty(faculty);
 	}
 }

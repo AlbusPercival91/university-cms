@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import ua.foxminded.university.dao.entities.Faculty;
 import ua.foxminded.university.dao.entities.Teacher;
 
 @Repository
@@ -33,4 +35,14 @@ public interface TeacherRepository extends JpaRepository<Teacher, Integer> {
 			     JOIN Course c ON c.id = tc.courseId WHERE c.courseName = :courseName
 			""")
 	List<Teacher> findTeachersRelatedToCourse(@Param("courseName") String courseName);
+
+	/*
+	 * return all Teachers in Faculty
+	 */
+	List<Teacher> findAllByDepartmentFaculty(Faculty faculty);
+
+	/*
+	 * return all Teachers in defined Department of special Faculty
+	 */
+	List<Teacher> findAllByDepartmentIdAndDepartmentFacultyId(int departmentId, int facultyId);
 }
