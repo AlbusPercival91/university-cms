@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import ua.foxminded.university.dao.entities.Group;
 import ua.foxminded.university.dao.entities.Student;
 
 @Repository
@@ -35,5 +36,7 @@ public interface StudentRepository extends JpaRepository<Student, Integer> {
 			     JOIN Course c ON c.id = sc.courseId WHERE c.courseName = :courseName
 			""")
 	List<Student> findStudentsRelatedToCourse(@Param("courseName") String courseName);
+
+	List<Student> findAllByGroup(Group group);
 
 }

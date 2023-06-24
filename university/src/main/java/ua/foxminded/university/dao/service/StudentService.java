@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ua.foxminded.university.dao.entities.Course;
+import ua.foxminded.university.dao.entities.Group;
 import ua.foxminded.university.dao.entities.Student;
 import ua.foxminded.university.dao.interfaces.CourseRepository;
 import ua.foxminded.university.dao.interfaces.StudentRepository;
@@ -84,4 +85,9 @@ public class StudentService {
 	public List<Student> findStudentsRelatedToCourse(String courseName) {
 		return studentRepository.findStudentsRelatedToCourse(courseName);
 	}
+
+	public List<Student> findAllByGroup(Group group) {
+		return studentRepository.findAllByGroup(group);
+	}
+
 }
