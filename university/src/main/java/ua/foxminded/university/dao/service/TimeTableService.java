@@ -33,6 +33,9 @@ public class TimeTableService {
 
 	public TimeTable createGroupTimeTable(LocalDate date, LocalTime timeFrom, LocalTime timeTo, Teacher teacher,
 			Course course, Group group, ClassRoom classRoom) {
+		if (timeTableRepository.existsByDateAndTimeFromAndTimeToAndClassRoom(date, timeFrom, timeTo, classRoom)) {
+			throw new IllegalStateException("ClassRoom is busy, choose another Time");
+		}
 		TimeTable timeTable = new TimeTable(date, timeFrom, timeTo, teacher, course, group, classRoom);
 		log.info("Timetable [date::{}, time from::{}, time to::{}] is scheduled successfully.", timeTable.getDate(),
 				timeTable.getTimeFrom(), timeTable.getTimeTo());
@@ -41,6 +44,9 @@ public class TimeTableService {
 
 	public TimeTable createTimeTableForStudentsAtCourse(LocalDate date, LocalTime timeFrom, LocalTime timeTo,
 			Teacher teacher, Course course, ClassRoom classRoom) {
+		if (timeTableRepository.existsByDateAndTimeFromAndTimeToAndClassRoom(date, timeFrom, timeTo, classRoom)) {
+			throw new IllegalStateException("ClassRoom is busy, choose another Time");
+		}
 		List<Student> studentsRelatedToCourse = studentRepository.findStudentsRelatedToCourse(course.getCourseName());
 
 		if (!studentsRelatedToCourse.isEmpty()) {
@@ -53,7 +59,6 @@ public class TimeTableService {
 			log.warn("Students assigned to course {} not found", course.getCourseName());
 			throw new NoSuchElementException("Students at this course not found");
 		}
-
 	}
 
 	public List<TimeTable> getTeacherTimeTable(Teacher teacher) {

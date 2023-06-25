@@ -58,6 +58,18 @@ class TimeTableServiceTest {
 	}
 
 	@ParameterizedTest
+	@CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 1, 1", "2023-09-01, 12:00, 13:30, 2, 2, 2, 2",
+			"2023-09-02, 09:00, 10:30, 3, 3, 3, 3", "2023-09-02, 12:00, 13:30, 1, 1, 2, 3" })
+	void testCreateGroupTimeTable_WhenClassRoomIsBusy_ShouldThrowIllegalStateException(LocalDate date,
+			LocalTime timeFrom, LocalTime timeTo, int teacherId, int courseId, int groupId, int classRoomId) {
+		timeTableBuilder.saveGroupTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId, classRoomId);
+
+		Exception illegalStateException = assertThrows(Exception.class, () -> timeTableBuilder.saveGroupTimeTable(date,
+				timeFrom, timeTo, teacherId, courseId, groupId, classRoomId));
+		Assertions.assertEquals("ClassRoom is busy, choose another Time", illegalStateException.getMessage());
+	}
+
+	@ParameterizedTest
 	@CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 1", "2023-09-01, 12:00, 13:30, 2, 2, 2",
 			"2023-09-02, 09:00, 10:30, 3, 3, 3", "2023-09-02, 12:00, 13:30, 1, 1, 2" })
 	void testCreateTimeTableForStudentsAtCourse_ShouldSaveTimeTableToDatabase(LocalDate date, LocalTime timeFrom,
@@ -71,6 +83,22 @@ class TimeTableServiceTest {
 				courseId, classRoomId);
 
 		Assertions.assertEquals(timeTableRepository.findById(1).get(), timeTable);
+	}
+
+	@ParameterizedTest
+	@CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 1", "2023-09-01, 12:00, 13:30, 2, 2, 2",
+			"2023-09-02, 09:00, 10:30, 3, 3, 3", "2023-09-02, 12:00, 13:30, 1, 1, 2" })
+	void testCreateTimeTableForStudentsAtCourse_WhenClassRoomIsBusy_ShouldThrowIllegalStateException(LocalDate date,
+			LocalTime timeFrom, LocalTime timeTo, int teacherId, int courseId, int classRoomId) {
+		studentRepository.addStudentToTheCourse(1, "Mathematics");
+		studentRepository.addStudentToTheCourse(2, "Mathematics");
+		studentRepository.addStudentToTheCourse(3, "Physics");
+		studentRepository.addStudentToTheCourse(1, "Chemistry");
+		timeTableBuilder.saveTimeTableForStudentsAtCourse(date, timeFrom, timeTo, teacherId, courseId, classRoomId);
+
+		Exception illegalStateException = assertThrows(Exception.class, () -> timeTableBuilder
+				.saveTimeTableForStudentsAtCourse(date, timeFrom, timeTo, teacherId, courseId, classRoomId));
+		Assertions.assertEquals("ClassRoom is busy, choose another Time", illegalStateException.getMessage());
 	}
 
 	@ParameterizedTest
