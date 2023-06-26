@@ -68,9 +68,9 @@ public class TimeTableService {
 		});
 
 		if (timeTableRepository.studentIsAssignedToAnyCourse(existingStudent.getId())) {
-			return timeTableRepository.findByStudent(existingStudent.getId());
+			return timeTableRepository.findByStudentOrderByDateAscTimeFromAsc(existingStudent.getId());
 		} else {
-			return timeTableRepository.findByGroup(existingStudent.getGroup());
+			return timeTableRepository.findByGroupOrderByDateAscTimeFromAsc(existingStudent.getGroup());
 		}
 	}
 
@@ -79,7 +79,7 @@ public class TimeTableService {
 			log.warn("Teacher with id {} not found", teacher.getId());
 			return new NoSuchElementException("Teacher not found");
 		});
-		return timeTableRepository.findByTeacher(existingTeacher);
+		return timeTableRepository.findByTeacherOrderByDateAscTimeFromAsc(existingTeacher);
 	}
 
 	public List<TimeTable> getStudentsGroupTimeTable(Student student) {
@@ -87,7 +87,7 @@ public class TimeTableService {
 			log.warn("Student with id {} not found", student.getId());
 			return new NoSuchElementException("Student not found");
 		});
-		return timeTableRepository.findByGroup(existingStudent.getGroup());
+		return timeTableRepository.findByGroupOrderByDateAscTimeFromAsc(existingStudent.getGroup());
 	}
 
 	public List<TimeTable> getGroupTimeTable(Group group) {
@@ -95,7 +95,7 @@ public class TimeTableService {
 			log.warn("Group with id {} not found", group.getId());
 			return new NoSuchElementException("Group not found");
 		});
-		return timeTableRepository.findByGroup(existingGroup);
+		return timeTableRepository.findByGroupOrderByDateAscTimeFromAsc(existingGroup);
 	}
 
 	List<TimeTable> getStudentTimeTableByDate(LocalDate dateFrom, LocalDate dateTo, int studentId) {
@@ -105,9 +105,9 @@ public class TimeTableService {
 		});
 
 		if (timeTableRepository.studentIsAssignedToAnyCourse(existingStudent.getId())) {
-			return timeTableRepository.findByDateAndStudent(dateFrom, dateTo, existingStudent.getId());
+			return timeTableRepository.findByDateAndStudentOrderByDateAscTimeFromAsc(dateFrom, dateTo, existingStudent.getId());
 		} else {
-			return timeTableRepository.findByDateAndGroup(dateFrom, dateTo, existingStudent.getGroup());
+			return timeTableRepository.findByDateAndGroupOrderByDateAscTimeFromAsc(dateFrom, dateTo, existingStudent.getGroup());
 		}
 	}
 
@@ -116,7 +116,7 @@ public class TimeTableService {
 			log.warn("Teacher with id {} not found", teacher.getId());
 			return new NoSuchElementException("Teacher not found");
 		});
-		return timeTableRepository.findByDateAndTeacher(dateFrom, dateTo, existingTeacher);
+		return timeTableRepository.findByDateAndTeacherOrderByDateAscTimeFromAsc(dateFrom, dateTo, existingTeacher);
 	}
 
 	public List<TimeTable> getStudentsGroupTimeTableByDate(LocalDate dateFrom, LocalDate dateTo, Student student) {
@@ -124,7 +124,7 @@ public class TimeTableService {
 			log.warn("Student with id {} not found", student.getId());
 			return new NoSuchElementException("Student not found");
 		});
-		return timeTableRepository.findByDateAndGroup(dateFrom, dateTo, existingStudent.getGroup());
+		return timeTableRepository.findByDateAndGroupOrderByDateAscTimeFromAsc(dateFrom, dateTo, existingStudent.getGroup());
 	}
 
 	public List<TimeTable> getGroupTimeTableByDate(LocalDate dateFrom, LocalDate dateTo, Group group) {
@@ -132,11 +132,11 @@ public class TimeTableService {
 			log.warn("Group with id {} not found", group.getId());
 			return new NoSuchElementException("Group not found");
 		});
-		return timeTableRepository.findByDateAndGroup(dateFrom, dateTo, existingGroup);
+		return timeTableRepository.findByDateAndGroupOrderByDateAscTimeFromAsc(dateFrom, dateTo, existingGroup);
 	}
 
 	public List<TimeTable> getAllTimeTablesByDate(LocalDate dateFrom, LocalDate dateTo) {
-		return timeTableRepository.findByDate(dateFrom, dateTo);
+		return timeTableRepository.findByDateOrderByDateAscTimeFromAsc(dateFrom, dateTo);
 	}
 
 	public TimeTable updateTimeTabletById(int timeTableId, TimeTable targetTimeTable) {

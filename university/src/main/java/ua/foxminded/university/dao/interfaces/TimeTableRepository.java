@@ -15,9 +15,9 @@ import ua.foxminded.university.dao.entities.TimeTable;
 @Repository
 public interface TimeTableRepository extends JpaRepository<TimeTable, Integer> {
 
-	List<TimeTable> findByTeacher(Teacher teacher);
+	List<TimeTable> findByTeacherOrderByDateAscTimeFromAsc(Teacher teacher);
 
-	List<TimeTable> findByGroup(Group group);
+	List<TimeTable> findByGroupOrderByDateAscTimeFromAsc(Group group);
 
 	@Query("""
 			    SELECT t FROM TimeTable t
@@ -26,16 +26,33 @@ public interface TimeTableRepository extends JpaRepository<TimeTable, Integer> {
 			    WHERE s.id = :studentId
 			    ORDER BY t.date, t.timeFrom
 			""")
-	List<TimeTable> findByStudent(@Param("studentId") int studentId);
+	List<TimeTable> findByStudentOrderByDateAscTimeFromAsc(@Param("studentId") int studentId);
 
-	@Query("SELECT t FROM TimeTable t JOIN FETCH t.group JOIN FETCH t.classRoom JOIN FETCH t.teacher JOIN FETCH t.course WHERE t.date >= ?1 AND t.date <= ?2")
-	List<TimeTable> findByDate(LocalDate dateFrom, LocalDate dateTo);
+	@Query("""
+			SELECT t FROM TimeTable t
+			JOIN FETCH t.group
+			JOIN FETCH t.classRoom
+			JOIN FETCH t.teacher
+			JOIN FETCH t.course
+			WHERE t.date BETWEEN :dateFrom AND :dateTo
+			ORDER BY t.date, t.timeFrom
+			""")
+	List<TimeTable> findByDateOrderByDateAscTimeFromAsc(LocalDate dateFrom, LocalDate dateTo);
 
-	@Query("SELECT t FROM TimeTable t WHERE t.date>= ?1 AND t.date <= ?2 AND t.teacher = ?3")
-	List<TimeTable> findByDateAndTeacher(LocalDate dateFrom, LocalDate dateTo, Teacher teacher);
+	@Query("""
+			SELECT t FROM TimeTable t
+			WHERE t.date BETWEEN :dateFrom AND :dateTo AND t.teacher = :teacher
+			ORDER BY t.date, t.timeFrom
+			""")
+	List<TimeTable> findByDateAndTeacherOrderByDateAscTimeFromAsc(LocalDate dateFrom, LocalDate dateTo,
+			Teacher teacher);
 
-	@Query("SELECT t FROM TimeTable t WHERE t.date >= ?1 AND t.date <= ?2 AND t.group = ?3")
-	List<TimeTable> findByDateAndGroup(LocalDate dateFrom, LocalDate dateTo, Group group);
+	@Query("""
+			SELECT t FROM TimeTable t
+			WHERE t.date BETWEEN :dateFrom AND :dateTo AND t.group = :group
+			ORDER BY t.date, t.timeFrom
+			""")
+	List<TimeTable> findByDateAndGroupOrderByDateAscTimeFromAsc(LocalDate dateFrom, LocalDate dateTo, Group group);
 
 	@Query("""
 			    SELECT t FROM TimeTable t
@@ -45,8 +62,8 @@ public interface TimeTableRepository extends JpaRepository<TimeTable, Integer> {
 			    AND t.date BETWEEN :dateFrom AND :dateTo
 			    ORDER BY t.date, t.timeFrom
 			""")
-	List<TimeTable> findByDateAndStudent(@Param("dateFrom") LocalDate dateFrom, @Param("dateTo") LocalDate dateTo,
-			@Param("studentId") int studentId);
+	List<TimeTable> findByDateAndStudentOrderByDateAscTimeFromAsc(@Param("dateFrom") LocalDate dateFrom,
+			@Param("dateTo") LocalDate dateTo, @Param("studentId") int studentId);
 
 	boolean existsByDateAndTimeFromAndTimeToAndClassRoom(LocalDate date, LocalTime timeFrom, LocalTime timeTo,
 			ClassRoom classRoom);
