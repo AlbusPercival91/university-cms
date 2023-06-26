@@ -19,6 +19,14 @@ public interface TimeTableRepository extends JpaRepository<TimeTable, Integer> {
 
 	List<TimeTable> findByGroup(Group group);
 
+	@Query("""
+			    SELECT t FROM TimeTable t
+			    JOIN t.course c
+			    JOIN c.students s
+			    WHERE s.id = :studentId
+			""")
+	List<TimeTable> findByStudent(@Param("studentId") int studentId);
+
 	@Query("SELECT t FROM TimeTable t JOIN FETCH t.group JOIN FETCH t.classRoom JOIN FETCH t.teacher JOIN FETCH t.course WHERE t.date >= ?1 AND t.date <= ?2")
 	List<TimeTable> findByDate(LocalDate dateFrom, LocalDate dateTo);
 
@@ -33,8 +41,10 @@ public interface TimeTableRepository extends JpaRepository<TimeTable, Integer> {
 			    JOIN t.course c
 			    JOIN c.students s
 			    WHERE s.id = :studentId
+			    AND t.date BETWEEN :dateFrom AND :dateTo
 			""")
-	List<TimeTable> findTimeTablesByStudent(@Param("studentId") int studentId);
+	List<TimeTable> findByDateAndStudent(@Param("dateFrom") LocalDate dateFrom, @Param("dateTo") LocalDate dateTo,
+			@Param("studentId") int studentId);
 
 	boolean existsByDateAndTimeFromAndTimeToAndClassRoom(LocalDate date, LocalTime timeFrom, LocalTime timeTo,
 			ClassRoom classRoom);

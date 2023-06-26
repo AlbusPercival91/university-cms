@@ -68,7 +68,7 @@ public class TimeTableService {
 		});
 
 		if (timeTableRepository.studentIsAssignedToAnyCourse(existingStudent.getId())) {
-			return timeTableRepository.findTimeTablesByStudent(existingStudent.getId());
+			return timeTableRepository.findByStudent(existingStudent.getId());
 		} else {
 			return timeTableRepository.findByGroup(existingStudent.getGroup());
 		}
@@ -96,6 +96,19 @@ public class TimeTableService {
 			return new NoSuchElementException("Group not found");
 		});
 		return timeTableRepository.findByGroup(existingGroup);
+	}
+
+	List<TimeTable> getStudentTimeTableByDate(LocalDate dateFrom, LocalDate dateTo, int studentId) {
+		Student existingStudent = studentRepository.findById(studentId).orElseThrow(() -> {
+			log.warn("Student with id {} not found", studentId);
+			return new NoSuchElementException("Student not found");
+		});
+
+		if (timeTableRepository.studentIsAssignedToAnyCourse(existingStudent.getId())) {
+			return timeTableRepository.findByDateAndStudent(dateFrom, dateTo, existingStudent.getId());
+		} else {
+			return timeTableRepository.findByDateAndGroup(dateFrom, dateTo, existingStudent.getGroup());
+		}
 	}
 
 	public List<TimeTable> getTeacherTimeTableByDate(LocalDate dateFrom, LocalDate dateTo, Teacher teacher) {
