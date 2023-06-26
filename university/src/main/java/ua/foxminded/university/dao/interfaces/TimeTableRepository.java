@@ -5,6 +5,7 @@ import java.time.LocalTime;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ua.foxminded.university.dao.entities.ClassRoom;
 import ua.foxminded.university.dao.entities.Group;
@@ -26,6 +27,14 @@ public interface TimeTableRepository extends JpaRepository<TimeTable, Integer> {
 
 	@Query("SELECT t FROM TimeTable t WHERE t.date >= ?1 AND t.date <= ?2 AND t.group = ?3")
 	List<TimeTable> findByDateAndGroup(LocalDate dateFrom, LocalDate dateTo, Group group);
+
+	@Query("""
+			    SELECT t FROM TimeTable t
+			    JOIN t.course c
+			    JOIN c.students s
+			    WHERE s.id = :studentId
+			""")
+	List<TimeTable> findTimeTablesByStudent(@Param("studentId") int studentId);
 
 	boolean existsByDateAndTimeFromAndTimeToAndClassRoom(LocalDate date, LocalTime timeFrom, LocalTime timeTo,
 			ClassRoom classRoom);

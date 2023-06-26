@@ -61,6 +61,10 @@ public class TimeTableService {
 		}
 	}
 
+	List<TimeTable> getStudentTimeTables(int studentId) {
+		return timeTableRepository.findTimeTablesByStudent(studentId);
+	}
+
 	public List<TimeTable> getTeacherTimeTable(Teacher teacher) {
 		Teacher existingTeacher = teacherRepository.findById(teacher.getId()).orElseThrow(() -> {
 			log.warn("Teacher with id {} not found", teacher.getId());

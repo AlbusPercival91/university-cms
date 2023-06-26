@@ -113,6 +113,26 @@ class TimeTableServiceTest {
 	}
 
 	@ParameterizedTest
+	@CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 1, 1, 1", "2023-09-01, 12:00, 13:30, 2, 2, 2, 2, 2",
+			"2023-09-02, 09:00, 10:30, 3, 3, 3, 3, 3", "2023-09-02, 12:00, 13:30, 1, 1, 3, 1, 3" })
+	void testGetStudentTimeTables_ShouldReturnAllTimeTablesForStudent(LocalDate date, LocalTime timeFrom,
+			LocalTime timeTo, int teacherId, int courseId, int groupId, int classRoomId, int studentId) {
+		Optional<Student> student = studentRepository.findById(studentId);
+
+		studentRepository.addStudentToTheCourse(studentId, "Mathematics");
+//		studentRepository.addStudentToTheCourse(studentId, "Physics");
+//		studentRepository.addStudentToTheCourse(studentId, "Chemistry");
+
+		TimeTable timeTable = timeTableBuilder.saveGroupTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId,
+				classRoomId);
+
+//		TimeTable timeTable2 = timeTableBuilder.saveTimeTableForStudentsAtCourse(date, timeFrom.plusHours(1),
+//				timeTo.plusHours(1), teacherId, courseId, classRoomId);
+
+		Assertions.assertEquals("", timeTableService.getStudentTimeTables(studentId));
+	}
+
+	@ParameterizedTest
 	@CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 1, 1 ", "2023-09-01, 12:00, 13:30, 2, 2, 2, 2",
 			"2023-09-02, 09:00, 10:30, 3, 3, 3, 3", "2023-09-02, 12:00, 13:30, 1, 1, 2, 3" })
 	void testGetTeacherTimeTable_ShouldReturnTeacherTimeTable(LocalDate date, LocalTime timeFrom, LocalTime timeTo,
