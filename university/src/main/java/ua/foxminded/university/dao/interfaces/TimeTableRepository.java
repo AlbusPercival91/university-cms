@@ -24,6 +24,7 @@ public interface TimeTableRepository extends JpaRepository<TimeTable, Integer> {
 			    JOIN t.course c
 			    JOIN c.students s
 			    WHERE s.id = :studentId
+			    ORDER BY t.date, t.timeFrom
 			""")
 	List<TimeTable> findByStudent(@Param("studentId") int studentId);
 
@@ -42,6 +43,7 @@ public interface TimeTableRepository extends JpaRepository<TimeTable, Integer> {
 			    JOIN c.students s
 			    WHERE s.id = :studentId
 			    AND t.date BETWEEN :dateFrom AND :dateTo
+			    ORDER BY t.date, t.timeFrom
 			""")
 	List<TimeTable> findByDateAndStudent(@Param("dateFrom") LocalDate dateFrom, @Param("dateTo") LocalDate dateTo,
 			@Param("studentId") int studentId);
