@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    profile: test-container
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+    url: jdbc:tc:postgresql:13:///test?currentSchema=university&TC_REUSABLE=true
+    username: root
+    password: test
+    hikari:
+      minimum-idle: 1
+      maximum-pool-size: 5
+  jpa:
+    hibernate:
+      ddl-auto: none
+      
+  flyway:
+    enabled: false
+    
+server:
+  error:
+    include-binding-errors: always
+    include-message: always  
+
