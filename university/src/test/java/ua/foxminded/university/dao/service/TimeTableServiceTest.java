@@ -115,7 +115,7 @@ class TimeTableServiceTest {
 	@ParameterizedTest
 	@CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 2, 1, 1, 1", "2023-09-01, 12:00, 13:30, 2, 1, 2, 2, 2, 2",
 			"2023-09-02, 09:00, 10:30, 3, 2, 3, 3, 3, 3", "2023-09-02, 12:00, 13:30, 1, 1, 2, 3, 1, 3" })
-	void testGetStudentTimeTables_ShouldReturnAllTimeTablesForStudent(LocalDate date, LocalTime timeFrom,
+	void testGetStudentTimeTable_ShouldReturnAllTimeTablesForStudent(LocalDate date, LocalTime timeFrom,
 			LocalTime timeTo, int teacherId, int firstCourseId, int secondCourseId, int groupId, int classRoomId,
 			int studentId) {
 		studentRepository.addStudentToTheCourse(studentId, "Mathematics");
@@ -140,7 +140,7 @@ class TimeTableServiceTest {
 			}
 		};
 
-		Assertions.assertEquals(expectedTimeTables, timeTableService.getStudentTimeTables(studentId));
+		Assertions.assertEquals(expectedTimeTables, timeTableService.getStudentTimeTable(studentId));
 	}
 
 	@ParameterizedTest

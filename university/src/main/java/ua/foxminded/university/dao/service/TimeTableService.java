@@ -61,7 +61,7 @@ public class TimeTableService {
 		}
 	}
 
-	List<TimeTable> getStudentTimeTables(int studentId) {
+	List<TimeTable> getStudentTimeTable(int studentId) {
 		Student existingStudent = studentRepository.findById(studentId).orElseThrow(() -> {
 			log.warn("Student with id {} not found", studentId);
 			return new NoSuchElementException("Student not found");
