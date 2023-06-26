@@ -39,4 +39,7 @@ public interface TimeTableRepository extends JpaRepository<TimeTable, Integer> {
 	boolean existsByDateAndTimeFromAndTimeToAndClassRoom(LocalDate date, LocalTime timeFrom, LocalTime timeTo,
 			ClassRoom classRoom);
 
+	@Query("SELECT CASE WHEN COUNT(c) > 0 THEN true ELSE false END FROM Student s JOIN s.courses c WHERE s.id = :studentId")
+	boolean studentIsAssignedToAnyCourse(@Param("studentId") int studentId);
+
 }

@@ -62,7 +62,16 @@ public class TimeTableService {
 	}
 
 	List<TimeTable> getStudentTimeTables(int studentId) {
-		return timeTableRepository.findTimeTablesByStudent(studentId);
+		Student existingStudent = studentRepository.findById(studentId).orElseThrow(() -> {
+			log.warn("Student with id {} not found", studentId);
+			return new NoSuchElementException("Student not found");
+		});
+
+		if (timeTableRepository.studentIsAssignedToAnyCourse(existingStudent.getId())) {
+			return timeTableRepository.findTimeTablesByStudent(existingStudent.getId());
+		} else {
+			return timeTableRepository.findByGroup(existingStudent.getGroup());
+		}
 	}
 
 	public List<TimeTable> getTeacherTimeTable(Teacher teacher) {

@@ -113,23 +113,34 @@ class TimeTableServiceTest {
 	}
 
 	@ParameterizedTest
-	@CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 1, 1, 1", "2023-09-01, 12:00, 13:30, 2, 2, 2, 2, 2",
-			"2023-09-02, 09:00, 10:30, 3, 3, 3, 3, 3", "2023-09-02, 12:00, 13:30, 1, 1, 3, 1, 3" })
+	@CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 2, 1, 1, 1", "2023-09-01, 12:00, 13:30, 2, 1, 2, 2, 2, 2",
+			"2023-09-02, 09:00, 10:30, 3, 2, 3, 3, 3, 3", "2023-09-02, 12:00, 13:30, 1, 1, 2, 3, 1, 3" })
 	void testGetStudentTimeTables_ShouldReturnAllTimeTablesForStudent(LocalDate date, LocalTime timeFrom,
-			LocalTime timeTo, int teacherId, int courseId, int groupId, int classRoomId, int studentId) {
-		Optional<Student> student = studentRepository.findById(studentId);
-
+			LocalTime timeTo, int teacherId, int firstCourseId, int secondCourseId, int groupId, int classRoomId,
+			int studentId) {
 		studentRepository.addStudentToTheCourse(studentId, "Mathematics");
-//		studentRepository.addStudentToTheCourse(studentId, "Physics");
-//		studentRepository.addStudentToTheCourse(studentId, "Chemistry");
+		studentRepository.addStudentToTheCourse(studentId, "Physics");
+		studentRepository.addStudentToTheCourse(studentId, "Chemistry");
 
-		TimeTable timeTable = timeTableBuilder.saveGroupTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId,
-				classRoomId);
+		TimeTable timeTable1 = timeTableBuilder.saveGroupTimeTable(date, timeFrom, timeTo, teacherId, firstCourseId,
+				groupId, classRoomId);
+		TimeTable timeTable2 = timeTableBuilder.saveGroupTimeTable(date, timeFrom.plusHours(2), timeTo.plusHours(2),
+				teacherId, secondCourseId, groupId, classRoomId);
+		TimeTable timeTable3 = timeTableBuilder.saveTimeTableForStudentsAtCourse(date, timeFrom.plusHours(1),
+				timeTo.plusHours(1), teacherId, firstCourseId, classRoomId);
+		TimeTable timeTable4 = timeTableBuilder.saveTimeTableForStudentsAtCourse(date.plusDays(1),
+				timeFrom.plusHours(1), timeTo.plusHours(1), teacherId, firstCourseId, classRoomId);
+		List<TimeTable> expectedTimeTables = new ArrayList<>() {
+			private static final long serialVersionUID = 1L;
+			{
+				add(timeTable1);
+				add(timeTable2);
+				add(timeTable3);
+				add(timeTable4);
+			}
+		};
 
-//		TimeTable timeTable2 = timeTableBuilder.saveTimeTableForStudentsAtCourse(date, timeFrom.plusHours(1),
-//				timeTo.plusHours(1), teacherId, courseId, classRoomId);
-
-		Assertions.assertEquals("", timeTableService.getStudentTimeTables(studentId));
+		Assertions.assertEquals(expectedTimeTables, timeTableService.getStudentTimeTables(studentId));
 	}
 
 	@ParameterizedTest
