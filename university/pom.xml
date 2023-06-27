@@ -100,6 +100,13 @@
             <artifactId>spring-security-crypto</artifactId>
         </dependency>
 
+        <!-- Bootstrap webjar -->
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>bootstrap</artifactId>
+            <version>5.3.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>

@@ -14,3 +14,4 @@ spring:
   flyway:
     table: schema_history
     schemas: university
+        
