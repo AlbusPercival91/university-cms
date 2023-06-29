@@ -21,7 +21,9 @@ VALUES
     ('Course 5', 'Course 5 description'),
     ('Course 6', 'Course 6 description'),
     ('Course 7', 'Course 7 description'),
-    ('Course 8', 'Course 8 description');
+    ('Course 8', 'Course 8 description'),
+    ('Course 9', 'Course 9 description'),
+    ('Course 10', 'Course 10 description');
 
 -- Insert sample data for university.faculties
 INSERT INTO university.faculties (faculty_name)
@@ -91,4 +93,42 @@ SELECT
     (id - 1) % 8 + 1, 
     FLOOR((id - 1) / 4) + 1
 FROM generate_series(1, 20) id;
+
+-- Insert sample data for university.students_courses
+INSERT INTO university.students_courses (student_id, course_id)
+SELECT
+    s.id,
+    c.course_id
+FROM
+    university.students AS s
+    JOIN LATERAL (
+        SELECT course_id
+        FROM university.courses
+        WHERE course_id NOT IN (
+            SELECT course_id
+            FROM university.students_courses
+            WHERE student_id = s.id
+        )
+        ORDER BY random()
+        LIMIT 5 
+    ) AS c ON true;
+    
+-- Insert sample data for university.teachers_courses
+INSERT INTO university.teachers_courses (teacher_id, course_id)
+SELECT
+    t.id,
+    c.course_id
+FROM
+    university.teachers AS t
+    JOIN LATERAL (
+        SELECT course_id
+        FROM university.courses
+        WHERE course_id NOT IN (
+            SELECT course_id
+            FROM university.teachers_courses
+            WHERE teacher_id = t.id
+        )
+        ORDER BY random()
+        LIMIT 2 
+    ) AS c ON true;
 

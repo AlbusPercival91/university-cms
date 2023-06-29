@@ -76,6 +76,22 @@ CREATE TABLE IF NOT EXISTS university.teachers (
     FOREIGN KEY (department_id) REFERENCES university.departments (department_id)
 );
 
+CREATE TABLE IF NOT EXISTS university.students_courses (
+    id SERIAL PRIMARY KEY,
+    student_id INT,
+    course_id INT,
+    FOREIGN KEY (student_id) REFERENCES university.students (id),
+    FOREIGN KEY (course_id) REFERENCES university.courses (course_id)
+);
+
+CREATE TABLE IF NOT EXISTS university.teachers_courses (
+    id SERIAL PRIMARY KEY,
+    teacher_id INT,
+    course_id INT,
+    FOREIGN KEY (teacher_id) REFERENCES university.teachers (id),
+    FOREIGN KEY (course_id) REFERENCES university.courses (course_id)
+);
+
 CREATE TABLE IF NOT EXISTS university.timetable (
     timetable_id SERIAL PRIMARY KEY,
     date DATE NOT NULL,
