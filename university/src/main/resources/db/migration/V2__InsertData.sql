@@ -74,8 +74,8 @@ VALUES
 -- Insert sample data for university.students
 INSERT INTO university.students (first_name, last_name, active, email, password, group_id)
 SELECT
-    CONCAT('Student', id),
-    'User',
+    CONCAT('Studen Name', id),
+    CONCAT('Student Surname', id),
     true,
     CONCAT('student', id, '@example.com'),
     CONCAT('student', id, 'password'),
@@ -85,13 +85,13 @@ FROM generate_series(1, 100) id;
 -- Insert sample data for university.teachers
 INSERT INTO university.teachers (first_name, last_name, active, email, password, course_id, department_id)
 SELECT
-    CONCAT('Teacher', id),
-    'User',
+    CONCAT('Teacher Name', id),
+    CONCAT('Teacher Surname', id),
     true,
     CONCAT('teacher', id, '@example.com'),
     CONCAT('teacher', id, 'password'),
-    (id - 1) % 8 + 1, 
-    FLOOR((id - 1) / 4) + 1
+    (id - 1) % 10 + 1, 
+    FLOOR((id - 1) / 2) + 1
 FROM generate_series(1, 20) id;
 
 -- Insert sample data for university.students_courses
