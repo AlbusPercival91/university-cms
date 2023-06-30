@@ -1,52 +1,52 @@
 -- Insert sample data for university.admin
 INSERT INTO university.admin (first_name, last_name, active, email, password)
-VALUES ('Admin', 'User', true, 'admin@example.com', 'adminpassword');
+VALUES ('Admin', 'Admin', true, 'admin@example.com', 'adminpassword');
 
 -- Insert sample data for university.classroom
 INSERT INTO university.classroom (build_no, room_no, street)
 VALUES
-    (1, 101, 'Main Street'),
-    (2, 202, 'Park Avenue'),
-    (3, 303, 'Elm Street'),
-    (4, 404, 'Oak Avenue'),
-    (5, 505, 'Maple Street');
+    (1, 101, 'Green Street'),
+    (2, 202, 'Yellow Avenue'),
+    (3, 303, 'Red Street'),
+    (4, 404, 'Pink Avenue'),
+    (5, 505, 'Purple Street');
 
 -- Insert sample data for university.courses
 INSERT INTO university.courses (course_name, course_description)
 VALUES
-    ('Course 1', 'Course 1 description'),
-    ('Course 2', 'Course 2 description'),
-    ('Course 3', 'Course 3 description'),
-    ('Course 4', 'Course 4 description'),
-    ('Course 5', 'Course 5 description'),
-    ('Course 6', 'Course 6 description'),
-    ('Course 7', 'Course 7 description'),
-    ('Course 8', 'Course 8 description'),
-    ('Course 9', 'Course 9 description'),
-    ('Course 10', 'Course 10 description');
+    ('History', 'Exploring the ancient civilizations and their impact on modern society.'),
+    ('Geometry', 'A comprehensive study of calculus and its applications in mathematics.'),
+    ('Literature', 'An overview of literary genres, styles, and critical analysis.'),
+    ('Economics', 'Understanding the basic principles and concepts of economics.'),
+    ('Psychology', 'An introduction to the fundamental concepts and theories of psychology.'),
+    ('Political Science', 'Examining the basic concepts and theories of political science.'),
+    ('Sociology', 'Understanding the sociological perspectives and theories.'),
+    ('Biology', 'An introduction to the basic principles of biology and the diversity of life.'),
+    ('Chemistry', 'Exploring the foundational principles and concepts of chemistry.'),
+    ('Philosophy', 'Examining major philosophical themes and thinkers throughout history.');
 
 -- Insert sample data for university.faculties
 INSERT INTO university.faculties (faculty_name)
 VALUES
-    ('Faculty 1'),
-    ('Faculty 2'),
-    ('Faculty 3'),
-    ('Faculty 4'),
-    ('Faculty 5');
+    ('Faculty of Arts'),
+    ('Faculty of Science'),
+    ('Faculty of Business'),
+    ('Faculty of Engineering'),
+    ('Faculty of Medicine');
 
 -- Insert sample data for university.departments
 INSERT INTO university.departments (name, faculty_id)
 VALUES
-    ('Department 1', 1),
-    ('Department 2', 2),
-    ('Department 3', 3),
-    ('Department 4', 4),
-    ('Department 5', 5),
-    ('Department 6', 1),
-    ('Department 7', 2),
-    ('Department 8', 3),
-    ('Department 9', 4),
-    ('Department 10', 5);
+    ('Department of History', 1),
+    ('Department of Mathematics', 2),
+    ('Department of Computer Science', 3),
+    ('Department of Physics', 4),
+    ('Department of Economics', 5),
+    ('Department of English', 1),
+    ('Department of Chemistry', 2),
+    ('Department of Business Administration', 3),
+    ('Department of Mechanical Engineering', 4),
+    ('Department of Medicine', 5);
 
 -- Insert sample data for university.groups
 INSERT INTO university.groups (group_name, faculty_id)
@@ -65,11 +65,11 @@ VALUES
 -- Insert sample data for university.staff
 INSERT INTO university.staff (first_name, last_name, active, email, password, position, "function")
 VALUES
-    ('Staff 1', 'User', true, 'staff1@example.com', 'staff1password', 'Position 1', 'Function 1'),
-    ('Staff 2', 'User', true, 'staff2@example.com', 'staff2password', 'Position 2', 'Function 2'),
-    ('Staff 3', 'User', true, 'staff3@example.com', 'staff3password', 'Position 3', 'Function 3'),
-    ('Staff 4', 'User', true, 'staff4@example.com', 'staff4password', 'Position 4', 'Function 4'),
-    ('Staff 5', 'User', true, 'staff5@example.com', 'staff5password', 'Position 5', 'Function 5');
+    ('John', 'Cole', true, 'johncole@example.com', 'password1', 'Administrator', 'Administrative tasks'),
+    ('Jane', 'Smith', true, 'janesmith@example.com', 'password2', 'Counselor', 'Student guidance'),
+    ('Michael', 'Johnson', true, 'michaeljohnson@example.com', 'password3', 'Librarian', 'Library management'),
+    ('Emily', 'Brown', true, 'emilybrown@example.com', 'password4', 'Advisor', 'Academic advising'),
+    ('David', 'Davis', true, 'daviddavis@example.com', 'password5', 'Coordinator', 'Program coordination');
 
 -- Insert sample data for university.students
 INSERT INTO university.students (first_name, last_name, active, email, password, group_id)
