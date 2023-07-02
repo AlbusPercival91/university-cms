@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+   <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}" />
+   <style>
+      /* Custom CSS styles */
+      body {
+         background-color: cream;
+      }
+      .menu-button {
+         position: absolute;
+         top: 10px;
+         left: 10px;
+      }
+      .menu {
+         position: fixed;
+         top: 0;
+         left: -250px;
+         width: 250px;
+         height: 100%;
+         background-color: white;
+         transition: left 0.3s;
+      }
+      .menu.open {
+         left: 0;
+      }
+   </style>
+</head>
+<body>
+   <button class="menu-button" onclick="toggleMenu()">Menu</button>
+   <div class="menu">
+      <ul>
+         <li>Student</li>
+         <li>Teacher</li>
+         <li>Staff</li>
+         <li>University info</li>
+      </ul>
+   </div>
+   <div class="container">
+      <h1>Welcome to My App!</h1>
+      <div class="row justify-content-center">
+         <div class="col-sm-4">
+            <div class="text-center">
+               <input type="text" class="form-control mb-2" placeholder="Email">
+               <input type="password" class="form-control mb-2" placeholder="Password">
+               <button class="btn btn-primary">Login</button>
+               <button class="btn btn-secondary">Forgot Password</button>
+            </div>
+         </div>
+      </div>
+   </div>
+   
+   <script th:src="@{/webjars/bootstrap/5.3.0/js/bootstrap.min.js}"></script>
+   <script>
+      function toggleMenu() {
+         document.querySelector('.menu').classList.toggle('open');
+      }
+      document.addEventListener("DOMContentLoaded", function() {
+         console.log("Document loaded!");
+      });
+   </script>
+</body>
+</html>
+
