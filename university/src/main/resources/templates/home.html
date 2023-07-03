@@ -7,16 +7,8 @@
 </head>
 
 <body>
-    <header>
-        <nav>
-            <ul>
-                <li><a th:href="@{~/}">Home</a></li>
-                <li><a th:href="@{~/about}">About</a></li>
-                <li><a th:href="@{~/contacts}">Contacts</a></li>
 
-            </ul>
-        </nav>
-    </header>
+    <div th:replace="fragments/header :: header"></div>
 
     <section class="hero">
         <div class="hero-content">
@@ -44,9 +36,7 @@
         </div>
     </section>
 
-    <footer>
-        <p>&copy; 2023 University CMS. All rights reserved.</p>
-    </footer>
+    <div th:replace="fragments/footer :: footer"></div>
 
     <script th:src="@{/js/scripts.js}"></script>
 </body>
