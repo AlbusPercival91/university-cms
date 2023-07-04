@@ -1,25 +1,21 @@
 document.addEventListener("DOMContentLoaded", function() {
     var sidebar = document.getElementById("sidebar");
-    var content = document.querySelector(".content");
+    var menuItems = sidebar.querySelectorAll(".menu-item-box");
 
-    sidebar.addEventListener("click", function(e) {
-        var menuItem = e.target.closest(".menu-item");
-        if (menuItem) {
-            var submenu = menuItem.querySelector(".submenu");
+    menuItems.forEach(function(menuItem) {
+        menuItem.addEventListener("click", function(event) {
+            var submenu = this.querySelector(".submenu");
             if (submenu) {
+                event.stopPropagation(); // Stop event propagation to prevent closing the submenu immediately
                 submenu.style.display = submenu.style.display === "block" ? "none" : "block";
             }
-        }
+        });
     });
 
-    content.addEventListener("click", function() {
+    document.addEventListener("click", function() {
         var submenuItems = sidebar.querySelectorAll(".submenu");
         submenuItems.forEach(function(submenu) {
             submenu.style.display = "none";
         });
     });
 });
-
-
-
-
