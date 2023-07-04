@@ -46,7 +46,7 @@
 
   .submenu {
       display: none;
-      position: absolute;
+      position: -ms-page;
       top: 100%;
       left: 0;
       background-color: #333;
