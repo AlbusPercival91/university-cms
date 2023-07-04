@@ -1,0 +1,52 @@
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+header {
+    background-color: #f0f0f0;
+    padding: 10px;
+}
+
+aside#sidebar {
+    background-color: #333;
+    color: #fff;
+    width: 250px;
+    transition: transform 0.3s;
+    overflow-y: auto;
+}
+
+.content {
+    flex: 1;
+    padding: 20px;
+}
+
+.menu-item {
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 1px solid #666;
+}
+
+.menu-item-title {
+    display: block;
+    font-weight: bold;
+}
+
+.submenu {
+    display: none;
+    padding-left: 20px;
+}
+
+.submenu li {
+    padding: 5px 0;
+}
+
+.submenu a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.footer {
+    background-color: #f0f0f0;
+    padding: 10px;
+}
