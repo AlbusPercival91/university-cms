@@ -68,12 +68,6 @@ a.feature-link {
     color: inherit;
 }
 
-a.feature-link:hover {
-    text-decoration: none;
-    color: blue;
-    /* Change the color to your desired color */
-}
-
 /* Footer styles */
 footer {
     background-color: #333;
