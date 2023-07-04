@@ -1,11 +1,12 @@
 .container {
     display: flex;
+    flex-direction: column;
     height: 100vh;
 }
 
 header {
-    background-color: #f0f0f0;
     padding: 10px;
+    margin-bottom: 10px;
 }
 
 aside#sidebar {
@@ -44,9 +45,4 @@ aside#sidebar {
 .submenu a {
     color: #fff;
     text-decoration: none;
-}
-
-.footer {
-    background-color: #f0f0f0;
-    padding: 10px;
 }

@@ -10,8 +10,10 @@
 </head>
 
 <body>
+
+    <header th:replace="fragments/header :: header"></header>
+
     <div class="container">
-        <header th:replace="fragments/header :: header"></header>
 
         <aside id="sidebar">
             <nav>
@@ -94,8 +96,10 @@
             <!-- Your content goes here -->
         </section>
 
-        <footer th:replace="fragments/footer :: footer"></footer>
     </div>
+
+    <footer th:replace="fragments/footer :: footer"></footer>
+
 </body>
 
 </html>
