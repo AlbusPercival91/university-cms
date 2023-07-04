@@ -63,6 +63,17 @@ nav ul li a {
     transform: scale(1.05);
 }
 
+a.feature-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+a.feature-link:hover {
+    text-decoration: none;
+    color: blue;
+    /* Change the color to your desired color */
+}
+
 /* Footer styles */
 footer {
     background-color: #333;

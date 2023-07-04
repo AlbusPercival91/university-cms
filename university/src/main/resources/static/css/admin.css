@@ -1,11 +1,26 @@
 .container {
     display: flex;
+    flex-direction: column;
     height: 100vh;
 }
 
-header {
-    background-color: #f0f0f0;
-    padding: 10px;
+.menu-button {
+    position: fixed;
+    top: 50px;
+    /* Adjust this value to position the button below the header */
+    left: 10px;
+    /* Adjust this value to set the left position of the button */
+    background-color: black;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 99;
+    transition: transform 0.3s;
+}
+
+.menu-button.active {
+    transform: translateY(100%);
 }
 
 aside#sidebar {
@@ -13,12 +28,24 @@ aside#sidebar {
     color: #fff;
     width: 250px;
     transition: transform 0.3s;
-    overflow-y: auto;
+    transform: translateX(-100%);
+    position: fixed;
+    top: 70px;
+    /* Adjust this value to position the sidebar below the header */
+    left: 0;
+    bottom: 0;
+    z-index: 98;
+}
+
+.show-menu {
+    transform: translateX(0);
 }
 
 .content {
     flex: 1;
     padding: 20px;
+    margin-top: 70px;
+    /* Adjust this value to push the content below the header */
 }
 
 .menu-item {
@@ -49,4 +76,9 @@ aside#sidebar {
 .footer {
     background-color: #f0f0f0;
     padding: 10px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 99;
 }
