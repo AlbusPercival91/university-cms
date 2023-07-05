@@ -18,6 +18,6 @@ public class TeacherController {
 	public String getTeacherList(Model model) {
 		List<Teacher> teachers = teacherService.getAllTeachers();
 		model.addAttribute("teachers", teachers);
-		return "teacher-list";
+		return "teachers/list";
 	}
 }
