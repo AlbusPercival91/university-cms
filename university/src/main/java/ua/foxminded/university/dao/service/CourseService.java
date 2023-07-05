@@ -56,7 +56,7 @@ public class CourseService {
 		return courseRepository.findAll();
 	}
 
-	List<Course> findCoursesRelatedToTeacher(int teacherId) {
+	public List<Course> findCoursesRelatedToTeacher(int teacherId) {
 		Teacher existingTeacher = teacherRepository.findById(teacherId).orElseThrow(() -> {
 			log.warn("Teacher with id {} not found", teacherId);
 			return new NoSuchElementException("Teacher not found");
@@ -64,7 +64,7 @@ public class CourseService {
 		return courseRepository.findCoursesRelatedToTeacher(existingTeacher.getId());
 	}
 
-	List<Course> findCoursesRelatedToStudent(int studentId) {
+	public List<Course> findCoursesRelatedToStudent(int studentId) {
 		Student existingStudent = studentRepository.findById(studentId).orElseThrow(() -> {
 			log.warn("Student with id {} not found", studentId);
 			return new NoSuchElementException("Student not found");

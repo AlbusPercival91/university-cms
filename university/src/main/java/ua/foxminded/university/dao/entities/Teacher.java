@@ -1,6 +1,7 @@
 package ua.foxminded.university.dao.entities;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -37,7 +38,7 @@ public class Teacher extends Person {
 	@ToString.Exclude
 	@ManyToMany(cascade = { CascadeType.PERSIST }, fetch = FetchType.LAZY)
 	@JoinTable(schema = "university", name = "teachers_courses", joinColumns = @JoinColumn(name = "teacher_id"), inverseJoinColumns = @JoinColumn(name = "course_id"))
-	private Set<Course> additionalCourses = new HashSet<>();
+	private List<Course> additionalCourses = new ArrayList<>();
 
 	@ToString.Exclude
 	@OneToMany(mappedBy = "teacher")

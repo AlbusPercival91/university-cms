@@ -1,7 +1,7 @@
 package ua.foxminded.university.dao.entities;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -32,7 +32,7 @@ public class Student extends Person {
 	@ToString.Exclude
 	@ManyToMany(cascade = { CascadeType.PERSIST }, fetch = FetchType.LAZY)
 	@JoinTable(schema = "university", name = "students_courses", joinColumns = @JoinColumn(name = "student_id"), inverseJoinColumns = @JoinColumn(name = "course_id"))
-	private Set<Course> courses = new HashSet<>();
+	private List<Course> courses = new ArrayList<>();
 
 	public Student(String firstName, String lastName, boolean isActive, String email, String password, Group group) {
 		super(firstName, lastName, isActive, email, password);
