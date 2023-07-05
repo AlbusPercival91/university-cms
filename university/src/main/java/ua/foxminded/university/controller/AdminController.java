@@ -17,6 +17,6 @@ public class AdminController {
 	}
 
 	public String getTeacherList(Model model) {
-		return teacherController.getTeacherList(model);
+		return teacherController.getAllTeachersList(model);
 	}
 }

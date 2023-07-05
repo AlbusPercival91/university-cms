@@ -15,7 +15,7 @@ public class TeacherController {
 	private TeacherService teacherService;
 
 	@GetMapping("/teachers/list")
-	public String getTeacherList(Model model) {
+	public String getAllTeachersList(Model model) {
 		List<Teacher> teachers = teacherService.getAllTeachers();
 		model.addAttribute("teachers", teachers);
 		return "teachers/list";
