@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Teacher List</title>
+    <title>Teachers List</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}" />
 </head>
 
@@ -14,7 +14,7 @@
 <body>
 
     <div class="container">
-        <h1>Teacher List</h1>
+        <h1>Teachers List</h1>
         <table class="table table-bordered">
             <caption>All Teachers Table</caption>
             <thead>
@@ -33,7 +33,7 @@
                     <td th:text="${teacher.firstName}"></td>
                     <td th:text="${teacher.lastName}"></td>
                     <td th:text="${teacher.department.name}"></td>
-                    <td th:text="${teacher.course.courseName}"></td>
+                    <td th:text="${teacher.mainCourse.courseName}"></td>
                     <td>
                         <span th:each="course, indexStat : ${teacher.additionalCourses}">
                             <span th:text="${course.courseName}"></span>

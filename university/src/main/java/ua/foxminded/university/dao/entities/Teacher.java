@@ -33,7 +33,7 @@ public class Teacher extends Person {
 
 	@ManyToOne
 	@JoinColumn(name = "course_id")
-	private Course course;
+	private Course mainCourse;
 
 	@ToString.Exclude
 	@ManyToMany(cascade = { CascadeType.PERSIST }, fetch = FetchType.LAZY)
@@ -48,6 +48,6 @@ public class Teacher extends Person {
 			Department department, Course course) {
 		super(firstName, lastName, isActive, email, password);
 		this.department = department;
-		this.course = course;
+		this.mainCourse = course;
 	}
 }

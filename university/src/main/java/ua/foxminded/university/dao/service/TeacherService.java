@@ -24,7 +24,7 @@ public class TeacherService {
 
 	public int createAndAssignTeacherToCourse(Teacher teacher) {
 		Teacher newTeacher = teacherRepository.save(teacher);
-		teacherRepository.addTeacherToTheCourse(teacher.getId(), teacher.getCourse().getCourseName());
+		teacherRepository.addTeacherToTheCourse(teacher.getId(), teacher.getMainCourse().getCourseName());
 		log.info("Created teacher with id: {}", newTeacher.getId());
 		return newTeacher.getId();
 	}
@@ -77,7 +77,7 @@ public class TeacherService {
 			return new NoSuchElementException("Course not found");
 		});
 
-		if (existingTeacher.getCourse().getCourseName().equals(courseName)) {
+		if (existingTeacher.getMainCourse().getCourseName().equals(courseName)) {
 			throw new IllegalStateException("Teacher can't be removed from his main Course!");
 		}
 		if (!findTeachersRelatedToCourse(courseName).contains(existingTeacher)) {
