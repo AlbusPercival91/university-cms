@@ -96,3 +96,65 @@ footer {
 .fade-in {
     animation: fadeIn 1s;
 }
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: auto;
+}
+
+aside#sidebar {
+    background-color: #333;
+    color: #fff;
+    width: 100%;
+    transition: transform 0.3s;
+    overflow-y: auto;
+}
+
+.menu {
+    display: flex;
+    justify-content: center;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.menu-item {
+    padding: 10px;
+    cursor: pointer;
+    position: relative;
+    border-bottom: 1px solid #666;
+}
+
+.menu-item-box {
+    position: relative;
+    cursor: pointer;
+}
+
+.menu-item-title {
+    display: block;
+    font-weight: bold;
+    color: #fff;
+}
+
+.submenu {
+    display: none;
+    position: -ms-page;
+    top: 100%;
+    left: 0;
+    background-color: #333;
+    list-style-type: none;
+    margin: 0;
+    padding: 10px;
+    z-index: 1;
+}
+
+.submenu li {
+    padding: 5px 0;
+}
+
+.submenu a {
+    color: #fff;
+    text-decoration: none;
+}
