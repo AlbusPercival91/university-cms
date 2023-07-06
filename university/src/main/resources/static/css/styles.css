@@ -169,3 +169,63 @@ aside#sidebar {
     border: 1px solid #ccc;
     padding: 8px;
 }
+
+/* Search styles */
+.search-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.search-section {
+    margin: 10px;
+}
+
+.search-square {
+    width: 200px;
+    padding: 20px;
+    text-align: center;
+    background-color: #f1f1f1;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s;
+}
+
+.search-square:hover {
+    transform: scale(1.05);
+}
+
+.search-square h3 {
+    margin-top: 0;
+}
+
+.search-square label {
+    display: block;
+    margin-top: 10px;
+}
+
+.search-square input[type="text"],
+.search-square select {
+    width: 100%;
+    padding: 5px;
+    margin-top: 5px;
+    box-sizing: border-box;
+}
+
+.search-square button {
+    width: 100%;
+    padding: 8px;
+    margin-top: 10px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.search-square button:hover {
+    background-color: #555;
+}
+
+#searchResults {
+    margin-top: 20px;
+    text-align: center;
+}

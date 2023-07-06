@@ -12,12 +12,109 @@
 <div th:replace="fragments/admin-panel :: div"></div>
 
 <body>
+    <div class="container">
+        <div class="search-block">
+            <h2>Search Panel</h2>
 
-    <!-- code here -->
+            <div class="search-container">
+                <!-- Search by Course Name -->
+                <div class="search-section">
+                    <div class="search-square">
+                        <h3>Search by Course Name</h3>
+                        <label for="courseName">Course Name:</label>
+                        <input type="text" id="courseName" name="courseName" />
+                        <button onclick="searchByCourseName()">Search</button>
+                    </div>
+                </div>
+
+                <!-- Search by Department Faculty -->
+                <div class="search-section">
+                    <div class="search-square">
+                        <h3>Search by Department Faculty</h3>
+                        <label for="facultyId">Faculty:</label>
+                        <select id="facultyId" name="facultyId">
+                            <!-- Add options dynamically from backend -->
+                        </select>
+                        <button onclick="searchByFaculty()">Search</button>
+                    </div>
+                </div>
+
+                <!-- Search by Department ID and Faculty ID -->
+                <div class="search-section">
+                    <div class="search-square">
+                        <h3>Search by Department ID and Faculty ID</h3>
+                        <label for="departmentId">Department ID:</label>
+                        <input type="text" id="departmentId" name="departmentId" />
+                        <label for="facultyId2">Faculty ID:</label>
+                        <input type="text" id="facultyId2" name="facultyId2" />
+                        <button onclick="searchByDepartment()">Search</button>
+                    </div>
+                </div>
+
+                <!-- Search by Teacher ID -->
+                <div class="search-section">
+                    <div class="search-square">
+                        <h3>Search by Teacher ID</h3>
+                        <label for="teacherId">Teacher ID:</label>
+                        <input type="text" id="teacherId" name="teacherId" />
+                        <button onclick="searchById()">Search</button>
+                    </div>
+                </div>
+
+                <!-- Search by Name and Family Name -->
+                <div class="search-section">
+                    <div class="search-square">
+                        <h3>Search by Name and Family Name</h3>
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" name="name" />
+                        <label for="familyName">Family Name:</label>
+                        <input type="text" id="familyName" name="familyName" />
+                        <button onclick="searchByNameAndFamilyName()">Search</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search results will be displayed here -->
+            <div id="searchResults"></div>
+        </div>
+    </div>
 
     <div th:replace="fragments/footer :: footer"></div>
 
     <script th:src="@{/js/admin-main.js}"></script>
+    <script>
+        function searchByCourseName() {
+            var courseName = document.getElementById("courseName").value;
+            // Perform AJAX request to backend with courseName and handle the response
+            // Update the searchResults div with the returned data
+        }
+
+        function searchByFaculty() {
+            var facultyId = document.getElementById("facultyId").value;
+            // Perform AJAX request to backend with facultyId and handle the response
+            // Update the searchResults div with the returned data
+        }
+
+        function searchByDepartment() {
+            var departmentId = document.getElementById("departmentId").value;
+            var facultyId = document.getElementById("facultyId2").value;
+            // Perform AJAX request to backend with departmentId and facultyId and handle the response
+            // Update the searchResults div with the returned data
+        }
+
+        function searchById() {
+            var teacherId = document.getElementById("teacherId").value;
+            // Perform AJAX request to backend with teacherId and handle the response
+            // Update the searchResults div with the returned data
+        }
+
+        function searchByNameAndFamilyName() {
+            var name = document.getElementById("name").value;
+            var familyName = document.getElementById("familyName").value;
+            // Perform AJAX request to backend with name and familyName and handle the response
+            // Update the searchResults div with the returned data
+        }
+    </script>
 </body>
 
 </html>
