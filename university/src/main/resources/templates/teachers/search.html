@@ -1,3 +1,4 @@
+<!-- search.html -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 
@@ -21,9 +22,11 @@
                 <div class="search-section">
                     <div class="search-square">
                         <h3>Find Teachers related to Course</h3>
-                        <label for="courseName">Course Name:</label>
-                        <input type="text" id="courseName" name="courseName" />
-                        <button onclick="searchByCourseName()">Search</button>
+                        <form th:action="@{/teachers/search-by-course}" method="post">
+                            <label for="courseName">Course Name:</label>
+                            <input type="text" id="courseName" name="courseName" />
+                            <button type="submit">Search</button>
+                        </form>
                     </div>
                 </div>
 
@@ -31,11 +34,11 @@
                 <div class="search-section">
                     <div class="search-square">
                         <h3>Find Teachers by Faculty</h3>
-                        <label for="facultyId">Faculty:</label>
-                        <select id="facultyId" name="facultyId">
-                            <!-- Add options dynamically from backend -->
-                        </select>
-                        <button onclick="searchByFaculty()">Search</button>
+                        <form th:action="@{/teachers/search-by-department-faculty}" method="post">
+                            <label for="facultyName">Faculty Name:</label>
+                            <input type="text" id="facultyName" name="facultyName" />
+                            <button type="submit">Search</button>
+                        </form>
                     </div>
                 </div>
 
@@ -43,11 +46,13 @@
                 <div class="search-section">
                     <div class="search-square">
                         <h3>Find Teachers by Department and Faculty</h3>
-                        <label for="departmentId">Department ID:</label>
-                        <input type="text" id="departmentId" name="departmentId" />
-                        <label for="facultyId2">Faculty ID:</label>
-                        <input type="text" id="facultyId2" name="facultyId2" />
-                        <button onclick="searchByDepartment()">Search</button>
+                        <form th:action="@{/teachers/search-by-department-id-faculty-id}" method="post">
+                            <label for="departmentId">Department ID:</label>
+                            <input type="text" id="departmentId" name="departmentId" />
+                            <label for="facultyId">Faculty ID:</label>
+                            <input type="text" id="facultyId" name="facultyId" />
+                            <button type="submit">Search</button>
+                        </form>
                     </div>
                 </div>
 
@@ -55,66 +60,51 @@
                 <div class="search-section">
                     <div class="search-square">
                         <h3>Find Teacher by ID</h3>
-                        <label for="teacherId">Teacher ID:</label>
-                        <input type="text" id="teacherId" name="teacherId" />
-                        <button onclick="searchById()">Search</button>
+                        <form th:action="@{/teachers/search-by-id}" method="post">
+                            <label for="teacherId">Teacher ID:</label>
+                            <input type="text" id="teacherId" name="teacherId" />
+                            <button type="submit">Search</button>
+                        </form>
                     </div>
                 </div>
 
                 <!-- Search by Name and Family Name -->
                 <div class="search-section">
                     <div class="search-square">
-                        <h3>Find Teacher by Name </h3>
-                        <label for="name">Name:</label>
-                        <input type="text" id="name" name="name" />
-                        <label for="familyName">Family Name:</label>
-                        <input type="text" id="familyName" name="familyName" />
-                        <button onclick="searchByNameAndFamilyName()">Search</button>
+                        <h3>Find Teacher by Name and Family Name</h3>
+                        <form th:action="@{/teachers/search-by-name-family-name}" method="post">
+                            <label for="name">Name:</label>
+                            <input type="text" id="name" name="name" />
+                            <label for="familyName">Family Name:</label>
+                            <input type="text" id="familyName" name="familyName" />
+                            <button type="submit">Search</button>
+                        </form>
                     </div>
                 </div>
             </div>
 
             <!-- Search results will be displayed here -->
-            <div id="searchResults"></div>
+            <div id="searchResults">
+                <!-- Display search results here if available -->
+                <th:block th:if="${not #lists.isEmpty(teachers)}">
+                    <h3>Search Results:</h3>
+                    <ul>
+                        <th:block th:each="teacher : ${teachers}">
+                            <li th:text="${teacher.firstName} + ' ' + ${teacher.lastName}}"></li>
+                        </th:block>
+                    </ul>
+                </th:block>
+                <!-- Display no results message if search results are empty -->
+                <th:block th:if="${#lists.isEmpty(teachers)}">
+                    <p>No results found.</p>
+                </th:block>
+            </div>
         </div>
     </div>
 
     <div th:replace="fragments/footer :: footer"></div>
 
     <script th:src="@{/js/admin-main.js}"></script>
-    <script>
-        function searchByCourseName() {
-            var courseName = document.getElementById("courseName").value;
-            // Perform AJAX request to backend with courseName and handle the response
-            // Update the searchResults div with the returned data
-        }
-
-        function searchByFaculty() {
-            var facultyId = document.getElementById("facultyId").value;
-            // Perform AJAX request to backend with facultyId and handle the response
-            // Update the searchResults div with the returned data
-        }
-
-        function searchByDepartment() {
-            var departmentId = document.getElementById("departmentId").value;
-            var facultyId = document.getElementById("facultyId2").value;
-            // Perform AJAX request to backend with departmentId and facultyId and handle the response
-            // Update the searchResults div with the returned data
-        }
-
-        function searchById() {
-            var teacherId = document.getElementById("teacherId").value;
-            // Perform AJAX request to backend with teacherId and handle the response
-            // Update the searchResults div with the returned data
-        }
-
-        function searchByNameAndFamilyName() {
-            var name = document.getElementById("name").value;
-            var familyName = document.getElementById("familyName").value;
-            // Perform AJAX request to backend with name and familyName and handle the response
-            // Update the searchResults div with the returned data
-        }
-    </script>
 </body>
 
 </html>

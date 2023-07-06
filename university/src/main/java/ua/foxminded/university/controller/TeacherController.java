@@ -14,6 +14,11 @@ public class TeacherController {
 	@Autowired
 	private TeacherService teacherService;
 
+	@GetMapping("/teachers/search")
+	public String searchPanel() {
+		return "teachers/search";
+	}
+
 	@GetMapping("/teachers/list")
 	public String getAllTeachersList(Model model) {
 		List<Teacher> teachers = teacherService.getAllTeachers();
@@ -21,13 +26,8 @@ public class TeacherController {
 		for (Teacher teacher : teachers) {
 			teacher.getAdditionalCourses();
 		}
-
 		model.addAttribute("teachers", teachers);
 		return "teachers/list";
 	}
 
-	@GetMapping("/teachers/search")
-	public String findTeachers() {
-		return "teachers/search";
-	}
 }
