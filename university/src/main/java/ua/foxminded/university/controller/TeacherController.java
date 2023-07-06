@@ -25,4 +25,9 @@ public class TeacherController {
 		model.addAttribute("teachers", teachers);
 		return "teachers/list";
 	}
+
+	@GetMapping("/teachers/search")
+	public String findTeachers() {
+		return "teachers/search";
+	}
 }
