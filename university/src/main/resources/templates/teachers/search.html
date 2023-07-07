@@ -82,23 +82,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Search results will be displayed here -->
-            <div id="searchResults">
-                <!-- Display search results here if available -->
-                <th:block th:if="${not #lists.isEmpty(teachers)}">
-                    <h3>Search Results:</h3>
-                    <ul>
-                        <th:block th:each="teacher : ${teachers}">
-                            <li th:text="${teacher.firstName} + ' ' + ${teacher.lastName}}"></li>
-                        </th:block>
-                    </ul>
-                </th:block>
-                <!-- Display no results message if search results are empty -->
-                <th:block th:if="${#lists.isEmpty(teachers)}">
-                    <p>No results found.</p>
-                </th:block>
-            </div>
         </div>
     </div>
 

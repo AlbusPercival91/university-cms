@@ -90,11 +90,11 @@ public class TeacherService {
 		return teacherRepository.findTeachersRelatedToCourse(courseName);
 	}
 
-	List<Teacher> findAllByDepartmentFaculty(Faculty faculty) {
+	public List<Teacher> findAllByDepartmentFaculty(Faculty faculty) {
 		return teacherRepository.findAllByDepartmentFaculty(faculty);
 	}
 
-	List<Teacher> findAllByDepartmentIdAndDepartmentFacultyId(int departmentId, int facultyId) {
+	public List<Teacher> findAllByDepartmentIdAndDepartmentFacultyId(int departmentId, int facultyId) {
 		return teacherRepository.findAllByDepartmentIdAndDepartmentFacultyId(departmentId, facultyId);
 	}
 }
