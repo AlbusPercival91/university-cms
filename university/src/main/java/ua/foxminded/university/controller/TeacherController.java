@@ -38,7 +38,7 @@ public class TeacherController {
 			@RequestParam(required = false) String courseName, @RequestParam(required = false) String facultyName,
 			@RequestParam(required = false) Integer departmentId, @RequestParam(required = false) Integer facultyId,
 			@RequestParam(required = false) Integer teacherId, @RequestParam(required = false) String firstName,
-			@RequestParam(required = false) String familyName, Model model) {
+			@RequestParam(required = false) String lastName, Model model) {
 		List<Teacher> teachers;
 
 		if ("course".equals(searchType)) {
@@ -50,9 +50,9 @@ public class TeacherController {
 		} else if ("teacher".equals(searchType)) {
 			teachers = new ArrayList<>();
 			teachers.add(teacherService.findTeacherById(teacherId));
-		} else if ("nameAndFamilyName".equals(searchType)) {
+		} else if ("firstNameAndLastName".equals(searchType)) {
 			teachers = new ArrayList<>();
-			teachers.add(teacherService.findTeacherByName(firstName, familyName));
+			teachers.add(teacherService.findTeacherByName(firstName, lastName));
 		} else {
 			return "error";
 		}
