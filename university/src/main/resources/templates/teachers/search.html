@@ -22,7 +22,8 @@
                 <div class="search-section">
                     <div class="search-square">
                         <h3>Find Teachers related to Course</h3>
-                        <form th:action="@{/teachers/search-by-course}" method="post">
+                        <form th:action="@{/teachers/search}" method="post">
+                            <input type="hidden" name="searchType" value="course" />
                             <label for="courseName">Course Name:</label>
                             <input type="text" id="courseName" name="courseName" />
                             <button type="submit">Search</button>
