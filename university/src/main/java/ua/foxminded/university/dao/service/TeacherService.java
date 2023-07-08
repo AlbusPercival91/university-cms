@@ -50,17 +50,6 @@ public class TeacherService {
 		return teacherRepository.save(existingTeacher);
 	}
 
-	public List<Teacher> getAllTeachers() {
-		return teacherRepository.findAll();
-	}
-
-	public Teacher findTeacherById(int teacherId) {
-		return teacherRepository.findById(teacherId).orElseThrow(() -> {
-			log.warn("Teacher with id {} not found", teacherId);
-			return new NoSuchElementException("Teacher not found");
-		});
-	}
-
 	public int addTeacherToTheCourse(int teacherId, String courseName) {
 		Teacher existingTeacher = teacherRepository.findById(teacherId).orElseThrow(() -> {
 			log.warn("Teacher with id {} not found", teacherId);
@@ -90,6 +79,17 @@ public class TeacherService {
 			throw new IllegalStateException("Teacher is not related with this Course!");
 		}
 		return teacherRepository.removeTeacherFromCourse(teacherId, existingCourse.getCourseName());
+	}
+
+	public List<Teacher> getAllTeachers() {
+		return teacherRepository.findAll();
+	}
+
+	public Teacher findTeacherById(int teacherId) {
+		return teacherRepository.findById(teacherId).orElseThrow(() -> {
+			log.warn("Teacher with id {} not found", teacherId);
+			return new NoSuchElementException("Teacher not found");
+		});
 	}
 
 	public Teacher findTeacherByName(String firstName, String lastName) {
