@@ -7,8 +7,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import ua.foxminded.university.dao.entities.Faculty;
 import ua.foxminded.university.dao.entities.Teacher;
 import ua.foxminded.university.dao.service.TeacherService;
 
@@ -46,9 +44,9 @@ public class TeacherController {
 		case "course":
 			teachers = teacherService.findTeachersRelatedToCourse(courseName);
 			break;
-//		case "faculty":
-//			teachers = teacherService.findAllByDepartmentFaculty(facultyName);
-//			break;
+		case "faculty":
+			teachers = teacherService.findAllByFacultyName(facultyName);
+			break;
 		case "department":
 			teachers = teacherService.findAllByDepartmentIdAndDepartmentFacultyId(departmentId, facultyId);
 			break;
