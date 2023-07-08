@@ -34,8 +34,7 @@ public class TeacherController {
 	}
 
 	@PostMapping("/teachers/search")
-	public String searchTeachers(@RequestParam("searchType") String searchType,
-			@RequestParam(required = false) String courseName, Model model) {
+	public String searchTeachers(@RequestParam("searchType") String searchType, String courseName, Model model) {
 		List<Teacher> teachers = teacherService.findTeachersRelatedToCourse(courseName);
 
 		for (Teacher teacher : teachers) {
