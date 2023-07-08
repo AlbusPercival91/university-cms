@@ -52,7 +52,6 @@
                             <input type="hidden" name="searchType" value="department" />
                             <label for="departmentId">Department ID:</label>
                             <input type="text" id="departmentId" name="departmentId" />
-                            <input type="hidden" name="searchType" value="faculty" />
                             <label for="facultyId">Faculty ID:</label>
                             <input type="text" id="facultyId" name="facultyId" />
                             <button type="submit">Search</button>
@@ -78,10 +77,9 @@
                     <div class="search-square">
                         <h3>Find Teacher by Name and Family Name</h3>
                         <form th:action="@{/teachers/search}" method="post">
-                            <input type="hidden" name="searchType" value="teacher" />
+                            <input type="hidden" name="searchType" value="nameAndFamilyName" />
                             <label for="name">Name:</label>
                             <input type="text" id="name" name="name" />
-                            <input type="hidden" name="searchType" value="teacher" />
                             <label for="familyName">Family Name:</label>
                             <input type="text" id="familyName" name="familyName" />
                             <button type="submit">Search</button>
