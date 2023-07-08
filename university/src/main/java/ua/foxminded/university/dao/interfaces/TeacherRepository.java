@@ -27,6 +27,8 @@ public interface TeacherRepository extends JpaRepository<Teacher, Integer> {
 			""")
 	int removeTeacherFromCourse(@Param("teacherId") int teacherId, @Param("courseName") String courseName);
 
+	Teacher findTeacherByFirstNameAndLastName(String firstName, String lastName);
+
 	@Query("""
 			SELECT t FROM Teacher t
 			     JOIN TeachersCourses tc ON t.id = tc.teacherId

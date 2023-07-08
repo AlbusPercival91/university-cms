@@ -92,6 +92,10 @@ public class TeacherService {
 		return teacherRepository.removeTeacherFromCourse(teacherId, existingCourse.getCourseName());
 	}
 
+	public Teacher findTeacherByName(String firstName, String lastName) {
+		return teacherRepository.findTeacherByFirstNameAndLastName(firstName, lastName);
+	}
+
 	public List<Teacher> findTeachersRelatedToCourse(String courseName) {
 		return teacherRepository.findTeachersRelatedToCourse(courseName);
 	}

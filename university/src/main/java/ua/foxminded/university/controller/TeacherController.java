@@ -37,35 +37,27 @@ public class TeacherController {
 	public String searchTeachers(@RequestParam("searchType") String searchType,
 			@RequestParam(required = false) String courseName, @RequestParam(required = false) String facultyName,
 			@RequestParam(required = false) Integer departmentId, @RequestParam(required = false) Integer facultyId,
-			@RequestParam(required = false) Integer teacherId, @RequestParam(required = false) String name,
+			@RequestParam(required = false) Integer teacherId, @RequestParam(required = false) String firstName,
 			@RequestParam(required = false) String familyName, Model model) {
 		List<Teacher> teachers;
 
-		switch (searchType) {
-		case "course":
+		if ("course".equals(searchType)) {
 			teachers = teacherService.findTeachersRelatedToCourse(courseName);
-			break;
-		case "faculty":
+		} else if ("faculty".equals(searchType)) {
 			teachers = teacherService.findAllByFacultyName(facultyName);
-			break;
-		case "department":
+		} else if ("department".equals(searchType)) {
 			teachers = teacherService.findAllByDepartmentIdAndDepartmentFacultyId(departmentId, facultyId);
-			break;
-		case "teacher":
+		} else if ("teacher".equals(searchType)) {
 			teachers = new ArrayList<>();
 			teachers.add(teacherService.findTeacherById(teacherId));
-			break;
-//		case "nameAndFamilyName":
-//			teachers = teacherService.findTeacherByNameAndFamilyName(name, familyName);
-//			break;
-		default:
+		} else if ("nameAndFamilyName".equals(searchType)) {
+			teachers = new ArrayList<>();
+			teachers.add(teacherService.findTeacherByName(firstName, familyName));
+		} else {
 			return "error";
 		}
 
-		for (Teacher teacher : teachers) {
-			teacher.getAdditionalCourses();
-		}
-
+		teachers.forEach(Teacher::getAdditionalCourses);
 		model.addAttribute("teachers", teachers);
 		return "teachers/list";
 	}
