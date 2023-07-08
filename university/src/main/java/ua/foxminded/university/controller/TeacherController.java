@@ -1,5 +1,6 @@
 package ua.foxminded.university.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -50,9 +51,10 @@ public class TeacherController {
 		case "department":
 			teachers = teacherService.findAllByDepartmentIdAndDepartmentFacultyId(departmentId, facultyId);
 			break;
-//		case "teacher":
-//			teachers = teacherService.findTeacherById(teacherId);
-//			break;
+		case "teacher":
+			teachers = new ArrayList<>();
+			teachers.add(teacherService.findTeacherById(teacherId));
+			break;
 //		case "nameAndFamilyName":
 //			teachers = teacherService.findTeacherByNameAndFamilyName(name, familyName);
 //			break;
