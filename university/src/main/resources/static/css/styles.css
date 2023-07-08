@@ -160,6 +160,14 @@ aside#sidebar {
     text-decoration: none;
 }
 
+.menu-item.separate .menu-item-box {
+    border-bottom: 2px solid #fff;
+}
+
+.menu-item.separate .menu-item-box a:hover {
+    background-color: #666;
+}
+
 .table-bordered {
     border-collapse: collapse;
 }
