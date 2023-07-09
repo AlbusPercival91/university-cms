@@ -23,7 +23,7 @@ public class TeacherService {
 
 	public int createAndAssignTeacherToCourse(Teacher teacher) {
 		Teacher newTeacher = teacherRepository.save(teacher);
-		teacherRepository.addTeacherToTheCourse(teacher.getId(), teacher.getMainCourse().getCourseName());
+		addTeacherToTheCourse(teacher.getId(), teacher.getMainCourse().getCourseName());
 		log.info("Created teacher with id: {}", newTeacher.getId());
 		return newTeacher.getId();
 	}
