@@ -17,12 +17,12 @@ public class TeacherController {
 	@Autowired
 	private TeacherService teacherService;
 
-	@GetMapping("/teachers/search")
+	@GetMapping("/teachers/teacher-search")
 	public String searchPanel() {
-		return "teachers/search";
+		return "teachers/teacher-search";
 	}
 
-	@GetMapping("/teachers/list")
+	@GetMapping("/teachers/teacher-list")
 	public String getAllTeachersList(Model model) {
 		List<Teacher> teachers = teacherService.getAllTeachers();
 
@@ -30,10 +30,10 @@ public class TeacherController {
 			teacher.getAdditionalCourses();
 		}
 		model.addAttribute("teachers", teachers);
-		return "teachers/list";
+		return "teachers/teacher-list";
 	}
 
-	@PostMapping("/teachers/search")
+	@PostMapping("/teachers/teacher-search")
 	public String searchTeachers(@RequestParam("searchType") String searchType,
 			@RequestParam(required = false) String courseName, @RequestParam(required = false) String facultyName,
 			@RequestParam(required = false) Integer departmentId, @RequestParam(required = false) Integer facultyId,
@@ -59,7 +59,7 @@ public class TeacherController {
 
 		teachers.forEach(Teacher::getAdditionalCourses);
 		model.addAttribute("teachers", teachers);
-		return "teachers/list";
+		return "teachers/teacher-list";
 	}
 
 }
