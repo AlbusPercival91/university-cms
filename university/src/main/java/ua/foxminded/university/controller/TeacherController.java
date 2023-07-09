@@ -22,6 +22,11 @@ public class TeacherController {
 		return "teachers/teacher-search";
 	}
 
+	@GetMapping("/teachers/create-teacher")
+	public String createTeacher() {
+		return "teachers/create-teacher";
+	}
+
 	@GetMapping("/teachers/teacher-list")
 	public String getAllTeachersList(Model model) {
 		List<Teacher> teachers = teacherService.getAllTeachers();
