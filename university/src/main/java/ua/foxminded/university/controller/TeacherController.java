@@ -34,18 +34,16 @@ public class TeacherController {
 	}
 
 	@PostMapping("/teachers/create-teacher")
-	public String createTeacher(@ModelAttribute("teacher") Teacher teacher) {
-		teacherService.createAndAssignTeacherToCourse(teacher);
-		return "redirect:/teachers/create-teacher"; // Redirect to the same page after creating the teacher
-	}
+	public String createTeacher(@ModelAttribute("teacher") Teacher teacher, Model model) {
+		if (teacher != null) {
+			teacherService.createAndAssignTeacherToCourse(teacher);
+			return "redirect:/teachers/create-teacher"; // Redirect to the same page after creating the teacher
+		}
 
-	@GetMapping("/teachers/create-teacher")
-	public String showCreateTeacherForm(Model model) {
 		List<Department> departments = departmentService.getAllDepartments();
 		List<Course> courses = courseService.getAllCourses();
 		model.addAttribute("departments", departments);
 		model.addAttribute("courses", courses);
-		model.addAttribute("teacher", new Teacher()); // Add an empty teacher object to the model
 		return "teachers/create-teacher";
 	}
 
