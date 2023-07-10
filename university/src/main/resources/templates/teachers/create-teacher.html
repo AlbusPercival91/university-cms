@@ -12,10 +12,8 @@
 <div th:replace="fragments/admin-panel :: div"></div>
 
 <body>
-    <header>
-        <h1>Create Teacher</h1>
-    </header>
     <div class="container">
+        <h2>Create New Teacher</h2>
         <form th:action="@{/teachers/create}" method="post">
             <div class="form-group">
                 <label for="firstName">First Name:</label>
@@ -45,12 +43,6 @@
                 <select id="course" name="course" required>
                     <option value="">Select Main Course</option>
                     <!-- Add options for courses -->
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="additionalCourses">Additional Courses:</label>
-                <select id="additionalCourses" name="additionalCourses" multiple>
-                    <!-- Add options for additional courses -->
                 </select>
             </div>
             <button type="submit">Create Teacher</button>
