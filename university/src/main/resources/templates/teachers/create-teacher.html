@@ -14,7 +14,7 @@
 <body>
     <div class="container">
         <h2>Create New Teacher</h2>
-        <form th:action="@{/teachers/create}" method="post">
+        <form th:action="@{/teachers/create-teacher}" method="post">
             <div class="form-group">
                 <label for="firstName">First Name:</label>
                 <input type="text" id="firstName" name="firstName" required>
@@ -35,16 +35,21 @@
                 <label for="department">Department:</label>
                 <select id="department" name="department" required>
                     <option value="">Select Department</option>
-                    <!-- Add options for departments -->
+                    <!-- Generate options for departments using Thymeleaf -->
+                    <option th:each="department : ${departments}" th:value="${department.id}"
+                        th:text="${department.name}"></option>
                 </select>
             </div>
             <div class="form-group">
                 <label for="course">Main Course:</label>
-                <select id="course" name="course" required>
+                <select id="course" name="courseName" required>
                     <option value="">Select Main Course</option>
-                    <!-- Add options for courses -->
+                    <!-- Generate options for courses using Thymeleaf -->
+                    <option th:each="course : ${courses}" th:value="${course.id}" th:text="${course.courseName}">
+                    </option>
                 </select>
             </div>
+
             <button type="submit">Create Teacher</button>
         </form>
     </div>
