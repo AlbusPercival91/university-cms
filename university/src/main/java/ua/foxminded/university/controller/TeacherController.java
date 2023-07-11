@@ -60,9 +60,9 @@ public class TeacherController {
 		int createdTeacher = teacherService.createAndAssignTeacherToCourse(teacher);
 
 		if (createdTeacher != teacher.getId()) {
-			redirectAttributes.addFlashAttribute("errorMessage", "Failed to create the teacher.");
+			redirectAttributes.addFlashAttribute("errorMessage", "Failed to create the teacher");
 		} else {
-			redirectAttributes.addFlashAttribute("successMessage", "Teacher created successfully.");
+			redirectAttributes.addFlashAttribute("successMessage", "Teacher created successfully");
 		}
 		return "redirect:/teachers/create-teacher";
 	}
