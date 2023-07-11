@@ -97,6 +97,7 @@ footer {
     animation: fadeIn 1s;
 }
 
+/* Admin panel styles */
 .container {
     display: flex;
     flex-direction: column;
@@ -160,6 +161,7 @@ aside#sidebar {
     text-decoration: none;
 }
 
+/* Back to Admin main page in Admin Panel */
 .menu-item.separate .menu-item-box {
     border-bottom: 2px solid #fff;
 }
@@ -168,6 +170,7 @@ aside#sidebar {
     background-color: #666;
 }
 
+/* Table styles */
 .table-bordered {
     border-collapse: collapse;
 }
@@ -238,6 +241,7 @@ aside#sidebar {
     text-align: center;
 }
 
+/* Styles in Create Entity page */
 .form-group {
     display: flex;
     flex-direction: row;
@@ -273,4 +277,27 @@ button[type="submit"] {
     border: none;
     border-radius: 4px;
     cursor: pointer;
+}
+
+/* information message styles when success or error ops */
+#success-message-container {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    color: #fff;
+    font-weight: bold;
+    background-color: #4caf50;
+}
+
+#error-message-container {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    color: #fff;
+    font-weight: bold;
+    background-color: #f44336;
 }
