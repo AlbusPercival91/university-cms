@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <title>Teachers List</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" />
 </head>
 
 <div th:replace="fragments/header :: header"></div>
@@ -32,8 +33,9 @@
             <tbody>
                 <tr th:each="teacher, rowStat : ${teachers}">
                     <td style="border: none;">
-                        <button th:id="'editButton-' + ${rowStat.index}" class="edit-button"
-                            style="display: none;">Edit</button>
+                        <button th:id="'editButton-' + ${rowStat.index}" class="icon-button">
+                            <i class="fas fa-edit"></i>
+                        </button>
                     </td>
                     <td th:text="${teacher.id}"></td>
                     <td th:text="${teacher.firstName}"></td>
@@ -49,19 +51,24 @@
                         </span>
                     </td>
                     <td style="border: none;">
-                        <button th:id="'removeButton-' + ${rowStat.index}" class="remove-button"
-                            style="display: none;">Remove</button>
+                        <button th:id="'removeButton-' + ${rowStat.index}" class="icon-button">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
                     </td>
                 </tr>
             </tbody>
         </table>
     </div>
 
+    <div th:replace="fragments/message :: div"></div>
     <div th:replace="fragments/footer :: footer"></div>
 
     <script th:src="@{/js/work-panel.js}"></script>
     <script th:src="@{/js/table-buttons.js}"></script>
 
 </body>
+
+</html>
+
 
 </html>

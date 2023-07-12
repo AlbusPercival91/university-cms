@@ -181,6 +181,12 @@ aside#sidebar {
     padding: 8px;
 }
 
+/* Style for icons in Table */
+.icon-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
 
 /* Search styles */
 .search-container {
