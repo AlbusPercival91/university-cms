@@ -181,17 +181,6 @@ aside#sidebar {
     padding: 8px;
 }
 
-/* Buttons styles in Table */
-.edit-button,
-.remove-button {
-    display: none;
-}
-
-tr:hover .edit-button,
-tr:hover .remove-button {
-    display: inline-block;
-}
-
 
 /* Search styles */
 .search-container {
