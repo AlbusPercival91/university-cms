@@ -181,8 +181,17 @@ aside#sidebar {
     padding: 8px;
 }
 
-/* Style for icons in Table */
+/* Styles for Table icons */
 .icon-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.icon-button .edit-icon,
+.icon-button .remove-icon {
+    display: none;
     background: none;
     border: none;
     cursor: pointer;

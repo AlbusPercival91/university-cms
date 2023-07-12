@@ -34,7 +34,7 @@
                 <tr th:each="teacher, rowStat : ${teachers}">
                     <td style="border: none;">
                         <button th:id="'editButton-' + ${rowStat.index}" class="icon-button">
-                            <i class="fas fa-edit"></i>
+                            <i class="fas fa-edit edit-icon"></i>
                         </button>
                     </td>
                     <td th:text="${teacher.id}"></td>
@@ -52,7 +52,7 @@
                     </td>
                     <td style="border: none;">
                         <button th:id="'removeButton-' + ${rowStat.index}" class="icon-button">
-                            <i class="fas fa-trash-alt"></i>
+                            <i class="fas fa-trash-alt remove-icon"></i>
                         </button>
                     </td>
                 </tr>
@@ -61,14 +61,12 @@
     </div>
 
     <div th:replace="fragments/message :: div"></div>
+
     <div th:replace="fragments/footer :: footer"></div>
 
     <script th:src="@{/js/work-panel.js}"></script>
     <script th:src="@{/js/table-buttons.js}"></script>
 
 </body>
-
-</html>
-
 
 </html>
