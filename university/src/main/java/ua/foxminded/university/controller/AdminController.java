@@ -37,28 +37,28 @@ public class AdminController {
 		return "admin/main";
 	}
 
-	@GetMapping("/admin/teacher-search-admin")
+	@GetMapping("/admin/teacher/teacher-search-admin")
 	public String adminTeacherSearchPanel() {
-		return "admin/teacher-search-admin";
+		return "admin/teacher/teacher-search-admin";
 	}
 
-	@GetMapping("/admin/create-teacher")
+	@GetMapping("/admin/teacher/create-teacher")
 	public String showCreateTeacherForm(Model model) {
 		List<Department> departments = departmentService.getAllDepartments();
 		List<Course> courses = courseService.getAllCourses();
 		model.addAttribute("departments", departments);
 		model.addAttribute("courses", courses);
-		return "admin/create-teacher";
+		return "admin/teacher/create-teacher";
 	}
 
-	@PostMapping("/admin/create-teacher")
+	@PostMapping("/admin/teacher/create-teacher")
 	public String createTeacher(@ModelAttribute("teacher") @Validated Teacher teacher, Model model,
 			BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 		if (bindingResult.hasErrors()) {
 			for (FieldError error : bindingResult.getFieldErrors()) {
 				redirectAttributes.addFlashAttribute(error.getField() + "Error", error.getDefaultMessage());
 			}
-			return "redirect:/admin/create-teacher";
+			return "redirect:/admin/teacher/create-teacher";
 		}
 
 		int createdTeacher = teacherService.createAndAssignTeacherToCourse(teacher);
@@ -68,15 +68,15 @@ public class AdminController {
 		} else {
 			redirectAttributes.addFlashAttribute("successMessage", "Teacher created successfully");
 		}
-		return "redirect:/admin/create-teacher";
+		return "redirect:/admin/teacher/create-teacher";
 	}
 
-	@GetMapping("/admin/teacher-card")
+	@GetMapping("/admin/teacher/teacher-card")
 	public String openTeacherCard() {
-		return "admin/teacher-card";
+		return "admin/teacher/teacher-card";
 	}
 
-	@GetMapping("/admin/edit-teacher-list")
+	@GetMapping("/admin/teacher/edit-teacher-list")
 	public String getAllTeachersListAsAdmin(Model model) {
 		List<Teacher> teachers = teacherService.getAllTeachers();
 
@@ -84,10 +84,10 @@ public class AdminController {
 			teacher.getAdditionalCourses();
 		}
 		model.addAttribute("teachers", teachers);
-		return "admin/edit-teacher-list";
+		return "admin/teacher/edit-teacher-list";
 	}
 
-	@PostMapping("/admin/teacher-search-admin")
+	@PostMapping("/admin/teacher/teacher-search-admin")
 	public String searchTeachersAsAdmin(@RequestParam("searchType") String searchType,
 			@RequestParam(required = false) String courseName, @RequestParam(required = false) String facultyName,
 			@RequestParam(required = false) Integer departmentId, @RequestParam(required = false) Integer facultyId,
@@ -113,7 +113,7 @@ public class AdminController {
 
 		teachers.forEach(Teacher::getAdditionalCourses);
 		model.addAttribute("teachers", teachers);
-		return "admin/edit-teacher-list";
+		return "admin/teacher/edit-teacher-list";
 	}
 
 }
