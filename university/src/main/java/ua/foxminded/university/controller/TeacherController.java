@@ -8,11 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import ua.foxminded.university.dao.entities.Course;
-import ua.foxminded.university.dao.entities.Department;
 import ua.foxminded.university.dao.entities.Teacher;
-import ua.foxminded.university.dao.service.CourseService;
-import ua.foxminded.university.dao.service.DepartmentService;
 import ua.foxminded.university.dao.service.TeacherService;
 
 @Controller
@@ -21,24 +17,9 @@ public class TeacherController {
 	@Autowired
 	private TeacherService teacherService;
 
-	@Autowired
-	private DepartmentService departmentService;
-
-	@Autowired
-	private CourseService courseService;
-
 	@GetMapping("/teachers/teacher-search")
 	public String searchPanel() {
 		return "teachers/teacher-search";
-	}
-
-	@GetMapping("/teachers/create-teacher")
-	public String showCreateTeacherForm(Model model) {
-		List<Department> departments = departmentService.getAllDepartments();
-		List<Course> courses = courseService.getAllCourses();
-		model.addAttribute("departments", departments);
-		model.addAttribute("courses", courses);
-		return "teachers/create-teacher";
 	}
 
 	@GetMapping("/teachers/teacher-list")
