@@ -19,16 +19,22 @@
             <caption hidden>All Teachers Table</caption>
             <thead>
                 <tr>
+                    <th>Edit</th>
                     <th>ID</th>
                     <th>First Name</th>
                     <th>Last Name</th>
                     <th>Department</th>
                     <th>Main Course</th>
                     <th>Additional Courses</th>
+                    <th>Remove</th>
                 </tr>
             </thead>
             <tbody>
-                <tr th:each="teacher : ${teachers}">
+                <tr th:each="teacher, rowStat : ${teachers}">
+                    <td>
+                        <button th:id="'editButton-' + ${rowStat.index}" class="edit-button"
+                            style="display: none;">Edit</button>
+                    </td>
                     <td th:text="${teacher.id}"></td>
                     <td th:text="${teacher.firstName}"></td>
                     <td th:text="${teacher.lastName}"></td>
@@ -42,6 +48,10 @@
                             <br th:unless="${indexStat.last}" /> <!-- Add a line break unless it's the last course -->
                         </span>
                     </td>
+                    <td>
+                        <button th:id="'removeButton-' + ${rowStat.index}" class="remove-button"
+                            style="display: none;">Remove</button>
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -50,6 +60,8 @@
     <div th:replace="fragments/footer :: footer"></div>
 
     <script th:src="@{/js/work-panel.js}"></script>
+    <script th:src="@{/js/table-buttons.js}"></script>
+
 </body>
 
 </html>
