@@ -129,4 +129,24 @@ public class AdminController {
 		return "redirect:/admin/teacher/edit-teacher-list";
 	}
 
+//	@PostMapping("/teachers/delete/{teacherId}")
+//	public String deleteTeacher(@PathVariable int teacherId, RedirectAttributes redirectAttributes,
+//			HttpServletRequest request) {
+//		try {
+//			teacherService.deleteTeacherById(teacherId);
+//			redirectAttributes.addFlashAttribute("successMessage", "Teacher was deleted!");
+//		} catch (EntityNotFoundException ex) {
+//			redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
+//		}
+//
+//		String referrer = request.getHeader("referer");
+//
+//		if (referrer.contains("/admin/teacher/edit-teacher-list")) {
+//			return "redirect:/admin/teacher/edit-teacher-list";
+//		} else if (referrer.contains("/admin/teacher/teacher-search-admin")) {
+//			return "redirect:/admin/teacher/teacher-search-admin";
+//		}
+//		return "redirect:/admin/teacher/edit-teacher-list";
+//	}
+
 }
