@@ -197,6 +197,14 @@ aside#sidebar {
     cursor: pointer;
 }
 
+/* Styles for Remove button */
+button.icon-button.remove-button[type="submit"] {
+    background: none;
+    border: none;
+    padding: 0;
+    color: #ff0000;
+}
+
 /* Search styles */
 .search-container {
     display: flex;

@@ -51,9 +51,13 @@
                         </span>
                     </td>
                     <td style="border: none;">
-                        <button th:id="'removeButton-' + ${rowStat.index}" class="icon-button">
-                            <i class="fas fa-trash-alt remove-icon"></i>
-                        </button>
+                        <!-- Remove Button -->
+                        <form th:action="@{/teachers/delete/{teacherId}(teacherId=${teacher.id})}" method="post">
+                            <button th:id="'removeButton-' + ${rowStat.index}" class="icon-button remove-button"
+                                type="submit">
+                                <i class="fas fa-trash-alt remove-icon"></i>
+                            </button>
+                        </form>
                     </td>
                 </tr>
             </tbody>
