@@ -21,7 +21,7 @@
                 <div class="search-section">
                     <div class="search-square">
                         <h3>Find Teachers related to Course</h3>
-                        <form th:action="@{/admin/teacher/search-result}" method="post">
+                        <form th:action="@{/admin/teacher/search-result}" method="get">
                             <input type="hidden" name="searchType" value="course" />
                             <label for="courseName">Course Name:</label>
                             <input type="text" id="courseName" name="courseName" />
@@ -34,7 +34,7 @@
                 <div class="search-section">
                     <div class="search-square">
                         <h3>Find Teachers by Faculty</h3>
-                        <form th:action="@{/admin/teacher/search-result}" method="post">
+                        <form th:action="@{/admin/teacher/search-result}" method="get">
                             <input type="hidden" name="searchType" value="faculty" />
                             <label for="facultyName">Faculty Name:</label>
                             <input type="text" id="facultyName" name="facultyName" />
@@ -47,7 +47,7 @@
                 <div class="search-section">
                     <div class="search-square">
                         <h3>Find Teachers by Department</h3>
-                        <form th:action="@{/admin/teacher/search-result}" method="post">
+                        <form th:action="@{/admin/teacher/search-result}" method="get">
                             <input type="hidden" name="searchType" value="department" />
                             <label for="departmentId">Department ID:</label>
                             <input type="text" id="departmentId" name="departmentId" />
@@ -62,7 +62,7 @@
                 <div class="search-section">
                     <div class="search-square">
                         <h3>Find Teacher by ID</h3>
-                        <form th:action="@{/admin/teacher/search-result}" method="post">
+                        <form th:action="@{/admin/teacher/search-result}" method="get">
                             <input type="hidden" name="searchType" value="teacher" />
                             <label for="teacherId">Teacher ID:</label>
                             <input type="text" id="teacherId" name="teacherId" />
@@ -75,7 +75,7 @@
                 <div class="search-section">
                     <div class="search-square">
                         <h3>Find Teacher by Name</h3>
-                        <form th:action="@{/admin/teacher/search-result}" method="post">
+                        <form th:action="@{/admin/teacher/search-result}" method="get">
                             <input type="hidden" name="searchType" value="firstNameAndLastName" />
                             <label for="firstName">Name:</label>
                             <input type="text" id="firstName" name="firstName" />

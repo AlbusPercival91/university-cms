@@ -3,6 +3,8 @@ package ua.foxminded.university.controller;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityNotFoundException;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -89,7 +91,7 @@ public class AdminController {
 		return "admin/teacher/edit-teacher-list";
 	}
 
-	@PostMapping("/admin/teacher/search-result")
+	@GetMapping("/admin/teacher/search-result")
 	public String searchTeachersAsAdmin(@RequestParam("searchType") String searchType,
 			@RequestParam(required = false) String courseName, @RequestParam(required = false) String facultyName,
 			@RequestParam(required = false) Integer departmentId, @RequestParam(required = false) Integer facultyId,
@@ -118,35 +120,35 @@ public class AdminController {
 		return "admin/teacher/edit-teacher-list";
 	}
 
-	@PostMapping("/teachers/delete/{teacherId}")
-	public String deleteTeacher(@PathVariable int teacherId, RedirectAttributes redirectAttributes) {
-		try {
-			teacherService.deleteTeacherById(teacherId);
-			redirectAttributes.addFlashAttribute("successMessage", "Teacher was deleted!");
-		} catch (EntityNotFoundException ex) {
-			redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
-		}
-		return "redirect:/admin/teacher/edit-teacher-list";
-	}
-
 //	@PostMapping("/teachers/delete/{teacherId}")
-//	public String deleteTeacher(@PathVariable int teacherId, RedirectAttributes redirectAttributes,
-//			HttpServletRequest request) {
+//	public String deleteTeacher(@PathVariable int teacherId, RedirectAttributes redirectAttributes) {
 //		try {
 //			teacherService.deleteTeacherById(teacherId);
 //			redirectAttributes.addFlashAttribute("successMessage", "Teacher was deleted!");
 //		} catch (EntityNotFoundException ex) {
 //			redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
 //		}
-//
-//		String referrer = request.getHeader("referer");
-//
-//		if (referrer.contains("/admin/teacher/edit-teacher-list")) {
-//			return "redirect:/admin/teacher/edit-teacher-list";
-//		} else if (referrer.contains("/admin/teacher/teacher-search-admin")) {
-//			return "redirect:/admin/teacher/teacher-search-admin";
-//		}
 //		return "redirect:/admin/teacher/edit-teacher-list";
 //	}
+
+	@PostMapping("/teachers/delete/{teacherId}")
+	public String deleteTeacher(@PathVariable int teacherId, RedirectAttributes redirectAttributes,
+			HttpServletRequest request) {
+		try {
+			teacherService.deleteTeacherById(teacherId);
+			redirectAttributes.addFlashAttribute("successMessage", "Teacher was deleted!");
+		} catch (EntityNotFoundException ex) {
+			redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
+		}
+
+		String referrer = request.getHeader("referer");
+
+		// If the referrer is not available or empty, redirect to a default page
+		if (referrer == null || referrer.isEmpty()) {
+			return "redirect:/admin/teacher/edit-teacher-list";
+		}
+
+		return "redirect:" + referrer;
+	}
 
 }
