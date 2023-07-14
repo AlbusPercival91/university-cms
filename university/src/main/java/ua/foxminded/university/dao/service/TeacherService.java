@@ -85,14 +85,11 @@ public class TeacherService {
 		return teacherRepository.findAll();
 	}
 
-	public Teacher findTeacherById(int teacherId) {
-		return teacherRepository.findById(teacherId).orElseThrow(() -> {
-			log.warn("Teacher with id {} not found", teacherId);
-			return new NoSuchElementException("Teacher not found");
-		});
+	public Optional<Teacher> findTeacherById(int teacherId) {
+		return teacherRepository.findById(teacherId);
 	}
 
-	public Teacher findTeacherByName(String firstName, String lastName) {
+	public Optional<Teacher> findTeacherByName(String firstName, String lastName) {
 		return teacherRepository.findTeacherByFirstNameAndLastName(firstName, lastName);
 	}
 

@@ -33,33 +33,33 @@ public class TeacherController {
 		return "teachers/teacher-list";
 	}
 
-	@PostMapping("/teachers/teacher-search")
-	public String searchTeachers(@RequestParam("searchType") String searchType,
-			@RequestParam(required = false) String courseName, @RequestParam(required = false) String facultyName,
-			@RequestParam(required = false) Integer departmentId, @RequestParam(required = false) Integer facultyId,
-			@RequestParam(required = false) Integer teacherId, @RequestParam(required = false) String firstName,
-			@RequestParam(required = false) String lastName, Model model) {
-		List<Teacher> teachers;
-
-		if ("course".equals(searchType)) {
-			teachers = teacherService.findTeachersRelatedToCourse(courseName);
-		} else if ("faculty".equals(searchType)) {
-			teachers = teacherService.findAllByFacultyName(facultyName);
-		} else if ("department".equals(searchType)) {
-			teachers = teacherService.findAllByDepartmentIdAndDepartmentFacultyId(departmentId, facultyId);
-		} else if ("teacher".equals(searchType)) {
-			teachers = new ArrayList<>();
-			teachers.add(teacherService.findTeacherById(teacherId));
-		} else if ("firstNameAndLastName".equals(searchType)) {
-			teachers = new ArrayList<>();
-			teachers.add(teacherService.findTeacherByName(firstName, lastName));
-		} else {
-			return "error";
-		}
-
-		teachers.forEach(Teacher::getAdditionalCourses);
-		model.addAttribute("teachers", teachers);
-		return "teachers/teacher-list";
-	}
+//	@PostMapping("/teachers/teacher-search")
+//	public String searchTeachers(@RequestParam("searchType") String searchType,
+//			@RequestParam(required = false) String courseName, @RequestParam(required = false) String facultyName,
+//			@RequestParam(required = false) Integer departmentId, @RequestParam(required = false) Integer facultyId,
+//			@RequestParam(required = false) Integer teacherId, @RequestParam(required = false) String firstName,
+//			@RequestParam(required = false) String lastName, Model model) {
+//		List<Teacher> teachers;
+//
+//		if ("course".equals(searchType)) {
+//			teachers = teacherService.findTeachersRelatedToCourse(courseName);
+//		} else if ("faculty".equals(searchType)) {
+//			teachers = teacherService.findAllByFacultyName(facultyName);
+//		} else if ("department".equals(searchType)) {
+//			teachers = teacherService.findAllByDepartmentIdAndDepartmentFacultyId(departmentId, facultyId);
+//		} else if ("teacher".equals(searchType)) {
+//			teachers = new ArrayList<>();
+//			teachers.add(teacherService.findTeacherById(teacherId));
+//		} else if ("firstNameAndLastName".equals(searchType)) {
+//			teachers = new ArrayList<>();
+//			teachers.add(teacherService.findTeacherByName(firstName, lastName));
+//		} else {
+//			return "error";
+//		}
+//
+//		teachers.forEach(Teacher::getAdditionalCourses);
+//		model.addAttribute("teachers", teachers);
+//		return "teachers/teacher-list";
+//	}
 
 }

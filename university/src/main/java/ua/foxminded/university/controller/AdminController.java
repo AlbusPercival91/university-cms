@@ -1,10 +1,10 @@
 package ua.foxminded.university.controller;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -106,11 +106,11 @@ public class AdminController {
 		} else if ("department".equals(searchType)) {
 			teachers = teacherService.findAllByDepartmentIdAndDepartmentFacultyId(departmentId, facultyId);
 		} else if ("teacher".equals(searchType)) {
-			teachers = new ArrayList<>();
-			teachers.add(teacherService.findTeacherById(teacherId));
+			Optional<Teacher> optionalTeacher = teacherService.findTeacherById(teacherId);
+			teachers = optionalTeacher.map(Collections::singletonList).orElse(Collections.emptyList());
 		} else if ("firstNameAndLastName".equals(searchType)) {
-			teachers = new ArrayList<>();
-			teachers.add(teacherService.findTeacherByName(firstName, lastName));
+			Optional<Teacher> optionalTeacher = teacherService.findTeacherByName(firstName, lastName);
+			teachers = optionalTeacher.map(Collections::singletonList).orElse(Collections.emptyList());
 		} else {
 			return "error";
 		}
@@ -119,17 +119,6 @@ public class AdminController {
 		model.addAttribute("teachers", teachers);
 		return "admin/teacher/edit-teacher-list";
 	}
-
-//	@PostMapping("/teachers/delete/{teacherId}")
-//	public String deleteTeacher(@PathVariable int teacherId, RedirectAttributes redirectAttributes) {
-//		try {
-//			teacherService.deleteTeacherById(teacherId);
-//			redirectAttributes.addFlashAttribute("successMessage", "Teacher was deleted!");
-//		} catch (EntityNotFoundException ex) {
-//			redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
-//		}
-//		return "redirect:/admin/teacher/edit-teacher-list";
-//	}
 
 	@PostMapping("/teachers/delete/{teacherId}")
 	public String deleteTeacher(@PathVariable int teacherId, RedirectAttributes redirectAttributes,
@@ -140,14 +129,11 @@ public class AdminController {
 		} catch (EntityNotFoundException ex) {
 			redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
 		}
-
 		String referrer = request.getHeader("referer");
 
-		// If the referrer is not available or empty, redirect to a default page
 		if (referrer == null || referrer.isEmpty()) {
 			return "redirect:/admin/teacher/edit-teacher-list";
 		}
-
 		return "redirect:" + referrer;
 	}
 

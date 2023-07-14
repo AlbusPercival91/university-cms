@@ -1,6 +1,7 @@
 package ua.foxminded.university.dao.interfaces;
 
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -27,7 +28,7 @@ public interface TeacherRepository extends JpaRepository<Teacher, Integer> {
 			""")
 	int removeTeacherFromCourse(@Param("teacherId") int teacherId, @Param("courseName") String courseName);
 
-	Teacher findTeacherByFirstNameAndLastName(String firstName, String lastName);
+	Optional<Teacher> findTeacherByFirstNameAndLastName(String firstName, String lastName);
 
 	@Query("""
 			SELECT t FROM Teacher t
