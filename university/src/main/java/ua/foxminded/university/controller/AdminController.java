@@ -89,7 +89,7 @@ public class AdminController {
 		return "admin/teacher/edit-teacher-list";
 	}
 
-	@PostMapping("/admin/teacher/teacher-search-admin")
+	@PostMapping("/admin/teacher/search-result")
 	public String searchTeachersAsAdmin(@RequestParam("searchType") String searchType,
 			@RequestParam(required = false) String courseName, @RequestParam(required = false) String facultyName,
 			@RequestParam(required = false) Integer departmentId, @RequestParam(required = false) Integer facultyId,
