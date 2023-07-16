@@ -93,7 +93,7 @@ public class AdminController {
 		List<Teacher> teachers = teacherService.getAllTeachers();
 
 		for (Teacher teacher : teachers) {
-			teacher.getAdditionalCourses();
+			teacher.getAssignedCourses();
 		}
 		model.addAttribute("teachers", teachers);
 		return "admin/teacher/edit-teacher-list";
@@ -123,7 +123,7 @@ public class AdminController {
 			return "error";
 		}
 
-		teachers.forEach(Teacher::getAdditionalCourses);
+		teachers.forEach(Teacher::getAssignedCourses);
 		model.addAttribute("teachers", teachers);
 		return "admin/teacher/edit-teacher-list";
 	}

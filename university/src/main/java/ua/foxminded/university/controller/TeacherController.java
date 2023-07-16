@@ -27,7 +27,7 @@ public class TeacherController {
 		List<Teacher> teachers = teacherService.getAllTeachers();
 
 		for (Teacher teacher : teachers) {
-			teacher.getAdditionalCourses();
+			teacher.getAssignedCourses();
 		}
 		model.addAttribute("teachers", teachers);
 		return "teachers/teacher-list";

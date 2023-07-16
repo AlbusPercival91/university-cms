@@ -41,7 +41,7 @@ public class Course {
 	private String courseDescription;
 
 	@ToString.Exclude
-	@ManyToMany(mappedBy = "additionalCourses", cascade = { CascadeType.PERSIST }, fetch = FetchType.LAZY)
+	@ManyToMany(mappedBy = "assignedCourses", cascade = { CascadeType.PERSIST }, fetch = FetchType.LAZY)
 	private List<Teacher> teachers = new ArrayList<>();
 
 	@ToString.Exclude

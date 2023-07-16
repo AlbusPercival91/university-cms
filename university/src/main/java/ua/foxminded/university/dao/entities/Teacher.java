@@ -38,7 +38,7 @@ public class Teacher extends Person {
 	@ToString.Exclude
 	@ManyToMany(cascade = { CascadeType.PERSIST }, fetch = FetchType.LAZY)
 	@JoinTable(schema = "university", name = "teachers_courses", joinColumns = @JoinColumn(name = "teacher_id"), inverseJoinColumns = @JoinColumn(name = "course_id"))
-	private List<Course> additionalCourses = new ArrayList<>();
+	private List<Course> assignedCourses = new ArrayList<>();
 
 	@ToString.Exclude
 	@OneToMany(mappedBy = "teacher")

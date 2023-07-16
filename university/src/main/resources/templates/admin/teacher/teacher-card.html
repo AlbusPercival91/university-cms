@@ -37,7 +37,7 @@
             <button type="submit" onclick="openEditPopup()">Edit</button>
         </div>
         <div class="courses">
-            <h2>Additional Courses</h2>
+            <h2>Assigned Courses</h2>
             <table class="table table-bordered">
                 <caption hidden>Additional Courses Table</caption>
                 <thead>
@@ -47,7 +47,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="course : ${teacher.additionalCourses}">
+                    <tr th:each="course : ${teacher.assignedCourses}">
                         <td th:text="${course.courseName}"></td>
                         <td>
                             <button th:data-course-id="${course.id}" class="action-button remove-button">Remove</button>
