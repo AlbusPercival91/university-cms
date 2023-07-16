@@ -5,28 +5,73 @@
     <meta charset="UTF-8">
     <title>Teacher Card</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}" />
+    <style>
+        .teacher-details-container,
+        .additional-courses-container {
+            width: 48%;
+            border: 1px solid #ccc;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 3vh;
+            height: auto;
+        }
+
+        .teacher-details-container h2,
+        .additional-courses-container h2 {
+            width: 48%;
+            border: 1px solid #ccc;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 3vh;
+            height: auto;
+        }
+    </style>
 </head>
 
-<div th:replace="fragments/header :: header"></div>
-<div th:replace="fragments/admin-panel :: div"></div>
-
 <body>
-    <div class="teacher-card">
-        <h2>Teacher Details</h2>
-        <p>First Name: <span th:text="${teacher.firstName}"></span></p>
-        <p>Last Name: <span th:text="${teacher.lastName}"></span></p>
-        <p>Email: <span th:text="${teacher.email}"></span></p>
-        <p>Department: <span th:text="${teacher.department.name}"></span></p>
-        <p>Main Course: <span th:text="${teacher.mainCourse.courseName}"></span></p>
+    <div th:replace="fragments/header :: header"></div>
+    <div th:replace="fragments/admin-panel :: div"></div>
 
-        <h3>Additional Courses</h3>
-        <ul>
-            <li th:each="course : ${teacher.additionalCourses}">
-                <span th:text="${course.courseName}"></span>
-            </li>
-        </ul>
+    <div class="container">
+        <div class="teacher-details-container">
+            <h2>Teacher Details</h2>
+            <div class="form-section">
+                <label for="firstName">First Name:</label>
+                <input type="text" id="firstName" th:value="${teacher.firstName}" readonly />
+            </div>
+            <div class="form-section">
+                <label for="lastName">Last Name:</label>
+                <input type="text" id="lastName" th:value="${teacher.lastName}" readonly />
+            </div>
+            <div class="form-section">
+                <label for="email">Email:</label>
+                <input type="text" id="email" th:value="${teacher.email}" readonly />
+            </div>
+            <div class="form-section">
+                <label for="department">Department:</label>
+                <input type="text" id="department" th:value="${teacher.department.name}" readonly />
+            </div>
+            <div class="form-section">
+                <label for="mainCourse">Main Course:</label>
+                <input type="text" id="mainCourse" th:value="${teacher.mainCourse.courseName}" readonly />
+            </div>
+            <button class="edit-button" onclick="openEditPopup()">Edit</button>
+        </div>
 
-        <a th:href="@{/admin/teacher/edit/{teacherId}(teacherId=${teacher.id})}" class="edit-link">Edit</a>
+        <div class="additional-courses-container">
+            <h2>Additional Courses</h2>
+            <ul>
+                <li th:each="course : ${teacher.additionalCourses}">
+                    <span th:text="${course.courseName}"></span>
+                    <button th:data-course-id="${course.id}" class="action-button assign-button">Assign</button>
+                    <button th:data-course-id="${course.id}" class="action-button remove-button">Remove</button>
+                </li>
+            </ul>
+        </div>
     </div>
 
     <div th:replace="fragments/message :: div"></div>
