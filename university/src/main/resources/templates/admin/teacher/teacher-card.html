@@ -37,17 +37,25 @@
     </div>
 
     <div class="container">
-        <div>
-            <h2>Additional Courses</h2>
-            <ul>
-                <li th:each="course : ${teacher.additionalCourses}" class="course-item">
-                    <div>
-                        <span th:text="${course.courseName}"></span>
-                    </div>
-                    <button th:data-course-id="${course.id}" class="action-button remove-button">Remove</button>
-                </li>
-            </ul>
-        </div>
+        <h2>Additional Courses</h2>
+        <table class="table table-bordered">
+            <caption hidden>Additional Courses Table</caption>
+            <thead>
+                <tr>
+                    <th style="border: none; width: 3vh;"></th>
+                    <th style="border: none; width: 3vh;"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="course : ${teacher.additionalCourses}">
+                    <td th:text="${course.courseName}"></td>
+                    <td>
+                        <button th:data-course-id="${course.id}" class="action-button remove-button">Remove</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
         <!-- Generate options for Additional courses using Thymeleaf -->
         <select>
             <option value="">Select Additional Course</option>
