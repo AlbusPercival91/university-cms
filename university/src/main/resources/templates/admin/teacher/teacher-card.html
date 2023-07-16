@@ -5,45 +5,6 @@
     <meta charset="UTF-8">
     <title>Teacher Card</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}" />
-
-    <style>
-        .container-teacher-card {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 20px;
-        }
-
-        .teacher-details {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .teacher-details .form-group {
-            width: 300px;
-            margin-bottom: 20px;
-        }
-
-        .teacher-details .form-group label {
-            display: inline-block;
-            width: auto;
-        }
-
-        .teacher-details .form-group input {
-            width: auto;
-        }
-
-        .courses {
-            flex: 1;
-            margin-left: 10px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-    </style>
-
 </head>
 
 <body>
@@ -101,7 +62,7 @@
                 <option th:each="course : ${courses}" th:value="${course.id}" th:text="${course.courseName}">
                 </option>
             </select>
-            <button class="action-button assign-button">Assign</button>
+            <button type="submit">Assign</button>
         </div>
     </div>
 
