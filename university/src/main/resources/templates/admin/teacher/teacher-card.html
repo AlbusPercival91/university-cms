@@ -1,13 +1,38 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 
 <head>
     <meta charset="UTF-8">
     <title>Teacher Card</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
 </head>
 
-<body>
+<div th:replace="fragments/header :: header"></div>
+<div th:replace="fragments/admin-panel :: div"></div>
 
+<body>
+    <div class="teacher-card">
+        <h2>Teacher Details</h2>
+        <p>First Name: <span th:text="${teacher.firstName}"></span></p>
+        <p>Last Name: <span th:text="${teacher.lastName}"></span></p>
+        <p>Email: <span th:text="${teacher.email}"></span></p>
+        <p>Department: <span th:text="${teacher.department.name}"></span></p>
+        <p>Main Course: <span th:text="${teacher.mainCourse.courseName}"></span></p>
+
+        <h3>Additional Courses</h3>
+        <ul>
+            <li th:each="course : ${teacher.additionalCourses}">
+                <span th:text="${course.courseName}"></span>
+            </li>
+        </ul>
+
+        <a th:href="@{/admin/teacher/edit/{teacherId}(teacherId=${teacher.id})}" class="edit-link">Edit</a>
+    </div>
+
+    <div th:replace="fragments/message :: div"></div>
+    <div th:replace="fragments/footer :: footer"></div>
+
+    <script th:src="@{/js/work-panel.js}"></script>
 </body>
 
 </html>

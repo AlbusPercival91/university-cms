@@ -33,9 +33,12 @@
             <tbody>
                 <tr th:each="teacher, rowStat : ${teachers}">
                     <td style="border: none;">
-                        <button th:id="'editButton-' + ${rowStat.index}" class="icon-button">
-                            <i class="fas fa-edit edit-icon"></i>
-                        </button>
+                        <!-- Edit Button -->
+                        <a th:href="@{/admin/teacher/teacher-card/{teacherId}(teacherId=${teacher.id})}">
+                            <button th:id="'editButton-' + ${rowStat.index}" class="icon-button">
+                                <i class="fas fa-edit edit-icon"></i>
+                            </button>
+                        </a>
                     </td>
                     <td th:text="${teacher.id}"></td>
                     <td th:text="${teacher.firstName}"></td>

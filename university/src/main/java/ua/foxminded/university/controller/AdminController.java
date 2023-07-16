@@ -75,9 +75,17 @@ public class AdminController {
 		return "redirect:/admin/teacher/create-teacher";
 	}
 
-	@GetMapping("/admin/teacher/teacher-card")
-	public String openTeacherCard() {
-		return "admin/teacher/teacher-card";
+	@GetMapping("/admin/teacher/teacher-card/{teacherId}")
+	public String openTeacherCard(@PathVariable int teacherId, Model model) {
+		Optional<Teacher> optionalTeacher = teacherService.findTeacherById(teacherId);
+
+		if (optionalTeacher.isPresent()) {
+			Teacher teacher = optionalTeacher.get();
+			model.addAttribute("teacher", teacher);
+			return "admin/teacher/teacher-card";
+		} else {
+			return "redirect:/admin/teacher/edit-teacher-list";
+		}
 	}
 
 	@GetMapping("/admin/teacher/edit-teacher-list")
