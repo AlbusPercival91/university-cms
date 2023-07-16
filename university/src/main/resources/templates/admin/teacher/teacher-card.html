@@ -5,64 +5,104 @@
     <meta charset="UTF-8">
     <title>Teacher Card</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}" />
+
+    <style>
+        .container-teacher-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .teacher-details {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .teacher-details .form-group {
+            width: 300px;
+            margin-bottom: 20px;
+        }
+
+        .teacher-details .form-group label {
+            display: inline-block;
+            width: auto;
+        }
+
+        .teacher-details .form-group input {
+            width: auto;
+        }
+
+        .courses {
+            flex: 1;
+            margin-left: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    </style>
+
 </head>
 
 <body>
     <div th:replace="fragments/header :: header"></div>
     <div th:replace="fragments/admin-panel :: div"></div>
 
-    <div class="container">
-        <h2>Teacher Details</h2>
-        <div class="form-group">
-            <label for="firstName">First Name:</label>
-            <input type="text" id="firstName" th:value="${teacher.firstName}" readonly />
+    <div class="container-teacher-card">
+        <div class="teacher-details">
+            <h2>Teacher Details</h2>
+            <div class="form-group">
+                <label for="firstName">First Name:</label>
+                <input type="text" id="firstName" th:value="${teacher.firstName}" readonly />
+            </div>
+            <div class="form-group">
+                <label for="lastName">Last Name:</label>
+                <input type="text" id="lastName" th:value="${teacher.lastName}" readonly />
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" th:value="${teacher.email}" readonly />
+            </div>
+            <div class="form-group">
+                <label for="department">Department:</label>
+                <input type="text" id="department" th:value="${teacher.department.name}" readonly />
+            </div>
+            <div class="form-group">
+                <label for="mainCourse">Main Course:</label>
+                <input type="text" id="mainCourse" th:value="${teacher.mainCourse.courseName}" readonly />
+            </div>
+            <button type="submit" onclick="openEditPopup()">Edit</button>
         </div>
-        <div class="form-group">
-            <label for="lastName">Last Name:</label>
-            <input type="text" id="lastName" th:value="${teacher.lastName}" readonly />
-        </div>
-        <div class="form-group">
-            <label for="email">Email:</label>
-            <input type="email" id="email" th:value="${teacher.email}" readonly />
-        </div>
-        <div class="form-group">
-            <label for="department">Department:</label>
-            <input type="text" id="department" th:value="${teacher.department.name}" readonly />
-        </div>
-        <div class="form-group">
-            <label for="mainCourse">Main Course:</label>
-            <input type="text" id="mainCourse" th:value="${teacher.mainCourse.courseName}" readonly />
-        </div>
-        <button type="submit" onclick="openEditPopup()">Edit</button>
-    </div>
+        <div class="courses">
+            <h2>Additional Courses</h2>
+            <table class="table table-bordered">
+                <caption hidden>Additional Courses Table</caption>
+                <thead>
+                    <tr>
+                        <th style="border: none; width: 3vh;"></th>
+                        <th style="border: none; width: 3vh;"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="course : ${teacher.additionalCourses}">
+                        <td th:text="${course.courseName}"></td>
+                        <td>
+                            <button th:data-course-id="${course.id}" class="action-button remove-button">Remove</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
 
-    <div class="container">
-        <h2>Additional Courses</h2>
-        <table class="table table-bordered">
-            <caption hidden>Additional Courses Table</caption>
-            <thead>
-                <tr>
-                    <th style="border: none; width: 3vh;"></th>
-                    <th style="border: none; width: 3vh;"></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="course : ${teacher.additionalCourses}">
-                    <td th:text="${course.courseName}"></td>
-                    <td>
-                        <button th:data-course-id="${course.id}" class="action-button remove-button">Remove</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-
-        <!-- Generate options for Additional courses using Thymeleaf -->
-        <select>
-            <option value="">Select Additional Course</option>
-            <option th:each="course : ${courses}" th:value="${course.id}" th:text="${course.courseName}">
-            </option>
-        </select>
-        <button class="action-button assign-button">Assign</button>
+            <!-- Generate options for Additional courses using Thymeleaf -->
+            <select>
+                <option value="">Select Additional Course</option>
+                <option th:each="course : ${courses}" th:value="${course.id}" th:text="${course.courseName}">
+                </option>
+            </select>
+            <button class="action-button assign-button">Assign</button>
+        </div>
     </div>
 
     <div th:replace="fragments/message :: div"></div>
