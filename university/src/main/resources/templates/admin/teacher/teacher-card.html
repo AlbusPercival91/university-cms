@@ -54,7 +54,7 @@
                         <td style="border: none;">
                             <!-- Remove Button -->
                             <form
-                                th:action="@{/admin/teacher/remove-course/{courseName}(courseName=${course.courseName})}"
+                                th:action="@{/admin/teacher/remove-course/{teacherId}/{courseName}(teacherId=${teacher.id}, courseName=${course.courseName})}"
                                 method="post">
                                 <input type="hidden" name="courseName" th:value="${course.courseName}" />
                                 <button th:id="'removeButton-' + ${rowStat.index}" class="remove-icon" type="submit">

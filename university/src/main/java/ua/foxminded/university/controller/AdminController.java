@@ -2,8 +2,8 @@ package ua.foxminded.university.controller;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
-import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -122,7 +122,6 @@ public class AdminController {
 		} else {
 			return "error";
 		}
-
 		teachers.forEach(Teacher::getAssignedCourses);
 		model.addAttribute("teachers", teachers);
 		return "admin/teacher/edit-teacher-list";
@@ -134,7 +133,7 @@ public class AdminController {
 		try {
 			teacherService.deleteTeacherById(teacherId);
 			redirectAttributes.addFlashAttribute("successMessage", "Teacher was deleted!");
-		} catch (EntityNotFoundException ex) {
+		} catch (NoSuchElementException ex) {
 			redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
 		}
 		String referrer = request.getHeader("referer");
@@ -143,6 +142,18 @@ public class AdminController {
 			return "redirect:/admin/teacher/edit-teacher-list";
 		}
 		return "redirect:" + referrer;
+	}
+
+	@PostMapping("/admin/teacher/remove-course/{teacherId}/{courseName}")
+	public String removeTeacherFromCourse(@PathVariable int teacherId, @PathVariable String courseName,
+			RedirectAttributes redirectAttributes) {
+		try {
+			teacherService.removeTeacherFromCourse(teacherId, courseName);
+			redirectAttributes.addFlashAttribute("successMessage", "Teacher unsubscribed from Course!");
+		} catch (NoSuchElementException ex) {
+			redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
+		}
+		return "redirect:/admin/teacher/teacher-card/{teacherId}";
 	}
 
 }
