@@ -37,10 +37,11 @@
             </div>
             <button type="submit" onclick="openEditPopup()">Edit</button>
         </div>
+
         <div class="courses">
             <h2>Assigned Courses</h2>
             <table class="table table-bordered">
-                <caption hidden>Additional Courses Table</caption>
+                <caption hidden>Assigned Courses Table</caption>
                 <thead>
                     <tr>
                         <th style="border: none; width: 3vh;"></th>
@@ -48,12 +49,18 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="course : ${teacher.assignedCourses}">
-                        <td th:text="${course.courseName}"></td>
-                        <td>
-                            <a th:href="@{/remove-course/{courseId}(courseId=${course.id})}">
-                                <i class="fas fa-trash-alt remove-icon"></i>
-                            </a>
+                    <tr th:each="course, rowStat : ${teacher.assignedCourses}">
+                        <td style="white-space: nowrap;" th:text="${course.courseName}"></td>
+                        <td style="border: none;">
+                            <!-- Remove Button -->
+                            <form
+                                th:action="@{/admin/teacher/remove-course/{courseName}(courseName=${course.courseName})}"
+                                method="post">
+                                <input type="hidden" name="courseName" th:value="${course.courseName}" />
+                                <button th:id="'removeButton-' + ${rowStat.index}" class="remove-icon" type="submit">
+                                    <i class="fas fa-trash-alt remove-icon"></i>
+                                </button>
+                            </form>
                         </td>
                     </tr>
                 </tbody>
