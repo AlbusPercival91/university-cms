@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <title>Teacher Card</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" />
 </head>
 
 <body>
@@ -50,7 +51,9 @@
                     <tr th:each="course : ${teacher.assignedCourses}">
                         <td th:text="${course.courseName}"></td>
                         <td>
-                            <button th:data-course-id="${course.id}" class="action-button remove-button">Remove</button>
+                            <a th:href="@{/remove-course/{courseId}(courseId=${course.id})}">
+                                <i class="fas fa-trash-alt remove-icon"></i>
+                            </a>
                         </td>
                     </tr>
                 </tbody>
