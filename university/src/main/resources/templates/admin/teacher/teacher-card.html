@@ -67,12 +67,16 @@
             </table>
 
             <!-- Generate options for Additional courses using Thymeleaf -->
-            <select>
-                <option value="">Select Additional Course</option>
-                <option th:each="course : ${courses}" th:value="${course.id}" th:text="${course.courseName}">
-                </option>
-            </select>
-            <button type="submit">Assign</button>
+            <form th:action="@{/admin/teacher/assign-course}" method="post">
+                <select name="courseId">
+                    <option value="">Select Additional Course</option>
+                    <option th:each="course : ${courses}" th:value="${course.id}" th:text="${course.courseName}">
+                    </option>
+                </select>
+                <br>
+                <button type="submit">Assign</button>
+            </form>
+
         </div>
     </div>
 
