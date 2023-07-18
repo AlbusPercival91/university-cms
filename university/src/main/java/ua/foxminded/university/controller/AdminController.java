@@ -78,10 +78,12 @@ public class AdminController {
 	@GetMapping("/admin/teacher/teacher-card/{teacherId}")
 	public String openTeacherCard(@PathVariable int teacherId, Model model) {
 		Optional<Teacher> optionalTeacher = teacherService.findTeacherById(teacherId);
+		List<Course> courses = courseService.getAllCourses();
 
 		if (optionalTeacher.isPresent()) {
 			Teacher teacher = optionalTeacher.get();
 			model.addAttribute("teacher", teacher);
+			model.addAttribute("courses", courses);
 			return "admin/teacher/teacher-card";
 		} else {
 			return "redirect:/admin/teacher/edit-teacher-list";
