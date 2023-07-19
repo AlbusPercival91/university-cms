@@ -9,6 +9,7 @@
 </head>
 
 <body>
+
     <div th:replace="fragments/header :: header"></div>
     <div th:replace="fragments/admin-panel :: div"></div>
 
@@ -65,14 +66,13 @@
                     </tr>
                 </tbody>
             </table>
-
             <!-- Generate options for Additional courses using Thymeleaf -->
-            <form
-                th:action="@{/admin/teacher/assign-course/{teacherId}/{courseName}(teacherId=${teacher.id}, courseName=${course.courseName})}"
-                method="post">
-                <select name="courseId">
+            <form th:action="@{/admin/teacher/assign-course}" method="post">
+                <input type="hidden" name="teacherId" th:value="${teacher.id}" />
+                <select name="courseName">
                     <option value="">Select Additional Course</option>
-                    <option th:each="course : ${courses}" th:value="${course.courseName}" th:text="${course.courseName}">
+                    <option th:each="course : ${courses}" th:value="${course.courseName}"
+                        th:text="${course.courseName}">
                     </option>
                 </select>
                 <br>
@@ -86,6 +86,7 @@
     <div th:replace="fragments/footer :: footer"></div>
 
     <script th:src="@{/js/work-panel.js}"></script>
+
 </body>
 
 </html>

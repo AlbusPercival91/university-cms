@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.util.UriComponentsBuilder;
+
 import ua.foxminded.university.dao.entities.Course;
 import ua.foxminded.university.dao.entities.Department;
 import ua.foxminded.university.dao.entities.Teacher;
@@ -158,8 +160,8 @@ public class AdminController {
 		return "redirect:/admin/teacher/teacher-card/{teacherId}";
 	}
 
-	@PostMapping("/admin/teacher/assign-course/{teacherId}/{courseName}")
-	public String addTeacherToTheCourse(@PathVariable int teacherId, @PathVariable String courseName,
+	@PostMapping("/admin/teacher/assign-course")
+	public String addTeacherToTheCourse(@RequestParam int teacherId, @RequestParam String courseName,
 			RedirectAttributes redirectAttributes) {
 		try {
 			teacherService.addTeacherToTheCourse(teacherId, courseName);
@@ -167,6 +169,10 @@ public class AdminController {
 		} catch (IllegalStateException | NoSuchElementException ex) {
 			redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
 		}
-		return "redirect:/admin/teacher/teacher-card/{teacherId}";
+
+		UriComponentsBuilder builder = UriComponentsBuilder.fromPath("/admin/teacher/teacher-card/{teacherId}");
+		return "redirect:" + builder.buildAndExpand(teacherId).toUriString();
+
 	}
+
 }
