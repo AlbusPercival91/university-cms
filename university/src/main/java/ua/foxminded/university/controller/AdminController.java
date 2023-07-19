@@ -169,10 +169,8 @@ public class AdminController {
 		} catch (IllegalStateException | NoSuchElementException ex) {
 			redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
 		}
-
 		UriComponentsBuilder builder = UriComponentsBuilder.fromPath("/admin/teacher/teacher-card/{teacherId}");
 		return "redirect:" + builder.buildAndExpand(teacherId).toUriString();
-
 	}
 
 }
