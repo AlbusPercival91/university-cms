@@ -59,6 +59,10 @@ public class TeacherService {
 			log.warn("Course with name {} not found", courseName);
 			return new NoSuchElementException("Course not found");
 		});
+
+		if (existingTeacher.getAssignedCourses().contains(existingCourse)) {
+			throw new IllegalStateException("Teacher already assigned with this Course!");
+		}
 		return teacherRepository.addTeacherToTheCourse(existingTeacher.getId(), existingCourse.getCourseName());
 	}
 
