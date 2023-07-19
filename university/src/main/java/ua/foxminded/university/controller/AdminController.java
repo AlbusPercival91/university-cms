@@ -152,7 +152,7 @@ public class AdminController {
 		try {
 			teacherService.removeTeacherFromCourse(teacherId, courseName);
 			redirectAttributes.addFlashAttribute("successMessage", "Teacher unsubscribed from Course!");
-		} catch (NoSuchElementException ex) {
+		} catch (IllegalStateException | NoSuchElementException ex) {
 			redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
 		}
 		return "redirect:/admin/teacher/teacher-card/{teacherId}";
