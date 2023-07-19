@@ -36,7 +36,11 @@
                 <label for="mainCourse">Main Course:</label>
                 <input type="text" id="mainCourse" th:value="${teacher.mainCourse.courseName}" readonly />
             </div>
-            <button type="submit" onclick="openEditPopup()">Edit</button>
+            <!-- Container for buttons -->
+            <div class="button-container">
+                <button type="submit" onclick="saveChanges()">Save</button>
+                <button type="submit" onclick="openEditPopup()">Edit</button>
+            </div>
         </div>
 
         <div class="courses">
