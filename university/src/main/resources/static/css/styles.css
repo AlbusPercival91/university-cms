@@ -305,6 +305,12 @@ select {
     display: inline-block;
 }
 
+/* Style for the disabled Save button */
+.button-container button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
 button[type="submit"] {
     padding: 8px 20px;
     background-color: #333;
