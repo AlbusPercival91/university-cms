@@ -38,9 +38,14 @@
             </div>
             <!-- Container for buttons -->
             <div class="button-container">
-                <button id="saveButton" type="submit" disabled>Save</button>
-                <button id="editButton" type="submit">Edit</button>
+                <form th:action="@{/admin/teacher/{teacherId}(teacherId=${teacher.id})}" method="post">
+                    <!-- Add other input fields for the teacher properties here if needed -->
+                    <button id="saveButton" type="submit" class="button-common-style">Save</button>
+                    <button id="editButton" type="button" class="button-common-style">Edit</button>
+                </form>
             </div>
+
+
         </div>
 
         <div class="courses">

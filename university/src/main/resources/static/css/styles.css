@@ -320,6 +320,16 @@ button[type="submit"] {
     cursor: pointer;
 }
 
+/* Style for buttons */
+.button-common-style {
+    padding: 8px 20px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
 /* information message styles when success or error ops */
 #success-message-container {
     position: fixed;
