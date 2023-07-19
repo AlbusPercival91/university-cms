@@ -172,4 +172,17 @@ public class AdminController {
 		return "redirect:" + builder.buildAndExpand(teacherId).toUriString();
 	}
 
+	@PostMapping("/admin/teacher/edit-teacher/{teacherId}")
+	public String editTeacher(@PathVariable int teacherId, @ModelAttribute("teacher") @Validated Teacher teacher,
+			Model model, RedirectAttributes redirectAttributes) {
+		Teacher updatedTeacher = teacherService.updateTeacherById(teacherId, teacher);
+
+		if (updatedTeacher.getId() != teacher.getId()) {
+			redirectAttributes.addFlashAttribute("errorMessage", "Failed to update the teacher");
+		} else {
+			redirectAttributes.addFlashAttribute("successMessage", "Teacher updated successfully");
+		}
+		return "redirect:/admin/teacher/teacher-card/{teacherId}";
+	}
+
 }
