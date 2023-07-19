@@ -158,4 +158,15 @@ public class AdminController {
 		return "redirect:/admin/teacher/teacher-card/{teacherId}";
 	}
 
+	@PostMapping("/admin/teacher/assign-course/{teacherId}/{courseName}")
+	public String addTeacherToTheCourse(@PathVariable int teacherId, @PathVariable String courseName,
+			RedirectAttributes redirectAttributes) {
+		try {
+			teacherService.addTeacherToTheCourse(teacherId, courseName);
+			redirectAttributes.addFlashAttribute("successMessage", "Teacher subscribed to Course!");
+		} catch (IllegalStateException | NoSuchElementException ex) {
+			redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
+		}
+		return "redirect:/admin/teacher/teacher-card/{teacherId}";
+	}
 }
