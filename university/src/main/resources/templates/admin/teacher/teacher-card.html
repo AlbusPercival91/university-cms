@@ -18,27 +18,28 @@
             <h2>Teacher Details</h2>
             <div class="form-group">
                 <label for="firstName">First Name:</label>
-                <input type="text" id="firstName" th:value="${teacher.firstName}" readonly />
+                <input type="text" id="firstName" th:value="${teacher.firstName}" name="firstName" readonly />
             </div>
             <div class="form-group">
                 <label for="lastName">Last Name:</label>
-                <input type="text" id="lastName" th:value="${teacher.lastName}" readonly />
+                <input type="text" id="lastName" th:value="${teacher.lastName}" name="lastName" readonly />
             </div>
             <div class="form-group">
                 <label for="email">Email:</label>
-                <input type="email" id="email" th:value="${teacher.email}" readonly />
+                <input type="email" id="email" th:value="${teacher.email}" name="email" readonly />
             </div>
             <div class="form-group">
                 <label for="department">Department:</label>
-                <input type="text" id="department" th:value="${teacher.department.name}" readonly />
+                <input type="text" id="department" th:value="${teacher.department.name}" name="department" readonly />
             </div>
             <div class="form-group">
                 <label for="mainCourse">Main Course:</label>
-                <input type="text" id="mainCourse" th:value="${teacher.mainCourse.courseName}" readonly />
+                <input type="text" id="mainCourse" th:value="${teacher.mainCourse.courseName}" name="mainCourse"
+                    readonly />
             </div>
             <!-- Container for buttons -->
             <div class="button-container">
-                <form th:action="@{/admin/teacher/teacher-card/{teacherId}(teacherId=${teacher.id})}" method="post">
+                <form th:action="@{/admin/teacher/edit-teacher/{teacherId}(teacherId=${teacher.id})}" method="post">
                     <button id="saveButton" type="submit" class="button-common-style">Save</button>
                     <button id="editButton" type="button" class="button-common-style">Edit</button>
                 </form>
