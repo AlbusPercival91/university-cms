@@ -26,7 +26,7 @@ import ua.foxminded.university.dao.service.DepartmentService;
 import ua.foxminded.university.dao.service.TeacherService;
 
 @Controller
-public class AdminController {
+public class AdminTeacherController {
 
 	@Autowired
 	private TeacherService teacherService;
