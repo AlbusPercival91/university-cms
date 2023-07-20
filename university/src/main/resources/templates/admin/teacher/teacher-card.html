@@ -27,10 +27,10 @@
                 <input type="text" id="lastName" th:value="${teacher.lastName}" name="lastName" readonly />
             </div>
             <div class="form-group">
-                <label for="isActive">Active:</label>
-                <select id="isActive" name="isActive" readonly>
-                    <option th:value="${teacher.isActive}" th:selected="${teacher.isActive}">True</option>
-                    <option th:value="${!teacher.isActive}" th:selected="${!teacher.isActive}">False</option>
+                <label for="active">Active:</label>
+                <select id="active" name="active" readonly>
+                    <option th:value="${teacher.active}" th:selected="${teacher.active}">True</option>
+                    <option th:value="${!teacher.active}" th:selected="${!teacher.active}">False</option>
                 </select>
             </div>
             <div class="form-group">
