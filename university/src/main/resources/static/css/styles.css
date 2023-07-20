@@ -407,10 +407,10 @@ button[type="submit"] {
     margin-bottom: 20px;
 }
 
-input[type="date"],
-select {
-    flex: 1;
-    padding: 8px;
+.date-input {
+    flex: 3;
     border: 1px solid #ccc;
     border-radius: 4px;
+    padding: 8px;
+    width: 160px;
 }

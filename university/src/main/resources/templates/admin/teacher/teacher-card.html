@@ -102,18 +102,28 @@
             <h2>Teacher Time-Table</h2>
 
             <div class="form-group">
-                <label for="dateFrom">Date From:</label>
-                <input type="date" id="dateFrom" name="dateFrom" required />
+                <label for="dateFrom">From:</label>
+                <input type="date" id="dateFrom" name="dateFrom" required class="date-input" />
             </div>
             <div class="form-group">
-                <label for="dateTo">Date To:</label>
-                <input type="date" id="dateTo" name="dateTo" required />
+                <label for="dateTo">To:</label>
+                <input type="date" id="dateTo" name="dateTo" required class="date-input" />
             </div>
 
-            <!-- Container for button -->
+            <!-- Container for Get Time-Table button -->
             <div class="button-container">
-                <form th:action="@{/admin/teacher/time-table/{teacherId}(teacherId=${teacher.id})}" method="post">
-                    <button id="saveButton" type="submit" class="button-common-style">Get Time-Table</button>
+                <form th:action="@{/admin/teacher/selected-timetable/{teacherId}(teacherId=${teacher.id})}"
+                    method="post">
+                    <button id="saveButton" type="submit" class="button-common-style">Get Selected Date
+                        Time-Table</button>
+                </form>
+                <br><br>
+            </div>
+
+            <!-- Container for Get All Time-Tables button -->
+            <div class="button-container">
+                <form th:action="@{/admin/teacher/full-timetable/{teacherId}(teacherId=${teacher.id})}" method="post">
+                    <button id="saveButton" type="submit" class="button-common-style">Get Full Time-Table List</button>
                 </form>
             </div>
         </div>
