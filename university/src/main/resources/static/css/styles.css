@@ -390,6 +390,14 @@ button[type="submit"] {
     align-items: center;
 }
 
+.teacher-timetable {
+    flex: 1;
+    margin-left: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .courses table {
     margin-bottom: 30px;
 }
@@ -397,4 +405,12 @@ button[type="submit"] {
 .courses select,
 .courses button {
     margin-bottom: 20px;
+}
+
+input[type="date"],
+select {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
