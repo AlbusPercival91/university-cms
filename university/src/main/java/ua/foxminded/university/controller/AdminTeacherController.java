@@ -37,11 +37,6 @@ public class AdminTeacherController {
 	@Autowired
 	private CourseService courseService;
 
-	@GetMapping("/admin/main")
-	public String adminMainPage() {
-		return "admin/main";
-	}
-
 	@GetMapping("/admin/teacher/teacher-search-admin")
 	public String adminTeacherSearchPanel() {
 		return "admin/teacher/teacher-search-admin";
