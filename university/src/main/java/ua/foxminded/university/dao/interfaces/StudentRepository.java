@@ -1,14 +1,12 @@
 package ua.foxminded.university.dao.interfaces;
 
 import java.util.List;
-
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
-import ua.foxminded.university.dao.entities.Group;
 import ua.foxminded.university.dao.entities.Student;
 
 @Repository
@@ -37,6 +35,9 @@ public interface StudentRepository extends JpaRepository<Student, Integer> {
 			""")
 	List<Student> findStudentsRelatedToCourse(@Param("courseName") String courseName);
 
-	List<Student> findAllByGroup(Group group);
+	List<Student> findAllByGroupGroupName(String groupName);
 
+	List<Student> findAllByGroupFacultyFacultyName(String facultyName);
+
+	Optional<Student> findStudentByFirstNameAndLastName(String firstName, String lastName);
 }

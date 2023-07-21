@@ -1,5 +1,6 @@
 package ua.foxminded.university.controller;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.UriComponentsBuilder;
-
 import ua.foxminded.university.dao.entities.Course;
 import ua.foxminded.university.dao.entities.Student;
 import ua.foxminded.university.dao.service.CourseService;
@@ -94,6 +94,39 @@ public class AdminStudentController {
 		}
 		UriComponentsBuilder builder = UriComponentsBuilder.fromPath("/admin/student/student-card/{studentId}");
 		return "redirect:" + builder.buildAndExpand(studentId).toUriString();
+	}
+
+	@GetMapping("/admin/student/student-search-admin")
+	public String adminStudentSearchPanel() {
+		return "admin/student/student-search-admin";
+	}
+
+	@GetMapping("/admin/student/search-result")
+	public String searchStudentAsAdmin(@RequestParam("searchType") String searchType,
+			@RequestParam(required = false) String courseName, @RequestParam(required = false) String facultyName,
+			@RequestParam(required = false) String groupName, @RequestParam(required = false) Integer facultyId,
+			@RequestParam(required = false) Integer studentId, @RequestParam(required = false) String firstName,
+			@RequestParam(required = false) String lastName, Model model) {
+		List<Student> students;
+
+		if ("course".equals(searchType)) {
+			students = studentService.findStudentsRelatedToCourse(courseName);
+		} else if ("faculty".equals(searchType)) {
+			students = studentService.findAllByGroupFacultyFacultyName(facultyName);
+		} else if ("group".equals(searchType)) {
+			students = studentService.findAllByGroupName(groupName);
+		} else if ("student".equals(searchType)) {
+			Optional<Student> optionalStudent = studentService.findStudentById(studentId);
+			students = optionalStudent.map(Collections::singletonList).orElse(Collections.emptyList());
+		} else if ("firstNameAndLastName".equals(searchType)) {
+			Optional<Student> optionalStudent = studentService.findStudentByName(firstName, lastName);
+			students = optionalStudent.map(Collections::singletonList).orElse(Collections.emptyList());
+		} else {
+			return "error";
+		}
+		students.forEach(Student::getCourses);
+		model.addAttribute("students", students);
+		return "admin/student/edit-student-list";
 	}
 
 }

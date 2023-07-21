@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ua.foxminded.university.dao.entities.Course;
-import ua.foxminded.university.dao.entities.Group;
 import ua.foxminded.university.dao.entities.Student;
 import ua.foxminded.university.dao.interfaces.CourseRepository;
 import ua.foxminded.university.dao.interfaces.StudentRepository;
@@ -50,10 +49,6 @@ public class StudentService {
 		return studentRepository.save(existingStudent);
 	}
 
-	public Optional<Student> findStudentById(int studentId) {
-		return studentRepository.findById(studentId);
-	}
-
 	public List<Student> getAllStudents() {
 		return studentRepository.findAll();
 	}
@@ -90,12 +85,24 @@ public class StudentService {
 		return studentRepository.removeStudentFromCourse(studentId, existingCourse.getCourseName());
 	}
 
+	public Optional<Student> findStudentById(int studentId) {
+		return studentRepository.findById(studentId);
+	}
+
 	public List<Student> findStudentsRelatedToCourse(String courseName) {
 		return studentRepository.findStudentsRelatedToCourse(courseName);
 	}
 
-	public List<Student> findAllByGroup(Group group) {
-		return studentRepository.findAllByGroup(group);
+	public List<Student> findAllByGroupName(String groupName) {
+		return studentRepository.findAllByGroupGroupName(groupName);
+	}
+
+	public List<Student> findAllByGroupFacultyFacultyName(String facultyName) {
+		return studentRepository.findAllByGroupFacultyFacultyName(facultyName);
+	}
+
+	public Optional<Student> findStudentByName(String firstName, String lastName) {
+		return studentRepository.findStudentByFirstNameAndLastName(firstName, lastName);
 	}
 
 }
