@@ -8,7 +8,9 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -127,6 +129,28 @@ public class AdminStudentController {
 		students.forEach(Student::getCourses);
 		model.addAttribute("students", students);
 		return "admin/student/edit-student-list";
+	}
+
+	@GetMapping("/admin/student/create-student")
+	public String showCreateStudentForm() {
+		return "admin/student/create-student";
+	}
+
+	@PostMapping("/admin/student/create-student")
+	public String createStudent(@ModelAttribute("student") @Validated Student student,
+			RedirectAttributes redirectAttributes) {
+		try {
+			int createdStudent = studentService.createStudent(student);
+
+			if (createdStudent != student.getId()) {
+				redirectAttributes.addFlashAttribute("errorMessage", "Failed to create the student");
+			} else {
+				redirectAttributes.addFlashAttribute("successMessage", "Student created successfully");
+			}
+		} catch (NoSuchElementException ex) {
+			redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
+		}
+		return "redirect:/admin/student/create-student";
 	}
 
 }

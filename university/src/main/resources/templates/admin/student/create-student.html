@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Create Teacher</title>
+    <title>Create Student</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}" />
 </head>
 
@@ -12,8 +12,8 @@
 
 <body>
     <div class="container">
-        <h2>Create New Teacher</h2>
-        <form th:action="@{/admin/teacher/create-teacher}" method="post">
+        <h2>Create New Student</h2>
+        <form th:action="@{/admin/student/create-student}" method="post">
             <div class="form-group">
                 <label for="firstName">First Name:</label>
                 <input type="text" id="firstName" name="firstName" required>
@@ -38,25 +38,11 @@
                 <input type="password" id="password" name="password" required>
             </div>
             <div class="form-group">
-                <label for="department">Department:</label>
-                <select id="department" name="department" required>
-                    <option value="">Select Department</option>
-                    <!-- Generate options for departments using Thymeleaf -->
-                    <option th:each="department : ${departments}" th:value="${department.id}"
-                        th:text="${department.name}"></option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="course">Main Course:</label>
-                <select id="course" name="mainCourse" required>
-                    <option value="">Select Main Course</option>
-                    <!-- Generate options for courses using Thymeleaf -->
-                    <option th:each="course : ${courses}" th:value="${course.id}" th:text="${course.courseName}">
-                    </option>
-                </select>
+                <label for="group">Group:</label>
+                <input type="text" id="group" name="group" required>
             </div>
 
-            <button type="submit">Create Teacher</button>
+            <button type="submit">Create Student</button>
         </form>
 
     </div>

@@ -20,11 +20,16 @@ import ua.foxminded.university.dao.interfaces.StudentRepository;
 public class StudentService {
 	private final StudentRepository studentRepository;
 	private final CourseRepository courseRepository;
+	private final GroupService groupService;
 
 	public int createStudent(Student student) {
-		Student newStudent = studentRepository.save(student);
-		log.info("Created student with id: {}", newStudent.getId());
-		return newStudent.getId();
+		if (groupService.getAllGroups().contains(student.getGroup())) {
+			Student newStudent = studentRepository.save(student);
+			log.info("Created student with id: {}", newStudent.getId());
+			return newStudent.getId();
+		} else {
+			throw new NoSuchElementException("Group not found");
+		}
 	}
 
 	public int deleteStudentById(int studentId) {

@@ -52,8 +52,9 @@ public class AdminTeacherController {
 	}
 
 	@PostMapping("/admin/teacher/create-teacher")
-	public String createTeacher(@ModelAttribute("teacher") @Validated Teacher teacher, Model model,
-			BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+	public String createTeacher(@ModelAttribute("teacher") @Validated Teacher teacher,
+			BindingResult bindingResult,
+			RedirectAttributes redirectAttributes) {
 		if (bindingResult.hasErrors()) {
 			for (FieldError error : bindingResult.getFieldErrors()) {
 				redirectAttributes.addFlashAttribute(error.getField() + "Error", error.getDefaultMessage());
