@@ -50,6 +50,10 @@ public class StudentService {
 		return studentRepository.save(existingStudent);
 	}
 
+	public Optional<Student> findStudentById(int studentId) {
+		return studentRepository.findById(studentId);
+	}
+
 	public List<Student> getAllStudents() {
 		return studentRepository.findAll();
 	}
@@ -63,6 +67,10 @@ public class StudentService {
 			log.warn("Course with name {} not found", courseName);
 			return new NoSuchElementException("Course not found");
 		});
+
+		if (existingStudent.getCourses().contains(existingCourse)) {
+			throw new IllegalStateException("Student already assigned with this Course!");
+		}
 		return studentRepository.addStudentToTheCourse(existingStudent.getId(), existingCourse.getCourseName());
 	}
 
