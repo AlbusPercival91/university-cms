@@ -354,31 +354,31 @@ button[type="submit"] {
 }
 
 /* Styles for Teacher Card */
-.container-teacher-card {
+.container-entity-card {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     margin-bottom: 20px;
 }
 
-.teacher-details {
+.entity-details {
     flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.teacher-details .form-group {
+.entity-details .form-group {
     width: 350px;
     margin-bottom: 20px;
 }
 
-.teacher-details .form-group label {
+.entity-details .form-group label {
     display: inline-block;
     width: auto;
 }
 
-.teacher-details .form-group input {
+.entity-details .form-group input {
     width: auto;
 }
 
@@ -390,7 +390,7 @@ button[type="submit"] {
     align-items: center;
 }
 
-.teacher-timetable {
+.entity-timetable {
     flex: 1;
     margin-left: auto;
     display: flex;
