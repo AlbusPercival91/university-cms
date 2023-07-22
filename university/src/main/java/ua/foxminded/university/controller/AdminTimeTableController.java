@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -51,12 +50,6 @@ public class AdminTimeTableController {
 	public String ceateTimeTableForStudentsAtCourse(@ModelAttribute("timetable") @Validated TimeTable timetable,
 			BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 		try {
-			if (bindingResult.hasErrors()) {
-				for (FieldError error : bindingResult.getFieldErrors()) {
-					redirectAttributes.addFlashAttribute(error.getField() + "Error", error.getDefaultMessage());
-				}
-				return "redirect:/admin/timetable/course-timetable-form";
-			}
 
 			TimeTable createdTimeTable = timeTableService.createTimeTableForStudentsAtCourse(timetable.getDate(),
 					timetable.getTimeFrom(), timetable.getTimeTo(), timetable.getTeacher(), timetable.getCourse(),

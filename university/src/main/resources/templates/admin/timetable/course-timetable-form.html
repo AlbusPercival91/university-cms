@@ -38,7 +38,7 @@
             </div>
             <div class="form-group">
                 <label for="course">Course:</label>
-                <select id="course" name="mainCourse" required>
+                <select id="course" name="course" required>
                     <option value="">Select Course</option>
                     <!-- Generate options for courses using Thymeleaf -->
                     <option th:each="course : ${courses}" th:value="${course.id}" th:text="${course.courseName}">
@@ -47,8 +47,8 @@
             </div>
             <div class="form-group">
                 <label for="classroom">Class Room:</label>
-                <select id="classroom" name="classroom" required>
-                    <option value="">Select Class-Room</option>
+                <select id="classRoom" name="classRoom" required>
+                    <option value="">Select Class Room</option>
                     <!-- Generate options for classrooms using Thymeleaf -->
                     <option th:each="classroom : ${classrooms}" th:value="${classroom.id}"
                         th:text="${classroom.street + ', ' + classroom.buildingNumber + ', Room ' + classroom.roomNumber}">
