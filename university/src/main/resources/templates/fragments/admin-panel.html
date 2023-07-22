@@ -21,8 +21,6 @@
                         <span class="menu-item-title">Student</span>
                         <ul class="submenu">
                             <li><a th:href="@{~/admin/student/create-student}">Create New Student</a></li>
-                            <li><a th:href="@{~/admin/student/create-student-timetable}">Create Student Time-Table</a>
-                            </li>
                             <li><a th:href="@{~/admin/student/edit-student-list}">View All Students</a></li>
                         </ul>
                     </div>
@@ -59,7 +57,6 @@
                         <span class="menu-item-title">Group</span>
                         <ul class="submenu">
                             <li><a th:href="@{~/admin/group/create-group}">Create New Group</a></li>
-                            <li><a th:href="@{~/admin/group/group-card}">Create Group Time-Table</a></li>
                             <li><a th:href="@{~/admin/group/edit-group-list}">View All Groups</a></li>
                         </ul>
                     </div>
@@ -86,7 +83,9 @@
                     <div class="menu-item-box">
                         <span class="menu-item-title">TimeTable</span>
                         <ul class="submenu">
-                            <li><a th:href="@{~/admin/timetable/create-timetable}">Create Time Table</a></li>
+                            <li><a th:href="@{~/admin/timetable/group-timetable-form}">Create Group Time-Table</a></li>
+                            <li><a th:href="@{~/admin/timetable/course-timetable-form}">Create Course Time-Table</a>
+                            </li>
                             <li><a th:href="@{~/admin/timetable/edit-timetable-list}">View All TimeTables</a></li>
                         </ul>
                     </div>

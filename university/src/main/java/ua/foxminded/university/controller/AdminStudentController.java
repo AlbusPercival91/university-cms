@@ -16,14 +16,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.UriComponentsBuilder;
-import ua.foxminded.university.dao.entities.ClassRoom;
 import ua.foxminded.university.dao.entities.Course;
 import ua.foxminded.university.dao.entities.Student;
-import ua.foxminded.university.dao.entities.Teacher;
-import ua.foxminded.university.dao.service.ClassRoomService;
 import ua.foxminded.university.dao.service.CourseService;
 import ua.foxminded.university.dao.service.StudentService;
-import ua.foxminded.university.dao.service.TeacherService;
 
 @Controller
 public class AdminStudentController {
@@ -33,12 +29,6 @@ public class AdminStudentController {
 
 	@Autowired
 	private CourseService courseService;
-
-	@Autowired
-	private TeacherService teacherService;
-
-	@Autowired
-	private ClassRoomService classRoomService;
 
 	@GetMapping("/admin/student/edit-student-list")
 	public String getAllStudentsListAsAdmin(Model model) {
@@ -163,14 +153,4 @@ public class AdminStudentController {
 		return "redirect:/admin/student/create-student";
 	}
 
-	@GetMapping("/admin/student/create-student-timetable")
-	public String showFormCreateTimeTableForStudentsAtCourse(Model model) {
-		List<Teacher> teachers = teacherService.getAllTeachers();
-		List<Course> courses = courseService.getAllCourses();
-		List<ClassRoom> classrooms = classRoomService.getAllClassRooms();
-		model.addAttribute("teachers", teachers);
-		model.addAttribute("courses", courses);
-		model.addAttribute("classrooms", classrooms);
-		return "admin/student/create-student-timetable";
-	}
 }
