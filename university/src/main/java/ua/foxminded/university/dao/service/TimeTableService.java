@@ -33,26 +33,28 @@ public class TimeTableService {
 
 	public TimeTable createGroupTimeTable(LocalDate date, LocalTime timeFrom, LocalTime timeTo, Teacher teacher,
 			Course course, Group group, ClassRoom classRoom) {
-		if (timeTableRepository.existsByDateAndTimeFromAndTimeToAndClassRoom(date, timeFrom, timeTo, classRoom)) {
-			throw new IllegalStateException("ClassRoom is busy, choose another Time");
+		if (timeTableRepository.timeTableValidationFailed(date, timeFrom, timeTo, classRoom)
+				|| timeFrom.isAfter(timeTo)) {
+			throw new IllegalStateException("Validation failed while creating TimeTable");
 		}
 		TimeTable timeTable = new TimeTable(date, timeFrom, timeTo, teacher, course, group, classRoom);
-		log.info("Timetable [date::{}, time from::{}, time to::{}] is scheduled successfully.", timeTable.getDate(),
+		log.info("Timetable [date:{}, time from:{}, time to:{}] is scheduled successfully.", timeTable.getDate(),
 				timeTable.getTimeFrom(), timeTable.getTimeTo());
 		return timeTableRepository.save(timeTable);
 	}
 
 	public TimeTable createTimeTableForStudentsAtCourse(LocalDate date, LocalTime timeFrom, LocalTime timeTo,
 			Teacher teacher, Course course, ClassRoom classRoom) {
-		if (timeTableRepository.existsByDateAndTimeFromAndTimeToAndClassRoom(date, timeFrom, timeTo, classRoom)) {
-			throw new IllegalStateException("ClassRoom is busy, choose another Time");
+		if (timeTableRepository.timeTableValidationFailed(date, timeFrom, timeTo, classRoom)
+				|| timeFrom.isAfter(timeTo)) {
+			throw new IllegalStateException("Validation failed while creating TimeTable");
 		}
 		List<Student> studentsRelatedToCourse = studentRepository.findStudentsRelatedToCourse(course.getCourseName());
 
 		if (!studentsRelatedToCourse.isEmpty()) {
 			TimeTable timeTable = new TimeTable(date, timeFrom, timeTo, teacher, course, classRoom,
 					studentsRelatedToCourse);
-			log.info("Timetable [date::{}, time from::{}, time to::{}] is scheduled successfully.", timeTable.getDate(),
+			log.info("Timetable [date:{}, time from:{}, time to:{}] is scheduled successfully.", timeTable.getDate(),
 					timeTable.getTimeFrom(), timeTable.getTimeTo());
 			return timeTableRepository.save(timeTable);
 		} else {
@@ -105,9 +107,11 @@ public class TimeTableService {
 		});
 
 		if (timeTableRepository.studentIsAssignedToAnyCourse(existingStudent.getId())) {
-			return timeTableRepository.findByDateAndStudentOrderByDateAscTimeFromAsc(dateFrom, dateTo, existingStudent.getId());
+			return timeTableRepository.findByDateAndStudentOrderByDateAscTimeFromAsc(dateFrom, dateTo,
+					existingStudent.getId());
 		} else {
-			return timeTableRepository.findByDateAndGroupOrderByDateAscTimeFromAsc(dateFrom, dateTo, existingStudent.getGroup());
+			return timeTableRepository.findByDateAndGroupOrderByDateAscTimeFromAsc(dateFrom, dateTo,
+					existingStudent.getGroup());
 		}
 	}
 
@@ -124,7 +128,8 @@ public class TimeTableService {
 			log.warn("Student with id {} not found", student.getId());
 			return new NoSuchElementException("Student not found");
 		});
-		return timeTableRepository.findByDateAndGroupOrderByDateAscTimeFromAsc(dateFrom, dateTo, existingStudent.getGroup());
+		return timeTableRepository.findByDateAndGroupOrderByDateAscTimeFromAsc(dateFrom, dateTo,
+				existingStudent.getGroup());
 	}
 
 	public List<TimeTable> getGroupTimeTableByDate(LocalDate dateFrom, LocalDate dateTo, Group group) {
