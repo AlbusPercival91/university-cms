@@ -31,7 +31,8 @@
                 <select id="teacher" name="teacher" required>
                     <option value="">Select Teacher</option>
                     <!-- Generate options for teachers using Thymeleaf -->
-                    <option th:each="teacher : ${teachers}" th:value="${teacher.id}" th:text="${teacher.firstName}">
+                    <option th:each="teacher : ${teachers}" th:value="${teacher.id}"
+                        th:text="${'ID: ' + teacher.id + ', ' + teacher.firstName + ' ' + teacher.lastName}">
                     </option>
                 </select>
             </div>
