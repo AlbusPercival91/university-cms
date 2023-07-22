@@ -60,7 +60,8 @@ public class AdminTimeTableController {
 			TimeTable createdTimeTable = timeTableService.createTimeTableForStudentsAtCourse(date, timeFrom, timeTo,
 					timetable.getTeacher(), timetable.getCourse(), timetable.getClassRoom());
 
-			if (createdTimeTable.getId() != timetable.getId()) {
+			if (!createdTimeTable.getDate().equals(date) && !createdTimeTable.getTimeFrom().equals(timeTo)
+					&& !createdTimeTable.getTimeTo().equals(timeTo)) {
 				redirectAttributes.addFlashAttribute("errorMessage", "Failed to create Time Table");
 			} else {
 				redirectAttributes.addFlashAttribute("successMessage", "Time Table created successfully");
