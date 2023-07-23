@@ -27,6 +27,7 @@
                     <th>Time To</th>
                     <th>Teacher</th>
                     <th>Course</th>
+                    <th>Group</th>
                     <th>Class-Room</th>
                     <th style="border: none; width: 3vh;"></th>
                 </tr>
@@ -45,9 +46,14 @@
                     <td th:text="${timetable.date}"></td>
                     <td th:text="${timetable.timeFrom}"></td>
                     <td th:text="${timetable.timeTo}"></td>
-                    <td th:text="${timetable.teacher.firstName}"></td>
+                    <td
+                        th:text="${'ID: ' + timetable.teacher.id + ', ' + timetable.teacher.firstName + ' ' + timetable.teacher.lastName}">
+                    </td>
                     <td th:text="${timetable.course.courseName}"></td>
-                    <td th:text="${timetable.classRoom.id}"></td>
+                    <td th:text="${timetable.group != null ? timetable.group.groupName : 'N/A'}"></td>
+                    <td
+                        th:text="${timetable.classRoom.street + ', ' + timetable.classRoom.buildingNumber + ', Room ' + timetable.classRoom.roomNumber}">
+                    </td>
                     <td style="border: none;">
                         <!-- Remove Button -->
                         <form th:action="@{/admin/timetable/delete/{timetableId}(timetableId=${timetable.id})}"
