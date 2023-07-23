@@ -29,6 +29,7 @@
                     <th>Course</th>
                     <th>Group</th>
                     <th>Class-Room</th>
+                    <th>Students Assigned</th>
                     <th style="border: none; width: 3vh;"></th>
                 </tr>
             </thead>
@@ -54,6 +55,21 @@
                     <td
                         th:text="${timetable.classRoom.street + ', ' + timetable.classRoom.buildingNumber + ', Room ' + timetable.classRoom.roomNumber}">
                     </td>
+
+                    <td>
+                        <span th:if="${not #lists.isEmpty(timetable.studentsRelatedToCourse)}">
+                            <span th:each="student, indexStat : ${timetable.studentsRelatedToCourse}">
+                                <span
+                                    th:text="${'ID: ' + student.id + ', ' + student.firstName + ' ' + student.lastName}"></span>
+                                <span th:unless="${indexStat.last}">, </span>
+                                <!-- Add a comma unless it's the last student -->
+                                <br th:unless="${indexStat.last}" />
+                                <!-- Add a line break unless it's the last student -->
+                            </span>
+                        </span>
+                        <span th:unless="${not #lists.isEmpty(timetable.studentsRelatedToCourse)}">N/A</span>
+                    </td>
+
                     <td style="border: none;">
                         <!-- Remove Button -->
                         <form th:action="@{/admin/timetable/delete/{timetableId}(timetableId=${timetable.id})}"
