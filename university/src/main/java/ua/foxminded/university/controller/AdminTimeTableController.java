@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
@@ -12,6 +14,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -71,4 +74,24 @@ public class AdminTimeTableController {
 		}
 		return "redirect:/admin/timetable/course-timetable-form";
 	}
+
+//	@GetMapping("/admin/timetable/timetable")
+//	public String getFullTeacherTimeTable(@ModelAttribute("teacher") @Validated Teacher teacher, Model model) {
+//		List<TimeTable> timetables = timeTableService.getTeacherTimeTable(teacher);
+//		model.addAttribute("timetables", timetables);
+//		return "admin/timetable/timetable}";
+//	}
+
+	@GetMapping("/admin/timetable/timetable/{teacherId}")
+	public String getFullTeacherTimeTable(@PathVariable("teacherId") int teacherId, Model model) {
+		Optional<Teacher> teacher = teacherService.findTeacherById(teacherId);
+
+		if (teacher.isPresent()) {
+			List<TimeTable> timetables = timeTableService.getTeacherTimeTable(teacher.get());
+			model.addAttribute("timetables", timetables);
+			return "admin/timetable/timetable";
+		}
+		return "admin/timetable/timetable";
+	}
+
 }

@@ -122,7 +122,7 @@
 
             <!-- Container for Get All Time-Tables button -->
             <div class="button-container">
-                <form th:action="@{/admin/teacher/full-timetable/{teacherId}(teacherId=${teacher.id})}" method="post">
+                <form th:action="@{/admin/timetable/timetable/{teacherId}(teacherId=${teacher.id})}" method="get">
                     <button id="saveButton" type="submit" class="button-common-style">Get Full Time-Table List</button>
                 </form>
             </div>
@@ -135,8 +135,6 @@
 
     <script th:src="@{/js/work-panel.js}"></script>
     <script th:src="@{/js/enable-edit.js}"></script>
-
-
 
 </body>
 
