@@ -64,9 +64,10 @@ class TimeTableServiceTest {
 			LocalTime timeFrom, LocalTime timeTo, int teacherId, int courseId, int groupId, int classRoomId) {
 		timeTableBuilder.saveGroupTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId, classRoomId);
 
-		Exception illegalStateException = assertThrows(Exception.class, () -> timeTableBuilder.saveGroupTimeTable(date,
-				timeFrom, timeTo, teacherId, courseId, groupId, classRoomId));
-		Assertions.assertEquals("ClassRoom is busy, choose another Time", illegalStateException.getMessage());
+		Exception timeTableValidationException = assertThrows(Exception.class, () -> timeTableBuilder
+				.saveGroupTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId, classRoomId));
+		Assertions.assertEquals("Validation failed while creating TimeTable",
+				timeTableValidationException.getMessage());
 	}
 
 	@ParameterizedTest
