@@ -5,6 +5,9 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
@@ -77,6 +80,23 @@ public class AdminTimeTableController {
 			redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
 		}
 		return "redirect:/admin/timetable/course-timetable-form";
+	}
+
+	@PostMapping("/admin/timetable/delete/{timetableId}")
+	public String deleteTimetable(@PathVariable int timetableId, RedirectAttributes redirectAttributes,
+			HttpServletRequest request) {
+		try {
+			timeTableService.deleteTimeTableById(timetableId);
+			redirectAttributes.addFlashAttribute("successMessage", "Time Table was deleted!");
+		} catch (NoSuchElementException ex) {
+			redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
+		}
+		String referrer = request.getHeader("referer");
+
+		if (referrer == null || referrer.isEmpty()) {
+			return "redirect:/admin/timetable/timetable/{teacherId}";
+		}
+		return "redirect:" + referrer;
 	}
 
 	@GetMapping("/admin/timetable/timetable/{teacherId}")
