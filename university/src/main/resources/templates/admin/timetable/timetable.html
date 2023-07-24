@@ -58,14 +58,11 @@
 
                     <td>
                         <span th:if="${not #lists.isEmpty(timetable.studentsRelatedToCourse)}">
-                            <span th:each="student, indexStat : ${timetable.studentsRelatedToCourse}">
-                                <span
-                                    th:text="${'ID: ' + student.id + ', ' + student.firstName + ' ' + student.lastName}"></span>
-                                <span th:unless="${indexStat.last}">, </span>
-                                <!-- Add a comma unless it's the last student -->
-                                <br th:unless="${indexStat.last}" />
-                                <!-- Add a line break unless it's the last student -->
-                            </span>
+                            <select>
+                                <option th:each="student : ${timetable.studentsRelatedToCourse}"
+                                    th:text="${'ID: ' + student.id + ', ' + student.firstName + ' ' + student.lastName}">
+                                </option>
+                            </select>
                         </span>
                         <span th:unless="${not #lists.isEmpty(timetable.studentsRelatedToCourse)}">N/A</span>
                     </td>
