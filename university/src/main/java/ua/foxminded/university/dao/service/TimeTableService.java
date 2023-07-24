@@ -16,6 +16,7 @@ import ua.foxminded.university.dao.entities.Group;
 import ua.foxminded.university.dao.entities.Student;
 import ua.foxminded.university.dao.entities.Teacher;
 import ua.foxminded.university.dao.entities.TimeTable;
+import ua.foxminded.university.dao.exception.TimeTableValidationException;
 import ua.foxminded.university.dao.interfaces.GroupRepository;
 import ua.foxminded.university.dao.interfaces.StudentRepository;
 import ua.foxminded.university.dao.interfaces.TeacherRepository;
@@ -31,6 +32,21 @@ public class TimeTableService {
 	private final TeacherRepository teacherRepository;
 	private final GroupRepository groupRepository;
 
+	private void timeTableValidationFailed(LocalDate date, LocalTime timeFrom, LocalTime timeTo, Teacher teacher,
+			Course course, ClassRoom classRoom) {
+		if (timeTableRepository.timeTableValidationFailed(date, timeFrom, timeTo, classRoom)) {
+			throw new TimeTableValidationException("Validation failed while creating TimeTable");
+		}
+
+		if (timeFrom.isAfter(timeTo)) {
+			throw new TimeTableValidationException("Timing is wrong");
+		}
+
+		if (!teacherRepository.findTeachersRelatedToCourse(course.getCourseName()).contains(teacher)) {
+			throw new TimeTableValidationException("Teacher is not assigned with such Course");
+		}
+	}
+
 	public TimeTable createGroupTimeTable(LocalDate date, LocalTime timeFrom, LocalTime timeTo, Teacher teacher,
 			Course course, Group group, ClassRoom classRoom) {
 		if (timeTableRepository.timeTableValidationFailed(date, timeFrom, timeTo, classRoom)
@@ -45,21 +61,24 @@ public class TimeTableService {
 
 	public TimeTable createTimeTableForStudentsAtCourse(LocalDate date, LocalTime timeFrom, LocalTime timeTo,
 			Teacher teacher, Course course, ClassRoom classRoom) {
-		if (timeTableRepository.timeTableValidationFailed(date, timeFrom, timeTo, classRoom)
-				|| timeFrom.isAfter(timeTo)) {
-			throw new IllegalStateException("Validation failed while creating TimeTable");
-		}
-		List<Student> studentsRelatedToCourse = studentRepository.findStudentsRelatedToCourse(course.getCourseName());
+		try {
+			timeTableValidationFailed(date, timeFrom, timeTo, teacher, course, classRoom);
 
-		if (!studentsRelatedToCourse.isEmpty()) {
-			TimeTable timeTable = new TimeTable(date, timeFrom, timeTo, teacher, course, classRoom,
-					studentsRelatedToCourse);
-			log.info("Timetable [date:{}, time from:{}, time to:{}] is scheduled successfully.", timeTable.getDate(),
-					timeTable.getTimeFrom(), timeTable.getTimeTo());
-			return timeTableRepository.save(timeTable);
-		} else {
-			log.warn("Students assigned to course {} not found", course.getCourseName());
-			throw new NoSuchElementException("Students at this course not found");
+			List<Student> studentsRelatedToCourse = studentRepository
+					.findStudentsRelatedToCourse(course.getCourseName());
+
+			if (!studentsRelatedToCourse.isEmpty()) {
+				TimeTable timeTable = new TimeTable(date, timeFrom, timeTo, teacher, course, classRoom,
+						studentsRelatedToCourse);
+				log.info("Timetable [date:{}, time from:{}, time to:{}] is scheduled successfully.",
+						timeTable.getDate(), timeTable.getTimeFrom(), timeTable.getTimeTo());
+				return timeTableRepository.save(timeTable);
+			} else {
+				log.warn("Students assigned to course {} not found", course.getCourseName());
+				throw new NoSuchElementException("Students at this course not found");
+			}
+		} catch (TimeTableValidationException ex) {
+			throw new IllegalStateException(ex.getMessage());
 		}
 	}
 
