@@ -25,6 +25,7 @@ import ua.foxminded.university.dao.entities.Course;
 import ua.foxminded.university.dao.entities.Student;
 import ua.foxminded.university.dao.entities.Teacher;
 import ua.foxminded.university.dao.entities.TimeTable;
+import ua.foxminded.university.dao.exception.TimeTableValidationException;
 import ua.foxminded.university.dao.service.ClassRoomService;
 import ua.foxminded.university.dao.service.CourseService;
 import ua.foxminded.university.dao.service.StudentService;
@@ -76,7 +77,7 @@ public class AdminTimeTableController {
 			} else {
 				redirectAttributes.addFlashAttribute("successMessage", "Time Table created successfully");
 			}
-		} catch (NoSuchElementException | IllegalStateException ex) {
+		} catch (NoSuchElementException | TimeTableValidationException ex) {
 			redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
 		}
 		return "redirect:/admin/timetable/course-timetable-form";

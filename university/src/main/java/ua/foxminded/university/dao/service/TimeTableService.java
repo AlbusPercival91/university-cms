@@ -45,6 +45,10 @@ public class TimeTableService {
 		if (!teacherRepository.findTeachersRelatedToCourse(course.getCourseName()).contains(teacher)) {
 			throw new TimeTableValidationException("Teacher is not assigned with such Course");
 		}
+
+		if (timeTableRepository.teacherIsBusy(date, timeFrom, timeTo, teacher)) {
+			throw new TimeTableValidationException("Teacher is busy during this time");
+		}
 	}
 
 	public TimeTable createGroupTimeTable(LocalDate date, LocalTime timeFrom, LocalTime timeTo, Teacher teacher,
@@ -78,7 +82,7 @@ public class TimeTableService {
 				throw new NoSuchElementException("Students at this course not found");
 			}
 		} catch (TimeTableValidationException ex) {
-			throw new IllegalStateException(ex.getMessage());
+			throw new TimeTableValidationException(ex.getMessage());
 		}
 	}
 
