@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Teachers List</title>
+    <title>Students List</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" />
 </head>
@@ -48,13 +48,11 @@
                     <td th:text="${student.active}"></td>
                     <td th:text="${student.group.groupName}"></td>
                     <td>
-                        <span th:each="course, indexStat : ${student.courses}">
-                            <span th:text="${course.courseName}"></span>
-                            <span th:unless="${indexStat.last}">, </span>
-                            <!-- Add a comma unless it's the last course -->
-                            <br th:unless="${indexStat.last}" /> <!-- Add a line break unless it's the last course -->
-                        </span>
+                        <select>
+                            <option th:each="course : ${student.courses}" th:text="${course.courseName}"></option>
+                        </select>
                     </td>
+
                     <td style="border: none;">
                         <!-- Remove Button -->
                         <form th:action="@{/admin/student/delete/{studentId}(studentId=${student.id})}" method="post">

@@ -48,12 +48,10 @@
                     <td th:text="${teacher.department.name}"></td>
                     <td th:text="${teacher.mainCourse.courseName}"></td>
                     <td>
-                        <span th:each="course, indexStat : ${teacher.assignedCourses}">
-                            <span th:text="${course.courseName}"></span>
-                            <span th:unless="${indexStat.last}">, </span>
-                            <!-- Add a comma unless it's the last course -->
-                            <br th:unless="${indexStat.last}" /> <!-- Add a line break unless it's the last course -->
-                        </span>
+                        <select>
+                            <option th:each="course : ${teacher.assignedCourses}" th:text="${course.courseName}">
+                            </option>
+                        </select>
                     </td>
                     <td style="border: none;">
                         <!-- Remove Button -->
