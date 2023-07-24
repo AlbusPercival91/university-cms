@@ -23,6 +23,7 @@ import ua.foxminded.university.dao.entities.Student;
 import ua.foxminded.university.dao.entities.Teacher;
 import ua.foxminded.university.dao.entities.TimeTable;
 import ua.foxminded.university.dao.interfaces.StudentRepository;
+import ua.foxminded.university.dao.interfaces.TeacherRepository;
 import ua.foxminded.university.dao.interfaces.TimeTableRepository;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
@@ -45,6 +46,9 @@ class TimeTableServiceTest {
 
 	@Autowired
 	private StudentRepository studentRepository;
+
+	@Autowired
+	private TeacherRepository teacherRepository;
 
 	@ParameterizedTest
 	@CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 1, 1", "2023-09-01, 12:00, 13:30, 2, 2, 2, 2",
@@ -80,6 +84,10 @@ class TimeTableServiceTest {
 		studentRepository.addStudentToTheCourse(3, "Physics");
 		studentRepository.addStudentToTheCourse(1, "Chemistry");
 
+		teacherRepository.addTeacherToTheCourse(teacherId, "Mathematics");
+		teacherRepository.addTeacherToTheCourse(teacherId, "Physics");
+		teacherRepository.addTeacherToTheCourse(teacherId, "Chemistry");
+
 		TimeTable timeTable = timeTableBuilder.saveTimeTableForStudentsAtCourse(date, timeFrom, timeTo, teacherId,
 				courseId, classRoomId);
 
@@ -95,11 +103,16 @@ class TimeTableServiceTest {
 		studentRepository.addStudentToTheCourse(2, "Mathematics");
 		studentRepository.addStudentToTheCourse(3, "Physics");
 		studentRepository.addStudentToTheCourse(1, "Chemistry");
+
+		teacherRepository.addTeacherToTheCourse(teacherId, "Mathematics");
+		teacherRepository.addTeacherToTheCourse(teacherId, "Physics");
+		teacherRepository.addTeacherToTheCourse(teacherId, "Chemistry");
+
 		timeTableBuilder.saveTimeTableForStudentsAtCourse(date, timeFrom, timeTo, teacherId, courseId, classRoomId);
 
 		Exception illegalStateException = assertThrows(Exception.class, () -> timeTableBuilder
 				.saveTimeTableForStudentsAtCourse(date, timeFrom, timeTo, teacherId, courseId, classRoomId));
-		Assertions.assertEquals("ClassRoom is busy, choose another Time", illegalStateException.getMessage());
+		Assertions.assertEquals("Validation failed while creating TimeTable", illegalStateException.getMessage());
 	}
 
 	@ParameterizedTest
@@ -110,12 +123,12 @@ class TimeTableServiceTest {
 
 		Exception noSuchElementException = assertThrows(Exception.class, () -> timeTableBuilder
 				.saveTimeTableForStudentsAtCourse(date, timeFrom, timeTo, teacherId, courseId, classRoomId));
-		Assertions.assertEquals("Students at this course not found", noSuchElementException.getMessage());
+		Assertions.assertEquals("Teacher is not assigned with such Course", noSuchElementException.getMessage());
 	}
 
 	@ParameterizedTest
-	@CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 2, 1, 1, 1", "2023-09-01, 12:00, 13:30, 2, 1, 2, 2, 2, 2",
-			"2023-09-02, 09:00, 10:30, 3, 2, 3, 3, 3, 3", "2023-09-02, 12:00, 13:30, 1, 1, 2, 3, 1, 3" })
+	@CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 2, 1, 1, 1", "2023-09-01, 12:00, 13:30, 2, 2, 2, 2, 2, 2",
+			"2023-09-02, 09:00, 10:30, 3, 3, 3, 3, 3, 3", "2023-09-02, 12:00, 13:30, 1, 1, 2, 3, 1, 3" })
 	void testGetStudentTimeTable_ShouldReturnAllTimeTablesForStudent(LocalDate date, LocalTime timeFrom,
 			LocalTime timeTo, int teacherId, int firstCourseId, int secondCourseId, int groupId, int classRoomId,
 			int studentId) {
@@ -123,20 +136,24 @@ class TimeTableServiceTest {
 		studentRepository.addStudentToTheCourse(studentId, "Physics");
 		studentRepository.addStudentToTheCourse(studentId, "Chemistry");
 
+		teacherRepository.addTeacherToTheCourse(teacherId, "Mathematics");
+		teacherRepository.addTeacherToTheCourse(teacherId, "Physics");
+		teacherRepository.addTeacherToTheCourse(teacherId, "Chemistry");
+
 		TimeTable timeTable1 = timeTableBuilder.saveGroupTimeTable(date, timeFrom, timeTo, teacherId, firstCourseId,
 				groupId, classRoomId);
 		TimeTable timeTable2 = timeTableBuilder.saveGroupTimeTable(date, timeFrom.plusHours(2), timeTo.plusHours(2),
 				teacherId, secondCourseId, groupId, classRoomId);
-		TimeTable timeTable3 = timeTableBuilder.saveTimeTableForStudentsAtCourse(date, timeFrom.plusHours(1),
-				timeTo.plusHours(1), teacherId, firstCourseId, classRoomId);
+		TimeTable timeTable3 = timeTableBuilder.saveTimeTableForStudentsAtCourse(date, timeFrom.plusHours(5),
+				timeTo.plusHours(5), teacherId, firstCourseId, classRoomId);
 		TimeTable timeTable4 = timeTableBuilder.saveTimeTableForStudentsAtCourse(date.plusDays(1),
 				timeFrom.plusHours(1), timeTo.plusHours(1), teacherId, firstCourseId, classRoomId);
 		List<TimeTable> expectedTimeTables = new ArrayList<>() {
 			private static final long serialVersionUID = 1L;
 			{
 				add(timeTable1);
-				add(timeTable3);
 				add(timeTable2);
+				add(timeTable3);
 				add(timeTable4);
 			}
 		};
@@ -145,8 +162,8 @@ class TimeTableServiceTest {
 	}
 
 	@ParameterizedTest
-	@CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 2, 1, 1, 1", "2023-09-01, 12:00, 13:30, 2, 1, 2, 2, 2, 2",
-			"2023-09-02, 09:00, 10:30, 3, 2, 3, 3, 3, 3", "2023-09-02, 12:00, 13:30, 1, 1, 2, 3, 1, 3" })
+	@CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 2, 1, 1, 1", "2023-09-01, 12:00, 13:30, 2, 2, 2, 2, 2, 2",
+			"2023-09-02, 09:00, 10:30, 3, 3, 3, 3, 3, 3", "2023-09-02, 12:00, 13:30, 1, 1, 2, 3, 1, 3" })
 	void testGetStudentTimeTableByDate_ShouldReturnAllTimeTablesForStudentWithDateRange(LocalDate date,
 			LocalTime timeFrom, LocalTime timeTo, int teacherId, int firstCourseId, int secondCourseId, int groupId,
 			int classRoomId, int studentId) {
@@ -154,20 +171,24 @@ class TimeTableServiceTest {
 		studentRepository.addStudentToTheCourse(studentId, "Physics");
 		studentRepository.addStudentToTheCourse(studentId, "Chemistry");
 
+		teacherRepository.addTeacherToTheCourse(teacherId, "Mathematics");
+		teacherRepository.addTeacherToTheCourse(teacherId, "Physics");
+		teacherRepository.addTeacherToTheCourse(teacherId, "Chemistry");
+
 		TimeTable timeTable1 = timeTableBuilder.saveGroupTimeTable(date, timeFrom, timeTo, teacherId, firstCourseId,
 				groupId, classRoomId);
 		TimeTable timeTable2 = timeTableBuilder.saveGroupTimeTable(date, timeFrom.plusHours(2), timeTo.plusHours(2),
 				teacherId, secondCourseId, groupId, classRoomId);
-		TimeTable timeTable3 = timeTableBuilder.saveTimeTableForStudentsAtCourse(date, timeFrom.plusHours(1),
-				timeTo.plusHours(1), teacherId, firstCourseId, classRoomId);
+		TimeTable timeTable3 = timeTableBuilder.saveTimeTableForStudentsAtCourse(date, timeFrom.plusHours(5),
+				timeTo.plusHours(5), teacherId, firstCourseId, classRoomId);
 		timeTableBuilder.saveTimeTableForStudentsAtCourse(date.plusDays(1), timeFrom.plusHours(1), timeTo.plusHours(1),
 				teacherId, firstCourseId, classRoomId);
 		List<TimeTable> expectedTimeTables = new ArrayList<>() {
 			private static final long serialVersionUID = 1L;
 			{
 				add(timeTable1);
-				add(timeTable3);
 				add(timeTable2);
+				add(timeTable3);
 			}
 		};
 
