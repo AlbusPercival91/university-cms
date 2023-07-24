@@ -32,7 +32,7 @@ public class TimeTableService {
 	private final TeacherRepository teacherRepository;
 	private final GroupRepository groupRepository;
 
-	private void timeTableValidationFailed(LocalDate date, LocalTime timeFrom, LocalTime timeTo, Teacher teacher,
+	private void timeTableValidation(LocalDate date, LocalTime timeFrom, LocalTime timeTo, Teacher teacher,
 			Course course, ClassRoom classRoom) {
 		if (timeTableRepository.timeTableValidationFailed(date, timeFrom, timeTo, classRoom)) {
 			throw new TimeTableValidationException("Validation failed while creating TimeTable");
@@ -66,7 +66,7 @@ public class TimeTableService {
 	public TimeTable createTimeTableForStudentsAtCourse(LocalDate date, LocalTime timeFrom, LocalTime timeTo,
 			Teacher teacher, Course course, ClassRoom classRoom) {
 		try {
-			timeTableValidationFailed(date, timeFrom, timeTo, teacher, course, classRoom);
+			timeTableValidation(date, timeFrom, timeTo, teacher, course, classRoom);
 
 			List<Student> studentsRelatedToCourse = studentRepository
 					.findStudentsRelatedToCourse(course.getCourseName());
