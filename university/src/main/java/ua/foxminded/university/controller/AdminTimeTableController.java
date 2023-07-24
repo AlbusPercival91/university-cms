@@ -118,4 +118,25 @@ public class AdminTimeTableController {
 		}
 		return "admin/timetable/timetable";
 	}
+
+	@GetMapping("/admin/timetable/selected-timetable/{teacherId}")
+	public String getSelectedDateTeacherTimeTable(@PathVariable("teacherId") int teacherId,
+			@RequestParam("dateFrom") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateFrom,
+			@RequestParam("dateTo") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateTo, Model model) {
+		Optional<Teacher> teacher = teacherService.findTeacherById(teacherId);
+
+		if (teacher.isPresent()) {
+			List<TimeTable> timetables = timeTableService.getTeacherTimeTableByDate(dateFrom, dateTo, teacher.get());
+
+			for (TimeTable timetable : timetables) {
+				List<Student> studentsRelatedToCourse = studentService
+						.findStudentsRelatedToCourse(timetable.getCourse().getCourseName());
+				timetable.setStudentsRelatedToCourse(studentsRelatedToCourse);
+			}
+
+			model.addAttribute("timetables", timetables);
+			return "admin/timetable/timetable";
+		}
+		return "admin/timetable/timetable";
+	}
 }
