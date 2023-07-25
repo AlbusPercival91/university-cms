@@ -218,7 +218,7 @@ public class AdminTimeTableController {
 	}
 
 	@GetMapping("/admin/timetable/selected-timetable/{studentId}")
-	public String getSelectedDateTimeTable(@PathVariable("studentId") int studentId,
+	public String getSelectedDateStudentAndGroupTimeTable(@PathVariable("studentId") int studentId,
 			@RequestParam("dateFrom") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateFrom,
 			@RequestParam("dateTo") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateTo,
 			@RequestParam("action") String action, Model model) {
