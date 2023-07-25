@@ -100,7 +100,7 @@ public class AdminTimeTableController {
 		return "redirect:" + referrer;
 	}
 
-	@GetMapping("/admin/timetable/timetable/{teacherId}")
+	@GetMapping("/admin/timetable/teacher-timetable/{teacherId}")
 	public String getFullTeacherTimeTable(@PathVariable("teacherId") int teacherId, Model model) {
 		Optional<Teacher> teacher = teacherService.findTeacherById(teacherId);
 
@@ -119,7 +119,7 @@ public class AdminTimeTableController {
 		return "admin/timetable/timetable";
 	}
 
-	@GetMapping("/admin/timetable/selected-timetable/{teacherId}")
+	@GetMapping("/admin/timetable/teacher-selected-timetable/{teacherId}")
 	public String getSelectedDateTeacherTimeTable(@PathVariable("teacherId") int teacherId,
 			@RequestParam("dateFrom") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateFrom,
 			@RequestParam("dateTo") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateTo, Model model) {
@@ -127,6 +127,47 @@ public class AdminTimeTableController {
 
 		if (teacher.isPresent()) {
 			List<TimeTable> timetables = timeTableService.getTeacherTimeTableByDate(dateFrom, dateTo, teacher.get());
+
+			for (TimeTable timetable : timetables) {
+				List<Student> studentsRelatedToCourse = studentService
+						.findStudentsRelatedToCourse(timetable.getCourse().getCourseName());
+				timetable.setStudentsRelatedToCourse(studentsRelatedToCourse);
+			}
+
+			model.addAttribute("timetables", timetables);
+			return "admin/timetable/timetable";
+		}
+		return "admin/timetable/timetable";
+	}
+
+	@GetMapping("/admin/timetable/student-timetable/{studentId}")
+	public String getFullStudentTimeTable(@PathVariable("studentId") int studentId, Model model) {
+		Optional<Student> student = studentService.findStudentById(studentId);
+
+		if (student.isPresent()) {
+			List<TimeTable> timetables = timeTableService.getStudentTimeTable(student.get().getId());
+
+			for (TimeTable timetable : timetables) {
+				List<Student> studentsRelatedToCourse = studentService
+						.findStudentsRelatedToCourse(timetable.getCourse().getCourseName());
+				timetable.setStudentsRelatedToCourse(studentsRelatedToCourse);
+			}
+
+			model.addAttribute("timetables", timetables);
+			return "admin/timetable/timetable";
+		}
+		return "admin/timetable/timetable";
+	}
+
+	@GetMapping("/admin/timetable/student-selected-timetable/{studentId}")
+	public String getSelectedDateStudentTimeTable(@PathVariable("studentId") int studentId,
+			@RequestParam("dateFrom") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateFrom,
+			@RequestParam("dateTo") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateTo, Model model) {
+		Optional<Student> student = studentService.findStudentById(studentId);
+
+		if (student.isPresent()) {
+			List<TimeTable> timetables = timeTableService.getStudentTimeTableByDate(dateFrom, dateTo,
+					student.get().getId());
 
 			for (TimeTable timetable : timetables) {
 				List<Student> studentsRelatedToCourse = studentService

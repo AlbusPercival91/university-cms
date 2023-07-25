@@ -97,7 +97,8 @@
             <h2>Student Time-Table</h2>
 
             <!-- First form for the first button -->
-            <form th:action="@{/admin/timetable/selected-timetable/{studentId}(studentId=${student.id})}" method="get">
+            <form th:action="@{/admin/timetable/student-selected-timetable/{studentId}(studentId=${student.id})}"
+                method="get">
                 <div class="form-group">
                     <label for="dateFrom">From:</label>
                     <input type="date" id="dateFrom" name="dateFrom" required class="date-input" />
@@ -133,7 +134,8 @@
 
             <!-- Container for Get All Time-Tables button -->
             <div class="button-container">
-                <form th:action="@{/admin/timetable/timetable/{studentId}(studentId=${student.id})}" method="get">
+                <form th:action="@{/admin/timetable/student-timetable/{studentId}(studentId=${student.id})}"
+                    method="get">
                     <button id="saveButton" type="submit" class="button-common-style">Get Full Student
                         Time-Table</button>
                 </form>

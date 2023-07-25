@@ -101,7 +101,8 @@
         <div class="entity-timetable">
             <h2>Teacher Time-Table</h2>
 
-            <form th:action="@{/admin/timetable/selected-timetable/{teacherId}(teacherId=${teacher.id})}" method="get">
+            <form th:action="@{/admin/timetable/teacher-selected-timetable/{teacherId}(teacherId=${teacher.id})}"
+                method="get">
                 <div class="form-group">
                     <label for="dateFrom">From:</label>
                     <input type="date" id="dateFrom" name="dateFrom" required class="date-input" />
@@ -122,7 +123,8 @@
 
             <!-- Container for Get All Time-Tables button -->
             <div class="button-container">
-                <form th:action="@{/admin/timetable/timetable/{teacherId}(teacherId=${teacher.id})}" method="get">
+                <form th:action="@{/admin/timetable/teacher-timetable/{teacherId}(teacherId=${teacher.id})}"
+                    method="get">
                     <button id="saveButton" type="submit" class="button-common-style">Get Full Time-Table List</button>
                 </form>
             </div>
