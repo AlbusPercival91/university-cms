@@ -101,11 +101,11 @@
                 method="get">
                 <div class="form-group">
                     <label for="dateFrom">From:</label>
-                    <input type="date" id="dateFrom" name="dateFrom" required class="date-input" />
+                    <input type="date" id="dateFrom" name="dateFrom" required class="date-input" pattern="yyyy-MM-dd" />
                 </div>
                 <div class="form-group">
                     <label for="dateTo">To:</label>
-                    <input type="date" id="dateTo" name="dateTo" required class="date-input" />
+                    <input type="date" id="dateTo" name="dateTo" required class="date-input" pattern="yyyy-MM-dd" />
                 </div>
 
                 <!-- Container for Get Selected Date Time-Table button -->
@@ -120,14 +120,14 @@
             <form th:action="@{/admin/timetable/selected-group-timetable/{studentId}(studentId=${student.id})}"
                 method="get">
                 <!-- Hidden input fields to carry dateFrom and dateTo values from the first form to the second form -->
-                <input type="hidden" id="dateFrom" name="dateFrom"
+                <input type="hidden" id="groupDateFrom" name="dateFrom"
                     th:value="${#dates.format(dateFrom, 'yyyy-MM-dd')}" />
-                <input type="hidden" id="dateTo" name="dateTo" th:value="${#dates.format(dateTo, 'yyyy-MM-dd')}" />
+                <input type="hidden" id="groupDateTo" name="dateTo" th:value="${#dates.format(dateTo, 'yyyy-MM-dd')}" />
 
                 <!-- Container for the second button -->
                 <div class="button-container">
                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                    <button id="anotherButton" type="submit" class="button-common-style">Get Selected Date Group
+                    <button id="groupButton" type="submit" class="button-common-style">Get Selected Date Group
                         Time-Table</button>
                 </div>
             </form>

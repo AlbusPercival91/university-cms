@@ -218,4 +218,45 @@ public class AdminTimeTableController {
 		}
 		return "admin/timetable/timetable";
 	}
+
+	@GetMapping("/admin/timetable/timetable-group/{studentId}")
+	public String getFullGroupTimeTable(@PathVariable("studentId") int studentId, Model model) {
+		Optional<Student> student = studentService.findStudentById(studentId);
+
+		if (student.isPresent()) {
+			List<TimeTable> timetables = timeTableService.getStudentsGroupTimeTable(student.get());
+
+			for (TimeTable timetable : timetables) {
+				List<Student> studentsRelatedToCourse = studentService
+						.findStudentsRelatedToCourse(timetable.getCourse().getCourseName());
+				timetable.setStudentsRelatedToCourse(studentsRelatedToCourse);
+			}
+
+			model.addAttribute("timetables", timetables);
+			return "admin/timetable/timetable";
+		}
+		return "admin/timetable/timetable";
+	}
+
+	@GetMapping("/admin/timetable/selected-group-timetable/{studentId}")
+	public String getSelectedDateGroupTimeTable(@PathVariable("studentId") int studentId,
+			@RequestParam("dateFrom") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateFrom,
+			@RequestParam("dateTo") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateTo, Model model) {
+		Optional<Student> student = studentService.findStudentById(studentId);
+
+		if (student.isPresent()) {
+			List<TimeTable> timetables = timeTableService.getStudentsGroupTimeTableByDate(dateFrom, dateTo,
+					student.get());
+
+			for (TimeTable timetable : timetables) {
+				List<Student> studentsRelatedToCourse = studentService
+						.findStudentsRelatedToCourse(timetable.getCourse().getCourseName());
+				timetable.setStudentsRelatedToCourse(studentsRelatedToCourse);
+			}
+
+			model.addAttribute("timetables", timetables);
+			return "admin/timetable/timetable";
+		}
+		return "admin/timetable/timetable";
+	}
 }
