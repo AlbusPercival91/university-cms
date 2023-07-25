@@ -5,9 +5,7 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-
 import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
@@ -22,12 +20,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ua.foxminded.university.dao.entities.ClassRoom;
 import ua.foxminded.university.dao.entities.Course;
+import ua.foxminded.university.dao.entities.Group;
 import ua.foxminded.university.dao.entities.Student;
 import ua.foxminded.university.dao.entities.Teacher;
 import ua.foxminded.university.dao.entities.TimeTable;
 import ua.foxminded.university.dao.exception.TimeTableValidationException;
 import ua.foxminded.university.dao.service.ClassRoomService;
 import ua.foxminded.university.dao.service.CourseService;
+import ua.foxminded.university.dao.service.GroupService;
 import ua.foxminded.university.dao.service.StudentService;
 import ua.foxminded.university.dao.service.TeacherService;
 import ua.foxminded.university.dao.service.TimeTableService;
@@ -40,6 +40,9 @@ public class AdminTimeTableController {
 
 	@Autowired
 	private CourseService courseService;
+
+	@Autowired
+	private GroupService groupService;
 
 	@Autowired
 	private TeacherService teacherService;
@@ -81,6 +84,41 @@ public class AdminTimeTableController {
 			redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
 		}
 		return "redirect:/admin/timetable/course-timetable-form";
+	}
+
+	@GetMapping("/admin/timetable/group-timetable-form")
+	public String showFormCreateGroupTimeTable(Model model) {
+		List<Teacher> teachers = teacherService.getAllTeachers();
+		List<Course> courses = courseService.getAllCourses();
+		List<Group> groups = groupService.getAllGroups();
+		List<ClassRoom> classrooms = classRoomService.getAllClassRooms();
+		model.addAttribute("teachers", teachers);
+		model.addAttribute("courses", courses);
+		model.addAttribute("groups", groups);
+		model.addAttribute("classrooms", classrooms);
+		return "admin/timetable/group-timetable-form";
+	}
+
+	@PostMapping("/admin/timetable/group-timetable-form")
+	public String createGroupTimeTable(@ModelAttribute("timetable") @Validated TimeTable timetable,
+			BindingResult bindingResult, RedirectAttributes redirectAttributes,
+			@RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
+			@RequestParam("timeFrom") @DateTimeFormat(pattern = "HH:mm") LocalTime timeFrom,
+			@RequestParam("timeTo") @DateTimeFormat(pattern = "HH:mm") LocalTime timeTo) {
+		try {
+			TimeTable createdTimeTable = timeTableService.createGroupTimeTable(date, timeFrom, timeTo,
+					timetable.getTeacher(), timetable.getCourse(), timetable.getGroup(), timetable.getClassRoom());
+
+			if (!createdTimeTable.getDate().equals(date) && !createdTimeTable.getTimeFrom().equals(timeTo)
+					&& !createdTimeTable.getTimeTo().equals(timeTo)) {
+				redirectAttributes.addFlashAttribute("errorMessage", "Failed to create Time Table");
+			} else {
+				redirectAttributes.addFlashAttribute("successMessage", "Time Table created successfully");
+			}
+		} catch (NoSuchElementException | TimeTableValidationException ex) {
+			redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
+		}
+		return "redirect:/admin/timetable/group-timetable-form";
 	}
 
 	@PostMapping("/admin/timetable/delete/{timetableId}")
