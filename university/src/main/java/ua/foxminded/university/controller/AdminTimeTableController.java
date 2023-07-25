@@ -2,6 +2,7 @@ package ua.foxminded.university.controller;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -197,28 +198,6 @@ public class AdminTimeTableController {
 		return "admin/timetable/timetable";
 	}
 
-	@GetMapping("/admin/timetable/student-selected-timetable/{studentId}")
-	public String getSelectedDateStudentTimeTable(@PathVariable("studentId") int studentId,
-			@RequestParam("dateFrom") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateFrom,
-			@RequestParam("dateTo") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateTo, Model model) {
-		Optional<Student> student = studentService.findStudentById(studentId);
-
-		if (student.isPresent()) {
-			List<TimeTable> timetables = timeTableService.getStudentTimeTableByDate(dateFrom, dateTo,
-					student.get().getId());
-
-			for (TimeTable timetable : timetables) {
-				List<Student> studentsRelatedToCourse = studentService
-						.findStudentsRelatedToCourse(timetable.getCourse().getCourseName());
-				timetable.setStudentsRelatedToCourse(studentsRelatedToCourse);
-			}
-
-			model.addAttribute("timetables", timetables);
-			return "admin/timetable/timetable";
-		}
-		return "admin/timetable/timetable";
-	}
-
 	@GetMapping("/admin/timetable/timetable-group/{studentId}")
 	public String getFullGroupTimeTable(@PathVariable("studentId") int studentId, Model model) {
 		Optional<Student> student = studentService.findStudentById(studentId);
@@ -238,24 +217,27 @@ public class AdminTimeTableController {
 		return "admin/timetable/timetable";
 	}
 
-	@GetMapping("/admin/timetable/selected-group-timetable/{studentId}")
-	public String getSelectedDateGroupTimeTable(@PathVariable("studentId") int studentId,
+	@GetMapping("/admin/timetable/selected-timetable/{studentId}")
+	public String getSelectedDateTimeTable(@PathVariable("studentId") int studentId,
 			@RequestParam("dateFrom") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateFrom,
-			@RequestParam("dateTo") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateTo, Model model) {
+			@RequestParam("dateTo") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateTo,
+			@RequestParam("action") String action, Model model) {
 		Optional<Student> student = studentService.findStudentById(studentId);
-
+		List<TimeTable> timetables = new ArrayList<>();
 		if (student.isPresent()) {
-			List<TimeTable> timetables = timeTableService.getStudentsGroupTimeTableByDate(dateFrom, dateTo,
-					student.get());
 
-			for (TimeTable timetable : timetables) {
-				List<Student> studentsRelatedToCourse = studentService
-						.findStudentsRelatedToCourse(timetable.getCourse().getCourseName());
-				timetable.setStudentsRelatedToCourse(studentsRelatedToCourse);
+			if ("selected-timetable".equals(action)) {
+				timetables = timeTableService.getStudentTimeTableByDate(dateFrom, dateTo, student.get().getId());
+
+				for (TimeTable timetable : timetables) {
+					List<Student> studentsRelatedToCourse = studentService
+							.findStudentsRelatedToCourse(timetable.getCourse().getCourseName());
+					timetable.setStudentsRelatedToCourse(studentsRelatedToCourse);
+				}
+			} else if ("selected-group-timetable".equals(action)) {
+				timetables = timeTableService.getStudentsGroupTimeTableByDate(dateFrom, dateTo, student.get());
 			}
-
 			model.addAttribute("timetables", timetables);
-			return "admin/timetable/timetable";
 		}
 		return "admin/timetable/timetable";
 	}

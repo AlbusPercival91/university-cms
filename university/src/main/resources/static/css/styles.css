@@ -353,7 +353,7 @@ button[type="submit"] {
     background-color: #f44336;
 }
 
-/* Styles for Teacher Card */
+/* Styles for Entity Card */
 .container-entity-card {
     display: flex;
     justify-content: space-between;
@@ -412,5 +412,5 @@ button[type="submit"] {
     border: 1px solid #ccc;
     border-radius: 4px;
     padding: 8px;
-    width: 160px;
+    width: auto;
 }
