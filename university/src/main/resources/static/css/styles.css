@@ -329,6 +329,7 @@ button[type="submit"] {
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    margin: 5px;
 }
 
 /* information message styles when success or error ops */
