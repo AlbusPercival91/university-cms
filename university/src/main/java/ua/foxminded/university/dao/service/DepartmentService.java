@@ -51,7 +51,7 @@ public class DepartmentService {
 		return departmentRepository.findAll();
 	}
 
-	List<Department> findAllByFaculty(Faculty faculty) {
+	public List<Department> findAllByFaculty(Faculty faculty) {
 		return departmentRepository.findAllByFaculty(faculty);
 	}
 }

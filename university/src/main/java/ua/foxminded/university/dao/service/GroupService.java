@@ -51,7 +51,7 @@ public class GroupService {
 		return groupRepository.findAll();
 	}
 
-	List<Group> findAllByFaculty(Faculty faculty) {
+	public List<Group> findAllByFaculty(Faculty faculty) {
 		return groupRepository.findAllByFaculty(faculty);
 	}
 }
