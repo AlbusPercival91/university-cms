@@ -147,13 +147,13 @@ public class AdminTimeTableController {
 			List<TimeTable> timetables = timeTableService.getTeacherTimeTable(teacher.get());
 
 			for (TimeTable timetable : timetables) {
-				List<Student> studentsRelatedToCourse = studentService
-						.findStudentsRelatedToCourse(timetable.getCourse().getCourseName());
-				timetable.setStudentsRelatedToCourse(studentsRelatedToCourse);
+				if (timetable.getGroup() == null) {
+					List<Student> studentsRelatedToCourse = studentService
+							.findStudentsRelatedToCourse(timetable.getCourse().getCourseName());
+					timetable.setStudentsRelatedToCourse(studentsRelatedToCourse);
+				}
 			}
-
 			model.addAttribute("timetables", timetables);
-			return "admin/timetable/timetable";
 		}
 		return "admin/timetable/timetable";
 	}
@@ -168,13 +168,13 @@ public class AdminTimeTableController {
 			List<TimeTable> timetables = timeTableService.getTeacherTimeTableByDate(dateFrom, dateTo, teacher.get());
 
 			for (TimeTable timetable : timetables) {
-				List<Student> studentsRelatedToCourse = studentService
-						.findStudentsRelatedToCourse(timetable.getCourse().getCourseName());
-				timetable.setStudentsRelatedToCourse(studentsRelatedToCourse);
+				if (timetable.getGroup() == null) {
+					List<Student> studentsRelatedToCourse = studentService
+							.findStudentsRelatedToCourse(timetable.getCourse().getCourseName());
+					timetable.setStudentsRelatedToCourse(studentsRelatedToCourse);
+				}
 			}
-
 			model.addAttribute("timetables", timetables);
-			return "admin/timetable/timetable";
 		}
 		return "admin/timetable/timetable";
 	}
@@ -187,13 +187,13 @@ public class AdminTimeTableController {
 			List<TimeTable> timetables = timeTableService.getStudentTimeTable(student.get().getId());
 
 			for (TimeTable timetable : timetables) {
-				List<Student> studentsRelatedToCourse = studentService
-						.findStudentsRelatedToCourse(timetable.getCourse().getCourseName());
-				timetable.setStudentsRelatedToCourse(studentsRelatedToCourse);
+				if (timetable.getGroup() == null) {
+					List<Student> studentsRelatedToCourse = studentService
+							.findStudentsRelatedToCourse(timetable.getCourse().getCourseName());
+					timetable.setStudentsRelatedToCourse(studentsRelatedToCourse);
+				}
 			}
-
 			model.addAttribute("timetables", timetables);
-			return "admin/timetable/timetable";
 		}
 		return "admin/timetable/timetable";
 	}
@@ -204,15 +204,7 @@ public class AdminTimeTableController {
 
 		if (student.isPresent()) {
 			List<TimeTable> timetables = timeTableService.getStudentsGroupTimeTable(student.get());
-
-			for (TimeTable timetable : timetables) {
-				List<Student> studentsRelatedToCourse = studentService
-						.findStudentsRelatedToCourse(timetable.getCourse().getCourseName());
-				timetable.setStudentsRelatedToCourse(studentsRelatedToCourse);
-			}
-
 			model.addAttribute("timetables", timetables);
-			return "admin/timetable/timetable";
 		}
 		return "admin/timetable/timetable";
 	}
@@ -230,9 +222,11 @@ public class AdminTimeTableController {
 				timetables = timeTableService.getStudentTimeTableByDate(dateFrom, dateTo, student.get().getId());
 
 				for (TimeTable timetable : timetables) {
-					List<Student> studentsRelatedToCourse = studentService
-							.findStudentsRelatedToCourse(timetable.getCourse().getCourseName());
-					timetable.setStudentsRelatedToCourse(studentsRelatedToCourse);
+					if (timetable.getGroup() == null) {
+						List<Student> studentsRelatedToCourse = studentService
+								.findStudentsRelatedToCourse(timetable.getCourse().getCourseName());
+						timetable.setStudentsRelatedToCourse(studentsRelatedToCourse);
+					}
 				}
 			} else if ("selected-group-timetable".equals(action)) {
 				timetables = timeTableService.getStudentsGroupTimeTableByDate(dateFrom, dateTo, student.get());
@@ -247,9 +241,11 @@ public class AdminTimeTableController {
 		List<TimeTable> timetables = timeTableService.getAllTimeTables();
 
 		for (TimeTable timetable : timetables) {
-			List<Student> studentsRelatedToCourse = studentService
-					.findStudentsRelatedToCourse(timetable.getCourse().getCourseName());
-			timetable.setStudentsRelatedToCourse(studentsRelatedToCourse);
+			if (timetable.getGroup() == null) {
+				List<Student> studentsRelatedToCourse = studentService
+						.findStudentsRelatedToCourse(timetable.getCourse().getCourseName());
+				timetable.setStudentsRelatedToCourse(studentsRelatedToCourse);
+			}
 		}
 		model.addAttribute("timetables", timetables);
 		return "admin/timetable/timetable";
