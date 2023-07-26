@@ -49,4 +49,12 @@ public class StaffService {
 	public List<Staff> getAllStaff() {
 		return staffRepository.findAll();
 	}
+
+	public Optional<Staff> findStaffById(int staffId) {
+		return staffRepository.findById(staffId);
+	}
+
+	public Optional<Staff> findStaffByName(String firstName, String lastName) {
+		return staffRepository.findStaffByFirstNameAndLastName(firstName, lastName);
+	}
 }
