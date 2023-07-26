@@ -241,4 +241,17 @@ public class AdminTimeTableController {
 		}
 		return "admin/timetable/timetable";
 	}
+
+	@GetMapping("/admin/timetable/edit-timetable-list")
+	public String getAllTimeTableListAsAdmin(Model model) {
+		List<TimeTable> timetables = timeTableService.getAllTimeTables();
+
+		for (TimeTable timetable : timetables) {
+			List<Student> studentsRelatedToCourse = studentService
+					.findStudentsRelatedToCourse(timetable.getCourse().getCourseName());
+			timetable.setStudentsRelatedToCourse(studentsRelatedToCourse);
+		}
+		model.addAttribute("timetables", timetables);
+		return "admin/timetable/timetable";
+	}
 }
