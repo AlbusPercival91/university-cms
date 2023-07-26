@@ -300,9 +300,10 @@ select {
 
 .button-container {
     display: flex;
+    flex-direction: column;
     justify-content: center;
-    margin-top: 20px;
-    display: inline-block;
+    padding: 8px;
+    margin-top: 10px;
 }
 
 /* Style for the disabled Save button */
@@ -390,14 +391,6 @@ button[type="submit"] {
     align-items: center;
 }
 
-.entity-timetable {
-    flex: 1;
-    margin-left: auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
 .courses table {
     margin-bottom: 30px;
 }
@@ -405,6 +398,14 @@ button[type="submit"] {
 .courses select,
 .courses button {
     margin-bottom: 20px;
+}
+
+.entity-timetable {
+    flex: 1;
+    margin-left: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .date-input {
