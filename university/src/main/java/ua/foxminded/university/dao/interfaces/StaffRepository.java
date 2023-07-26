@@ -9,4 +9,6 @@ import ua.foxminded.university.dao.entities.Staff;
 public interface StaffRepository extends JpaRepository<Staff, Integer> {
 
 	Optional<Staff> findStaffByFirstNameAndLastName(String firstName, String lastName);
+
+	Optional<Staff> findStaffByPosition(String position);
 }

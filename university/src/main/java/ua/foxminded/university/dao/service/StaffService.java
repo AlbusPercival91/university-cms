@@ -57,4 +57,8 @@ public class StaffService {
 	public Optional<Staff> findStaffByName(String firstName, String lastName) {
 		return staffRepository.findStaffByFirstNameAndLastName(firstName, lastName);
 	}
+
+	public Optional<Staff> findStaffByPosition(String position) {
+		return staffRepository.findStaffByPosition(position);
+	}
 }

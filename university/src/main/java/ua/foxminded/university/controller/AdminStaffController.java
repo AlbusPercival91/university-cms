@@ -83,7 +83,8 @@ public class AdminStaffController {
 	@GetMapping("/admin/staff/search-result")
 	public String searchStaffAsAdmin(@RequestParam("searchType") String searchType,
 			@RequestParam(required = false) Integer staffId, @RequestParam(required = false) String firstName,
-			@RequestParam(required = false) String lastName, Model model) {
+			@RequestParam(required = false) String lastName, @RequestParam(required = false) String position,
+			Model model) {
 		List<Staff> staffList;
 
 		if ("staff".equals(searchType)) {
@@ -91,6 +92,9 @@ public class AdminStaffController {
 			staffList = optionalStaff.map(Collections::singletonList).orElse(Collections.emptyList());
 		} else if ("firstNameAndLastName".equals(searchType)) {
 			Optional<Staff> optionalStaff = staffService.findStaffByName(firstName, lastName);
+			staffList = optionalStaff.map(Collections::singletonList).orElse(Collections.emptyList());
+		} else if ("position".equals(searchType)) {
+			Optional<Staff> optionalStaff = staffService.findStaffByPosition(position);
 			staffList = optionalStaff.map(Collections::singletonList).orElse(Collections.emptyList());
 		} else {
 			return "error";
