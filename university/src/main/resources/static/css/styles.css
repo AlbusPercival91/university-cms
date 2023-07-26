@@ -216,6 +216,11 @@ button.icon-button.remove-button[type="submit"] {
 }
 
 /* Search styles */
+.search-block {
+    display: flex;
+    flex-direction: row;
+}
+
 .search-container {
     display: flex;
     justify-content: center;
