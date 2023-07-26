@@ -17,7 +17,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import ua.foxminded.university.dao.entities.Course;
 import ua.foxminded.university.dao.entities.Staff;
+import ua.foxminded.university.dao.entities.Teacher;
 import ua.foxminded.university.dao.service.StaffService;
 
 @Controller
@@ -102,4 +105,18 @@ public class AdminStaffController {
 		model.addAttribute("staff", staffList);
 		return "admin/staff/edit-staff-list";
 	}
+
+	@GetMapping("/admin/staff/staff-card/{staffId}")
+	public String openStaffCard(@PathVariable int staffId, Model model) {
+		Optional<Staff> optionalStaff = staffService.findStaffById(staffId);
+
+		if (optionalStaff.isPresent()) {
+			Staff staff = optionalStaff.get();
+			model.addAttribute("staff", staff);
+			return "admin/staff/staff-card";
+		} else {
+			return "redirect:/admin/staff/edit-staff-list";
+		}
+	}
+
 }
