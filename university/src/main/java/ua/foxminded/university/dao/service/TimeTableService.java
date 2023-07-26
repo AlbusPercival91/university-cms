@@ -53,14 +53,16 @@ public class TimeTableService {
 
 	public TimeTable createGroupTimeTable(LocalDate date, LocalTime timeFrom, LocalTime timeTo, Teacher teacher,
 			Course course, Group group, ClassRoom classRoom) {
-		if (timeTableRepository.timeTableValidationFailed(date, timeFrom, timeTo, classRoom)
-				|| timeFrom.isAfter(timeTo)) {
-			throw new IllegalStateException("Validation failed while creating TimeTable");
+		try {
+			timeTableValidation(date, timeFrom, timeTo, teacher, course, classRoom);
+
+			TimeTable timeTable = new TimeTable(date, timeFrom, timeTo, teacher, course, group, classRoom);
+			log.info("Timetable [date:{}, time from:{}, time to:{}] is scheduled successfully.", timeTable.getDate(),
+					timeTable.getTimeFrom(), timeTable.getTimeTo());
+			return timeTableRepository.save(timeTable);
+		} catch (TimeTableValidationException ex) {
+			throw new TimeTableValidationException(ex.getMessage());
 		}
-		TimeTable timeTable = new TimeTable(date, timeFrom, timeTo, teacher, course, group, classRoom);
-		log.info("Timetable [date:{}, time from:{}, time to:{}] is scheduled successfully.", timeTable.getDate(),
-				timeTable.getTimeFrom(), timeTable.getTimeTo());
-		return timeTableRepository.save(timeTable);
 	}
 
 	public TimeTable createTimeTableForStudentsAtCourse(LocalDate date, LocalTime timeFrom, LocalTime timeTo,
