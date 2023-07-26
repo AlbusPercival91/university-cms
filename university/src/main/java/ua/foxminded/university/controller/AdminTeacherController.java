@@ -125,7 +125,7 @@ public class AdminTeacherController {
 		return "admin/teacher/edit-teacher-list";
 	}
 
-	@PostMapping("/teachers/delete/{teacherId}")
+	@PostMapping("/admin/teacher/delete/{teacherId}")
 	public String deleteTeacher(@PathVariable int teacherId, RedirectAttributes redirectAttributes,
 			HttpServletRequest request) {
 		try {
