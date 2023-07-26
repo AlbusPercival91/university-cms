@@ -165,6 +165,10 @@ public class TimeTableService {
 		return timeTableRepository.findByDateAndGroupOrderByDateAscTimeFromAsc(dateFrom, dateTo, existingGroup);
 	}
 
+	public List<TimeTable> getAllTimeTables() {
+		return timeTableRepository.findAll();
+	}
+
 	public List<TimeTable> getAllTimeTablesByDate(LocalDate dateFrom, LocalDate dateTo) {
 		return timeTableRepository.findByDateOrderByDateAscTimeFromAsc(dateFrom, dateTo);
 	}
