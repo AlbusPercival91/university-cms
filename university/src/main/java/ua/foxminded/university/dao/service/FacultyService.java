@@ -49,4 +49,13 @@ public class FacultyService {
 	public List<Faculty> getAllFaculties() {
 		return facultyRepository.findAll();
 	}
+
+	public Optional<Faculty> findFacultyById(int facultyId) {
+		return facultyRepository.findById(facultyId);
+	}
+
+	public Optional<Faculty> findFacultyByFacultyName(String facultyName) {
+		return facultyRepository.findFacultyByFacultyName(facultyName);
+	}
+
 }
