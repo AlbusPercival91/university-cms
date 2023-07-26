@@ -8,7 +8,11 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,6 +25,35 @@ public class AdminStaffController {
 
 	@Autowired
 	private StaffService staffService;
+
+	@GetMapping("/admin/staff/create-staff")
+	public String showCreateStaffForm() {
+		return "admin/staff/create-staff";
+	}
+
+	@PostMapping("/admin/staff/create-staff")
+	public String createStaff(@ModelAttribute("staff") @Validated Staff staff, BindingResult bindingResult,
+			RedirectAttributes redirectAttributes) {
+		try {
+			if (bindingResult.hasErrors()) {
+				for (FieldError error : bindingResult.getFieldErrors()) {
+					redirectAttributes.addFlashAttribute(error.getField() + "Error", error.getDefaultMessage());
+				}
+				return "redirect:/admin/staff/create-staff";
+			}
+
+			int createdStaff = staffService.createStaff(staff);
+
+			if (createdStaff != staff.getId()) {
+				redirectAttributes.addFlashAttribute("errorMessage", "Failed to create the Staff member");
+			} else {
+				redirectAttributes.addFlashAttribute("successMessage", "Staff created successfully");
+			}
+		} catch (NoSuchElementException ex) {
+			redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
+		}
+		return "redirect:/admin/staff/create-staff";
+	}
 
 	@GetMapping("/admin/staff/edit-staff-list")
 	public String getAllStaffListAsAdmin(Model model) {
