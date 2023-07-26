@@ -216,8 +216,8 @@ public class AdminTimeTableController {
 			@RequestParam("action") String action, Model model) {
 		Optional<Student> student = studentService.findStudentById(studentId);
 		List<TimeTable> timetables = new ArrayList<>();
-		if (student.isPresent()) {
 
+		if (student.isPresent()) {
 			if ("selected-timetable".equals(action)) {
 				timetables = timeTableService.getStudentTimeTableByDate(dateFrom, dateTo, student.get().getId());
 

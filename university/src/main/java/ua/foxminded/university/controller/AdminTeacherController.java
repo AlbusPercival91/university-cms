@@ -52,8 +52,7 @@ public class AdminTeacherController {
 	}
 
 	@PostMapping("/admin/teacher/create-teacher")
-	public String createTeacher(@ModelAttribute("teacher") @Validated Teacher teacher,
-			BindingResult bindingResult,
+	public String createTeacher(@ModelAttribute("teacher") @Validated Teacher teacher, BindingResult bindingResult,
 			RedirectAttributes redirectAttributes) {
 		if (bindingResult.hasErrors()) {
 			for (FieldError error : bindingResult.getFieldErrors()) {
@@ -167,18 +166,5 @@ public class AdminTeacherController {
 		UriComponentsBuilder builder = UriComponentsBuilder.fromPath("/admin/teacher/teacher-card/{teacherId}");
 		return "redirect:" + builder.buildAndExpand(teacherId).toUriString();
 	}
-
-//	@PostMapping("/admin/teacher/edit-teacher/{teacherId}")
-//	public String editTeacher(@PathVariable int teacherId, @ModelAttribute("teacher") @Validated Teacher teacher,
-//			Model model, RedirectAttributes redirectAttributes) {
-//		Teacher updatedTeacher = teacherService.updateTeacherById(teacherId, teacher);
-//
-//		if (updatedTeacher.getId() != teacher.getId()) {
-//			redirectAttributes.addFlashAttribute("errorMessage", "Failed to update the teacher");
-//		} else {
-//			redirectAttributes.addFlashAttribute("successMessage", "Teacher updated successfully");
-//		}
-//		return "redirect:/admin/teacher/teacher-card/{teacherId}";
-//	}
 
 }
