@@ -19,6 +19,10 @@ public class FacultyService {
 	private final FacultyRepository facultyRepository;
 
 	public int createFaculty(Faculty faculty) {
+		if (facultyRepository.findFacultyByFacultyName(faculty.getFacultyName()).isPresent()) {
+			throw new IllegalStateException("Faculty already exists");
+		}
+
 		Faculty newFaculty = facultyRepository.save(faculty);
 		log.info("Created faculty with id: {}", newFaculty.getId());
 		return newFaculty.getId();
