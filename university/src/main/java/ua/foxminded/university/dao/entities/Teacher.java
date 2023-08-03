@@ -2,7 +2,6 @@ package ua.foxminded.university.dao.entities;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -41,8 +40,8 @@ public class Teacher extends Person {
 	private List<Course> assignedCourses = new ArrayList<>();
 
 	@ToString.Exclude
-	@OneToMany(mappedBy = "teacher")
-	private Set<TimeTable> timeTables;
+	@OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	private List<TimeTable> timeTables;
 
 	public Teacher(String firstName, String lastName, boolean isActive, String email, String password,
 			Department department, Course course) {
