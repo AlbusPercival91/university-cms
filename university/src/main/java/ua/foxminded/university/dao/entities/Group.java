@@ -1,8 +1,10 @@
 package ua.foxminded.university.dao.entities;
 
-import java.util.Set;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -39,15 +41,15 @@ public class Group {
 	private Faculty faculty;
 
 	@ToString.Exclude
-	@OneToMany(mappedBy = "group")
-	private Set<Student> students;
+	@OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	private List<Student> students;
 
 	@ToString.Exclude
-	@OneToMany(mappedBy = "group")
-	private Set<TimeTable> timeTables;
+	@OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	private List<TimeTable> timeTables;
 
 	public Group(String groupName, Faculty faculty) {
 		this.groupName = groupName;
 		this.faculty = faculty;
-	}	
+	}
 }
