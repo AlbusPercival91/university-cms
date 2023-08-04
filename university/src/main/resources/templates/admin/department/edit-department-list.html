@@ -29,7 +29,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr th:each="faculty, rowStat : ${faculties}">
+                <tr th:each="department, rowStat : ${departments}">
                     <td style="border: none;">
                         <!-- Edit Button -->
                         <a th:href="@{/admin/department/department-card/{departmentId}(departmentId=${department.id})}">

@@ -61,7 +61,7 @@ public class AdminFacultyController {
 				for (FieldError error : bindingResult.getFieldErrors()) {
 					redirectAttributes.addFlashAttribute(error.getField() + "Error", error.getDefaultMessage());
 				}
-				return "redirect:/admin/staff/create-staff";
+				return "redirect:/admin/faculty/create-faculty";
 			}
 
 			int createdFaculty = facultyService.createFaculty(faculty);
