@@ -1,7 +1,9 @@
 package ua.foxminded.university.controller;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ua.foxminded.university.dao.entities.Department;
 import ua.foxminded.university.dao.entities.Faculty;
@@ -84,4 +87,26 @@ public class AdminDepartmentController {
 		}
 		return "redirect:/admin/department/create-department";
 	}
+
+	@GetMapping("/admin/department/search-result")
+	public String searchDepartmentAsAdmin(@RequestParam("searchType") String searchType,
+			@RequestParam(required = false) Integer departmentId, @RequestParam(required = false) String name,
+			@RequestParam(required = false) String facultyName, Model model) {
+		List<Department> departmentList;
+
+		if ("department".equals(searchType)) {
+			Optional<Department> optionalDepartment = departmentService.findDepartmentById(departmentId);
+			departmentList = optionalDepartment.map(Collections::singletonList).orElse(Collections.emptyList());
+		} else if ("name".equals(searchType)) {
+			Optional<Department> optionalDepartment = departmentService.findDepartmentByName(name);
+			departmentList = optionalDepartment.map(Collections::singletonList).orElse(Collections.emptyList());
+		} else if ("facultyName".equals(searchType)) {
+			departmentList = departmentService.findAllByFacultyName(facultyName);
+		} else {
+			return "error";
+		}
+		model.addAttribute("department", departmentList);
+		return "admin/department/edit-department-list";
+	}
+
 }

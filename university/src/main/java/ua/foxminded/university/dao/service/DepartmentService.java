@@ -61,6 +61,10 @@ public class DepartmentService {
 		return departmentRepository.findAll();
 	}
 
+	public Optional<Department> findDepartmentById(int departmentId) {
+		return departmentRepository.findById(departmentId);
+	}
+
 	public List<Department> findAllByFacultyName(String facultyName) {
 		return departmentRepository.findAllByFacultyFacultyName(facultyName);
 	}

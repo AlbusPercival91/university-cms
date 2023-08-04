@@ -1,0 +1,44 @@
+<div class="container">
+    <h2>Search Panel</h2>
+
+    <div class="search-block">
+        <!-- Search by Department  by ID -->
+        <div class="search-section">
+            <div class="search-square">
+                <h3>Find Department by ID</h3>
+                <form th:action="@{/admin/department/search-result}" method="get">
+                    <input type="hidden" name="searchType" value="department" />
+                    <label for="departmentId">Department ID:</label>
+                    <input type="text" id="departmentId" name="departmentId" />
+                    <button type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Search by Department Name -->
+        <div class="search-section">
+            <div class="search-square">
+                <h3>Find Department by Name</h3>
+                <form th:action="@{/admin/department/search-result}" method="get">
+                    <input type="hidden" name="searchType" value="name" />
+                    <label for="name">Department Name:</label>
+                    <input type="text" id="name" name="name" />
+                    <button type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Search by Faculty Name -->
+        <div class="search-section">
+            <div class="search-square">
+                <h3>Find Department by Faculty Name</h3>
+                <form th:action="@{/admin/department/search-result}" method="get">
+                    <input type="hidden" name="searchType" value="facultyName" />
+                    <label for="facultyName">Faculty Name:</label>
+                    <input type="text" id="facultyName" name="facultyName" />
+                    <button type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
