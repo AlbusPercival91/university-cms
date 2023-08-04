@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import ua.foxminded.university.dao.entities.Department;
 import ua.foxminded.university.dao.entities.Faculty;
 import ua.foxminded.university.dao.interfaces.DepartmentRepository;
+import ua.foxminded.university.dao.interfaces.FacultyRepository;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -18,8 +19,17 @@ import ua.foxminded.university.dao.interfaces.DepartmentRepository;
 @Transactional
 public class DepartmentService {
 	private final DepartmentRepository departmentRepository;
+	private final FacultyRepository facultyRepository;
 
 	public int createDepartment(Department department) {
+		String facultyName = department.getFaculty().getFacultyName();
+		Optional<Faculty> faculty = facultyRepository.findFacultyByFacultyName(facultyName);
+
+		if (faculty.get().getDepartments().stream().anyMatch(d -> d.getName().equals(department.getName()))) {
+			log.warn("Faculty already contains this Department");
+			throw new IllegalStateException("Faculty already contains this Department");
+		}
+
 		Department newDepartment = departmentRepository.save(department);
 		log.info("Created department with id: {}", newDepartment.getId());
 		return newDepartment.getId();
@@ -51,7 +61,11 @@ public class DepartmentService {
 		return departmentRepository.findAll();
 	}
 
-	public List<Department> findAllByFaculty(Faculty faculty) {
-		return departmentRepository.findAllByFaculty(faculty);
+	public List<Department> findAllByFacultyName(String facultyName) {
+		return departmentRepository.findAllByFacultyFacultyName(facultyName);
+	}
+
+	public Optional<Department> findDepartmentByName(String departmentName) {
+		return departmentRepository.findDepartmentByName(departmentName);
 	}
 }
