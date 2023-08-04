@@ -100,11 +100,6 @@ public class AdminStudentController {
 		return "redirect:" + builder.buildAndExpand(studentId).toUriString();
 	}
 
-	@GetMapping("/admin/student/student-search-admin")
-	public String adminStudentSearchPanel() {
-		return "admin/student/student-search-admin";
-	}
-
 	@GetMapping("/admin/student/search-result")
 	public String searchStudentAsAdmin(@RequestParam("searchType") String searchType,
 			@RequestParam(required = false) String courseName, @RequestParam(required = false) String facultyName,

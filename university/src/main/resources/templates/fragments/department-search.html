@@ -27,13 +27,13 @@
                 </form>
             </div>
         </div>
-
+        
         <!-- Search by Faculty Name -->
         <div class="search-section">
             <div class="search-square">
                 <h3>Find Department by Faculty Name</h3>
                 <form th:action="@{/admin/department/search-result}" method="get">
-                    <input type="hidden" name="searchType" value="facultyName" />
+                    <input type="hidden" name="searchType" value="faculty" />
                     <label for="facultyName">Faculty Name:</label>
                     <input type="text" id="facultyName" name="facultyName" />
                     <button type="submit">Search</button>

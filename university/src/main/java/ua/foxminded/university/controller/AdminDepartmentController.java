@@ -100,12 +100,12 @@ public class AdminDepartmentController {
 		} else if ("name".equals(searchType)) {
 			Optional<Department> optionalDepartment = departmentService.findDepartmentByName(name);
 			departmentList = optionalDepartment.map(Collections::singletonList).orElse(Collections.emptyList());
-		} else if ("facultyName".equals(searchType)) {
+		} else if ("faculty".equals(searchType)) {
 			departmentList = departmentService.findAllByFacultyName(facultyName);
 		} else {
 			return "error";
 		}
-		model.addAttribute("department", departmentList);
+		model.addAttribute("departments", departmentList);
 		return "admin/department/edit-department-list";
 	}
 
