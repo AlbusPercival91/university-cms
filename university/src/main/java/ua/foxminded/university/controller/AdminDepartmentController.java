@@ -98,8 +98,7 @@ public class AdminDepartmentController {
 			Optional<Department> optionalDepartment = departmentService.findDepartmentById(departmentId);
 			departmentList = optionalDepartment.map(Collections::singletonList).orElse(Collections.emptyList());
 		} else if ("name".equals(searchType)) {
-			Optional<Department> optionalDepartment = departmentService.findDepartmentByName(name);
-			departmentList = optionalDepartment.map(Collections::singletonList).orElse(Collections.emptyList());
+			departmentList = departmentService.findDepartmentByName(name);
 		} else if ("faculty".equals(searchType)) {
 			departmentList = departmentService.findAllByFacultyName(facultyName);
 		} else {

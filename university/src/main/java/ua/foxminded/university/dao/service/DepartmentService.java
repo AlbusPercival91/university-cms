@@ -69,7 +69,7 @@ public class DepartmentService {
 		return departmentRepository.findAllByFacultyFacultyName(facultyName);
 	}
 
-	public Optional<Department> findDepartmentByName(String departmentName) {
+	public List<Department> findDepartmentByName(String departmentName) {
 		return departmentRepository.findDepartmentByName(departmentName);
 	}
 }
