@@ -107,5 +107,4 @@ public class AdminDepartmentController {
 		model.addAttribute("departments", departmentList);
 		return "admin/department/edit-department-list";
 	}
-
 }

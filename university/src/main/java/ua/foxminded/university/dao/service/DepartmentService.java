@@ -60,7 +60,7 @@ public class DepartmentService {
 	public List<Department> getAllDepartments() {
 		return departmentRepository.findAll();
 	}
-
+	
 	public Optional<Department> findDepartmentById(int departmentId) {
 		return departmentRepository.findById(departmentId);
 	}

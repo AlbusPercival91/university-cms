@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Group List</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" />
+</head>
+
+<div th:replace="fragments/header :: header"></div>
+
+<div th:replace="fragments/admin-panel :: div"></div>
+
+<div th:replace="fragments/group-search :: div"></div>
+
+<body>
+
+    <div class="container">
+        <h2>Group List</h2>
+        <table class="table table-bordered">
+            <caption hidden>All Groups Table</caption>
+            <thead>
+                <tr>
+                    <th style="border: none; width: 3vh;"></th>
+                    <th>ID</th>
+                    <th>Group Name</th>
+                    <th>Faculty Name</th>
+                    <th>Students</th>
+                    <th style="border: none; width: 3vh;"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="group, rowStat : ${groups}">
+                    <td style="border: none;">
+                        <!-- Edit Button -->
+                        <a th:href="@{/admin/group/group-card/{groupId}(groupId=${group.id})}">
+                            <button th:id="'editButton-' + ${rowStat.index}" class="icon-button">
+                                <i class="fas fa-edit edit-icon"></i>
+                            </button>
+                        </a>
+                    </td>
+                    <td th:text="${group.id}"></td>
+                    <td th:text="${group.groupName}"></td>
+                    <td th:text="${group.faculty.facultyName}"></td>
+                    <td>
+                        <select>
+                            <option th:each="student : ${group.students}"
+                                th:text="${'ID: ' + student.id + ', ' + student.firstName + ' ' + student.lastName}">
+                            </option>
+                        </select>
+                    </td>
+                    <td style="border: none;">
+                        <!-- Remove Button -->
+                        <form th:action="@{/admin/group/delete/{groupId}(groupId=${group.id})}" method="post">
+                            <input type="hidden" name="groupId" th:value="${group.id}" />
+                            <button th:id="'removeButton-' + ${rowStat.index}" class="icon-button remove-button"
+                                type="submit">
+                                <i class="fas fa-trash-alt remove-icon"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div th:replace="fragments/message :: div"></div>
+    <div th:replace="fragments/footer :: footer"></div>
+
+    <script th:src="@{/js/work-panel.js}"></script>
+    <script th:src="@{/js/table-buttons.js}"></script>
+</body>
+
+</html>

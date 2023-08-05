@@ -8,7 +8,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ua.foxminded.university.dao.entities.Faculty;
 import ua.foxminded.university.dao.entities.Group;
 import ua.foxminded.university.dao.interfaces.GroupRepository;
 
@@ -51,7 +50,15 @@ public class GroupService {
 		return groupRepository.findAll();
 	}
 
-	public List<Group> findAllByFaculty(Faculty faculty) {
-		return groupRepository.findAllByFaculty(faculty);
+	public Optional<Group> findGroupById(int groupId) {
+		return groupRepository.findById(groupId);
+	}
+
+	public List<Group> findGroupByGroupName(String groupName) {
+		return groupRepository.findGroupByGroupName(groupName);
+	}
+
+	public List<Group> findAllByFacultyName(String facultyName) {
+		return groupRepository.findAllByFacultyFacultyName(facultyName);
 	}
 }
