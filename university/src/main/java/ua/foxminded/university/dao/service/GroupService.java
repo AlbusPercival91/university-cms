@@ -8,7 +8,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import ua.foxminded.university.dao.entities.Faculty;
 import ua.foxminded.university.dao.entities.Group;
+import ua.foxminded.university.dao.interfaces.FacultyRepository;
 import ua.foxminded.university.dao.interfaces.GroupRepository;
 
 @Slf4j
@@ -17,8 +19,16 @@ import ua.foxminded.university.dao.interfaces.GroupRepository;
 @Transactional
 public class GroupService {
 	private final GroupRepository groupRepository;
+	private final FacultyRepository facultyRepository;
 
 	public int createGroup(Group group) {
+		String facultyName = group.getFaculty().getFacultyName();
+		Optional<Faculty> faculty = facultyRepository.findFacultyByFacultyName(facultyName);
+
+		if (faculty.get().getGroups().stream().anyMatch(d -> d.getGroupName().equals(group.getGroupName()))) {
+			log.warn("Faculty already contains this Group");
+			throw new IllegalStateException("Faculty already contains this Group");
+		}
 		Group newGroup = groupRepository.save(group);
 		log.info("Created group with id: {}", newGroup.getId());
 		return newGroup.getId();
