@@ -25,6 +25,10 @@ public class CourseService {
 	private final StudentRepository studentRepository;
 
 	public int createCourse(Course course) {
+		if (findByCourseName(course.getCourseName()).isPresent()) {
+			log.warn("Course already exists");
+			throw new IllegalStateException("Course already exists");
+		}
 		Course newCourse = courseRepository.save(course);
 		log.info("Created course with id: {}", newCourse.getId());
 		return newCourse.getId();
