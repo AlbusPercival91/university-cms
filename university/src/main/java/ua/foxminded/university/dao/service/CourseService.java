@@ -72,4 +72,11 @@ public class CourseService {
 		return courseRepository.findCoursesRelatedToStudent(existingStudent.getId());
 	}
 
+	public Optional<Course> findCourseById(int courseId) {
+		return courseRepository.findById(courseId);
+	}
+
+	public Optional<Course> findByCourseName(String courseName) {
+		return courseRepository.findByCourseName(courseName);
+	}
 }
