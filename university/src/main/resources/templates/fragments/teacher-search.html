@@ -10,7 +10,7 @@
                     <form th:action="@{/admin/teacher/search-result}" method="get">
                         <input type="hidden" name="searchType" value="course" />
                         <label for="courseName">Course Name:</label>
-                        <input type="text" id="courseName" name="courseName" />
+                        <input type="text" id="courseName" name="courseName" required />
                         <button type="submit">Search</button>
                     </form>
                 </div>
@@ -23,7 +23,7 @@
                     <form th:action="@{/admin/teacher/search-result}" method="get">
                         <input type="hidden" name="searchType" value="faculty" />
                         <label for="facultyName">Faculty Name:</label>
-                        <input type="text" id="facultyName" name="facultyName" />
+                        <input type="text" id="facultyName" name="facultyName" required />
                         <button type="submit">Search</button>
                     </form>
                 </div>
@@ -36,9 +36,9 @@
                     <form th:action="@{/admin/teacher/search-result}" method="get">
                         <input type="hidden" name="searchType" value="department" />
                         <label for="departmentId">Department ID:</label>
-                        <input type="text" id="departmentId" name="departmentId" />
+                        <input type="text" id="departmentId" name="departmentId" required />
                         <label for="facultyId">Faculty ID:</label>
-                        <input type="text" id="facultyId" name="facultyId" />
+                        <input type="text" id="facultyId" name="facultyId" required />
                         <button type="submit">Search</button>
                     </form>
                 </div>
@@ -51,7 +51,7 @@
                     <form th:action="@{/admin/teacher/search-result}" method="get">
                         <input type="hidden" name="searchType" value="teacher" />
                         <label for="teacherId">Teacher ID:</label>
-                        <input type="text" id="teacherId" name="teacherId" />
+                        <input type="text" id="teacherId" name="teacherId" required />
                         <button type="submit">Search</button>
                     </form>
                 </div>
@@ -64,9 +64,9 @@
                     <form th:action="@{/admin/teacher/search-result}" method="get">
                         <input type="hidden" name="searchType" value="firstNameAndLastName" />
                         <label for="firstName">Name:</label>
-                        <input type="text" id="firstName" name="firstName" />
+                        <input type="text" id="firstName" name="firstName" required />
                         <label for="lastName">Family Name:</label>
-                        <input type="text" id="lastName" name="lastName" />
+                        <input type="text" id="lastName" name="lastName" required />
                         <button type="submit">Search</button>
                     </form>
                 </div>
