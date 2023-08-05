@@ -2,40 +2,53 @@
     <h2>Search Panel</h2>
 
     <div class="search-block">
-        <!-- Search by Group  by ID -->
+        <!-- Search Course by ID -->
         <div class="search-section">
             <div class="search-square">
-                <h3>Find Group by ID</h3>
-                <form th:action="@{/admin/group/search-result}" method="get">
-                    <input type="hidden" name="searchType" value="group" />
-                    <label for="departmentId">Group ID:</label>
-                    <input type="text" id="grouptId" name="groupId" required />
+                <h3>Find Course by ID</h3>
+                <form th:action="@{/admin/course/search-result}" method="get">
+                    <input type="hidden" name="searchType" value="course" />
+                    <label for="courseId">Course ID:</label>
+                    <input type="text" id="courseId" name="courseId" required />
                     <button type="submit">Search</button>
                 </form>
             </div>
         </div>
 
-        <!-- Search by Group Name -->
+        <!-- Search by Course Name -->
         <div class="search-section">
             <div class="search-square">
-                <h3>Find Group by Name</h3>
-                <form th:action="@{/admin/group/search-result}" method="get">
-                    <input type="hidden" name="searchType" value="groupName" />
-                    <label for="groupName">Group Name:</label>
-                    <input type="text" id="groupName" name="groupName" required />
+                <h3>Find Course by Name</h3>
+                <form th:action="@{/admin/course/search-result}" method="get">
+                    <input type="hidden" name="searchType" value="courseName" />
+                    <label for="courseName">Course Name:</label>
+                    <input type="text" id="courseName" name="courseName" required />
                     <button type="submit">Search</button>
                 </form>
             </div>
         </div>
 
-        <!-- Search by Faculty Name -->
+        <!-- Search by Teacher -->
         <div class="search-section">
             <div class="search-square">
-                <h3>Find Group by Faculty</h3>
-                <form th:action="@{/admin/group/search-result}" method="get">
-                    <input type="hidden" name="searchType" value="faculty" />
-                    <label for="facultyName">Faculty Name:</label>
-                    <input type="text" id="facultyName" name="facultyName" required />
+                <h3>Find Courses related to Teacher</h3>
+                <form th:action="@{/admin/course/search-result}" method="get">
+                    <input type="hidden" name="searchType" value="teacher" />
+                    <label for="teacherId">Teacher ID:</label>
+                    <input type="text" id="teacherId" name="teacherId" required />
+                    <button type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Search by Student -->
+        <div class="search-section">
+            <div class="search-square">
+                <h3>Find Courses related to Student</h3>
+                <form th:action="@{/admin/course/search-result}" method="get">
+                    <input type="hidden" name="searchType" value="student" />
+                    <label for="studentId">Student ID:</label>
+                    <input type="text" id="studentId" name="studentId" required />
                     <button type="submit">Search</button>
                 </form>
             </div>
