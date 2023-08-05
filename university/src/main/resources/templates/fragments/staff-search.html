@@ -9,7 +9,7 @@
                 <form th:action="@{/admin/staff/search-result}" method="get">
                     <input type="hidden" name="searchType" value="staff" />
                     <label for="staffId">Staff ID:</label>
-                    <input type="text" id="staffId" name="staffId" />
+                    <input type="text" id="staffId" name="staffId" required />
                     <button type="submit">Search</button>
                 </form>
             </div>
@@ -22,7 +22,7 @@
                 <form th:action="@{/admin/staff/search-result}" method="get">
                     <input type="hidden" name="searchType" value="position" />
                     <label for="position">Position:</label>
-                    <input type="text" id="position" name="position" />
+                    <input type="text" id="position" name="position" required />
                     <button type="submit">Search</button>
                 </form>
             </div>
@@ -35,9 +35,9 @@
                 <form th:action="@{/admin/staff/search-result}" method="get">
                     <input type="hidden" name="searchType" value="firstNameAndLastName" />
                     <label for="firstName">Name:</label>
-                    <input type="text" id="firstName" name="firstName" />
+                    <input type="text" id="firstName" name="firstName" required />
                     <label for="lastName">Family Name:</label>
-                    <input type="text" id="lastName" name="lastName" />
+                    <input type="text" id="lastName" name="lastName" required />
                     <button type="submit">Search</button>
                 </form>
             </div>

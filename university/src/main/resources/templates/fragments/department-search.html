@@ -9,7 +9,7 @@
                 <form th:action="@{/admin/department/search-result}" method="get">
                     <input type="hidden" name="searchType" value="department" />
                     <label for="departmentId">Department ID:</label>
-                    <input type="text" id="departmentId" name="departmentId" />
+                    <input type="text" id="departmentId" name="departmentId" required />
                     <button type="submit">Search</button>
                 </form>
             </div>
@@ -22,12 +22,12 @@
                 <form th:action="@{/admin/department/search-result}" method="get">
                     <input type="hidden" name="searchType" value="name" />
                     <label for="name">Department Name:</label>
-                    <input type="text" id="name" name="name" />
+                    <input type="text" id="name" name="name" required />
                     <button type="submit">Search</button>
                 </form>
             </div>
         </div>
-        
+
         <!-- Search by Faculty Name -->
         <div class="search-section">
             <div class="search-square">
@@ -35,7 +35,7 @@
                 <form th:action="@{/admin/department/search-result}" method="get">
                     <input type="hidden" name="searchType" value="faculty" />
                     <label for="facultyName">Faculty Name:</label>
-                    <input type="text" id="facultyName" name="facultyName" />
+                    <input type="text" id="facultyName" name="facultyName" required />
                     <button type="submit">Search</button>
                 </form>
             </div>
