@@ -21,7 +21,7 @@
                 <h3>Find Class Room by Street</h3>
                 <form th:action="@{/admin/classroom/search-result}" method="get">
                     <input type="hidden" name="searchType" value="street" />
-                    <label for="street">Street:</label>
+                    <label for="street">Street Name:</label>
                     <input type="text" id="street" name="street" required />
                     <button type="submit">Search</button>
                 </form>

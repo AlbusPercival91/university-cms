@@ -101,7 +101,7 @@ public class AdminClassRoomController {
 		} else {
 			return "error";
 		}
-		model.addAttribute("courses", classRoomList);
+		model.addAttribute("classrooms", classRoomList);
 		return "admin/classroom/edit-classroom-list";
 	}
 }
