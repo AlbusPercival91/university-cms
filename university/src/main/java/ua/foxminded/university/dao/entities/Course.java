@@ -1,7 +1,8 @@
 package ua.foxminded.university.dao.entities;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -41,11 +42,11 @@ public class Course {
 
 	@ToString.Exclude
 	@ManyToMany(mappedBy = "assignedCourses", cascade = { CascadeType.PERSIST }, fetch = FetchType.LAZY)
-	private List<Teacher> teachers = new ArrayList<>();
+	private Set<Teacher> teachers = new HashSet<>();
 
 	@ToString.Exclude
 	@ManyToMany(mappedBy = "courses", cascade = { CascadeType.PERSIST }, fetch = FetchType.LAZY)
-	private List<Student> students = new ArrayList<>();
+	private Set<Student> students = new HashSet<>();
 
 	@ToString.Exclude
 	@OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
