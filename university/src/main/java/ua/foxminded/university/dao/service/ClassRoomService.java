@@ -53,4 +53,16 @@ public class ClassRoomService {
 	public List<ClassRoom> getAllClassRooms() {
 		return classRoomRepository.findAll();
 	}
+
+	public Optional<ClassRoom> findClassRoomById(int classRoomId) {
+		return classRoomRepository.findById(classRoomId);
+	}
+
+	public List<ClassRoom> findClassRoomsByStreet(String street) {
+		return classRoomRepository.findAllByStreet(street);
+	}
+
+	public List<ClassRoom> findClassRoomsByStreetAndBuildingNumber(String street, int buildingNumber) {
+		return classRoomRepository.findAllByStreetAndBuildingNumber(street, buildingNumber);
+	}
 }
