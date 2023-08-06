@@ -83,14 +83,13 @@ SELECT
 FROM generate_series(1, 100) id;
 
 -- Insert sample data for university.teachers
-INSERT INTO university.teachers (first_name, last_name, active, email, password, course_id, department_id)
+INSERT INTO university.teachers (first_name, last_name, active, email, password, department_id)
 SELECT
     CONCAT('Teacher Name', id),
     CONCAT('Teacher Surname', id),
     true,
     CONCAT('teacher', id, '@example.com'),
     CONCAT('teacher', id, 'password'),
-    (id - 1) % 10 + 1, 
     FLOOR((id - 1) / 2) + 1
 FROM generate_series(1, 20) id;
 

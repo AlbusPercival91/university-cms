@@ -70,9 +70,7 @@ CREATE TABLE IF NOT EXISTS university.teachers (
     active BOOLEAN NOT NULL,
     email VARCHAR(100) NOT NULL,
     password VARCHAR(60) NOT NULL,
-    course_id INT,
     department_id INT,
-    FOREIGN KEY (course_id) REFERENCES university.courses (course_id),
     FOREIGN KEY (department_id) REFERENCES university.departments (department_id)
 );
 
