@@ -64,12 +64,7 @@ public class Course {
 
 	@PreRemove
 	private void removeTeacherAndStudentAssociations() {
-		for (Teacher teacher : this.teachers) {
-			teacher.getAssignedCourses().remove(this);
-		}
-
-		for (Student student : this.students) {
-			student.getCourses().remove(this);
-		}
+		teachers.forEach(teacher -> teacher.getAssignedCourses().remove(this));
+		students.forEach(student -> student.getCourses().remove(this));
 	}
 }
