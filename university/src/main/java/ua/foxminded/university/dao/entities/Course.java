@@ -42,11 +42,11 @@ public class Course {
 	private String courseDescription;
 
 	@ToString.Exclude
-	@ManyToMany(mappedBy = "assignedCourses", cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
+	@ManyToMany(mappedBy = "assignedCourses")
 	private Set<Teacher> teachers = new HashSet<>();
 
 	@ToString.Exclude
-	@ManyToMany(mappedBy = "courses", cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
+	@ManyToMany(mappedBy = "courses")
 	private Set<Student> students = new HashSet<>();
 
 	@ToString.Exclude
