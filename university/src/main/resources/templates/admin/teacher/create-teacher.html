@@ -47,9 +47,9 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="course">Main Course:</label>
-                <select id="course" name="mainCourse" required>
-                    <option value="">Select Main Course</option>
+                <label for="course">Course:</label>
+                <select id="course" name="course" required>
+                    <option value="">Select Course</option>
                     <!-- Generate options for courses using Thymeleaf -->
                     <option th:each="course : ${courses}" th:value="${course.id}" th:text="${course.courseName}">
                     </option>

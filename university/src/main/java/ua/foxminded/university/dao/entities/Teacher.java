@@ -30,10 +30,6 @@ public class Teacher extends Person {
 	@JoinColumn(name = "department_id")
 	private Department department;
 
-	@ManyToOne
-	@JoinColumn(name = "course_id")
-	private Course mainCourse;
-
 	@ToString.Exclude
 	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.LAZY)
 	@JoinTable(schema = "university", name = "teachers_courses", joinColumns = @JoinColumn(name = "teacher_id"), inverseJoinColumns = @JoinColumn(name = "course_id"))
@@ -44,10 +40,9 @@ public class Teacher extends Person {
 	private List<TimeTable> timeTables;
 
 	public Teacher(String firstName, String lastName, boolean isActive, String email, String password,
-			Department department, Course course) {
+			Department department) {
 		super(firstName, lastName, isActive, email, password);
 		this.department = department;
-		this.mainCourse = course;
 	}
 
 	@Override

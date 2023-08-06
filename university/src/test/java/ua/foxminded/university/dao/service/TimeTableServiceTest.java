@@ -231,7 +231,7 @@ class TimeTableServiceTest {
 		teacherRepository.addTeacherToTheCourse(teacherId, "Mathematics");
 		timeTableBuilder.saveGroupTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId, classRoomId);
 
-		Teacher fakeTeacher = new Teacher("Kevin", "Kell", false, "faketeacher@fakemail.com", "1234", null, null);
+		Teacher fakeTeacher = new Teacher("Kevin", "Kell", false, "faketeacher@fakemail.com", "1234", null);
 
 		Exception noSuchElementException = assertThrows(Exception.class,
 				() -> timeTableService.getTeacherTimeTable(fakeTeacher));
@@ -316,7 +316,7 @@ class TimeTableServiceTest {
 		teacherRepository.addTeacherToTheCourse(teacherId, "Mathematics");
 
 		timeTableBuilder.saveGroupTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId, classRoomId);
-		Teacher fakeTeacher = new Teacher("Kevin", "Kell", false, "faketeacher@fakemail.com", "1234", null, null);
+		Teacher fakeTeacher = new Teacher("Kevin", "Kell", false, "faketeacher@fakemail.com", "1234", null);
 
 		Exception noSuchElementException = assertThrows(Exception.class,
 				() -> timeTableService.getTeacherTimeTableByDate(date, date, fakeTeacher));

@@ -27,7 +27,6 @@
                     <th>First Name</th>
                     <th>Last Name</th>
                     <th>Department</th>
-                    <th>Main Course</th>
                     <th>Assigned Courses</th>
                     <th style="border: none; width: 3vh;"></th>
                 </tr>
@@ -46,7 +45,6 @@
                     <td th:text="${teacher.firstName}"></td>
                     <td th:text="${teacher.lastName}"></td>
                     <td th:text="${teacher.department.name}"></td>
-                    <td th:text="${teacher.mainCourse.courseName}"></td>
                     <td>
                         <select>
                             <option th:each="course : ${teacher.assignedCourses}" th:text="${course.courseName}">

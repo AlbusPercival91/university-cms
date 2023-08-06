@@ -21,9 +21,9 @@ public class TeacherService {
 	private final TeacherRepository teacherRepository;
 	private final CourseRepository courseRepository;
 
-	public int createAndAssignTeacherToCourse(Teacher teacher) {
+	public int createAndAssignTeacherToCourse(Teacher teacher, Course course) {
 		Teacher newTeacher = teacherRepository.save(teacher);
-		addTeacherToTheCourse(teacher.getId(), teacher.getMainCourse().getCourseName());
+		addTeacherToTheCourse(newTeacher.getId(), course.getCourseName());
 		log.info("Created teacher with id: {}", newTeacher.getId());
 		return newTeacher.getId();
 	}
@@ -75,10 +75,8 @@ public class TeacherService {
 			log.warn("Course with name {} not found", courseName);
 			return new NoSuchElementException("Course not found");
 		});
+		
 
-		if (existingTeacher.getMainCourse().getCourseName().equals(courseName)) {
-			throw new IllegalStateException("Teacher can't be removed from his main Course!");
-		}
 		if (!findTeachersRelatedToCourse(courseName).contains(existingTeacher)) {
 			throw new IllegalStateException("Teacher is not related with this Course!");
 		}

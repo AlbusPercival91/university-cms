@@ -52,8 +52,8 @@ public class AdminTeacherController {
 	}
 
 	@PostMapping("/admin/teacher/create-teacher")
-	public String createTeacher(@ModelAttribute("teacher") @Validated Teacher teacher, BindingResult bindingResult,
-			RedirectAttributes redirectAttributes) {
+	public String createTeacher(@ModelAttribute("teacher") @Validated Teacher teacher, @Validated Course course,
+			BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 		if (bindingResult.hasErrors()) {
 			for (FieldError error : bindingResult.getFieldErrors()) {
 				redirectAttributes.addFlashAttribute(error.getField() + "Error", error.getDefaultMessage());
@@ -61,7 +61,7 @@ public class AdminTeacherController {
 			return "redirect:/admin/teacher/create-teacher";
 		}
 
-		int createdTeacher = teacherService.createAndAssignTeacherToCourse(teacher);
+		int createdTeacher = teacherService.createAndAssignTeacherToCourse(teacher, course);
 
 		if (createdTeacher != teacher.getId()) {
 			redirectAttributes.addFlashAttribute("errorMessage", "Failed to create the teacher");

@@ -41,11 +41,6 @@
                 <label for="department">Department:</label>
                 <input type="text" id="department" th:value="${teacher.department.name}" name="department" readonly />
             </div>
-            <div class="form-group">
-                <label for="mainCourse">Main Course:</label>
-                <input type="text" id="mainCourse" th:value="${teacher.mainCourse.courseName}" name="mainCourse"
-                    readonly />
-            </div>
             <!-- Container for buttons -->
             <div class="button-container">
                 <form th:action="@{/admin/teacher/edit-teacher/{teacherId}(teacherId=${teacher.id})}" method="post">
