@@ -12,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.PreRemove;
 import javax.persistence.Table;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -41,11 +42,11 @@ public class Course {
 	private String courseDescription;
 
 	@ToString.Exclude
-	@ManyToMany(mappedBy = "assignedCourses", cascade = { CascadeType.PERSIST }, fetch = FetchType.LAZY)
+	@ManyToMany(mappedBy = "assignedCourses", cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
 	private Set<Teacher> teachers = new HashSet<>();
 
 	@ToString.Exclude
-	@ManyToMany(mappedBy = "courses", cascade = { CascadeType.PERSIST }, fetch = FetchType.LAZY)
+	@ManyToMany(mappedBy = "courses", cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
 	private Set<Student> students = new HashSet<>();
 
 	@ToString.Exclude
@@ -59,5 +60,16 @@ public class Course {
 	public Course(String courseName, String courseDescription) {
 		this.courseName = courseName;
 		this.courseDescription = courseDescription;
+	}
+
+	@PreRemove
+	private void removeTeacherAndStudentAssociations() {
+		for (Teacher teacher : this.teachers) {
+			teacher.getAssignedCourses().remove(this);
+		}
+
+		for (Student student : this.students) {
+			student.getCourses().remove(this);
+		}
 	}
 }
