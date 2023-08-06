@@ -8,4 +8,5 @@ import ua.foxminded.university.dao.entities.ClassRoom;
 @Repository
 public interface ClassRoomRepository extends JpaRepository<ClassRoom, Integer> {
 
+	boolean existsByStreetAndBuildingNumberAndRoomNumber(String street, int buildingNumber, int roomNumber);
 }

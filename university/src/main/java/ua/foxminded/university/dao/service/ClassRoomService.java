@@ -19,6 +19,10 @@ public class ClassRoomService {
 	private final ClassRoomRepository classRoomRepository;
 
 	public int createClassRoom(ClassRoom classRoom) {
+		if (classRoomRepository.existsByStreetAndBuildingNumberAndRoomNumber(classRoom.getStreet(),
+				classRoom.getBuildingNumber(), classRoom.getRoomNumber())) {
+			throw new IllegalStateException("Class room already exists");
+		}
 		ClassRoom newClassRoom = classRoomRepository.save(classRoom);
 		log.info("Created room with id: {}", newClassRoom.getId());
 		return newClassRoom.getId();
