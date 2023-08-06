@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Course List</title>
+    <title>Class-Room List</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" />
 </head>
@@ -12,56 +12,51 @@
 
 <div th:replace="fragments/admin-panel :: div"></div>
 
-<div th:replace="fragments/course-search :: div"></div>
+<div th:replace="fragments/classroom-search :: div"></div>
 
 <body>
 
     <div class="container">
-        <h2>Course List</h2>
+        <h2>Class-Room List</h2>
         <table class="table table-bordered">
-            <caption hidden>All Courses Table</caption>
+            <caption hidden>All Class-Room Table</caption>
             <thead>
                 <tr>
                     <th style="border: none; width: 3vh;"></th>
                     <th>ID</th>
-                    <th>Course Name</th>
-                    <th>Course Description</th>
-                    <th>Teachers Assigned</th>
-                    <th>Students Assigned</th>
+                    <th>Street Name</th>
+                    <th>Building Number</th>
+                    <th>Room Number</th>
+                    <th>Lessons Scheduled</th>
                     <th style="border: none; width: 3vh;"></th>
                 </tr>
             </thead>
             <tbody>
-                <tr th:each="course, rowStat : ${courses}">
+                <tr th:each="classroom, rowStat : ${classrooms}">
                     <td style="border: none;">
                         <!-- Edit Button -->
-                        <a th:href="@{/admin/course/course-card/{courseId}(courseId=${course.id})}">
+                        <a th:href="@{/admin/classroom/classroom-card/{classroomId}(classroomId=${classroom.id})}">
                             <button th:id="'editButton-' + ${rowStat.index}" class="icon-button">
                                 <i class="fas fa-edit edit-icon"></i>
                             </button>
                         </a>
                     </td>
-                    <td th:text="${course.id}"></td>
-                    <td th:text="${course.courseName}"></td>
-                    <td th:text="${course.courseDescription}"></td>
+                    <td th:text="${classroom.id}"></td>
+                    <td th:text="${classroom.street}"></td>
+                    <td th:text="${classroom.buildingNumber}"></td>
+                    <td th:text="${classroom.roomNumber}"></td>
                     <td>
                         <select>
-                            <option th:each="teacher : ${course.teachers}"
-                                th:text="${'ID: ' + teacher.id + ', ' + teacher.firstName + ' ' + teacher.lastName}">
-                            </option>
-                        </select>
-                    </td>
-                    <td>
-                        <select>
-                            <option th:each="student : ${course.students}"
-                                th:text="${'ID: ' + student.id + ', ' + student.firstName + ' ' + student.lastName}">
+                            <option th:each="timetable : ${classroom.timeTables}"
+                                th:text="${'Date: ' + timetable.date + ', ' + timetable.timeFrom + '-' + timetable.timeTo + ', ' + timetable.course}">
                             </option>
                         </select>
                     </td>
                     <td style="border: none;">
                         <!-- Remove Button -->
-                        <form th:action="@{/admin/course/delete/{courseId}(courseId=${course.id})}" method="post">
-                            <input type="hidden" name="courseId" th:value="${course.id}" />
+                        <form th:action="@{/admin/classroom/delete/{classroomId}(classroomId=${classroom.id})}"
+                            method="post">
+                            <input type="hidden" name="classroomId" th:value="${classroom.id}" />
                             <button th:id="'removeButton-' + ${rowStat.index}" class="icon-button remove-button"
                                 type="submit">
                                 <i class="fas fa-trash-alt remove-icon"></i>
