@@ -103,4 +103,17 @@ public class AdminCourseController {
 		model.addAttribute("courses", courseList);
 		return "admin/course/edit-course-list";
 	}
+
+	@GetMapping("/admin/course/course-card/{courseId}")
+	public String openCourseCard(@PathVariable int courseId, Model model) {
+		Optional<Course> optionalCourse = courseService.findCourseById(courseId);
+
+		if (optionalCourse.isPresent()) {
+			Course course = optionalCourse.get();
+			model.addAttribute("course", course);
+			return "admin/course/course-card";
+		} else {
+			return "redirect:/admin/course/edit-course-list";
+		}
+	}
 }
