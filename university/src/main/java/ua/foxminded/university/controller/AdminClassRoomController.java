@@ -104,4 +104,17 @@ public class AdminClassRoomController {
 		model.addAttribute("classrooms", classRoomList);
 		return "admin/classroom/edit-classroom-list";
 	}
+
+	@GetMapping("/admin/classroom/classroom-card/{classroomId}")
+	public String openClassRoomCard(@PathVariable int classroomId, Model model) {
+		Optional<ClassRoom> optionalClassRoom = classRoomService.findClassRoomById(classroomId);
+
+		if (optionalClassRoom.isPresent()) {
+			ClassRoom classRoom = optionalClassRoom.get();
+			model.addAttribute("classroom", classRoom);
+			return "admin/classroom/classroom-card";
+		} else {
+			return "redirect:/admin/classroom/edit-classroom-list";
+		}
+	}
 }
