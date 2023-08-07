@@ -254,10 +254,18 @@ public class AdminTimeTableController {
 	@GetMapping("/admin/timetable/timetable-card/{timetableId}")
 	public String openTimeTableCard(@PathVariable int timetableId, Model model) {
 		Optional<TimeTable> optionalTimeTable = timeTableService.findTimeTableById(timetableId);
+		List<Teacher> teachers = teacherService.getAllTeachers();
+		List<Course> courses = courseService.getAllCourses();
+		List<Group> groups = groupService.getAllGroups();
+		List<ClassRoom> classRooms = classRoomService.getAllClassRooms();
 
 		if (optionalTimeTable.isPresent()) {
 			TimeTable timeTable = optionalTimeTable.get();
 			model.addAttribute("timetable", timeTable);
+			model.addAttribute("teachers", teachers);
+			model.addAttribute("courses", courses);
+			model.addAttribute("groups", groups);
+			model.addAttribute("classrooms", classRooms);
 			return "admin/timetable/timetable-card";
 		} else {
 			return "redirect:/admin/timetable/timetable";
