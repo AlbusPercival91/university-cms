@@ -107,4 +107,17 @@ public class AdminGroupController {
 		model.addAttribute("groups", groupList);
 		return "admin/group/edit-group-list";
 	}
+
+	@GetMapping("/admin/group/group-card/{groupId}")
+	public String openGroupCard(@PathVariable int groupId, Model model) {
+		Optional<Group> optionalGroup = groupService.findGroupById(groupId);
+
+		if (optionalGroup.isPresent()) {
+			Group group = optionalGroup.get();
+			model.addAttribute("group", group);
+			return "admin/group/group-card";
+		} else {
+			return "redirect:/admin/group/edit-group-list";
+		}
+	}
 }
