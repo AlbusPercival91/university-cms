@@ -107,4 +107,17 @@ public class AdminDepartmentController {
 		model.addAttribute("departments", departmentList);
 		return "admin/department/edit-department-list";
 	}
+
+	@GetMapping("/admin/department/department-card/{departmentId}")
+	public String openDepartmentCard(@PathVariable int departmentId, Model model) {
+		Optional<Department> optionalDepartment = departmentService.findDepartmentById(departmentId);
+
+		if (optionalDepartment.isPresent()) {
+			Department department = optionalDepartment.get();
+			model.addAttribute("department", department);
+			return "admin/department/department-card";
+		} else {
+			return "redirect:/admin/department/edit-department-list";
+		}
+	}
 }

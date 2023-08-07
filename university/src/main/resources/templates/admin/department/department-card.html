@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Department Card</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" />
+</head>
+
+<body>
+
+    <div th:replace="fragments/header :: header"></div>
+    <div th:replace="fragments/admin-panel :: div"></div>
+
+    <div class="container-entity-card">
+
+        <!-- Block for department-details -->
+        <div class="entity-details">
+            <h2>Department Details</h2>
+            <div class="form-group">
+                <label for="name">Department Name:</label>
+                <input type="text" id="name" th:value="${department.name}" name="name" readonly />
+            </div>
+            <div class="form-group">
+                <label for="facultyName">Faculty Name:</label>
+                <input type="text" id="facultyName" th:value="${department.faculty.facultyName}" name="facultyName"
+                    readonly />
+            </div>
+            <!-- Container for buttons -->
+            <div class="button-container">
+                <form th:action="@{/admin/department/edit-department/{departmentd}(departmentId=${department.id})}"
+                    method="post">
+                    <button id="saveButton" type="submit" class="button-common-style">Save</button>
+                    <button id="editButton" type="button" class="button-common-style">Edit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="fragments/message :: div"></div>
+    <div th:replace="fragments/footer :: footer"></div>
+
+    <script th:src="@{/js/work-panel.js}"></script>
+    <script th:src="@{/js/enable-edit.js}"></script>
+
+</body>
+
+</html>
