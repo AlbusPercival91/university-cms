@@ -194,4 +194,8 @@ public class TimeTableService {
 			throw new NoSuchElementException("TimeTable not found");
 		}
 	}
+
+	public Optional<TimeTable> findTimeTableById(int timeTableId) {
+		return timeTableRepository.findById(timeTableId);
+	}
 }

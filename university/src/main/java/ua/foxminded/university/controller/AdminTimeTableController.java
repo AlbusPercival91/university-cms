@@ -250,4 +250,17 @@ public class AdminTimeTableController {
 		model.addAttribute("timetables", timetables);
 		return "admin/timetable/timetable";
 	}
+
+	@GetMapping("/admin/timetable/timetable-card/{timetableId}")
+	public String openTimeTableCard(@PathVariable int timetableId, Model model) {
+		Optional<TimeTable> optionalTimeTable = timeTableService.findTimeTableById(timetableId);
+
+		if (optionalTimeTable.isPresent()) {
+			TimeTable timeTable = optionalTimeTable.get();
+			model.addAttribute("timetable", timeTable);
+			return "admin/timetable/timetable-card";
+		} else {
+			return "redirect:/admin/timetable/timetable";
+		}
+	}
 }
