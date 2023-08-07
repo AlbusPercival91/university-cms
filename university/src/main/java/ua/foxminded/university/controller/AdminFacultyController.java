@@ -2,6 +2,7 @@ package ua.foxminded.university.controller;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -75,6 +76,19 @@ public class AdminFacultyController {
 			redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
 		}
 		return "redirect:/admin/faculty/create-faculty";
+	}
+
+	@GetMapping("/admin/faculty/faculty-card/{facultyId}")
+	public String openFacultyCard(@PathVariable int facultyId, Model model) {
+		Optional<Faculty> optionalFaculty = facultyService.findFacultyById(facultyId);
+
+		if (optionalFaculty.isPresent()) {
+			Faculty faculty = optionalFaculty.get();
+			model.addAttribute("faculty", faculty);
+			return "admin/faculty/faculty-card";
+		} else {
+			return "redirect:/admin/faculty/edit-faculty-list";
+		}
 	}
 
 }
