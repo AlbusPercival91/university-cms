@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Card</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" />
+</head>
+
+<body>
+
+    <div th:replace="fragments/header :: header"></div>
+    <div th:replace="fragments/admin-panel :: div"></div>
+
+    <div class="container-entity-card">
+
+        <!-- Block for Admin-details -->
+        <div class="entity-details">
+            <h2>Admin Details</h2>
+            <div class="form-group">
+                <label for="firstName">First Name:</label>
+                <input type="text" id="firstName" th:value="${admin.firstName}" name="firstName" readonly />
+            </div>
+            <div class="form-group">
+                <label for="lastName">Last Name:</label>
+                <input type="text" id="lastName" th:value="${admin.lastName}" name="lastName" readonly />
+            </div>
+            <div class="form-group">
+                <label for="active">Active:</label>
+                <select id="active" name="active" readonly>
+                    <option th:value="${admin.active}" th:selected="${admin.active}">True</option>
+                    <option th:value="${!admin.active}" th:selected="${!admin.active}">False</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" th:value="${admin.email}" name="email" readonly />
+            </div>
+
+            <!-- Container for buttons -->
+            <div class="button-container">
+                <form th:action="@{/admin/edit-admin/{adminId}(adminId=${admin.id})}" method="post">
+                    <button id="saveButton" type="submit" class="button-common-style">Save</button>
+                    <button id="editButton" type="button" class="button-common-style">Edit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="fragments/message :: div"></div>
+    <div th:replace="fragments/footer :: footer"></div>
+
+    <script th:src="@{/js/work-panel.js}"></script>
+    <script th:src="@{/js/enable-edit.js}"></script>
+
+</body>
+
+</html>
