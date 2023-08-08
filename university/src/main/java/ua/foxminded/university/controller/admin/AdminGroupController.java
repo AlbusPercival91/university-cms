@@ -1,4 +1,4 @@
-package ua.foxminded.university.controller;
+package ua.foxminded.university.controller.admin;
 
 import java.util.Collections;
 import java.util.List;
