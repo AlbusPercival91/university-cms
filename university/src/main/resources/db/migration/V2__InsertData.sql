@@ -72,7 +72,7 @@ VALUES
     ('David', 'Davis', true, 'daviddavis@example.com', 'password5', 'Coordinator', 'Program coordination');
 
 -- Insert sample data for university.students
-INSERT INTO university.students (first_name, last_name, active, email, password, group_id)
+INSERT INTO university.student (first_name, last_name, active, email, password, group_id)
 SELECT
     CONCAT('Studen Name', id),
     CONCAT('Student Surname', id),
@@ -83,7 +83,7 @@ SELECT
 FROM generate_series(1, 100) id;
 
 -- Insert sample data for university.teachers
-INSERT INTO university.teachers (first_name, last_name, active, email, password, department_id)
+INSERT INTO university.teacher (first_name, last_name, active, email, password, department_id)
 SELECT
     CONCAT('Teacher Name', id),
     CONCAT('Teacher Surname', id),
@@ -99,7 +99,7 @@ SELECT
     s.id,
     c.course_id
 FROM
-    university.students AS s
+    university.student AS s
     JOIN LATERAL (
         SELECT course_id
         FROM university.courses
@@ -118,7 +118,7 @@ SELECT
     t.id,
     c.course_id
 FROM
-    university.teachers AS t
+    university.teacher AS t
     JOIN LATERAL (
         SELECT course_id
         FROM university.courses

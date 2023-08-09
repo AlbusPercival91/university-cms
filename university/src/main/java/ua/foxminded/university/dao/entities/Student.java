@@ -15,13 +15,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import ua.foxminded.university.validation.UniqueEmail;
 
 @Getter
 @Setter
 @ToString(callSuper = true)
 @NoArgsConstructor
 @Entity
-@Table(name = "students", schema = "university")
+@Table(name = "student", schema = "university")
+@UniqueEmail
 public class Student extends Person {
 
 	@ManyToOne

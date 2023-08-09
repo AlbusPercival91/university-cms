@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import ua.foxminded.university.validation.UniqueEmail;
 
 @Getter
 @Setter
@@ -19,6 +20,7 @@ import lombok.ToString;
 @EqualsAndHashCode(exclude = "hashedPassword")
 @NoArgsConstructor
 @MappedSuperclass
+@UniqueEmail
 public class Person {
 
 	@Id

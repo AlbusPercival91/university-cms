@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -52,7 +53,7 @@ public class AdminTeacherController {
 	}
 
 	@PostMapping("/admin/teacher/create-teacher")
-	public String createTeacher(@ModelAttribute("teacher") @Validated Teacher teacher, @Validated Course course,
+	public String createTeacher(@ModelAttribute("teacher") @Valid Teacher teacher, @Validated Course course,
 			BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 		if (bindingResult.hasErrors()) {
 			for (FieldError error : bindingResult.getFieldErrors()) {
