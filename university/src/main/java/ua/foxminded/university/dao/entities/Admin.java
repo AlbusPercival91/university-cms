@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import ua.foxminded.university.validation.UniqueEmail;
 
 @Getter
 @Setter
@@ -16,7 +15,6 @@ import ua.foxminded.university.validation.UniqueEmail;
 @NoArgsConstructor
 @Entity
 @Table(name = "admin", schema = "university")
-@UniqueEmail
 public class Admin extends Person {
 
 	public Admin(String firstName, String lastName, boolean isActive, String email, String password) {

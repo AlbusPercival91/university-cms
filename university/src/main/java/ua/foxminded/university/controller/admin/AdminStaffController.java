@@ -5,12 +5,12 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,16 +32,16 @@ public class AdminStaffController {
 	}
 
 	@PostMapping("/admin/staff/create-staff")
-	public String createStaff(@ModelAttribute("staff") @Valid Staff staff, BindingResult bindingResult,
+	public String createStaff(@ModelAttribute("staff") @Validated Staff staff, BindingResult bindingResult,
 			RedirectAttributes redirectAttributes) {
-		try {
-			if (bindingResult.hasErrors()) {
-				for (FieldError error : bindingResult.getFieldErrors()) {
-					redirectAttributes.addFlashAttribute(error.getField() + "Error", error.getDefaultMessage());
-				}
-				return "redirect:/admin/staff/create-staff";
+		if (bindingResult.hasErrors()) {
+			for (FieldError error : bindingResult.getFieldErrors()) {
+				redirectAttributes.addFlashAttribute(error.getField() + "Error", error.getDefaultMessage());
 			}
+			return "redirect:/admin/staff/create-staff";
+		}
 
+		try {
 			int createdStaff = staffService.createStaff(staff);
 
 			if (createdStaff != staff.getId()) {
@@ -49,7 +49,7 @@ public class AdminStaffController {
 			} else {
 				redirectAttributes.addFlashAttribute("successMessage", "Staff created successfully");
 			}
-		} catch (NoSuchElementException ex) {
+		} catch (IllegalStateException ex) {
 			redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
 		}
 		return "redirect:/admin/staff/create-staff";

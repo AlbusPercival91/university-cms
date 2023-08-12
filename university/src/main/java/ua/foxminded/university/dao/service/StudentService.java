@@ -12,6 +12,7 @@ import ua.foxminded.university.dao.entities.Course;
 import ua.foxminded.university.dao.entities.Student;
 import ua.foxminded.university.dao.interfaces.CourseRepository;
 import ua.foxminded.university.dao.interfaces.StudentRepository;
+import ua.foxminded.university.dao.validation.UniqueEmailValidator;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -21,15 +22,20 @@ public class StudentService {
 	private final StudentRepository studentRepository;
 	private final CourseRepository courseRepository;
 	private final GroupService groupService;
+	private final UniqueEmailValidator emailValidator;
 
 	public int createStudent(Student student) {
-		if (groupService.getAllGroups().contains(student.getGroup())) {
-			Student newStudent = studentRepository.save(student);
-			log.info("Created student with id: {}", newStudent.getId());
-			return newStudent.getId();
-		} else {
-			throw new NoSuchElementException("Group not found");
+		if (emailValidator.isValid(student)) {
+			if (groupService.getAllGroups().contains(student.getGroup())) {
+				Student newStudent = studentRepository.save(student);
+				log.info("Created student with id: {}", newStudent.getId());
+				return newStudent.getId();
+			} else {
+				throw new NoSuchElementException("Group not found");
+			}
 		}
+		log.warn("Email already registered");
+		throw new IllegalStateException("Email already registered");
 	}
 
 	public int deleteStudentById(int studentId) {

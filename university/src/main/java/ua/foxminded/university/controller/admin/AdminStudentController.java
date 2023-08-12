@@ -5,12 +5,12 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -134,16 +134,16 @@ public class AdminStudentController {
 	}
 
 	@PostMapping("/admin/student/create-student")
-	public String createStudent(@ModelAttribute("student") @Valid Student student, BindingResult bindingResult,
+	public String createStudent(@ModelAttribute("student") @Validated Student student, BindingResult bindingResult,
 			RedirectAttributes redirectAttributes) {
-		try {
-			if (bindingResult.hasErrors()) {
-				for (FieldError error : bindingResult.getFieldErrors()) {
-					redirectAttributes.addFlashAttribute(error.getField() + "Error", error.getDefaultMessage());
-				}
-				return "redirect:/admin/student/create-student";
+		if (bindingResult.hasErrors()) {
+			for (FieldError error : bindingResult.getFieldErrors()) {
+				redirectAttributes.addFlashAttribute(error.getField() + "Error", error.getDefaultMessage());
 			}
+			return "redirect:/admin/student/create-student";
+		}
 
+		try {
 			int createdStudent = studentService.createStudent(student);
 
 			if (createdStudent != student.getId()) {
@@ -151,7 +151,7 @@ public class AdminStudentController {
 			} else {
 				redirectAttributes.addFlashAttribute("successMessage", "Student created successfully");
 			}
-		} catch (NoSuchElementException ex) {
+		} catch (NoSuchElementException | IllegalStateException ex) {
 			redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
 		}
 		return "redirect:/admin/student/create-student";

@@ -23,9 +23,10 @@ import ua.foxminded.university.dao.entities.Teacher;
 import ua.foxminded.university.dao.interfaces.CourseRepository;
 import ua.foxminded.university.dao.interfaces.DepartmentRepository;
 import ua.foxminded.university.dao.interfaces.TeacherRepository;
+import ua.foxminded.university.dao.validation.UniqueEmailValidator;
 
-@DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
-		TeacherService.class }))
+@DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = { TeacherService.class,
+		UniqueEmailValidator.class }))
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ActiveProfiles("test-container")
 @Sql(scripts = { "/drop_data.sql", "/init_tables.sql",

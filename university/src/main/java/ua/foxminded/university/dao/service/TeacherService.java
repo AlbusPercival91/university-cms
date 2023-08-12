@@ -12,6 +12,7 @@ import ua.foxminded.university.dao.entities.Course;
 import ua.foxminded.university.dao.entities.Teacher;
 import ua.foxminded.university.dao.interfaces.CourseRepository;
 import ua.foxminded.university.dao.interfaces.TeacherRepository;
+import ua.foxminded.university.dao.validation.UniqueEmailValidator;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -20,12 +21,17 @@ import ua.foxminded.university.dao.interfaces.TeacherRepository;
 public class TeacherService {
 	private final TeacherRepository teacherRepository;
 	private final CourseRepository courseRepository;
+	private final UniqueEmailValidator emailValidator;
 
 	public int createAndAssignTeacherToCourse(Teacher teacher, Course course) {
-		Teacher newTeacher = teacherRepository.save(teacher);
-		addTeacherToTheCourse(newTeacher.getId(), course.getCourseName());
-		log.info("Created teacher with id: {}", newTeacher.getId());
-		return newTeacher.getId();
+		if (emailValidator.isValid(teacher)) {
+			Teacher newTeacher = teacherRepository.save(teacher);
+			addTeacherToTheCourse(newTeacher.getId(), course.getCourseName());
+			log.info("Created teacher with id: {}", newTeacher.getId());
+			return newTeacher.getId();
+		}
+		log.warn("Email already registered");
+		throw new IllegalStateException("Email already registered");
 	}
 
 	public int deleteTeacherById(int teacherId) {
@@ -75,7 +81,6 @@ public class TeacherService {
 			log.warn("Course with name {} not found", courseName);
 			return new NoSuchElementException("Course not found");
 		});
-		
 
 		if (!findTeachersRelatedToCourse(courseName).contains(existingTeacher)) {
 			throw new IllegalStateException("Teacher is not related with this Course!");

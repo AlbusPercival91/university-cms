@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import ua.foxminded.university.validation.UniqueEmail;
 
 @Getter
 @Setter
@@ -17,7 +16,6 @@ import ua.foxminded.university.validation.UniqueEmail;
 @NoArgsConstructor
 @Entity
 @Table(name = "staff", schema = "university")
-@UniqueEmail
 public class Staff extends Person {
 
 	@Column(name = "position")

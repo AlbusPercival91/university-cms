@@ -27,9 +27,10 @@ import ua.foxminded.university.dao.entities.TimeTable;
 import ua.foxminded.university.dao.interfaces.StudentRepository;
 import ua.foxminded.university.dao.interfaces.TeacherRepository;
 import ua.foxminded.university.dao.interfaces.TimeTableRepository;
+import ua.foxminded.university.dao.validation.UniqueEmailValidator;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
-		TimeTableService.class, TimeTableBuilder.class }))
+		TimeTableService.class, TimeTableBuilder.class, UniqueEmailValidator.class }))
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ActiveProfiles("test-container")
 @Sql(scripts = { "/drop_data.sql", "/init_tables.sql",

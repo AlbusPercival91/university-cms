@@ -17,7 +17,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import ua.foxminded.university.validation.UniqueEmail;
 
 @Getter
 @Setter
@@ -25,7 +24,6 @@ import ua.foxminded.university.validation.UniqueEmail;
 @NoArgsConstructor
 @Entity
 @Table(name = "teacher", schema = "university")
-@UniqueEmail
 public class Teacher extends Person {
 
 	@ManyToOne
