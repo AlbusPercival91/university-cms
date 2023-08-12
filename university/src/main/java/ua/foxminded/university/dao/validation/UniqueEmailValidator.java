@@ -19,21 +19,17 @@ public class UniqueEmailValidator {
 	}
 
 	public boolean isValid(Person person) {
-		if (person == null || entityManager == null || person.getEmail() == null) {
+		if (person == null || person.getEmail() == null) {
 			return true;
 		}
-
 		String email = person.getEmail();
-
 		List<String> entityNames = Arrays.asList("Student", "Teacher", "Staff", "Admin");
 
 		for (String entityName : entityNames) {
 			String schemaName = "university";
 			String tableName = entityName.toLowerCase();
-
 			String nativeQuery = String.format("SELECT COUNT(*) FROM %s.%s WHERE email = :email", schemaName,
 					tableName);
-
 			BigInteger count = (BigInteger) entityManager.createNativeQuery(nativeQuery).setParameter("email", email)
 					.getSingleResult();
 
