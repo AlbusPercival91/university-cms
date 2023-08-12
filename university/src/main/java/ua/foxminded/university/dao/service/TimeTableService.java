@@ -21,6 +21,7 @@ import ua.foxminded.university.dao.interfaces.GroupRepository;
 import ua.foxminded.university.dao.interfaces.StudentRepository;
 import ua.foxminded.university.dao.interfaces.TeacherRepository;
 import ua.foxminded.university.dao.interfaces.TimeTableRepository;
+import ua.foxminded.university.dao.validation.TimeTableValidator;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -31,30 +32,12 @@ public class TimeTableService {
 	private final StudentRepository studentRepository;
 	private final TeacherRepository teacherRepository;
 	private final GroupRepository groupRepository;
-
-	private void timeTableValidation(LocalDate date, LocalTime timeFrom, LocalTime timeTo, Teacher teacher,
-			Course course, ClassRoom classRoom) {
-		if (timeTableRepository.timeTableValidationFailed(date, timeFrom, timeTo, classRoom)) {
-			throw new TimeTableValidationException("Validation failed while creating TimeTable");
-		}
-
-		if (timeFrom.isAfter(timeTo)) {
-			throw new TimeTableValidationException("Timing is wrong");
-		}
-
-		if (!teacherRepository.findTeachersRelatedToCourse(course.getCourseName()).contains(teacher)) {
-			throw new TimeTableValidationException("Teacher is not assigned with such Course");
-		}
-
-		if (timeTableRepository.teacherIsBusy(date, timeFrom, timeTo, teacher)) {
-			throw new TimeTableValidationException("Teacher is busy during this time");
-		}
-	}
+	private final TimeTableValidator timeTableValidator;
 
 	public TimeTable createGroupTimeTable(LocalDate date, LocalTime timeFrom, LocalTime timeTo, Teacher teacher,
 			Course course, Group group, ClassRoom classRoom) {
 		try {
-			timeTableValidation(date, timeFrom, timeTo, teacher, course, classRoom);
+			timeTableValidator.validate(date, timeFrom, timeTo, teacher, course, classRoom);
 
 			TimeTable timeTable = new TimeTable(date, timeFrom, timeTo, teacher, course, group, classRoom);
 			log.info("Timetable [date:{}, time from:{}, time to:{}] is scheduled successfully.", timeTable.getDate(),
@@ -68,7 +51,7 @@ public class TimeTableService {
 	public TimeTable createTimeTableForStudentsAtCourse(LocalDate date, LocalTime timeFrom, LocalTime timeTo,
 			Teacher teacher, Course course, ClassRoom classRoom) {
 		try {
-			timeTableValidation(date, timeFrom, timeTo, teacher, course, classRoom);
+			timeTableValidator.validate(date, timeFrom, timeTo, teacher, course, classRoom);
 
 			List<Student> studentsRelatedToCourse = studentRepository
 					.findStudentsRelatedToCourse(course.getCourseName());
