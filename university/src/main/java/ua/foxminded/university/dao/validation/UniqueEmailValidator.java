@@ -6,7 +6,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.springframework.stereotype.Component;
-import ua.foxminded.university.dao.entities.Person;
+import ua.foxminded.university.dao.entities.User;
 
 @Component
 public class UniqueEmailValidator {
@@ -18,7 +18,7 @@ public class UniqueEmailValidator {
 		this.entityManager = entityManager;
 	}
 
-	public boolean isValid(Person person) {
+	public boolean isValid(User person) {
 		if (person == null || person.getEmail() == null) {
 			return true;
 		}

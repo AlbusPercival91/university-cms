@@ -22,7 +22,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Entity
 @Table(name = "student", schema = "university")
-public class Student extends Person {
+public class Student extends User {
 
 	@ManyToOne
 	@JoinColumn(name = "group_id")

@@ -19,7 +19,7 @@ import lombok.ToString;
 @EqualsAndHashCode(exclude = "hashedPassword")
 @NoArgsConstructor
 @MappedSuperclass
-public class Person {
+public class User {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,7 +44,7 @@ public class Person {
 	@Column(name = "password")
 	private String hashedPassword;
 
-	public Person(String firstName, String lastName, boolean isActive, String email, String password) {
+	public User(String firstName, String lastName, boolean isActive, String email, String password) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.isActive = isActive;

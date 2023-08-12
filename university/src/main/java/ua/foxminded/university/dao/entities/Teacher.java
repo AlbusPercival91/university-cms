@@ -24,7 +24,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Entity
 @Table(name = "teacher", schema = "university")
-public class Teacher extends Person {
+public class Teacher extends User {
 
 	@ManyToOne
 	@JoinColumn(name = "department_id")
