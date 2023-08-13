@@ -29,7 +29,8 @@ class AdminClassRoomControllerTest {
 	@Test
 	void testDeleteClassRoom() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.post("/admin/classroom/delete/{classroomId}", 1))
-				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+				.andExpect(MockMvcResultMatchers.status()
+						.is3xxRedirection())
 				.andExpect(MockMvcResultMatchers.flash().attributeExists("successMessage"))
 				.andExpect(MockMvcResultMatchers.redirectedUrl("/admin/classroom/edit-classroom-list"));
 	}
