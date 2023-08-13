@@ -67,14 +67,14 @@ public class AdminGroupController {
 	@PostMapping("/admin/group/create-group")
 	public String createGroup(@ModelAttribute("group") @Validated Group group, BindingResult bindingResult,
 			RedirectAttributes redirectAttributes) {
-		try {
-			if (bindingResult.hasErrors()) {
-				for (FieldError error : bindingResult.getFieldErrors()) {
-					redirectAttributes.addFlashAttribute(error.getField() + "Error", error.getDefaultMessage());
-				}
-				return "redirect:/admin/group/create-group";
+		if (bindingResult.hasErrors()) {
+			for (FieldError error : bindingResult.getFieldErrors()) {
+				redirectAttributes.addFlashAttribute(error.getField() + "Error", error.getDefaultMessage());
 			}
+			return "redirect:/admin/group/create-group";
+		}
 
+		try {
 			int createdGroup = groupService.createGroup(group);
 
 			if (createdGroup != group.getId()) {

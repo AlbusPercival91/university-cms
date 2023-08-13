@@ -57,14 +57,14 @@ public class AdminFacultyController {
 	@PostMapping("/admin/faculty/create-faculty")
 	public String createFaculty(@ModelAttribute("staff") @Validated Faculty faculty, BindingResult bindingResult,
 			RedirectAttributes redirectAttributes) {
-		try {
-			if (bindingResult.hasErrors()) {
-				for (FieldError error : bindingResult.getFieldErrors()) {
-					redirectAttributes.addFlashAttribute(error.getField() + "Error", error.getDefaultMessage());
-				}
-				return "redirect:/admin/faculty/create-faculty";
+		if (bindingResult.hasErrors()) {
+			for (FieldError error : bindingResult.getFieldErrors()) {
+				redirectAttributes.addFlashAttribute(error.getField() + "Error", error.getDefaultMessage());
 			}
+			return "redirect:/admin/faculty/create-faculty";
+		}
 
+		try {
 			int createdFaculty = facultyService.createFaculty(faculty);
 
 			if (createdFaculty != faculty.getId()) {

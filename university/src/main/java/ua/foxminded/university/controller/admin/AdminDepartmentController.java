@@ -67,14 +67,14 @@ public class AdminDepartmentController {
 	@PostMapping("/admin/department/create-department")
 	public String createDepartment(@ModelAttribute("department") @Validated Department department,
 			BindingResult bindingResult, RedirectAttributes redirectAttributes) {
-		try {
-			if (bindingResult.hasErrors()) {
-				for (FieldError error : bindingResult.getFieldErrors()) {
-					redirectAttributes.addFlashAttribute(error.getField() + "Error", error.getDefaultMessage());
-				}
-				return "redirect:/admin/department/create-department";
+		if (bindingResult.hasErrors()) {
+			for (FieldError error : bindingResult.getFieldErrors()) {
+				redirectAttributes.addFlashAttribute(error.getField() + "Error", error.getDefaultMessage());
 			}
+			return "redirect:/admin/department/create-department";
+		}
 
+		try {
 			int createdDepartment = departmentService.createDepartment(department);
 
 			if (createdDepartment != department.getId()) {

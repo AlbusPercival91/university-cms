@@ -59,14 +59,14 @@ public class AdminCourseController {
 	@PostMapping("/admin/course/create-course")
 	public String createCourse(@ModelAttribute("course") @Validated Course course, BindingResult bindingResult,
 			RedirectAttributes redirectAttributes) {
-		try {
-			if (bindingResult.hasErrors()) {
-				for (FieldError error : bindingResult.getFieldErrors()) {
-					redirectAttributes.addFlashAttribute(error.getField() + "Error", error.getDefaultMessage());
-				}
-				return "redirect:/admin/course/create-course";
+		if (bindingResult.hasErrors()) {
+			for (FieldError error : bindingResult.getFieldErrors()) {
+				redirectAttributes.addFlashAttribute(error.getField() + "Error", error.getDefaultMessage());
 			}
+			return "redirect:/admin/course/create-course";
+		}
 
+		try {
 			int createdCourse = courseService.createCourse(course);
 
 			if (createdCourse != course.getId()) {

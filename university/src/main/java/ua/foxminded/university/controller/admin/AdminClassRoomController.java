@@ -38,7 +38,7 @@ public class AdminClassRoomController {
 		return "admin/classroom/edit-classroom-list";
 	}
 
-	@PostMapping("admin/classroom/delete/{classroomId}")
+	@PostMapping("/admin/classroom/delete/{classroomId}")
 	public String deleteClassRoom(@PathVariable int classroomId, RedirectAttributes redirectAttributes,
 			HttpServletRequest request) {
 		try {
@@ -63,14 +63,14 @@ public class AdminClassRoomController {
 	@PostMapping("/admin/classroom/create-classroom")
 	public String createClassRoom(@ModelAttribute("course") @Validated ClassRoom classroom, BindingResult bindingResult,
 			RedirectAttributes redirectAttributes) {
-		try {
-			if (bindingResult.hasErrors()) {
-				for (FieldError error : bindingResult.getFieldErrors()) {
-					redirectAttributes.addFlashAttribute(error.getField() + "Error", error.getDefaultMessage());
-				}
-				return "redirect:/admin/classroom/create-classroom";
+		if (bindingResult.hasErrors()) {
+			for (FieldError error : bindingResult.getFieldErrors()) {
+				redirectAttributes.addFlashAttribute(error.getField() + "Error", error.getDefaultMessage());
 			}
+			return "redirect:/admin/classroom/create-classroom";
+		}
 
+		try {
 			int createdClassRoom = classRoomService.createClassRoom(classroom);
 
 			if (createdClassRoom != classroom.getId()) {
