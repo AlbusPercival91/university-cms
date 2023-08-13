@@ -18,11 +18,11 @@ public class UniqueEmailValidator {
 		this.entityManager = entityManager;
 	}
 
-	public boolean isValid(User person) {
-		if (person == null || person.getEmail() == null) {
+	public boolean isValid(User user) {
+		if (user == null || user.getEmail() == null) {
 			return true;
 		}
-		String email = person.getEmail();
+		String email = user.getEmail();
 		List<String> entityNames = Arrays.asList("Student", "Teacher", "Staff", "Admin");
 
 		for (String entityName : entityNames) {
