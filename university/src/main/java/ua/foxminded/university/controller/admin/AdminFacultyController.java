@@ -50,7 +50,7 @@ public class AdminFacultyController {
 	}
 
 	@GetMapping("/admin/faculty/create-faculty")
-	public String showCreateStaffForm() {
+	public String showCreateFacultyForm() {
 		return "admin/faculty/create-faculty";
 	}
 

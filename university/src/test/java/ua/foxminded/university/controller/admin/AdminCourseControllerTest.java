@@ -140,7 +140,7 @@ class AdminCourseControllerTest {
 	void testOpenCourseCard_WhenCourseDoesNotExist() throws Exception {
 		int courseId = 999;
 
-		when(courseService.findCourseById(1)).thenReturn(Optional.empty());
+		when(courseService.findCourseById(courseId)).thenReturn(Optional.empty());
 
 		mockMvc.perform(MockMvcRequestBuilders.get("/admin/course/course-card/{courseId}", courseId))
 				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())

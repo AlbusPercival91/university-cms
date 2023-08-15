@@ -66,7 +66,7 @@ class AdminControllerTest {
 	void testOpenAdminCard_WhenAdminDoesNotExist() throws Exception {
 		int adminId = 999;
 
-		when(adminService.findAdminById(1)).thenReturn(Optional.empty());
+		when(adminService.findAdminById(adminId)).thenReturn(Optional.empty());
 
 		mockMvc.perform(MockMvcRequestBuilders.get("/admin/admin-card/{adminId}", adminId))
 				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())

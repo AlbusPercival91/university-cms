@@ -105,7 +105,7 @@ class AdminClassRoomControllerTest {
 	void testOpenClassRoomCard_WhenClassRoomDoesNotExist() throws Exception {
 		int classroomId = 999;
 
-		when(classRoomService.findClassRoomById(1)).thenReturn(Optional.empty());
+		when(classRoomService.findClassRoomById(classroomId)).thenReturn(Optional.empty());
 
 		mockMvc.perform(MockMvcRequestBuilders.get("/admin/classroom/classroom-card/{classroomId}", classroomId))
 				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())

@@ -138,7 +138,7 @@ class AdminDepartmentControllerTest {
 	void testOpenDepartmentCard_WhenDepartmentDoesNotExist() throws Exception {
 		int departmentId = 999;
 
-		when(departmentService.findDepartmentById(1)).thenReturn(Optional.empty());
+		when(departmentService.findDepartmentById(departmentId)).thenReturn(Optional.empty());
 
 		mockMvc.perform(MockMvcRequestBuilders.get("/admin/department/department-card/{departmentId}", departmentId))
 				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
