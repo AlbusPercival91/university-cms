@@ -63,6 +63,7 @@ class AdminCourseControllerTest {
 	void testSearchCourseAsAdmin_WhenSearchTypeIsCourse() throws Exception {
 		Course course = new Course();
 		course.setId(1);
+
 		when(courseService.findCourseById(1)).thenReturn(Optional.of(course));
 
 		mockMvc.perform(MockMvcRequestBuilders.get("/admin/course/search-result").param("searchType", "course")
@@ -136,7 +137,7 @@ class AdminCourseControllerTest {
 	}
 
 	@Test
-	void testOpenClassRoomCard_WhenClassRoomDoesNotExist() throws Exception {
+	void testOpenCourseCard_WhenCourseDoesNotExist() throws Exception {
 		int courseId = 999;
 
 		when(courseService.findCourseById(1)).thenReturn(Optional.empty());
