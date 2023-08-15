@@ -16,8 +16,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import ua.foxminded.university.dao.entities.Course;
 import ua.foxminded.university.dao.service.CourseService;
-import ua.foxminded.university.dao.service.StudentService;
-import ua.foxminded.university.dao.service.TeacherService;
 
 @WebMvcTest(AdminCourseController.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -29,12 +27,6 @@ class AdminCourseControllerTest {
 
 	@MockBean
 	private CourseService courseService;
-
-	@MockBean
-	private TeacherService teacherService;
-
-	@MockBean
-	private StudentService studentService;
 
 	@Test
 	void testGetAllCourseListAsAdmin() throws Exception {
