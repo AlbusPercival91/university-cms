@@ -96,7 +96,7 @@ public class TeacherService {
 		return teacherRepository.findById(teacherId);
 	}
 
-	public Optional<Teacher> findTeacherByName(String firstName, String lastName) {
+	public List<Teacher> findTeacherByName(String firstName, String lastName) {
 		return teacherRepository.findTeacherByFirstNameAndLastName(firstName, lastName);
 	}
 

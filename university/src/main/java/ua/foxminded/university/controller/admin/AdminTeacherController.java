@@ -119,8 +119,7 @@ public class AdminTeacherController {
 			Optional<Teacher> optionalTeacher = teacherService.findTeacherById(teacherId);
 			teachers = optionalTeacher.map(Collections::singletonList).orElse(Collections.emptyList());
 		} else if ("firstNameAndLastName".equals(searchType)) {
-			Optional<Teacher> optionalTeacher = teacherService.findTeacherByName(firstName, lastName);
-			teachers = optionalTeacher.map(Collections::singletonList).orElse(Collections.emptyList());
+			teachers = teacherService.findTeacherByName(firstName, lastName);
 		} else {
 			return "error";
 		}

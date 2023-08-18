@@ -118,8 +118,7 @@ public class AdminStudentController {
 			Optional<Student> optionalStudent = studentService.findStudentById(studentId);
 			students = optionalStudent.map(Collections::singletonList).orElse(Collections.emptyList());
 		} else if ("firstNameAndLastName".equals(searchType)) {
-			Optional<Student> optionalStudent = studentService.findStudentByName(firstName, lastName);
-			students = optionalStudent.map(Collections::singletonList).orElse(Collections.emptyList());
+			students = studentService.findStudentByName(firstName, lastName);
 		} else {
 			return "error";
 		}

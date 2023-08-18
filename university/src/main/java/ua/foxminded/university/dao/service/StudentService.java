@@ -112,7 +112,7 @@ public class StudentService {
 		return studentRepository.findAllByGroupFacultyFacultyName(facultyName);
 	}
 
-	public Optional<Student> findStudentByName(String firstName, String lastName) {
+	public List<Student> findStudentByName(String firstName, String lastName) {
 		return studentRepository.findStudentByFirstNameAndLastName(firstName, lastName);
 	}
 
