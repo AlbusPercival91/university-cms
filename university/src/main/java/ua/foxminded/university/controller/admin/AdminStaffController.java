@@ -91,11 +91,9 @@ public class AdminStaffController {
 			Optional<Staff> optionalStaff = staffService.findStaffById(staffId);
 			staffList = optionalStaff.map(Collections::singletonList).orElse(Collections.emptyList());
 		} else if ("firstNameAndLastName".equals(searchType)) {
-			Optional<Staff> optionalStaff = staffService.findStaffByName(firstName, lastName);
-			staffList = optionalStaff.map(Collections::singletonList).orElse(Collections.emptyList());
+			staffList = staffService.findStaffByName(firstName, lastName);
 		} else if ("position".equals(searchType)) {
-			Optional<Staff> optionalStaff = staffService.findStaffByPosition(position);
-			staffList = optionalStaff.map(Collections::singletonList).orElse(Collections.emptyList());
+			staffList = staffService.findStaffByPosition(position);
 		} else {
 			return "error";
 		}
