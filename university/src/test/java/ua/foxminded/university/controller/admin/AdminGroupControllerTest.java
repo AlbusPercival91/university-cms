@@ -103,7 +103,7 @@ class AdminGroupControllerTest {
 		Group group1 = new Group("Group A", faculty);
 		group1.setId(1);
 		Group group2 = new Group("Group B", faculty);
-		group2.setId(1);
+		group2.setId(2);
 		List<Group> groups = Arrays.asList(group1, group2);
 
 		when(groupService.findAllByFacultyName(faculty.getFacultyName())).thenReturn(groups);

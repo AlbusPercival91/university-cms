@@ -98,7 +98,7 @@ class AdminStaffControllerTest {
 		Staff staff1 = new Staff("Argus", "Filtch", true, "argus@mail.com", "1234", "Techical manager", null);
 		staff1.setId(1);
 		Staff staff2 = new Staff("Rubeous", "Hagrid", true, "hagrid@mail.com", "1234", "Techical manager", null);
-		staff2.setId(1);
+		staff2.setId(2);
 		List<Staff> staff = Arrays.asList(staff1, staff2);
 
 		when(staffService.findStaffByPosition(staff1.getPosition())).thenReturn(staff);
