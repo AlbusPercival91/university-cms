@@ -37,11 +37,6 @@ public class AdminTeacherController {
 	@Autowired
 	private CourseService courseService;
 
-	@GetMapping("/admin/teacher/teacher-search-admin")
-	public String adminTeacherSearchPanel() {
-		return "admin/teacher/teacher-search-admin";
-	}
-
 	@GetMapping("/admin/teacher/create-teacher")
 	public String showCreateTeacherForm(Model model) {
 		List<Department> departments = departmentService.getAllDepartments();
