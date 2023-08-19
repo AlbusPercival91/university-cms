@@ -86,12 +86,13 @@ class AdminStudentControllerTest {
 
 	@Test
 	void testRemoveStudentFromCourse() throws Exception {
+		int studentId = 1;
 		Course course = new Course("Herbology");
 
 		mockMvc.perform(MockMvcRequestBuilders.post("/admin/student/remove-course/{studentId}/{courseName}", 1,
 				course.getCourseName())).andExpect(MockMvcResultMatchers.status().is3xxRedirection())
 				.andExpect(MockMvcResultMatchers.flash().attributeExists("successMessage"))
-				.andExpect(MockMvcResultMatchers.redirectedUrl("/admin/student/student-card/1"));
+				.andExpect(MockMvcResultMatchers.redirectedUrl("/admin/student/student-card/" + studentId));
 	}
 
 	@Test
