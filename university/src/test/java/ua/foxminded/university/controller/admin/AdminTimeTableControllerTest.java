@@ -4,12 +4,10 @@ import static org.mockito.Mockito.when;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Optional;
-
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
@@ -28,7 +26,6 @@ import ua.foxminded.university.dao.service.TeacherService;
 import ua.foxminded.university.dao.service.TimeTableService;
 
 @WebMvcTest(AdminTimeTableController.class)
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ActiveProfiles("test-container")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class AdminTimeTableControllerTest {
@@ -67,16 +64,15 @@ class AdminTimeTableControllerTest {
 		LocalTime timeFrom = LocalTime.of(9, 0);
 		LocalTime timeTo = LocalTime.of(11, 0);
 
-		Teacher teacher = new Teacher(/* initialize teacher attributes */);
-		Course course = new Course(/* initialize course attributes */);
-		ClassRoom classRoom = new ClassRoom(/* initialize classRoom attributes */);
+		Teacher teacher = new Teacher();
+		Course course = new Course();
+		ClassRoom classRoom = new ClassRoom();
+
+		TimeTable timetable = new TimeTable(date, timeFrom, timeTo, teacher, course, classRoom, null);
 
 		when(teacherService.findTeacherById(1)).thenReturn(Optional.of(teacher));
 		when(courseService.findCourseById(1)).thenReturn(Optional.of(course));
 		when(classRoomService.findClassRoomById(1)).thenReturn(Optional.of(classRoom));
-
-		TimeTable timetable = new TimeTable(date, timeFrom, timeTo, teacher, course, classRoom, null);
-
 		when(timeTableService.createTimeTableForStudentsAtCourse(date, timeFrom, timeTo, teacher, course, classRoom))
 				.thenReturn(timetable);
 
