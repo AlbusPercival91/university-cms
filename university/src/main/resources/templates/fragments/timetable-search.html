@@ -49,7 +49,7 @@
                     <h3>Find Time Table by Date</h3>
                     <form th:action="@{/admin/timetable/search-result}" method="get">
                         <input type="hidden" name="searchType" value="date" />
-                        <label for="date">From:</label>
+                        <label for="date">Date:</label>
                         <input type="date" id="date" name="date" required class="date-input" />
                         <button type="submit">Search</button>
                     </form>
