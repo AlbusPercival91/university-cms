@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -19,12 +18,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ua.foxminded.university.dao.entities.ClassRoom;
 import ua.foxminded.university.dao.service.ClassRoomService;
+import ua.foxminded.university.validation.ControllerBindingValidator;
 
 @Controller
 public class AdminClassRoomController {
 
 	@Autowired
 	private ClassRoomService classRoomService;
+
+	@Autowired
+	private ControllerBindingValidator bindingValidator;
 
 	@GetMapping("/admin/classroom/edit-classroom-list")
 	public String getAllClassRoomListAsAdmin(Model model) {
@@ -63,25 +66,22 @@ public class AdminClassRoomController {
 	@PostMapping("/admin/classroom/create-classroom")
 	public String createClassRoom(@ModelAttribute("course") @Validated ClassRoom classroom, BindingResult bindingResult,
 			RedirectAttributes redirectAttributes) {
-		if (bindingResult.hasErrors()) {
-			for (FieldError error : bindingResult.getFieldErrors()) {
-				redirectAttributes.addFlashAttribute(error.getField() + "Error", error.getDefaultMessage());
+		if (bindingValidator.validate(bindingResult, redirectAttributes)) {
+			try {
+				int createdClassRoom = classRoomService.createClassRoom(classroom);
+
+				if (createdClassRoom != classroom.getId()) {
+					redirectAttributes.addFlashAttribute("errorMessage", "Failed to create Class Room");
+				} else {
+					redirectAttributes.addFlashAttribute("successMessage", "Class Room created successfully");
+				}
+			} catch (IllegalStateException ex) {
+				redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
 			}
 			return "redirect:/admin/classroom/create-classroom";
+		} else {
+			return "redirect:/admin/classroom/create-classroom";
 		}
-
-		try {
-			int createdClassRoom = classRoomService.createClassRoom(classroom);
-
-			if (createdClassRoom != classroom.getId()) {
-				redirectAttributes.addFlashAttribute("errorMessage", "Failed to create Class Room");
-			} else {
-				redirectAttributes.addFlashAttribute("successMessage", "Class Room created successfully");
-			}
-		} catch (IllegalStateException ex) {
-			redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
-		}
-		return "redirect:/admin/classroom/create-classroom";
 	}
 
 	@GetMapping("/admin/classroom/search-result")
