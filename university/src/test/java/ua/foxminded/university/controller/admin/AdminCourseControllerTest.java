@@ -39,7 +39,8 @@ class AdminCourseControllerTest {
 
 	@Test
 	void testDeleteCourse() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.post("/admin/course/delete/{courseId}", 1))
+		int courseId = 1;
+		mockMvc.perform(MockMvcRequestBuilders.post("/admin/course/delete/{courseId}", courseId))
 				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
 				.andExpect(MockMvcResultMatchers.flash().attributeExists("successMessage"))
 				.andExpect(MockMvcResultMatchers.redirectedUrl("/admin/course/edit-course-list"));
@@ -65,10 +66,10 @@ class AdminCourseControllerTest {
 		Course course = new Course();
 		course.setId(1);
 
-		when(courseService.findCourseById(1)).thenReturn(Optional.of(course));
+		when(courseService.findCourseById(course.getId())).thenReturn(Optional.of(course));
 
 		mockMvc.perform(MockMvcRequestBuilders.get("/admin/course/search-result").param("searchType", "course")
-				.param("courseId", "1")).andExpect(MockMvcResultMatchers.status().isOk())
+				.param("courseId", String.valueOf(course.getId()))).andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.view().name("admin/course/edit-course-list"))
 				.andExpect(MockMvcResultMatchers.model().attributeExists("courses"))
 				.andExpect(MockMvcResultMatchers.model().attribute("courses", Matchers.hasSize(1)))

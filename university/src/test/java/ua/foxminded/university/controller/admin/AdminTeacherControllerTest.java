@@ -203,7 +203,8 @@ class AdminTeacherControllerTest {
 
 	@Test
 	void testDeleteTeacher() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.post("/admin/teacher/delete/{teachertId}", 1))
+		int teacherId = 1;
+		mockMvc.perform(MockMvcRequestBuilders.post("/admin/teacher/delete/{teachertId}", teacherId))
 				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
 				.andExpect(MockMvcResultMatchers.flash().attributeExists("successMessage"))
 				.andExpect(MockMvcResultMatchers.redirectedUrl("/admin/teacher/edit-teacher-list"));
@@ -214,7 +215,7 @@ class AdminTeacherControllerTest {
 		int teacherId = 1;
 		Course course = new Course("Herbology");
 
-		mockMvc.perform(MockMvcRequestBuilders.post("/admin/teacher/remove-course/{teacherId}/{courseName}", 1,
+		mockMvc.perform(MockMvcRequestBuilders.post("/admin/teacher/remove-course/{teacherId}/{courseName}", teacherId,
 				course.getCourseName())).andExpect(MockMvcResultMatchers.status().is3xxRedirection())
 				.andExpect(MockMvcResultMatchers.flash().attributeExists("successMessage"))
 				.andExpect(MockMvcResultMatchers.redirectedUrl("/admin/teacher/teacher-card/" + teacherId));

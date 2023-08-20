@@ -51,7 +51,8 @@ class AdminStudentControllerTest {
 
 	@Test
 	void testDeleteStudent() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.post("/admin/student/delete/{studentId}", 1))
+		int studentId = 1;
+		mockMvc.perform(MockMvcRequestBuilders.post("/admin/student/delete/{studentId}", studentId))
 				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
 				.andExpect(MockMvcResultMatchers.flash().attributeExists("successMessage"))
 				.andExpect(MockMvcResultMatchers.redirectedUrl("/admin/student/edit-student-list"));
@@ -90,7 +91,7 @@ class AdminStudentControllerTest {
 		int studentId = 1;
 		Course course = new Course("Herbology");
 
-		mockMvc.perform(MockMvcRequestBuilders.post("/admin/student/remove-course/{studentId}/{courseName}", 1,
+		mockMvc.perform(MockMvcRequestBuilders.post("/admin/student/remove-course/{studentId}/{courseName}", studentId,
 				course.getCourseName())).andExpect(MockMvcResultMatchers.status().is3xxRedirection())
 				.andExpect(MockMvcResultMatchers.flash().attributeExists("successMessage"))
 				.andExpect(MockMvcResultMatchers.redirectedUrl("/admin/student/student-card/" + studentId));
@@ -151,10 +152,10 @@ class AdminStudentControllerTest {
 		Student student = new Student("Harry", "Potter", true, "potter@mail.com", "1234", group);
 		student.setId(1);
 
-		when(studentService.findStudentById(1)).thenReturn(Optional.of(student));
+		when(studentService.findStudentById(student.getId())).thenReturn(Optional.of(student));
 
 		mockMvc.perform(MockMvcRequestBuilders.get("/admin/student/search-result").param("searchType", "student")
-				.param("studentId", "1")).andExpect(MockMvcResultMatchers.status().isOk())
+				.param("studentId", String.valueOf(student.getId()))).andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.view().name("admin/student/edit-student-list"))
 				.andExpect(MockMvcResultMatchers.model().attributeExists("students"))
 				.andExpect(MockMvcResultMatchers.model().attribute("students", Matchers.hasSize(1)))

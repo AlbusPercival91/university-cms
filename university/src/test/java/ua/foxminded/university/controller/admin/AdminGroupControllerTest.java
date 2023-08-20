@@ -45,7 +45,8 @@ class AdminGroupControllerTest {
 
 	@Test
 	void testDeleteGroup() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.post("/admin/group/delete/{grouptId}", 1))
+		int groupId = 1;
+		mockMvc.perform(MockMvcRequestBuilders.post("/admin/group/delete/{grouptId}", groupId))
 				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
 				.andExpect(MockMvcResultMatchers.flash().attributeExists("successMessage"))
 				.andExpect(MockMvcResultMatchers.redirectedUrl("/admin/group/edit-group-list"));
@@ -72,10 +73,10 @@ class AdminGroupControllerTest {
 		Group group = new Group("Group A", faculty);
 		group.setId(1);
 
-		when(groupService.findGroupById(1)).thenReturn(Optional.of(group));
+		when(groupService.findGroupById(group.getId())).thenReturn(Optional.of(group));
 
 		mockMvc.perform(MockMvcRequestBuilders.get("/admin/group/search-result").param("searchType", "group")
-				.param("groupId", "1")).andExpect(MockMvcResultMatchers.status().isOk())
+				.param("groupId", String.valueOf(group.getId()))).andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.view().name("admin/group/edit-group-list"))
 				.andExpect(MockMvcResultMatchers.model().attributeExists("groups"))
 				.andExpect(MockMvcResultMatchers.model().attribute("groups", Matchers.hasSize(1)))

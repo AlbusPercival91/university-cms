@@ -138,10 +138,19 @@ class AdminTimeTableControllerTest {
 
 	@Test
 	void testDeleteTimetable() throws Exception {
-		int teacherId = 1;
-		mockMvc.perform(MockMvcRequestBuilders.post("/admin/timetable/delete/{timetableId}", 1))
+		int timetableId = 1;
+		mockMvc.perform(MockMvcRequestBuilders.post("/admin/timetable/delete/{timetableId}", timetableId))
 				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
 				.andExpect(MockMvcResultMatchers.flash().attributeExists("successMessage"))
-				.andExpect(MockMvcResultMatchers.redirectedUrl("/admin/timetable/timetable/" + teacherId));
+				.andExpect(MockMvcResultMatchers.redirectedUrl("/admin/timetable/timetable/" + timetableId));
 	}
+
+//	@Test
+//	void testGetFullTeacherTimeTable() throws Exception {
+//		mockMvc.perform(MockMvcRequestBuilders.get("/admin/timetable/teacher-timetable/{teacherId}", 1))
+//				.andExpect(MockMvcResultMatchers.status().isOk())
+//				.andExpect(MockMvcResultMatchers.model().attributeExists("teachers"))
+//				.andExpect(MockMvcResultMatchers.view().name("admin/teacher/edit-teacher-list"));
+//
+//	}
 }

@@ -43,7 +43,8 @@ class AdminControllerTest {
 
 	@Test
 	void testDeleteAdmin() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.post("/admin/delete/{adminId}", 1))
+		int adminId = 1;
+		mockMvc.perform(MockMvcRequestBuilders.post("/admin/delete/{adminId}", adminId))
 				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
 				.andExpect(MockMvcResultMatchers.flash().attributeExists("successMessage"))
 				.andExpect(MockMvcResultMatchers.redirectedUrl("/admin/edit-admin-list"));

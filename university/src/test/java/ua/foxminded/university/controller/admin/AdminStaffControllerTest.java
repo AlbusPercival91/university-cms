@@ -40,7 +40,8 @@ class AdminStaffControllerTest {
 
 	@Test
 	void testDeleteStaff() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.post("/admin/staff/delete/{staffId}", 1))
+		int staffId = 1;
+		mockMvc.perform(MockMvcRequestBuilders.post("/admin/staff/delete/{staffId}", staffId))
 				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
 				.andExpect(MockMvcResultMatchers.flash().attributeExists("successMessage"))
 				.andExpect(MockMvcResultMatchers.redirectedUrl("/admin/staff/edit-staff-list"));
@@ -66,10 +67,10 @@ class AdminStaffControllerTest {
 		Staff staff = new Staff("Argus", "Filtch", true, "argus@mail.com", "1234", "Techical manager", null);
 		staff.setId(1);
 
-		when(staffService.findStaffById(1)).thenReturn(Optional.of(staff));
+		when(staffService.findStaffById(staff.getId())).thenReturn(Optional.of(staff));
 
 		mockMvc.perform(MockMvcRequestBuilders.get("/admin/staff/search-result").param("searchType", "staff")
-				.param("staffId", "1")).andExpect(MockMvcResultMatchers.status().isOk())
+				.param("staffId", String.valueOf(staff.getId()))).andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.view().name("admin/staff/edit-staff-list"))
 				.andExpect(MockMvcResultMatchers.model().attributeExists("staff"))
 				.andExpect(MockMvcResultMatchers.model().attribute("staff", Matchers.hasSize(1)))

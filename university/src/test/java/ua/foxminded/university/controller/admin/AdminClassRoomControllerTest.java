@@ -38,7 +38,8 @@ class AdminClassRoomControllerTest {
 
 	@Test
 	void testDeleteClassRoom() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.post("/admin/classroom/delete/{classroomId}", 1))
+		int classRoomId = 1;
+		mockMvc.perform(MockMvcRequestBuilders.post("/admin/classroom/delete/{classroomId}", classRoomId))
 				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
 				.andExpect(MockMvcResultMatchers.flash().attributeExists("successMessage"))
 				.andExpect(MockMvcResultMatchers.redirectedUrl("/admin/classroom/edit-classroom-list"));
@@ -63,10 +64,11 @@ class AdminClassRoomControllerTest {
 	void testSearchClassRoomAsAdmin_WhenSearchTypeIsClassroom() throws Exception {
 		ClassRoom classRoom = new ClassRoom();
 		classRoom.setId(1);
-		when(classRoomService.findClassRoomById(1)).thenReturn(Optional.of(classRoom));
+		when(classRoomService.findClassRoomById(classRoom.getId())).thenReturn(Optional.of(classRoom));
 
 		mockMvc.perform(MockMvcRequestBuilders.get("/admin/classroom/search-result").param("searchType", "classroom")
-				.param("classroomId", "1")).andExpect(MockMvcResultMatchers.status().isOk())
+				.param("classroomId", String.valueOf(classRoom.getId())))
+				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.view().name("admin/classroom/edit-classroom-list"))
 				.andExpect(MockMvcResultMatchers.model().attributeExists("classrooms"))
 				.andExpect(MockMvcResultMatchers.model().attribute("classrooms", Matchers.hasSize(1)))

@@ -37,7 +37,8 @@ class AdminFacultyControllerTest {
 
 	@Test
 	void testDeleteFaculty() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.post("/admin/faculty/delete/{facultyId}", 1))
+		int facultyId = 1;
+		mockMvc.perform(MockMvcRequestBuilders.post("/admin/faculty/delete/{facultyId}", facultyId))
 				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
 				.andExpect(MockMvcResultMatchers.flash().attributeExists("successMessage"))
 				.andExpect(MockMvcResultMatchers.redirectedUrl("/admin/faculty/edit-faculty-list"));
