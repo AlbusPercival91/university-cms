@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -24,6 +23,7 @@ import ua.foxminded.university.dao.entities.Teacher;
 import ua.foxminded.university.dao.service.CourseService;
 import ua.foxminded.university.dao.service.DepartmentService;
 import ua.foxminded.university.dao.service.TeacherService;
+import ua.foxminded.university.validation.ControllerBindingValidator;
 
 @Controller
 public class AdminTeacherController {
@@ -37,6 +37,9 @@ public class AdminTeacherController {
 	@Autowired
 	private CourseService courseService;
 
+	@Autowired
+	private ControllerBindingValidator bindingValidator;
+
 	@GetMapping("/admin/teacher/create-teacher")
 	public String showCreateTeacherForm(Model model) {
 		List<Department> departments = departmentService.getAllDepartments();
@@ -49,25 +52,22 @@ public class AdminTeacherController {
 	@PostMapping("/admin/teacher/create-teacher")
 	public String createTeacher(@ModelAttribute("teacher") @Validated Teacher teacher, @Validated Course course,
 			BindingResult bindingResult, RedirectAttributes redirectAttributes) {
-		if (bindingResult.hasErrors()) {
-			for (FieldError error : bindingResult.getFieldErrors()) {
-				redirectAttributes.addFlashAttribute(error.getField() + "Error", error.getDefaultMessage());
+		if (bindingValidator.validate(bindingResult, redirectAttributes)) {
+			try {
+				int createdTeacher = teacherService.createAndAssignTeacherToCourse(teacher, course);
+
+				if (createdTeacher != teacher.getId()) {
+					redirectAttributes.addFlashAttribute("errorMessage", "Failed to create the teacher");
+				} else {
+					redirectAttributes.addFlashAttribute("successMessage", "Teacher created successfully");
+				}
+			} catch (IllegalStateException ex) {
+				redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
 			}
 			return "redirect:/admin/teacher/create-teacher";
+		} else {
+			return "redirect:/admin/teacher/create-teacher";
 		}
-
-		try {
-			int createdTeacher = teacherService.createAndAssignTeacherToCourse(teacher, course);
-
-			if (createdTeacher != teacher.getId()) {
-				redirectAttributes.addFlashAttribute("errorMessage", "Failed to create the teacher");
-			} else {
-				redirectAttributes.addFlashAttribute("successMessage", "Teacher created successfully");
-			}
-		} catch (IllegalStateException ex) {
-			redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
-		}
-		return "redirect:/admin/teacher/create-teacher";
 	}
 
 	@GetMapping("/admin/teacher/teacher-card/{teacherId}")

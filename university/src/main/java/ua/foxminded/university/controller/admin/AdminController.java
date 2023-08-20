@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -17,12 +16,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ua.foxminded.university.dao.entities.Admin;
 import ua.foxminded.university.dao.service.AdminService;
+import ua.foxminded.university.validation.ControllerBindingValidator;
 
 @Controller
 public class AdminController {
 
 	@Autowired
 	private AdminService adminService;
+
+	@Autowired
+	private ControllerBindingValidator bindingValidator;
 
 	@GetMapping("/admin/main")
 	public String adminMainPage() {
@@ -75,25 +78,22 @@ public class AdminController {
 	@PostMapping("/admin/create-admin")
 	public String createAdmin(@ModelAttribute("admin") @Validated Admin admin, BindingResult bindingResult,
 			RedirectAttributes redirectAttributes) {
-		if (bindingResult.hasErrors()) {
-			for (FieldError error : bindingResult.getFieldErrors()) {
-				redirectAttributes.addFlashAttribute(error.getField() + "Error", error.getDefaultMessage());
+		if (bindingValidator.validate(bindingResult, redirectAttributes)) {
+			try {
+				int createdAdmin = adminService.createAdmin(admin);
+
+				if (createdAdmin != admin.getId()) {
+					redirectAttributes.addFlashAttribute("errorMessage", "Failed to create the admin");
+				} else {
+					redirectAttributes.addFlashAttribute("successMessage", "Admin created successfully");
+				}
+			} catch (IllegalStateException ex) {
+				redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
 			}
 			return "redirect:/admin/create-admin";
+		} else {
+			return "redirect:/admin/create-admin";
 		}
-
-		try {
-			int createdAdmin = adminService.createAdmin(admin);
-
-			if (createdAdmin != admin.getId()) {
-				redirectAttributes.addFlashAttribute("errorMessage", "Failed to create the admin");
-			} else {
-				redirectAttributes.addFlashAttribute("successMessage", "Admin created successfully");
-			}
-		} catch (IllegalStateException ex) {
-			redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
-		}
-		return "redirect:/admin/create-admin";
 	}
 
 }

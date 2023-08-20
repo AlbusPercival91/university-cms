@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -21,6 +20,7 @@ import ua.foxminded.university.dao.entities.Department;
 import ua.foxminded.university.dao.entities.Faculty;
 import ua.foxminded.university.dao.service.DepartmentService;
 import ua.foxminded.university.dao.service.FacultyService;
+import ua.foxminded.university.validation.ControllerBindingValidator;
 
 @Controller
 public class AdminDepartmentController {
@@ -30,6 +30,9 @@ public class AdminDepartmentController {
 
 	@Autowired
 	private FacultyService facultyService;
+
+	@Autowired
+	private ControllerBindingValidator bindingValidator;
 
 	@GetMapping("/admin/department/edit-department-list")
 	public String getAllDepartmentListAsAdmin(Model model) {
@@ -67,25 +70,22 @@ public class AdminDepartmentController {
 	@PostMapping("/admin/department/create-department")
 	public String createDepartment(@ModelAttribute("department") @Validated Department department,
 			BindingResult bindingResult, RedirectAttributes redirectAttributes) {
-		if (bindingResult.hasErrors()) {
-			for (FieldError error : bindingResult.getFieldErrors()) {
-				redirectAttributes.addFlashAttribute(error.getField() + "Error", error.getDefaultMessage());
+		if (bindingValidator.validate(bindingResult, redirectAttributes)) {
+			try {
+				int createdDepartment = departmentService.createDepartment(department);
+
+				if (createdDepartment != department.getId()) {
+					redirectAttributes.addFlashAttribute("errorMessage", "Failed to create Department");
+				} else {
+					redirectAttributes.addFlashAttribute("successMessage", "Department created successfully");
+				}
+			} catch (IllegalStateException ex) {
+				redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
 			}
 			return "redirect:/admin/department/create-department";
+		} else {
+			return "redirect:/admin/department/create-department";
 		}
-
-		try {
-			int createdDepartment = departmentService.createDepartment(department);
-
-			if (createdDepartment != department.getId()) {
-				redirectAttributes.addFlashAttribute("errorMessage", "Failed to create Department");
-			} else {
-				redirectAttributes.addFlashAttribute("successMessage", "Department created successfully");
-			}
-		} catch (IllegalStateException ex) {
-			redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
-		}
-		return "redirect:/admin/department/create-department";
 	}
 
 	@GetMapping("/admin/department/search-result")

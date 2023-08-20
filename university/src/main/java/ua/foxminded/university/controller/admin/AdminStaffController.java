@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -19,12 +18,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ua.foxminded.university.dao.entities.Staff;
 import ua.foxminded.university.dao.service.StaffService;
+import ua.foxminded.university.validation.ControllerBindingValidator;
 
 @Controller
 public class AdminStaffController {
 
 	@Autowired
 	private StaffService staffService;
+
+	@Autowired
+	private ControllerBindingValidator bindingValidator;
 
 	@GetMapping("/admin/staff/create-staff")
 	public String showCreateStaffForm() {
@@ -34,25 +37,22 @@ public class AdminStaffController {
 	@PostMapping("/admin/staff/create-staff")
 	public String createStaff(@ModelAttribute("staff") @Validated Staff staff, BindingResult bindingResult,
 			RedirectAttributes redirectAttributes) {
-		if (bindingResult.hasErrors()) {
-			for (FieldError error : bindingResult.getFieldErrors()) {
-				redirectAttributes.addFlashAttribute(error.getField() + "Error", error.getDefaultMessage());
+		if (bindingValidator.validate(bindingResult, redirectAttributes)) {
+			try {
+				int createdStaff = staffService.createStaff(staff);
+
+				if (createdStaff != staff.getId()) {
+					redirectAttributes.addFlashAttribute("errorMessage", "Failed to create the Staff member");
+				} else {
+					redirectAttributes.addFlashAttribute("successMessage", "Staff created successfully");
+				}
+			} catch (IllegalStateException ex) {
+				redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
 			}
 			return "redirect:/admin/staff/create-staff";
+		} else {
+			return "redirect:/admin/staff/create-staff";
 		}
-
-		try {
-			int createdStaff = staffService.createStaff(staff);
-
-			if (createdStaff != staff.getId()) {
-				redirectAttributes.addFlashAttribute("errorMessage", "Failed to create the Staff member");
-			} else {
-				redirectAttributes.addFlashAttribute("successMessage", "Staff created successfully");
-			}
-		} catch (IllegalStateException ex) {
-			redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
-		}
-		return "redirect:/admin/staff/create-staff";
 	}
 
 	@GetMapping("/admin/staff/edit-staff-list")

@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -22,6 +21,7 @@ import ua.foxminded.university.dao.entities.Course;
 import ua.foxminded.university.dao.entities.Student;
 import ua.foxminded.university.dao.service.CourseService;
 import ua.foxminded.university.dao.service.StudentService;
+import ua.foxminded.university.validation.ControllerBindingValidator;
 
 @Controller
 public class AdminStudentController {
@@ -31,6 +31,9 @@ public class AdminStudentController {
 
 	@Autowired
 	private CourseService courseService;
+
+	@Autowired
+	private ControllerBindingValidator bindingValidator;
 
 	@GetMapping("/admin/student/edit-student-list")
 	public String getAllStudentsListAsAdmin(Model model) {
@@ -135,25 +138,22 @@ public class AdminStudentController {
 	@PostMapping("/admin/student/create-student")
 	public String createStudent(@ModelAttribute("student") @Validated Student student, BindingResult bindingResult,
 			RedirectAttributes redirectAttributes) {
-		if (bindingResult.hasErrors()) {
-			for (FieldError error : bindingResult.getFieldErrors()) {
-				redirectAttributes.addFlashAttribute(error.getField() + "Error", error.getDefaultMessage());
+		if (bindingValidator.validate(bindingResult, redirectAttributes)) {
+			try {
+				int createdStudent = studentService.createStudent(student);
+
+				if (createdStudent != student.getId()) {
+					redirectAttributes.addFlashAttribute("errorMessage", "Failed to create the student");
+				} else {
+					redirectAttributes.addFlashAttribute("successMessage", "Student created successfully");
+				}
+			} catch (NoSuchElementException | IllegalStateException ex) {
+				redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
 			}
 			return "redirect:/admin/student/create-student";
+		} else {
+			return "redirect:/admin/student/create-student";
 		}
-
-		try {
-			int createdStudent = studentService.createStudent(student);
-
-			if (createdStudent != student.getId()) {
-				redirectAttributes.addFlashAttribute("errorMessage", "Failed to create the student");
-			} else {
-				redirectAttributes.addFlashAttribute("successMessage", "Student created successfully");
-			}
-		} catch (NoSuchElementException | IllegalStateException ex) {
-			redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
-		}
-		return "redirect:/admin/student/create-student";
 	}
 
 }

@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -21,6 +20,7 @@ import ua.foxminded.university.dao.entities.Faculty;
 import ua.foxminded.university.dao.entities.Group;
 import ua.foxminded.university.dao.service.FacultyService;
 import ua.foxminded.university.dao.service.GroupService;
+import ua.foxminded.university.validation.ControllerBindingValidator;
 
 @Controller
 public class AdminGroupController {
@@ -30,6 +30,9 @@ public class AdminGroupController {
 
 	@Autowired
 	private FacultyService facultyService;
+
+	@Autowired
+	private ControllerBindingValidator bindingValidator;
 
 	@GetMapping("/admin/group/edit-group-list")
 	public String getAllGroupListAsAdmin(Model model) {
@@ -67,25 +70,22 @@ public class AdminGroupController {
 	@PostMapping("/admin/group/create-group")
 	public String createGroup(@ModelAttribute("group") @Validated Group group, BindingResult bindingResult,
 			RedirectAttributes redirectAttributes) {
-		if (bindingResult.hasErrors()) {
-			for (FieldError error : bindingResult.getFieldErrors()) {
-				redirectAttributes.addFlashAttribute(error.getField() + "Error", error.getDefaultMessage());
+		if (bindingValidator.validate(bindingResult, redirectAttributes)) {
+			try {
+				int createdGroup = groupService.createGroup(group);
+
+				if (createdGroup != group.getId()) {
+					redirectAttributes.addFlashAttribute("errorMessage", "Failed to create Group");
+				} else {
+					redirectAttributes.addFlashAttribute("successMessage", "Group created successfully");
+				}
+			} catch (IllegalStateException ex) {
+				redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
 			}
 			return "redirect:/admin/group/create-group";
+		} else {
+			return "redirect:/admin/group/create-group";
 		}
-
-		try {
-			int createdGroup = groupService.createGroup(group);
-
-			if (createdGroup != group.getId()) {
-				redirectAttributes.addFlashAttribute("errorMessage", "Failed to create Group");
-			} else {
-				redirectAttributes.addFlashAttribute("successMessage", "Group created successfully");
-			}
-		} catch (IllegalStateException ex) {
-			redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
-		}
-		return "redirect:/admin/group/create-group";
 	}
 
 	@GetMapping("/admin/group/search-result")
