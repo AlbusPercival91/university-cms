@@ -309,8 +309,7 @@ class AdminTimeTableControllerTest {
 				.andExpect(MockMvcResultMatchers.model().attribute("timetable", Matchers.sameInstance(timetable)));
 	}
 
-	@ParameterizedTest
-	@CsvSource({ "2023-09-01, 09:00, 10:30" })
+	@Test
 	void testOpenTimeTableCard_WhenTimeTableDoesNotExist() throws Exception {
 		int timetableId = 999;
 
@@ -319,6 +318,76 @@ class AdminTimeTableControllerTest {
 		mockMvc.perform(MockMvcRequestBuilders.get("/admin/timetable/timetable-card/{timetableId}", timetableId))
 				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
 				.andExpect(MockMvcResultMatchers.redirectedUrl("/admin/timetable/timetable"));
+	}
+
+	@ParameterizedTest
+	@CsvSource({ "2023-09-01, 09:00, 10:30" })
+	void testSearchTimeTablesAsAdmin_WhenSearchTypeIsTimeTable(LocalDate date, LocalTime timeFrom, LocalTime timeTo)
+			throws Exception {
+		TimeTable timetable = new TimeTable(date, timeFrom, timeTo, new Teacher(), new Course(), new Group(),
+				new ClassRoom());
+		timetable.setId(1);
+
+		when(timeTableService.findTimeTableById(timetable.getId())).thenReturn(Optional.of(timetable));
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/admin/timetable/search-result").param("searchType", "timetable")
+				.param("timetableId", String.valueOf(timetable.getId())))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.view().name("admin/timetable/timetable"))
+				.andExpect(MockMvcResultMatchers.model().attributeExists("timetables"))
+				.andExpect(MockMvcResultMatchers.model().attribute("timetables", Matchers.hasSize(1)))
+				.andExpect(MockMvcResultMatchers.model().attribute("timetables", Matchers.contains(timetable)));
+	}
+
+	@ParameterizedTest
+	@CsvSource({ "2023-09-01, 09:00, 10:30, Math" })
+	void testSearchTimeTablesAsAdmin_WhenSearchTypeIsCourseName(LocalDate date, LocalTime timeFrom, LocalTime timeTo,
+			String courseName) throws Exception {
+		TimeTable timetable = new TimeTable(date, timeFrom, timeTo, new Teacher(), new Course(), new Group(),
+				new ClassRoom());
+
+		when(timeTableService.findTimeTableByCourseName(courseName)).thenReturn(Collections.singletonList(timetable));
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/admin/timetable/search-result").param("searchType", "course")
+				.param("courseName", courseName)).andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.view().name("admin/timetable/timetable"))
+				.andExpect(MockMvcResultMatchers.model().attributeExists("timetables"))
+				.andExpect(MockMvcResultMatchers.model().attribute("timetables", Matchers.hasSize(1)))
+				.andExpect(MockMvcResultMatchers.model().attribute("timetables", Matchers.contains(timetable)));
+	}
+
+	@ParameterizedTest
+	@CsvSource({ "2023-09-01, 09:00, 10:30, Math" })
+	void testSearchTimeTablesAsAdmin_WhenSearchTypeIsGroupName(LocalDate date, LocalTime timeFrom, LocalTime timeTo,
+			String groupName) throws Exception {
+		TimeTable timetable = new TimeTable(date, timeFrom, timeTo, new Teacher(), new Course(), new Group(),
+				new ClassRoom());
+
+		when(timeTableService.findTimeTableByGroupName(groupName)).thenReturn(Collections.singletonList(timetable));
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/admin/timetable/search-result").param("searchType", "group")
+				.param("groupName", groupName)).andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.view().name("admin/timetable/timetable"))
+				.andExpect(MockMvcResultMatchers.model().attributeExists("timetables"))
+				.andExpect(MockMvcResultMatchers.model().attribute("timetables", Matchers.hasSize(1)))
+				.andExpect(MockMvcResultMatchers.model().attribute("timetables", Matchers.contains(timetable)));
+	}
+
+	@ParameterizedTest
+	@CsvSource({ "2023-09-01, 09:00, 10:30, Math" })
+	void testSearchTimeTablesAsAdmin_WhenSearchTypeIsDate(LocalDate date, LocalTime timeFrom, LocalTime timeTo)
+			throws Exception {
+		TimeTable timetable = new TimeTable(date, timeFrom, timeTo, new Teacher(), new Course(), new Group(),
+				new ClassRoom());
+
+		when(timeTableService.findTimeTablesByDate(date)).thenReturn(Collections.singletonList(timetable));
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/admin/timetable/search-result").param("searchType", "date")
+				.param("date", String.valueOf(date))).andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.view().name("admin/timetable/timetable"))
+				.andExpect(MockMvcResultMatchers.model().attributeExists("timetables"))
+				.andExpect(MockMvcResultMatchers.model().attribute("timetables", Matchers.hasSize(1)))
+				.andExpect(MockMvcResultMatchers.model().attribute("timetables", Matchers.contains(timetable)));
 	}
 
 }

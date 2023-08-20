@@ -104,10 +104,10 @@ class AdminTeacherControllerTest {
 		Teacher teacher = new Teacher("Madam", "Trix", true, "trix@mail.com", "1234", department);
 		teacher.setId(1);
 
-		when(teacherService.findTeacherById(1)).thenReturn(Optional.of(teacher));
+		when(teacherService.findTeacherById(teacher.getId())).thenReturn(Optional.of(teacher));
 
 		mockMvc.perform(MockMvcRequestBuilders.get("/admin/teacher/search-result").param("searchType", "teacher")
-				.param("teacherId", "1")).andExpect(MockMvcResultMatchers.status().isOk())
+				.param("teacherId", String.valueOf(teacher.getId()))).andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.view().name("admin/teacher/edit-teacher-list"))
 				.andExpect(MockMvcResultMatchers.model().attributeExists("teachers"))
 				.andExpect(MockMvcResultMatchers.model().attribute("teachers", Matchers.hasSize(1)))
