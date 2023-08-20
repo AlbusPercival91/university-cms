@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -24,6 +23,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import ua.foxminded.university.dao.entities.ClassRoom;
 import ua.foxminded.university.dao.entities.Course;
 import ua.foxminded.university.dao.entities.Group;
+import ua.foxminded.university.dao.entities.Student;
 import ua.foxminded.university.dao.entities.Teacher;
 import ua.foxminded.university.dao.entities.TimeTable;
 import ua.foxminded.university.dao.exception.TimeTableValidationException;
@@ -195,4 +195,130 @@ class AdminTimeTableControllerTest {
 				.andExpect(MockMvcResultMatchers.model().attribute("timetables",
 						Matchers.contains(timetable1, timetable2)));
 	}
+
+	@ParameterizedTest
+	@CsvSource({ "2023-09-01, 09:00, 10:30" })
+	void testGetFullStudentTimeTable(LocalDate date, LocalTime timeFrom, LocalTime timeTo) throws Exception {
+		Student student = new Student();
+		student.setId(1);
+
+		TimeTable timetable1 = new TimeTable(date, timeFrom, timeTo, new Teacher(), new Course(), new Group(),
+				new ClassRoom());
+		List<TimeTable> timetables = Collections.singletonList(timetable1);
+
+		when(studentService.findStudentById(student.getId())).thenReturn(Optional.of(student));
+		when(timeTableService.getStudentTimeTable(student.getId())).thenReturn(timetables);
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/admin/timetable/student-timetable/{studentId}", student.getId()))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.model().attributeExists("timetables"))
+				.andExpect(MockMvcResultMatchers.view().name("admin/timetable/timetable"));
+	}
+
+	@ParameterizedTest
+	@CsvSource({ "2023-09-01, 09:00, 10:30" })
+	void testGetFullGroupTimeTable(LocalDate date, LocalTime timeFrom, LocalTime timeTo) throws Exception {
+		Student student = new Student();
+		student.setId(1);
+
+		TimeTable timetable1 = new TimeTable(date, timeFrom, timeTo, new Teacher(), new Course(), new Group(),
+				new ClassRoom());
+		List<TimeTable> timetables = Collections.singletonList(timetable1);
+
+		when(studentService.findStudentById(student.getId())).thenReturn(Optional.of(student));
+		when(timeTableService.getStudentsGroupTimeTable(student)).thenReturn(timetables);
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/admin/timetable/timetable-group/{studentId}", student.getId()))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.model().attributeExists("timetables"))
+				.andExpect(MockMvcResultMatchers.view().name("admin/timetable/timetable"));
+	}
+
+	@ParameterizedTest
+	@CsvSource({ "1, 2023-09-01, 2023-10-01, 09:00, 10:30, selected-timetable" })
+	void testGetSelectedDateStudentAndGroupTimeTable_WhenOnActionIsStudent(int studentId, LocalDate date1,
+			LocalDate date2, LocalTime timeFrom, LocalTime timeTo, String action) throws Exception {
+		Student student = new Student();
+		student.setId(studentId);
+
+		TimeTable timetable1 = new TimeTable(date1, timeFrom, timeTo, new Teacher(), new Course(), new Group(),
+				new ClassRoom());
+		TimeTable timetable2 = new TimeTable(date2, timeFrom, timeTo, new Teacher(), new Course(), new Group(),
+				new ClassRoom());
+		List<TimeTable> timetables = Arrays.asList(timetable1, timetable2);
+
+		when(studentService.findStudentById(studentId)).thenReturn(Optional.of(student));
+		when(timeTableService.getStudentTimeTableByDate(date1, date2, studentId)).thenReturn(timetables);
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/admin/timetable/selected-timetable/{studentId}", studentId)
+				.param("dateFrom", String.valueOf(date1)).param("dateTo", String.valueOf(date2))
+				.param("action", action)).andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.model().attributeExists("timetables"))
+				.andExpect(MockMvcResultMatchers.view().name("admin/timetable/timetable"));
+	}
+
+	@ParameterizedTest
+	@CsvSource({ "1, 2023-09-01, 2023-10-01, 09:00, 10:30, selected-group-timetable" })
+	void testGetSelectedDateStudentAndGroupTimeTable_WhenOnActionIsStudentsGroup(int studentId, LocalDate date1,
+			LocalDate date2, LocalTime timeFrom, LocalTime timeTo, String action) throws Exception {
+		Student student = new Student();
+		student.setId(studentId);
+
+		TimeTable timetable1 = new TimeTable(date1, timeFrom, timeTo, new Teacher(), new Course(), new Group(),
+				new ClassRoom());
+		TimeTable timetable2 = new TimeTable(date2, timeFrom, timeTo, new Teacher(), new Course(), new Group(),
+				new ClassRoom());
+		List<TimeTable> timetables = Arrays.asList(timetable1, timetable2);
+
+		when(studentService.findStudentById(studentId)).thenReturn(Optional.of(student));
+		when(timeTableService.getStudentsGroupTimeTableByDate(date1, date2, student)).thenReturn(timetables);
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/admin/timetable/selected-timetable/{studentId}", studentId)
+				.param("dateFrom", String.valueOf(date1)).param("dateTo", String.valueOf(date2))
+				.param("action", action)).andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.model().attributeExists("timetables"))
+				.andExpect(MockMvcResultMatchers.view().name("admin/timetable/timetable"));
+	}
+
+	@Test
+	void testGetAllTimeTableListAsAdmin() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.get("/admin/timetable/edit-timetable-list"))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.model().attributeExists("timetables"))
+				.andExpect(MockMvcResultMatchers.view().name("admin/timetable/timetable"));
+	}
+
+	@ParameterizedTest
+	@CsvSource({ "2023-09-01, 09:00, 10:30" })
+	void testOpenTimeTableCard_WhenTimeTableExists(LocalDate date, LocalTime timeFrom, LocalTime timeTo)
+			throws Exception {
+		TimeTable timetable = new TimeTable(date, timeFrom, timeTo, new Teacher(), new Course(), new Group(),
+				new ClassRoom());
+		timetable.setId(1);
+
+		when(timeTableService.findTimeTableById(timetable.getId())).thenReturn(Optional.of(timetable));
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/admin/timetable/timetable-card/{timetableId}", timetable.getId()))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.view().name("admin/timetable/timetable-card"))
+				.andExpect(MockMvcResultMatchers.model().attributeExists("timetable"))
+				.andExpect(MockMvcResultMatchers.model().attributeExists("teachers"))
+				.andExpect(MockMvcResultMatchers.model().attributeExists("courses"))
+				.andExpect(MockMvcResultMatchers.model().attributeExists("groups"))
+				.andExpect(MockMvcResultMatchers.model().attributeExists("classrooms"))
+				.andExpect(MockMvcResultMatchers.model().attribute("timetable", Matchers.sameInstance(timetable)));
+	}
+
+	@ParameterizedTest
+	@CsvSource({ "2023-09-01, 09:00, 10:30" })
+	void testOpenTimeTableCard_WhenTimeTableDoesNotExist() throws Exception {
+		int timetableId = 999;
+
+		when(timeTableService.findTimeTableById(timetableId)).thenReturn(Optional.empty());
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/admin/timetable/timetable-card/{timetableId}", timetableId))
+				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+				.andExpect(MockMvcResultMatchers.redirectedUrl("/admin/timetable/timetable"));
+	}
+
 }
