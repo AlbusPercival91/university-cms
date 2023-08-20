@@ -3,10 +3,11 @@ package ua.foxminded.university.controller.admin;
 import static org.mockito.Mockito.when;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Optional;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -18,6 +19,7 @@ import ua.foxminded.university.dao.entities.ClassRoom;
 import ua.foxminded.university.dao.entities.Course;
 import ua.foxminded.university.dao.entities.Teacher;
 import ua.foxminded.university.dao.entities.TimeTable;
+import ua.foxminded.university.dao.exception.TimeTableValidationException;
 import ua.foxminded.university.dao.service.ClassRoomService;
 import ua.foxminded.university.dao.service.CourseService;
 import ua.foxminded.university.dao.service.GroupService;
@@ -58,23 +60,14 @@ class AdminTimeTableControllerTest {
 				.andExpect(MockMvcResultMatchers.view().name("admin/timetable/course-timetable-form"));
 	}
 
-	@Test
-	void testCeateTimeTableForStudentsAtCourse_Success() throws Exception {
-		LocalDate date = LocalDate.of(2023, 8, 19);
-		LocalTime timeFrom = LocalTime.of(9, 0);
-		LocalTime timeTo = LocalTime.of(11, 0);
+	@ParameterizedTest
+	@CsvSource({ "2023-09-01, 09:00, 10:30", "2023-09-01, 09:00, 10:30" })
+	void testCeateTimeTableForStudentsAtCourse_Success(LocalDate date, LocalTime timeFrom, LocalTime timeTo)
+			throws Exception {
+		TimeTable timetable = new TimeTable(date, timeFrom, timeTo, new Teacher(), new Course(), new ClassRoom(), null);
 
-		Teacher teacher = new Teacher();
-		Course course = new Course();
-		ClassRoom classRoom = new ClassRoom();
-
-		TimeTable timetable = new TimeTable(date, timeFrom, timeTo, teacher, course, classRoom, null);
-
-		when(teacherService.findTeacherById(1)).thenReturn(Optional.of(teacher));
-		when(courseService.findCourseById(1)).thenReturn(Optional.of(course));
-		when(classRoomService.findClassRoomById(1)).thenReturn(Optional.of(classRoom));
-		when(timeTableService.createTimeTableForStudentsAtCourse(date, timeFrom, timeTo, teacher, course, classRoom))
-				.thenReturn(timetable);
+		when(timeTableService.createTimeTableForStudentsAtCourse(date, timeFrom, timeTo, new Teacher(), new Course(),
+				new ClassRoom())).thenReturn(timetable);
 
 		mockMvc.perform(MockMvcRequestBuilders.post("/admin/timetable/course-timetable-form")
 				.param("date", String.valueOf(date)).param("timeFrom", String.valueOf(timeFrom))
@@ -84,22 +77,27 @@ class AdminTimeTableControllerTest {
 				.andExpect(MockMvcResultMatchers.redirectedUrl("/admin/timetable/course-timetable-form"));
 	}
 
-//	@Test
-//	void testCeateTimeTableForStudentsAtCourse_Failure() throws Exception {
-//		LocalDate date = LocalDate.now();
-//		LocalTime timeFrom = LocalTime.of(9, 0);
-//		LocalTime timeTo = LocalTime.of(11, 0);
-//		TimeTable timetable = new TimeTable();
-//
-//		when(timeTableService.createTimeTableForStudentsAtCourse(eq(date), eq(timeFrom), eq(timeTo), any(Teacher.class),
-//				any(Course.class), any(ClassRoom.class)))
-//				.thenThrow(new TimeTableValidationException("Validation error"));
-//
-//		mockMvc.perform(MockMvcRequestBuilders.post("/admin/timetable/course-timetable-form")
-//				.param("date", date.toString()).param("timeFrom", timeFrom.toString())
-//				.param("timeTo", timeTo.toString()).flashAttr("timetable", timetable))
-//				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-//				.andExpect(MockMvcResultMatchers.flash().attributeExists("errorMessage"))
-//				.andExpect(MockMvcResultMatchers.redirectedUrl("/admin/timetable/course-timetable-form"));
-//	}
+	@ParameterizedTest
+	@CsvSource({ "2023-09-01, 09:00, 10:30" })
+	void testCeateTimeTableForStudentsAtCourse_Failure(LocalDate date, LocalTime timeFrom, LocalTime timeTo)
+			throws Exception {
+		TimeTable timetable = new TimeTable(date, timeFrom, timeTo, new Teacher(), new Course(), new ClassRoom(), null);
+
+		when(timeTableService.createTimeTableForStudentsAtCourse(date, timeFrom, timeTo, new Teacher(), new Course(),
+				new ClassRoom())).thenThrow(new TimeTableValidationException("Validation error"));
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/admin/timetable/course-timetable-form")
+				.param("date", String.valueOf(date)).param("timeFrom", String.valueOf(timeFrom))
+				.param("timeTo", String.valueOf(timeTo)).flashAttr("timetable", timetable))
+				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+				.andExpect(MockMvcResultMatchers.flash().attributeExists("errorMessage"))
+				.andExpect(MockMvcResultMatchers.redirectedUrl("/admin/timetable/course-timetable-form"));
+	}
+
+	@Test
+	void testShowFormCreateGroupTimeTable() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.get("/admin/timetable/group-timetable-form"))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.view().name("admin/timetable/group-timetable-form"));
+	}
 }
