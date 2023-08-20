@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import ua.foxminded.university.dao.entities.ClassRoom;
 import ua.foxminded.university.dao.entities.Course;
+import ua.foxminded.university.dao.entities.Group;
 import ua.foxminded.university.dao.entities.Teacher;
 import ua.foxminded.university.dao.entities.TimeTable;
 import ua.foxminded.university.dao.exception.TimeTableValidationException;
@@ -61,7 +62,7 @@ class AdminTimeTableControllerTest {
 	}
 
 	@ParameterizedTest
-	@CsvSource({ "2023-09-01, 09:00, 10:30", "2023-09-01, 09:00, 10:30" })
+	@CsvSource({ "2023-09-01, 09:00, 10:30" })
 	void testCeateTimeTableForStudentsAtCourse_Success(LocalDate date, LocalTime timeFrom, LocalTime timeTo)
 			throws Exception {
 		TimeTable timetable = new TimeTable(date, timeFrom, timeTo, new Teacher(), new Course(), new ClassRoom(), null);
@@ -99,5 +100,39 @@ class AdminTimeTableControllerTest {
 		mockMvc.perform(MockMvcRequestBuilders.get("/admin/timetable/group-timetable-form"))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.view().name("admin/timetable/group-timetable-form"));
+	}
+
+	@ParameterizedTest
+	@CsvSource({ "2023-09-01, 09:00, 10:30" })
+	void testCreateGroupTimeTable_Success(LocalDate date, LocalTime timeFrom, LocalTime timeTo) throws Exception {
+		TimeTable timetable = new TimeTable(date, timeFrom, timeTo, new Teacher(), new Course(), new Group(),
+				new ClassRoom());
+
+		when(timeTableService.createGroupTimeTable(date, timeFrom, timeTo, new Teacher(), new Course(), new Group(),
+				new ClassRoom())).thenReturn(timetable);
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/admin/timetable/group-timetable-form")
+				.param("date", String.valueOf(date)).param("timeFrom", String.valueOf(timeFrom))
+				.param("timeTo", String.valueOf(timeTo)).flashAttr("timetable", timetable))
+				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+				.andExpect(MockMvcResultMatchers.flash().attributeExists("successMessage"))
+				.andExpect(MockMvcResultMatchers.redirectedUrl("/admin/timetable/group-timetable-form"));
+	}
+
+	@ParameterizedTest
+	@CsvSource({ "2023-09-01, 09:00, 10:30" })
+	void testCreateGroupTimeTable_Failure(LocalDate date, LocalTime timeFrom, LocalTime timeTo) throws Exception {
+		TimeTable timetable = new TimeTable(date, timeFrom, timeTo, new Teacher(), new Course(), new Group(),
+				new ClassRoom());
+
+		when(timeTableService.createGroupTimeTable(date, timeFrom, timeTo, new Teacher(), new Course(), new Group(),
+				new ClassRoom())).thenThrow(new TimeTableValidationException("Validation error"));
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/admin/timetable/group-timetable-form")
+				.param("date", String.valueOf(date)).param("timeFrom", String.valueOf(timeFrom))
+				.param("timeTo", String.valueOf(timeTo)).flashAttr("timetable", timetable))
+				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+				.andExpect(MockMvcResultMatchers.flash().attributeExists("errorMessage"))
+				.andExpect(MockMvcResultMatchers.redirectedUrl("/admin/timetable/group-timetable-form"));
 	}
 }
