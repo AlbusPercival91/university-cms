@@ -3,9 +3,12 @@ package ua.foxminded.university.controller.admin;
 import static org.mockito.Mockito.when;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
@@ -165,5 +168,31 @@ class AdminTimeTableControllerTest {
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.model().attributeExists("timetables"))
 				.andExpect(MockMvcResultMatchers.view().name("admin/timetable/timetable"));
+	}
+
+	@ParameterizedTest
+	@CsvSource({ "2023-09-01, 2023-10-01, 09:00, 10:30" })
+	void testGetSelectedDateTeacherTimeTable(LocalDate date1, LocalDate date2, LocalTime timeFrom, LocalTime timeTo)
+			throws Exception {
+		Teacher teacher = new Teacher();
+		teacher.setId(1);
+
+		TimeTable timetable1 = new TimeTable(date1, timeFrom, timeTo, teacher, new Course(), new Group(),
+				new ClassRoom());
+		TimeTable timetable2 = new TimeTable(date2, timeFrom, timeTo, teacher, new Course(), new Group(),
+				new ClassRoom());
+		List<TimeTable> timetables = Arrays.asList(timetable1, timetable2);
+
+		when(teacherService.findTeacherById(teacher.getId())).thenReturn(Optional.of(teacher));
+		when(timeTableService.getTeacherTimeTableByDate(date1, date2, teacher)).thenReturn(timetables);
+
+		mockMvc.perform(
+				MockMvcRequestBuilders.get("/admin/timetable/teacher-selected-timetable/{teacherId}", teacher.getId())
+						.param("dateFrom", String.valueOf(date1)).param("dateTo", String.valueOf(date2)))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.model().attributeExists("timetables"))
+				.andExpect(MockMvcResultMatchers.view().name("admin/timetable/timetable"))
+				.andExpect(MockMvcResultMatchers.model().attribute("timetables",
+						Matchers.contains(timetable1, timetable2)));
 	}
 }
