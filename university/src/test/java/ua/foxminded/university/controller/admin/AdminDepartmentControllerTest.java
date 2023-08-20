@@ -20,8 +20,9 @@ import ua.foxminded.university.dao.entities.Department;
 import ua.foxminded.university.dao.entities.Faculty;
 import ua.foxminded.university.dao.service.DepartmentService;
 import ua.foxminded.university.dao.service.FacultyService;
+import ua.foxminded.university.validation.ControllerBindingValidator;
 
-@WebMvcTest(AdminDepartmentController.class)
+@WebMvcTest({ AdminDepartmentController.class, ControllerBindingValidator.class })
 @ActiveProfiles("test-container")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class AdminDepartmentControllerTest {

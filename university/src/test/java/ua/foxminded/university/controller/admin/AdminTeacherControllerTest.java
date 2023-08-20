@@ -27,8 +27,9 @@ import ua.foxminded.university.dao.entities.Teacher;
 import ua.foxminded.university.dao.service.CourseService;
 import ua.foxminded.university.dao.service.DepartmentService;
 import ua.foxminded.university.dao.service.TeacherService;
+import ua.foxminded.university.validation.ControllerBindingValidator;
 
-@WebMvcTest(AdminTeacherController.class)
+@WebMvcTest({ AdminTeacherController.class, ControllerBindingValidator.class })
 @ActiveProfiles("test-container")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class AdminTeacherControllerTest {

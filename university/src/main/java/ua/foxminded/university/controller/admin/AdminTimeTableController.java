@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -66,7 +67,7 @@ public class AdminTimeTableController {
 
 	@PostMapping("/admin/timetable/course-timetable-form")
 	public String ceateTimeTableForStudentsAtCourse(@ModelAttribute("timetable") @Validated TimeTable timetable,
-			RedirectAttributes redirectAttributes,
+			BindingResult bindingResult, RedirectAttributes redirectAttributes,
 			@RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
 			@RequestParam("timeFrom") @DateTimeFormat(pattern = "HH:mm") LocalTime timeFrom,
 			@RequestParam("timeTo") @DateTimeFormat(pattern = "HH:mm") LocalTime timeTo) {
@@ -101,7 +102,7 @@ public class AdminTimeTableController {
 
 	@PostMapping("/admin/timetable/group-timetable-form")
 	public String createGroupTimeTable(@ModelAttribute("timetable") @Validated TimeTable timetable,
-			RedirectAttributes redirectAttributes,
+			BindingResult bindingResult, RedirectAttributes redirectAttributes,
 			@RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
 			@RequestParam("timeFrom") @DateTimeFormat(pattern = "HH:mm") LocalTime timeFrom,
 			@RequestParam("timeTo") @DateTimeFormat(pattern = "HH:mm") LocalTime timeTo) {
@@ -270,4 +271,5 @@ public class AdminTimeTableController {
 			return "redirect:/admin/timetable/timetable";
 		}
 	}
+
 }

@@ -20,8 +20,9 @@ import ua.foxminded.university.dao.entities.Faculty;
 import ua.foxminded.university.dao.entities.Group;
 import ua.foxminded.university.dao.service.FacultyService;
 import ua.foxminded.university.dao.service.GroupService;
+import ua.foxminded.university.validation.ControllerBindingValidator;
 
-@WebMvcTest(AdminGroupController.class)
+@WebMvcTest({ AdminGroupController.class, ControllerBindingValidator.class })
 @ActiveProfiles("test-container")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class AdminGroupControllerTest {

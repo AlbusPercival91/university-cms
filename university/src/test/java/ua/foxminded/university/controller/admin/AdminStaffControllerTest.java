@@ -18,8 +18,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import ua.foxminded.university.dao.entities.Staff;
 import ua.foxminded.university.dao.service.StaffService;
+import ua.foxminded.university.validation.ControllerBindingValidator;
 
-@WebMvcTest(AdminStaffController.class)
+@WebMvcTest({AdminStaffController.class, ControllerBindingValidator.class })
 @ActiveProfiles("test-container")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class AdminStaffControllerTest {
