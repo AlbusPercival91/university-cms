@@ -19,6 +19,12 @@ public interface TimeTableRepository extends JpaRepository<TimeTable, Integer> {
 
 	List<TimeTable> findByGroupOrderByDateAscTimeFromAsc(Group group);
 
+	List<TimeTable> findByGroupGroupNameOrderByDateAscTimeFromAsc(String groupName);
+
+	List<TimeTable> findByCourseCourseNameOrderByDateAscTimeFromAsc(String courseName);
+
+	List<TimeTable> findByDateOrderByDateAscTimeFromAsc(LocalDate date);
+
 	@Query("""
 			    SELECT t FROM TimeTable t
 			    JOIN t.course c

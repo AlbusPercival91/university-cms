@@ -181,4 +181,16 @@ public class TimeTableService {
 	public Optional<TimeTable> findTimeTableById(int timeTableId) {
 		return timeTableRepository.findById(timeTableId);
 	}
+
+	public List<TimeTable> findTimeTableByGroupName(String groupName) {
+		return timeTableRepository.findByGroupGroupNameOrderByDateAscTimeFromAsc(groupName);
+	}
+
+	public List<TimeTable> findTimeTableByCourseName(String groupName) {
+		return timeTableRepository.findByCourseCourseNameOrderByDateAscTimeFromAsc(groupName);
+	}
+
+	public List<TimeTable> findTimeTablesByDate(LocalDate date) {
+		return timeTableRepository.findByDateOrderByDateAscTimeFromAsc(date);
+	}
 }

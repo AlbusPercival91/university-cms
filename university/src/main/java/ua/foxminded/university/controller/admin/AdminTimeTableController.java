@@ -3,6 +3,7 @@ package ua.foxminded.university.controller.admin;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -272,4 +273,34 @@ public class AdminTimeTableController {
 		}
 	}
 
+	@GetMapping("/admin/timetable/search-result")
+	public String searchTimeTablesAsAdmin(@RequestParam("searchType") String searchType,
+			@RequestParam(required = false) Integer timetableId, @RequestParam(required = false) String courseName,
+			@RequestParam(required = false) String groupName,
+			@RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date, Model model) {
+		List<TimeTable> timetables;
+
+		if ("timetable".equals(searchType)) {
+			Optional<TimeTable> optionalTimeTable = timeTableService.findTimeTableById(timetableId);
+			timetables = optionalTimeTable.map(Collections::singletonList).orElse(Collections.emptyList());
+		} else if ("group".equals(searchType)) {
+			timetables = timeTableService.findTimeTableByGroupName(groupName);
+		} else if ("course".equals(searchType)) {
+			timetables = timeTableService.findTimeTableByCourseName(courseName);
+		} else if ("date".equals(searchType)) {
+			timetables = timeTableService.findTimeTablesByDate(date);
+		} else {
+			return "error";
+		}
+
+		for (TimeTable timetable : timetables) {
+			if (timetable.getGroup() == null) {
+				List<Student> studentsRelatedToCourse = studentService
+						.findStudentsRelatedToCourse(timetable.getCourse().getCourseName());
+				timetable.setStudentsRelatedToCourse(studentsRelatedToCourse);
+			}
+		}
+		model.addAttribute("timetables", timetables);
+		return "admin/timetable/timetable";
+	}
 }
