@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ua.foxminded.university.dao.entities.Staff;
 import ua.foxminded.university.dao.interfaces.StaffRepository;
-import ua.foxminded.university.dao.validation.UniqueEmailValidator;
+import ua.foxminded.university.validation.UniqueEmailValidator;
 
 @Slf4j
 @RequiredArgsConstructor

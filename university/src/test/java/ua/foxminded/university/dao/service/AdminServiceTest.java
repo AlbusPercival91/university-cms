@@ -16,7 +16,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import ua.foxminded.university.dao.entities.Admin;
 import ua.foxminded.university.dao.interfaces.AdminRepository;
-import ua.foxminded.university.dao.validation.UniqueEmailValidator;
+import ua.foxminded.university.validation.UniqueEmailValidator;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = { AdminService.class,
 		UniqueEmailValidator.class }))

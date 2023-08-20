@@ -12,7 +12,7 @@ import ua.foxminded.university.dao.entities.Course;
 import ua.foxminded.university.dao.entities.Teacher;
 import ua.foxminded.university.dao.interfaces.CourseRepository;
 import ua.foxminded.university.dao.interfaces.TeacherRepository;
-import ua.foxminded.university.dao.validation.UniqueEmailValidator;
+import ua.foxminded.university.validation.UniqueEmailValidator;
 
 @Slf4j
 @RequiredArgsConstructor

@@ -1,4 +1,4 @@
-package ua.foxminded.university.dao.validation;
+package ua.foxminded.university.validation;
 
 import java.math.BigInteger;
 import java.util.Arrays;

@@ -21,7 +21,7 @@ import ua.foxminded.university.dao.interfaces.GroupRepository;
 import ua.foxminded.university.dao.interfaces.StudentRepository;
 import ua.foxminded.university.dao.interfaces.TeacherRepository;
 import ua.foxminded.university.dao.interfaces.TimeTableRepository;
-import ua.foxminded.university.dao.validation.TimeTableValidator;
+import ua.foxminded.university.validation.TimeTableValidator;
 
 @Slf4j
 @RequiredArgsConstructor

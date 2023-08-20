@@ -23,7 +23,7 @@ import ua.foxminded.university.dao.entities.Teacher;
 import ua.foxminded.university.dao.interfaces.CourseRepository;
 import ua.foxminded.university.dao.interfaces.StudentRepository;
 import ua.foxminded.university.dao.interfaces.TeacherRepository;
-import ua.foxminded.university.dao.validation.UniqueEmailValidator;
+import ua.foxminded.university.validation.UniqueEmailValidator;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = { CourseService.class,
 		TeacherService.class, StudentService.class, GroupService.class, UniqueEmailValidator.class }))

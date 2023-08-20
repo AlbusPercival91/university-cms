@@ -1,4 +1,4 @@
-package ua.foxminded.university.dao.validation;
+package ua.foxminded.university.validation;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
