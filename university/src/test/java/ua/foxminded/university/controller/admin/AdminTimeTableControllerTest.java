@@ -135,4 +135,13 @@ class AdminTimeTableControllerTest {
 				.andExpect(MockMvcResultMatchers.flash().attributeExists("errorMessage"))
 				.andExpect(MockMvcResultMatchers.redirectedUrl("/admin/timetable/group-timetable-form"));
 	}
+
+	@Test
+	void testDeleteTimetable() throws Exception {
+		int teacherId = 1;
+		mockMvc.perform(MockMvcRequestBuilders.post("/admin/timetable/delete/{timetableId}", 1))
+				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+				.andExpect(MockMvcResultMatchers.flash().attributeExists("successMessage"))
+				.andExpect(MockMvcResultMatchers.redirectedUrl("/admin/timetable/timetable/" + teacherId));
+	}
 }

@@ -134,7 +134,7 @@ public class AdminTimeTableController {
 		String referrer = request.getHeader("referer");
 
 		if (referrer == null || referrer.isEmpty()) {
-			return "redirect:/admin/timetable/timetable/{teacherId}";
+			return "redirect:/admin/timetable/timetable/{timetableId}";
 		}
 		return "redirect:" + referrer;
 	}
