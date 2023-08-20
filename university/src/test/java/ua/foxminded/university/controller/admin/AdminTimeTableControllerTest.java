@@ -3,6 +3,9 @@ package ua.foxminded.university.controller.admin;
 import static org.mockito.Mockito.when;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
@@ -145,12 +148,22 @@ class AdminTimeTableControllerTest {
 				.andExpect(MockMvcResultMatchers.redirectedUrl("/admin/timetable/timetable/" + timetableId));
 	}
 
-//	@Test
-//	void testGetFullTeacherTimeTable() throws Exception {
-//		mockMvc.perform(MockMvcRequestBuilders.get("/admin/timetable/teacher-timetable/{teacherId}", 1))
-//				.andExpect(MockMvcResultMatchers.status().isOk())
-//				.andExpect(MockMvcResultMatchers.model().attributeExists("teachers"))
-//				.andExpect(MockMvcResultMatchers.view().name("admin/teacher/edit-teacher-list"));
-//
-//	}
+	@ParameterizedTest
+	@CsvSource({ "2023-09-01, 09:00, 10:30" })
+	void testGetFullTeacherTimeTable(LocalDate date, LocalTime timeFrom, LocalTime timeTo) throws Exception {
+		Teacher teacher = new Teacher();
+		teacher.setId(1);
+
+		TimeTable timetable1 = new TimeTable(date, timeFrom, timeTo, teacher, new Course(), new Group(),
+				new ClassRoom());
+		List<TimeTable> timetables = Collections.singletonList(timetable1);
+
+		when(teacherService.findTeacherById(teacher.getId())).thenReturn(Optional.of(teacher));
+		when(timeTableService.getTeacherTimeTable(teacher)).thenReturn(timetables);
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/admin/timetable/teacher-timetable/{teacherId}", teacher.getId()))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.model().attributeExists("timetables"))
+				.andExpect(MockMvcResultMatchers.view().name("admin/timetable/timetable"));
+	}
 }
