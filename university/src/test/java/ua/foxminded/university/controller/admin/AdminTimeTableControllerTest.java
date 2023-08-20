@@ -3,6 +3,10 @@ package ua.foxminded.university.controller.admin;
 import static org.mockito.Mockito.when;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Optional;
+
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -26,6 +30,7 @@ import ua.foxminded.university.dao.service.TimeTableService;
 @WebMvcTest(AdminTimeTableController.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ActiveProfiles("test-container")
+@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class AdminTimeTableControllerTest {
 
 	@Autowired
@@ -62,12 +67,14 @@ class AdminTimeTableControllerTest {
 		LocalTime timeFrom = LocalTime.of(9, 0);
 		LocalTime timeTo = LocalTime.of(11, 0);
 
-		Teacher teacher = new Teacher("Madam", "Trix", true, "trix@mail.com", "1234", null);
-		teacher.setId(1);
-		Course course = new Course("History of Magic");
-		course.setId(1);
-		ClassRoom classRoom = new ClassRoom("Example Street", 12, 14);
-		classRoom.setId(0);
+		Teacher teacher = new Teacher(/* initialize teacher attributes */);
+		Course course = new Course(/* initialize course attributes */);
+		ClassRoom classRoom = new ClassRoom(/* initialize classRoom attributes */);
+
+		when(teacherService.findTeacherById(1)).thenReturn(Optional.of(teacher));
+		when(courseService.findCourseById(1)).thenReturn(Optional.of(course));
+		when(classRoomService.findClassRoomById(1)).thenReturn(Optional.of(classRoom));
+
 		TimeTable timetable = new TimeTable(date, timeFrom, timeTo, teacher, course, classRoom, null);
 
 		when(timeTableService.createTimeTableForStudentsAtCourse(date, timeFrom, timeTo, teacher, course, classRoom))

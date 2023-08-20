@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -30,6 +32,7 @@ import ua.foxminded.university.dao.service.TeacherService;
 @WebMvcTest(AdminTeacherController.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ActiveProfiles("test-container")
+@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class AdminTeacherControllerTest {
 
 	@Autowired
