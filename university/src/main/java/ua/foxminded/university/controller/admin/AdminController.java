@@ -96,4 +96,26 @@ public class AdminController {
 		}
 	}
 
+	@PostMapping("/admin/edit-admin/{adminId}")
+	public String updateAdmin(@PathVariable("adminId") int adminId,
+			@ModelAttribute("admin") @Validated Admin updatedAdmin, BindingResult bindingResult,
+			RedirectAttributes redirectAttributes) {
+		if (bindingValidator.validate(bindingResult, redirectAttributes)) {
+			try {
+				Admin resultAdmin = adminService.updateAdminById(adminId, updatedAdmin);
+
+				if (resultAdmin != null) {
+					redirectAttributes.addFlashAttribute("successMessage", "Admin updated successfully");
+				} else {
+					redirectAttributes.addFlashAttribute("errorMessage", "Failed to update Admin");
+				}
+			} catch (NoSuchElementException ex) {
+				redirectAttributes.addFlashAttribute("errorMessage", "Admin not found");
+			}
+		} else {
+			return "redirect:/admin/admin-card/" + adminId;
+		}
+		return "redirect:/admin/admin-card/" + adminId;
+	}
+
 }
