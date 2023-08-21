@@ -21,13 +21,22 @@
                 method="post">
                 <div class="form-group">
                     <label for="name">Department Name:</label>
-                    <input type="text" id="name" th:value="${department.name}" name="name" readonly />
+                    <input type="text" id="name" th:value="${department.name}" name="name" readonly required />
                 </div>
                 <div class="form-group">
-                    <label for="facultyName">Faculty Name:</label>
-                    <input type="text" id="facultyName" th:value="${department.faculty.facultyName}" name="facultyName"
-                        readonly />
+                    <label for="faculty">Faculty:</label>
+                    <select id="faculty" name="faculty" readonly required>
+                        <!-- Display the currently assigned faculty initially -->
+                        <option th:text="${'ID: ' + department.faculty.id + ', ' + department.faculty.facultyName}">
+                        </option>
+                        <!-- Generate options for other departments using Thymeleaf -->
+                        <option th:each="faculty : ${faculties}" th:value="${faculty.id}"
+                            th:text="${'ID: ' + faculty.id + ', ' + faculty.facultyName}"
+                            th:selected="${department.faculty.id == faculty.id}">
+                        </option>
+                    </select>
                 </div>
+
                 <!-- Container for buttons -->
                 <div class="button-container">
                     <button id="saveButton" type="submit" class="button-common-style">Save</button>

@@ -111,10 +111,12 @@ public class AdminDepartmentController {
 	@GetMapping("/admin/department/department-card/{departmentId}")
 	public String openDepartmentCard(@PathVariable int departmentId, Model model) {
 		Optional<Department> optionalDepartment = departmentService.findDepartmentById(departmentId);
+		List<Faculty> faculties = facultyService.getAllFaculties();
 
 		if (optionalDepartment.isPresent()) {
 			Department department = optionalDepartment.get();
 			model.addAttribute("department", department);
+			model.addAttribute("faculties", faculties);
 			return "admin/department/department-card";
 		} else {
 			return "redirect:/admin/department/edit-department-list";
