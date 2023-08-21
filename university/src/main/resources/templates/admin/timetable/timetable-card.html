@@ -18,86 +18,87 @@
         <!-- Block for timetable details -->
         <div class="entity-details">
             <h2>Time-Table Details</h2>
-            <div class="form-group">
-                <label for="date">Date:</label>
-                <input type="date" id="date" th:value="${timetable.date}" name="date" readonly />
-            </div>
-            <div class="form-group">
-                <label for="timeFrom">Time From:</label>
-                <input type="time" id="timeFrom" th:value="${timetable.timeFrom}" name="timeFrom" readonly />
-            </div>
-            <div class="form-group">
-                <label for="timeTo">Time To:</label>
-                <input type="time" id="timeTo" th:value="${timetable.timeTo}" name="timeTo" readonly />
-            </div>
+            <form th:action="@{/admin/timetable/edit-timetable/{timetableId}(timetableId=${timetable.id})}"
+                method="post">
+                <div class="form-group">
+                    <label for="date">Date:</label>
+                    <input type="date" id="date" th:value="${timetable.date}" name="date" readonly />
+                </div>
+                <div class="form-group">
+                    <label for="timeFrom">Time From:</label>
+                    <input type="time" id="timeFrom" th:value="${timetable.timeFrom}" name="timeFrom" readonly />
+                </div>
+                <div class="form-group">
+                    <label for="timeTo">Time To:</label>
+                    <input type="time" id="timeTo" th:value="${timetable.timeTo}" name="timeTo" readonly />
+                </div>
 
-            <div class="form-group">
-                <label for="teacher">Teacher:</label>
-                <select id="teacher" name="teacher" readonly>
-                    <!-- Display the currently assigned teacher initially -->
-                    <option value="${timetable.teacher.id}"
-                        th:text="${'ID: ' + timetable.teacher.id + ', ' + timetable.teacher.firstName + ' ' + timetable.teacher.lastName}">
-                    </option>
-                    <!-- Generate options for other teachers using Thymeleaf -->
-                    <option th:each="teacher : ${teachers}" th:value="${teacher.id}"
-                        th:text="${'ID: ' + teacher.id + ', ' + teacher.firstName + ' ' + teacher.lastName}">
-                    </option>
-                </select>
-            </div>
+                <div class="form-group">
+                    <label for="teacher">Teacher:</label>
+                    <select id="teacher" name="teacher" readonly>
+                        <!-- Display the currently assigned teacher initially -->
+                        <option value="${timetable.teacher.id}"
+                            th:text="${'ID: ' + timetable.teacher.id + ', ' + timetable.teacher.firstName + ' ' + timetable.teacher.lastName}">
+                        </option>
+                        <!-- Generate options for other teachers using Thymeleaf -->
+                        <option th:each="teacher : ${teachers}" th:value="${teacher.id}"
+                            th:text="${'ID: ' + teacher.id + ', ' + teacher.firstName + ' ' + teacher.lastName}">
+                        </option>
+                    </select>
+                </div>
 
-            <div class="form-group">
-                <label for="course">Course:</label>
-                <select id="course" name="course" readonly>
-                    <!-- Display the currently assigned course initially -->
-                    <option value="${timetable.course.id}"
-                        th:text="${'ID: ' + timetable.course.id + ', ' + timetable.course.courseName}">
-                    </option>
-                    <!-- Generate options for other courses using Thymeleaf -->
-                    <option th:each="course : ${courses}" th:value="${course.id}"
-                        th:text="${'ID: ' + course.id + ', ' + course.courseName}">
-                    </option>
-                </select>
-            </div>
+                <div class="form-group">
+                    <label for="course">Course:</label>
+                    <select id="course" name="course" readonly>
+                        <!-- Display the currently assigned course initially -->
+                        <option value="${timetable.course.id}"
+                            th:text="${'ID: ' + timetable.course.id + ', ' + timetable.course.courseName}">
+                        </option>
+                        <!-- Generate options for other courses using Thymeleaf -->
+                        <option th:each="course : ${courses}" th:value="${course.id}"
+                            th:text="${'ID: ' + course.id + ', ' + course.courseName}">
+                        </option>
+                    </select>
+                </div>
 
-            <div class="form-group">
-                <label for="group">Group:</label>
-                <select id="group" name="group" readonly>
-                    <!-- Display the currently assigned group or 'n/a' if group is null -->
-                    <option th:if="${timetable.group == null}" value="n/a">N/A</option>
-                    <option th:if="${timetable.group != null}" value="${timetable.group.id}"
-                        th:text="${'ID: ' + timetable.group.id + ', ' + timetable.group.groupName}">
-                    </option>
-                    <!-- Generate options for other groups using Thymeleaf -->
-                    <option th:each="group : ${groups}" th:value="${group.id}"
-                        th:text="${'ID: ' + group.id + ', ' + group.groupName}">
-                    </option>
-                </select>
-            </div>
+                <div class="form-group">
+                    <label for="group">Group:</label>
+                    <select id="group" name="group" readonly>
+                        <!-- Display the currently assigned group or 'n/a' if group is null -->
+                        <option th:if="${timetable.group == null}" value="n/a">N/A</option>
+                        <option th:if="${timetable.group != null}" value="${timetable.group.id}"
+                            th:text="${'ID: ' + timetable.group.id + ', ' + timetable.group.groupName}">
+                        </option>
+                        <!-- Generate options for other groups using Thymeleaf -->
+                        <option th:each="group : ${groups}" th:value="${group.id}"
+                            th:text="${'ID: ' + group.id + ', ' + group.groupName}">
+                        </option>
+                    </select>
+                </div>
 
 
-            <div class="form-group">
-                <label for="classRoom">Class Room:</label>
-                <select id="classRoom" name="classRoom" readonly>
-                    <!-- Display the currently assigned classroom initially -->
-                    <option value="${timetable.classRoom.id}"
-                        th:text="${'ID: ' + timetable.classRoom.id + ', ' + timetable.classRoom.street + ', ' + timetable.classRoom.buildingNumber + ', room ' + timetable.classRoom.roomNumber}">
-                    </option>
-                    <!-- Generate options for other classrooms using Thymeleaf -->
-                    <option th:each="classroom : ${classrooms}" th:value="${classroom.id}"
-                        th:text="${'ID: ' + classroom.id + ', ' + classroom.street + ', ' + classroom.buildingNumber + ', room ' + classroom.roomNumber}">
-                    </option>
-                </select>
-            </div>
+                <div class="form-group">
+                    <label for="classRoom">Class Room:</label>
+                    <select id="classRoom" name="classRoom" readonly>
+                        <!-- Display the currently assigned classroom initially -->
+                        <option value="${timetable.classRoom.id}"
+                            th:text="${'ID: ' + timetable.classRoom.id + ', ' + timetable.classRoom.street + ', ' + timetable.classRoom.buildingNumber + ', room ' + timetable.classRoom.roomNumber}">
+                        </option>
+                        <!-- Generate options for other classrooms using Thymeleaf -->
+                        <option th:each="classroom : ${classrooms}" th:value="${classroom.id}"
+                            th:text="${'ID: ' + classroom.id + ', ' + classroom.street + ', ' + classroom.buildingNumber + ', room ' + classroom.roomNumber}">
+                        </option>
+                    </select>
+                </div>
 
-            <!-- Container for buttons -->
-            <div class="button-container">
-                <form th:action="@{/admin/timetable/edit-timetable/{timetableId}(timetableId=${timetable.id})}"
-                    method="post">
+                <!-- Container for buttons -->
+                <div class="button-container">
                     <button id="saveButton" type="submit" class="button-common-style">Save</button>
                     <button id="editButton" type="button" class="button-common-style">Edit</button>
-                </form>
-            </div>
+                </div>
+            </form>
         </div>
+
     </div>
 
     <div th:replace="fragments/message :: div"></div>
