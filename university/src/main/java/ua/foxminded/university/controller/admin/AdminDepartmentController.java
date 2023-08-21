@@ -120,4 +120,26 @@ public class AdminDepartmentController {
 			return "redirect:/admin/department/edit-department-list";
 		}
 	}
+
+	@PostMapping("/admin/department/edit-department/{departmentId}")
+	public String updateDepartment(@PathVariable("departmentId") int departmentId,
+			@ModelAttribute("department") @Validated Department updatedDepartment, BindingResult bindingResult,
+			RedirectAttributes redirectAttributes) {
+		if (bindingValidator.validate(bindingResult, redirectAttributes)) {
+			try {
+				Department resultDepartment = departmentService.updateDepartmentById(departmentId, updatedDepartment);
+
+				if (resultDepartment != null) {
+					redirectAttributes.addFlashAttribute("successMessage", "Department updated successfully");
+				} else {
+					redirectAttributes.addFlashAttribute("errorMessage", "Failed to update Department");
+				}
+			} catch (NoSuchElementException ex) {
+				redirectAttributes.addFlashAttribute("errorMessage", "Department not found");
+			}
+		} else {
+			return "redirect:/admin/department/department-card/" + departmentId;
+		}
+		return "redirect:/admin/department/department-card/" + departmentId;
+	}
 }

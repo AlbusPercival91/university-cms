@@ -156,4 +156,26 @@ public class AdminStudentController {
 		}
 	}
 
+	@PostMapping("/admin/student/edit-student/{studentId}")
+	public String updateStudent(@PathVariable("studentId") int studentId,
+			@ModelAttribute("student") @Validated Student updatedStudent, BindingResult bindingResult,
+			RedirectAttributes redirectAttributes) {
+		if (bindingValidator.validate(bindingResult, redirectAttributes)) {
+			try {
+				Student resultStudent = studentService.updateStudentById(studentId, updatedStudent);
+
+				if (resultStudent != null) {
+					redirectAttributes.addFlashAttribute("successMessage", "Student updated successfully");
+				} else {
+					redirectAttributes.addFlashAttribute("errorMessage", "Failed to update Student");
+				}
+			} catch (NoSuchElementException ex) {
+				redirectAttributes.addFlashAttribute("errorMessage", "Student not found");
+			}
+		} else {
+			return "redirect:/admin/student/student-card/" + studentId;
+		}
+		return "redirect:/admin/student/student-card/" + studentId;
+	}
+
 }

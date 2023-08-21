@@ -156,7 +156,7 @@ public class TimeTableService {
 		return timeTableRepository.findByDateOrderByDateAscTimeFromAsc(dateFrom, dateTo);
 	}
 
-	public TimeTable updateTimeTabletById(int timeTableId, TimeTable targetTimeTable) {
+	public TimeTable updateTimeTableById(int timeTableId, TimeTable targetTimeTable) {
 		TimeTable existingTimeTable = timeTableRepository.findById(timeTableId).orElseThrow(() -> {
 			log.warn("TimeTable with id {} not found", timeTableId);
 			return new NoSuchElementException("TimeTable not found");

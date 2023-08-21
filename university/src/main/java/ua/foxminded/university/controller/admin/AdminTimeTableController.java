@@ -303,4 +303,22 @@ public class AdminTimeTableController {
 		model.addAttribute("timetables", timetables);
 		return "admin/timetable/timetable";
 	}
+
+	@PostMapping("/admin/timetable/edit-timetable/{timetableId}")
+	public String updateTimeTable(@PathVariable("timetableId") int timetableId,
+			@ModelAttribute("timetable") @Validated TimeTable updatedTimeTable, BindingResult bindingResult,
+			RedirectAttributes redirectAttributes) {
+		try {
+			TimeTable resultTimeTable = timeTableService.updateTimeTableById(timetableId, updatedTimeTable);
+
+			if (resultTimeTable != null) {
+				redirectAttributes.addFlashAttribute("successMessage", "Time Table updated successfully");
+			} else {
+				redirectAttributes.addFlashAttribute("errorMessage", "Failed to update Time Table");
+			}
+		} catch (NoSuchElementException ex) {
+			redirectAttributes.addFlashAttribute("errorMessage", "Time Table not found");
+		}
+		return "redirect:/admin/timetable/timetable-card/" + timetableId;
+	}
 }

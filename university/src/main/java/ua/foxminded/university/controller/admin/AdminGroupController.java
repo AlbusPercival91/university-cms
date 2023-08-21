@@ -120,4 +120,26 @@ public class AdminGroupController {
 			return "redirect:/admin/group/edit-group-list";
 		}
 	}
+
+	@PostMapping("/admin/group/edit-group/{groupId}")
+	public String updateGroup(@PathVariable("groupId") int groupId,
+			@ModelAttribute("group") @Validated Group updatedGroup, BindingResult bindingResult,
+			RedirectAttributes redirectAttributes) {
+		if (bindingValidator.validate(bindingResult, redirectAttributes)) {
+			try {
+				Group resultGroup = groupService.updateGroupById(groupId, updatedGroup);
+
+				if (resultGroup != null) {
+					redirectAttributes.addFlashAttribute("successMessage", "Group updated successfully");
+				} else {
+					redirectAttributes.addFlashAttribute("errorMessage", "Failed to update Group");
+				}
+			} catch (NoSuchElementException ex) {
+				redirectAttributes.addFlashAttribute("errorMessage", "Group not found");
+			}
+		} else {
+			return "redirect:/admin/group/group-card/" + groupId;
+		}
+		return "redirect:/admin/group/group-card/" + groupId;
+	}
 }

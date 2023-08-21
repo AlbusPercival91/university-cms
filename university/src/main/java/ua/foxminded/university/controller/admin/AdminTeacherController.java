@@ -165,4 +165,26 @@ public class AdminTeacherController {
 		return "redirect:" + builder.buildAndExpand(teacherId).toUriString();
 	}
 
+	@PostMapping("/admin/teacher/edit-teacher/{teacherId}")
+	public String updateTeacher(@PathVariable("teacherId") int teacherId,
+			@ModelAttribute("teacher") @Validated Teacher updatedTeacher, BindingResult bindingResult,
+			RedirectAttributes redirectAttributes) {
+		if (bindingValidator.validate(bindingResult, redirectAttributes)) {
+			try {
+				Teacher resultTeacher = teacherService.updateTeacherById(teacherId, updatedTeacher);
+
+				if (resultTeacher != null) {
+					redirectAttributes.addFlashAttribute("successMessage", "Teacher updated successfully");
+				} else {
+					redirectAttributes.addFlashAttribute("errorMessage", "Failed to update Teacher");
+				}
+			} catch (NoSuchElementException ex) {
+				redirectAttributes.addFlashAttribute("errorMessage", "Teacher not found");
+			}
+		} else {
+			return "redirect:/admin/teacher/teacher-card/" + teacherId;
+		}
+		return "redirect:/admin/teacher/teacher-card/" + teacherId;
+	}
+
 }

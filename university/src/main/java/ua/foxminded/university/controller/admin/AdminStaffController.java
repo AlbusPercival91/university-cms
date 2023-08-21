@@ -114,4 +114,26 @@ public class AdminStaffController {
 		}
 	}
 
+	@PostMapping("/admin/staff/edit-staff/{staffId}")
+	public String updateStaff(@PathVariable("staffId") int staffId,
+			@ModelAttribute("staff") @Validated Staff updatedStaff, BindingResult bindingResult,
+			RedirectAttributes redirectAttributes) {
+		if (bindingValidator.validate(bindingResult, redirectAttributes)) {
+			try {
+				Staff resultStaff = staffService.updateStaffById(staffId, updatedStaff);
+
+				if (resultStaff != null) {
+					redirectAttributes.addFlashAttribute("successMessage", "Staff updated successfully");
+				} else {
+					redirectAttributes.addFlashAttribute("errorMessage", "Failed to update Staff");
+				}
+			} catch (NoSuchElementException ex) {
+				redirectAttributes.addFlashAttribute("errorMessage", "Staff not found");
+			}
+		} else {
+			return "redirect:/admin/staff/staff-card/" + staffId;
+		}
+		return "redirect:/admin/staff/staff-card/" + staffId;
+	}
+
 }
