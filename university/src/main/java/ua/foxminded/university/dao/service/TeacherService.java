@@ -52,7 +52,7 @@ public class TeacherService {
 			log.warn("Teacher with id {} not found", teacherId);
 			return new NoSuchElementException("Teacher not found");
 		});
-		BeanUtils.copyProperties(targetTeacher, existingTeacher, "id");
+		BeanUtils.copyProperties(targetTeacher, existingTeacher, "id", "assignedCourses");
 		return teacherRepository.save(existingTeacher);
 	}
 
