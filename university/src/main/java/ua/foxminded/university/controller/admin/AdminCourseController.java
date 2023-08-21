@@ -116,4 +116,26 @@ public class AdminCourseController {
 			return "redirect:/admin/course/edit-course-list";
 		}
 	}
+
+	@PostMapping("/admin/course/edit-course/{courseId}")
+	public String updateCourse(@PathVariable("courseId") int courseId,
+			@ModelAttribute("course") @Validated Course updatedCourse, BindingResult bindingResult,
+			RedirectAttributes redirectAttributes) {
+		if (bindingValidator.validate(bindingResult, redirectAttributes)) {
+			try {
+				Course resultCourse = courseService.updateCourseById(courseId, updatedCourse);
+
+				if (resultCourse != null) {
+					redirectAttributes.addFlashAttribute("successMessage", "Course updated successfully");
+				} else {
+					redirectAttributes.addFlashAttribute("errorMessage", "Failed to update Course");
+				}
+			} catch (NoSuchElementException ex) {
+				redirectAttributes.addFlashAttribute("errorMessage", "Course not found");
+			}
+		} else {
+			return "redirect:/admin/course/course-card/" + courseId;
+		}
+		return "redirect:/admin/course/course-card/" + courseId;
+	}
 }
