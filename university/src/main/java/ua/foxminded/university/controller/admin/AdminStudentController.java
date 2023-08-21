@@ -18,8 +18,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.UriComponentsBuilder;
 import ua.foxminded.university.dao.entities.Course;
+import ua.foxminded.university.dao.entities.Group;
 import ua.foxminded.university.dao.entities.Student;
 import ua.foxminded.university.dao.service.CourseService;
+import ua.foxminded.university.dao.service.GroupService;
 import ua.foxminded.university.dao.service.StudentService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
 
@@ -31,6 +33,9 @@ public class AdminStudentController {
 
 	@Autowired
 	private CourseService courseService;
+
+	@Autowired
+	private GroupService groupService;
 
 	@Autowired
 	private ControllerBindingValidator bindingValidator;
@@ -67,11 +72,13 @@ public class AdminStudentController {
 	public String openStudentCard(@PathVariable int studentId, Model model) {
 		Optional<Student> optionalStudent = studentService.findStudentById(studentId);
 		List<Course> courses = courseService.getAllCourses();
+		List<Group> groups = groupService.getAllGroups();
 
 		if (optionalStudent.isPresent()) {
 			Student student = optionalStudent.get();
 			model.addAttribute("student", student);
 			model.addAttribute("courses", courses);
+			model.addAttribute("groups", groups);
 			return "admin/student/student-card";
 		} else {
 			return "redirect:/admin/student/edit-student-list";

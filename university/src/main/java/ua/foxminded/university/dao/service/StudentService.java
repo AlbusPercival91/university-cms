@@ -56,7 +56,7 @@ public class StudentService {
 			log.warn("Student with id {} not found", studentId);
 			return new NoSuchElementException("Student not found");
 		});
-		BeanUtils.copyProperties(targetStudent, existingStudent, "id");
+		BeanUtils.copyProperties(targetStudent, existingStudent, "id", "courses");
 		return studentRepository.save(existingStudent);
 	}
 
