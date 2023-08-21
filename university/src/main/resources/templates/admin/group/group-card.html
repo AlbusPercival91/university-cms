@@ -20,13 +20,23 @@
             <form th:action="@{/admin/group/edit-group/{groupId}(groupId=${group.id})}" method="post">
                 <div class="form-group">
                     <label for="groupName">Group Name:</label>
-                    <input type="text" id="groupName" th:value="${group.groupName}" name="groupName" readonly />
+                    <input type="text" id="groupName" th:value="${group.groupName}" name="groupName" readonly
+                        required />
                 </div>
                 <div class="form-group">
-                    <label for="facultyName">Faculty Name:</label>
-                    <input type="text" id="facultyName" th:value="${group.faculty.facultyName}" name="facultyName"
-                        readonly />
+                    <label for="faculty">Faculty:</label>
+                    <select id="faculty" name="faculty" readonly required>
+                        <!-- Display the currently assigned faculty initially -->
+                        <option th:text="${'ID: ' + group.faculty.id + ', ' + group.faculty.facultyName}">
+                        </option>
+                        <!-- Generate options for other faculties using Thymeleaf -->
+                        <option th:each="faculty : ${faculties}" th:value="${faculty.id}"
+                            th:text="${'ID: ' + faculty.id + ', ' + faculty.facultyName}"
+                            th:selected="${group.faculty.id == faculty.id}">
+                        </option>
+                    </select>
                 </div>
+
                 <!-- Container for buttons -->
                 <div class="button-container">
                     <button id="saveButton" type="submit" class="button-common-style">Save</button>

@@ -111,10 +111,12 @@ public class AdminGroupController {
 	@GetMapping("/admin/group/group-card/{groupId}")
 	public String openGroupCard(@PathVariable int groupId, Model model) {
 		Optional<Group> optionalGroup = groupService.findGroupById(groupId);
+		List<Faculty> faculties = facultyService.getAllFaculties();
 
 		if (optionalGroup.isPresent()) {
 			Group group = optionalGroup.get();
 			model.addAttribute("group", group);
+			model.addAttribute("faculties", faculties);
 			return "admin/group/group-card";
 		} else {
 			return "redirect:/admin/group/edit-group-list";

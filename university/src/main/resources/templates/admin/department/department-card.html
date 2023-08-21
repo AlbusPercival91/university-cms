@@ -29,7 +29,7 @@
                         <!-- Display the currently assigned faculty initially -->
                         <option th:text="${'ID: ' + department.faculty.id + ', ' + department.faculty.facultyName}">
                         </option>
-                        <!-- Generate options for other departments using Thymeleaf -->
+                        <!-- Generate options for other faculties using Thymeleaf -->
                         <option th:each="faculty : ${faculties}" th:value="${faculty.id}"
                             th:text="${'ID: ' + faculty.id + ', ' + faculty.facultyName}"
                             th:selected="${department.faculty.id == faculty.id}">
