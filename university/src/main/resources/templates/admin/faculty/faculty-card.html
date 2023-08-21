@@ -15,21 +15,21 @@
 
     <div class="container-entity-card">
 
-        <!-- Block for faculty-details -->
         <div class="entity-details">
             <h2>Faculty Details</h2>
-            <div class="form-group">
-                <label for="facultyName">Faculty Name:</label>
-                <input type="text" id="facultyName" th:value="${faculty.facultyName}" name="facultyName" readonly />
-            </div>
-            <!-- Container for buttons -->
-            <div class="button-container">
-                <form th:action="@{/admin/faculty/edit-faculty/{facultyId}(facultyId=${faculty.id})}" method="post">
+            <form th:action="@{/admin/faculty/edit-faculty/{facultyId}(facultyId=${faculty.id})}" method="post">
+                <div class="form-group">
+                    <label for="facultyName">Faculty Name:</label>
+                    <input type="text" id="facultyName" th:value="${faculty.facultyName}" name="facultyName" readonly />
+                </div>
+                <!-- Container for buttons -->
+                <div class="button-container">
                     <button id="saveButton" type="submit" class="button-common-style">Save</button>
                     <button id="editButton" type="button" class="button-common-style">Edit</button>
-                </form>
-            </div>
+                </div>
+            </form>
         </div>
+
     </div>
 
     <div th:replace="fragments/message :: div"></div>
