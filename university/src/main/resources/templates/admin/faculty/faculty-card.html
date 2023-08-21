@@ -14,7 +14,7 @@
     <div th:replace="fragments/admin-panel :: div"></div>
 
     <div class="container-entity-card">
-
+      
         <div class="entity-details">
             <h2>Faculty Details</h2>
             <form th:action="@{/admin/faculty/edit-faculty/{facultyId}(facultyId=${faculty.id})}" method="post">

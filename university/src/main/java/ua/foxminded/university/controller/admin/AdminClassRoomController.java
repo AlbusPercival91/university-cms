@@ -117,4 +117,26 @@ public class AdminClassRoomController {
 			return "redirect:/admin/classroom/edit-classroom-list";
 		}
 	}
+
+	@PostMapping("/admin/classroom/edit-classroom/{classroomId}")
+	public String updateClassRoom(@PathVariable("classroomId") int classroomId,
+			@ModelAttribute("classroom") @Validated ClassRoom updatedClassRoom, BindingResult bindingResult,
+			RedirectAttributes redirectAttributes) {
+		if (bindingValidator.validate(bindingResult, redirectAttributes)) {
+			try {
+				ClassRoom resultClassRoom = classRoomService.updateClassRoomById(classroomId, updatedClassRoom);
+
+				if (resultClassRoom != null) {
+					redirectAttributes.addFlashAttribute("successMessage", "Class Room updated successfully");
+				} else {
+					redirectAttributes.addFlashAttribute("errorMessage", "Failed to update the Class Room");
+				}
+			} catch (NoSuchElementException ex) {
+				redirectAttributes.addFlashAttribute("errorMessage", "Class Room not found");
+			}
+		} else {
+			return "redirect:/admin/classroom/classroom-card/" + classroomId;
+		}
+		return "redirect:/admin/classroom/classroom-card/" + classroomId;
+	}
 }
