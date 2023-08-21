@@ -1,7 +1,6 @@
 package ua.foxminded.university.dao.entities;
 
 import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -42,7 +41,7 @@ public class ClassRoom {
 	private int roomNumber;
 
 	@ToString.Exclude
-	@OneToMany(mappedBy = "classRoom", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "classRoom", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<TimeTable> timeTables;
 
 	public ClassRoom(String street, int buildingNumber, int roomNumber) {

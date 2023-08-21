@@ -36,7 +36,7 @@ public class Teacher extends User {
 	private Set<Course> assignedCourses = new HashSet<>();
 
 	@ToString.Exclude
-	@OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<TimeTable> timeTables;
 
 	public Teacher(String firstName, String lastName, boolean isActive, String email, String password,

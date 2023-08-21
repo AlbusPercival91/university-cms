@@ -50,7 +50,7 @@ public class Course {
 	private Set<Student> students = new HashSet<>();
 
 	@ToString.Exclude
-	@OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<TimeTable> timeTables;
 
 	public Course(String courseName) {

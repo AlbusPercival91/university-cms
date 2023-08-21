@@ -58,7 +58,7 @@ public class AdminFacultyController {
 	}
 
 	@PostMapping("/admin/faculty/create-faculty")
-	public String createFaculty(@ModelAttribute("staff") @Validated Faculty faculty, BindingResult bindingResult,
+	public String createFaculty(@ModelAttribute("faculty") @Validated Faculty faculty, BindingResult bindingResult,
 			RedirectAttributes redirectAttributes) {
 		if (bindingValidator.validate(bindingResult, redirectAttributes)) {
 			try {
@@ -89,6 +89,28 @@ public class AdminFacultyController {
 		} else {
 			return "redirect:/admin/faculty/edit-faculty-list";
 		}
+	}
+
+	@PostMapping("/admin/faculty/edit-faculty/{facultyId}")
+	public String updateFaculty(@PathVariable("facultyId") int facultyId,
+			@ModelAttribute("faculty") @Validated Faculty updatedFaculty, BindingResult bindingResult,
+			RedirectAttributes redirectAttributes) {
+		if (bindingValidator.validate(bindingResult, redirectAttributes)) {
+			try {
+				Faculty resultFaculty = facultyService.updateFacultyById(facultyId, updatedFaculty);
+
+				if (resultFaculty != null) {
+					redirectAttributes.addFlashAttribute("successMessage", "Faculty updated successfully");
+				} else {
+					redirectAttributes.addFlashAttribute("errorMessage", "Failed to update the Faculty");
+				}
+			} catch (NoSuchElementException ex) {
+				redirectAttributes.addFlashAttribute("errorMessage", "Faculty not found");
+			}
+		} else {
+			return "redirect:/admin/faculty/faculty-card/" + facultyId;
+		}
+		return "redirect:/admin/faculty/faculty-card/" + facultyId;
 	}
 
 }

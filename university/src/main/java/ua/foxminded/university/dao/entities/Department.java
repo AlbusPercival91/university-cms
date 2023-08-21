@@ -41,7 +41,7 @@ public class Department {
 	private Faculty faculty;
 
 	@ToString.Exclude
-	@OneToMany(mappedBy = "department", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "department", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Teacher> teachers;
 
 	public Department(String name, Faculty faculty) {

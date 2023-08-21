@@ -41,11 +41,11 @@ public class Group {
 	private Faculty faculty;
 
 	@ToString.Exclude
-	@OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "group", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Student> students;
 
 	@ToString.Exclude
-	@OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "group", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<TimeTable> timeTables;
 
 	public Group(String groupName, Faculty faculty) {
