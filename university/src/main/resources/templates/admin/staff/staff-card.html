@@ -20,30 +20,31 @@
             <form th:action="@{/admin/staff/edit-staff/{staffId}(staffId=${staff.id})}" method="post">
                 <div class="form-group">
                     <label for="firstName">First Name:</label>
-                    <input type="text" id="firstName" th:value="${staff.firstName}" name="firstName" readonly />
+                    <input type="text" id="firstName" th:value="${staff.firstName}" name="firstName" readonly
+                        required />
                 </div>
                 <div class="form-group">
                     <label for="lastName">Last Name:</label>
-                    <input type="text" id="lastName" th:value="${staff.lastName}" name="lastName" readonly />
+                    <input type="text" id="lastName" th:value="${staff.lastName}" name="lastName" readonly required />
                 </div>
                 <div class="form-group">
                     <label for="active">Active:</label>
-                    <select id="active" name="active" readonly>
-                        <option th:value="${staff.active}" th:selected="${staff.active}">True</option>
-                        <option th:value="${!staff.active}" th:selected="${!staff.active}">False</option>
+                    <select id="active" name="active" readonly required>
+                        <option th:text="True" th:selected="${staff.active}">True</option>
+                        <option th:text="False" th:selected="${!staff.active}">False</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label for="email">Email:</label>
-                    <input type="email" id="email" th:value="${staff.email}" name="email" readonly />
+                    <input type="email" id="email" th:value="${staff.email}" name="email" readonly required />
                 </div>
                 <div class="form-group">
                     <label for="position">Position:</label>
-                    <input type="text" id="position" th:value="${staff.position}" name="position" readonly />
+                    <input type="text" id="position" th:value="${staff.position}" name="position" readonly required />
                 </div>
                 <div class="form-group">
                     <label for="function">Function:</label>
-                    <input type="text" id="function" th:value="${staff.function}" name="function" readonly />
+                    <input type="text" id="function" th:value="${staff.function}" name="function" readonly required />
                 </div>
                 <!-- Container for buttons -->
                 <div class="button-container">
