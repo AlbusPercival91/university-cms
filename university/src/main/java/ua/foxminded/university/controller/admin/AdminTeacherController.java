@@ -74,11 +74,13 @@ public class AdminTeacherController {
 	public String openTeacherCard(@PathVariable int teacherId, Model model) {
 		Optional<Teacher> optionalTeacher = teacherService.findTeacherById(teacherId);
 		List<Course> courses = courseService.getAllCourses();
+		List<Department> departments = departmentService.getAllDepartments();
 
 		if (optionalTeacher.isPresent()) {
 			Teacher teacher = optionalTeacher.get();
 			model.addAttribute("teacher", teacher);
 			model.addAttribute("courses", courses);
+			model.addAttribute("departments", departments);
 			return "admin/teacher/teacher-card";
 		} else {
 			return "redirect:/admin/teacher/edit-teacher-list";
@@ -169,21 +171,22 @@ public class AdminTeacherController {
 	public String updateTeacher(@PathVariable("teacherId") int teacherId,
 			@ModelAttribute("teacher") @Validated Teacher updatedTeacher, BindingResult bindingResult,
 			RedirectAttributes redirectAttributes) {
-		if (bindingValidator.validate(bindingResult, redirectAttributes)) {
-			try {
-				Teacher resultTeacher = teacherService.updateTeacherById(teacherId, updatedTeacher);
+//		if (bindingValidator.validate(bindingResult, redirectAttributes)) {
+		try {
+			Teacher resultTeacher = teacherService.updateTeacherById(teacherId, updatedTeacher);
 
-				if (resultTeacher != null) {
-					redirectAttributes.addFlashAttribute("successMessage", "Teacher updated successfully");
-				} else {
-					redirectAttributes.addFlashAttribute("errorMessage", "Failed to update Teacher");
-				}
-			} catch (NoSuchElementException ex) {
-				redirectAttributes.addFlashAttribute("errorMessage", "Teacher not found");
+			if (resultTeacher != null) {
+				redirectAttributes.addFlashAttribute("successMessage", "Teacher updated successfully");
+			} else {
+				redirectAttributes.addFlashAttribute("errorMessage", "Failed to update Teacher");
 			}
-		} else {
-			return "redirect:/admin/teacher/teacher-card/" + teacherId;
+		} catch (NoSuchElementException ex) {
+			redirectAttributes.addFlashAttribute("errorMessage", "Teacher not found");
 		}
+//		} 
+//	else {
+//			return "redirect:/admin/teacher/teacher-card/" + teacherId;
+//		}
 		return "redirect:/admin/teacher/teacher-card/" + teacherId;
 	}
 

@@ -40,9 +40,18 @@
                 </div>
                 <div class="form-group">
                     <label for="department">Department:</label>
-                    <input type="text" id="department" th:value="${teacher.department.name}" name="department"
-                        readonly />
+                    <select id="department" name="department" readonly>
+                        <!-- Display the currently assigned department initially -->
+                        <option value="${teacher.department.id}"
+                            th:text="${'ID: ' + teacher.department.id + ', ' + teacher.department.name}">
+                        </option>
+                        <!-- Generate options for other courses using Thymeleaf -->
+                        <option th:each="department : ${departments}" th:value="${department.id}"
+                            th:text="${'ID: ' + department.id + ', ' + department.name}">
+                        </option>
+                    </select>
                 </div>
+
                 <!-- Container for buttons -->
                 <div class="button-container">
                     <button id="saveButton" type="submit" class="button-common-style">Save</button>
