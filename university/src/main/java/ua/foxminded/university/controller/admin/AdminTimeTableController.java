@@ -316,8 +316,8 @@ public class AdminTimeTableController {
 			} else {
 				redirectAttributes.addFlashAttribute("errorMessage", "Failed to update Time Table");
 			}
-		} catch (NoSuchElementException ex) {
-			redirectAttributes.addFlashAttribute("errorMessage", "Time Table not found");
+		} catch (NoSuchElementException | TimeTableValidationException ex) {
+			redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
 		}
 		return "redirect:/admin/timetable/timetable-card/" + timetableId;
 	}

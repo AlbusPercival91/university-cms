@@ -161,6 +161,10 @@ public class TimeTableService {
 			log.warn("TimeTable with id {} not found", timeTableId);
 			return new NoSuchElementException("TimeTable not found");
 		});
+		timeTableValidator.validate(existingTimeTable.getDate(), existingTimeTable.getTimeFrom(),
+				existingTimeTable.getTimeTo(), targetTimeTable.getTeacher(), targetTimeTable.getCourse(),
+				targetTimeTable.getClassRoom());
+
 		BeanUtils.copyProperties(targetTimeTable, existingTimeTable, "id", "date", "timeFrom", "timeTo");
 		return timeTableRepository.save(existingTimeTable);
 	}
