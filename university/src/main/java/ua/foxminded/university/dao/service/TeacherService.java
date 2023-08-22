@@ -9,10 +9,10 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ua.foxminded.university.dao.entities.Course;
-import ua.foxminded.university.dao.entities.Faculty;
 import ua.foxminded.university.dao.entities.Teacher;
 import ua.foxminded.university.dao.interfaces.CourseRepository;
 import ua.foxminded.university.dao.interfaces.TeacherRepository;
+import ua.foxminded.university.validation.UniqueEmailValidator;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -21,12 +21,17 @@ import ua.foxminded.university.dao.interfaces.TeacherRepository;
 public class TeacherService {
 	private final TeacherRepository teacherRepository;
 	private final CourseRepository courseRepository;
+	private final UniqueEmailValidator emailValidator;
 
-	public int createAndAssignTeacherToCourse(Teacher teacher) {
-		Teacher newTeacher = teacherRepository.save(teacher);
-		teacherRepository.addTeacherToTheCourse(teacher.getId(), teacher.getCourse().getCourseName());
-		log.info("Created teacher with id: {}", newTeacher.getId());
-		return newTeacher.getId();
+	public int createAndAssignTeacherToCourse(Teacher teacher, Course course) {
+		if (emailValidator.isValid(teacher)) {
+			Teacher newTeacher = teacherRepository.save(teacher);
+			addTeacherToTheCourse(newTeacher.getId(), course.getCourseName());
+			log.info("Created teacher with id: {}", newTeacher.getId());
+			return newTeacher.getId();
+		}
+		log.warn("Email already registered");
+		throw new IllegalStateException("Email already registered");
 	}
 
 	public int deleteTeacherById(int teacherId) {
@@ -47,12 +52,8 @@ public class TeacherService {
 			log.warn("Teacher with id {} not found", teacherId);
 			return new NoSuchElementException("Teacher not found");
 		});
-		BeanUtils.copyProperties(targetTeacher, existingTeacher, "id");
+		BeanUtils.copyProperties(targetTeacher, existingTeacher, "id", "assignedCourses");
 		return teacherRepository.save(existingTeacher);
-	}
-
-	public List<Teacher> getAllTeachers() {
-		return teacherRepository.findAll();
 	}
 
 	public int addTeacherToTheCourse(int teacherId, String courseName) {
@@ -64,6 +65,10 @@ public class TeacherService {
 			log.warn("Course with name {} not found", courseName);
 			return new NoSuchElementException("Course not found");
 		});
+
+		if (existingTeacher.getAssignedCourses().contains(existingCourse)) {
+			throw new IllegalStateException("Teacher already assigned with this Course!");
+		}
 		return teacherRepository.addTeacherToTheCourse(existingTeacher.getId(), existingCourse.getCourseName());
 	}
 
@@ -77,24 +82,33 @@ public class TeacherService {
 			return new NoSuchElementException("Course not found");
 		});
 
-		if (existingTeacher.getCourse().getCourseName().equals(courseName)) {
-			throw new IllegalStateException("Teacher can't be removed from his main Course!");
-		}
 		if (!findTeachersRelatedToCourse(courseName).contains(existingTeacher)) {
 			throw new IllegalStateException("Teacher is not related with this Course!");
 		}
 		return teacherRepository.removeTeacherFromCourse(teacherId, existingCourse.getCourseName());
 	}
 
+	public List<Teacher> getAllTeachers() {
+		return teacherRepository.findAll();
+	}
+
+	public Optional<Teacher> findTeacherById(int teacherId) {
+		return teacherRepository.findById(teacherId);
+	}
+
+	public List<Teacher> findTeacherByName(String firstName, String lastName) {
+		return teacherRepository.findTeacherByFirstNameAndLastName(firstName, lastName);
+	}
+
 	public List<Teacher> findTeachersRelatedToCourse(String courseName) {
 		return teacherRepository.findTeachersRelatedToCourse(courseName);
 	}
 
-	List<Teacher> findAllByDepartmentFaculty(Faculty faculty) {
-		return teacherRepository.findAllByDepartmentFaculty(faculty);
+	public List<Teacher> findAllByFacultyName(String facultyName) {
+		return teacherRepository.findAllByDepartmentFacultyFacultyName(facultyName);
 	}
 
-	List<Teacher> findAllByDepartmentIdAndDepartmentFacultyId(int departmentId, int facultyId) {
+	public List<Teacher> findAllByDepartmentIdAndDepartmentFacultyId(int departmentId, int facultyId) {
 		return teacherRepository.findAllByDepartmentIdAndDepartmentFacultyId(departmentId, facultyId);
 	}
 }

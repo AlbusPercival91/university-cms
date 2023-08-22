@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS university.staff (
     function TEXT
 );
 
-CREATE TABLE IF NOT EXISTS university.students (
+CREATE TABLE IF NOT EXISTS university.student (
     id SERIAL PRIMARY KEY,
     first_name VARCHAR(70) NOT NULL,
     last_name VARCHAR(90) NOT NULL,
@@ -63,17 +63,31 @@ CREATE TABLE IF NOT EXISTS university.students (
     FOREIGN KEY (group_id) REFERENCES university.groups (group_id)
 );
 
-CREATE TABLE IF NOT EXISTS university.teachers (
+CREATE TABLE IF NOT EXISTS university.teacher (
     id SERIAL PRIMARY KEY,
     first_name VARCHAR(70) NOT NULL,
     last_name VARCHAR(90) NOT NULL,
     active BOOLEAN NOT NULL,
     email VARCHAR(100) NOT NULL,
     password VARCHAR(60) NOT NULL,
-    course_id INT,
     department_id INT,
-    FOREIGN KEY (course_id) REFERENCES university.courses (course_id),
     FOREIGN KEY (department_id) REFERENCES university.departments (department_id)
+);
+
+CREATE TABLE IF NOT EXISTS university.students_courses (
+    id SERIAL PRIMARY KEY,
+    student_id INT,
+    course_id INT,
+    FOREIGN KEY (student_id) REFERENCES university.student (id),
+    FOREIGN KEY (course_id) REFERENCES university.courses (course_id)
+);
+
+CREATE TABLE IF NOT EXISTS university.teachers_courses (
+    id SERIAL PRIMARY KEY,
+    teacher_id INT,
+    course_id INT,
+    FOREIGN KEY (teacher_id) REFERENCES university.teacher (id),
+    FOREIGN KEY (course_id) REFERENCES university.courses (course_id)
 );
 
 CREATE TABLE IF NOT EXISTS university.timetable (
@@ -85,7 +99,7 @@ CREATE TABLE IF NOT EXISTS university.timetable (
     course_id INT,
     group_id INT,
     classroom_id INT,
-    FOREIGN KEY (teacher_id) REFERENCES university.teachers (id),
+    FOREIGN KEY (teacher_id) REFERENCES university.teacher (id),
     FOREIGN KEY (course_id) REFERENCES university.courses (course_id),
     FOREIGN KEY (group_id) REFERENCES university.groups (group_id),
     FOREIGN KEY (classroom_id) REFERENCES university.classroom (classroom_id)

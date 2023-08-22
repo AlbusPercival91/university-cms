@@ -1,6 +1,6 @@
 package ua.foxminded.university.dao.entities;
 
-import java.util.Set;
+import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -35,12 +35,12 @@ public class Faculty {
 	private String facultyName;
 
 	@ToString.Exclude
-	@OneToMany(mappedBy = "faculty", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-	private Set<Group> groups;
+	@OneToMany(mappedBy = "faculty", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<Group> groups;
 
 	@ToString.Exclude
-	@OneToMany(mappedBy = "faculty", cascade = { CascadeType.PERSIST }, fetch = FetchType.LAZY)
-	private Set<Department> departments;
+	@OneToMany(mappedBy = "faculty", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<Department> departments;
 
 	public Faculty(String facultyName) {
 		this.facultyName = facultyName;

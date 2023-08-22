@@ -23,9 +23,10 @@ import ua.foxminded.university.dao.entities.Teacher;
 import ua.foxminded.university.dao.interfaces.CourseRepository;
 import ua.foxminded.university.dao.interfaces.DepartmentRepository;
 import ua.foxminded.university.dao.interfaces.TeacherRepository;
+import ua.foxminded.university.validation.UniqueEmailValidator;
 
-@DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
-		TeacherService.class }))
+@DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = { TeacherService.class,
+		UniqueEmailValidator.class }))
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ActiveProfiles("test-container")
 @Sql(scripts = { "/drop_data.sql", "/init_tables.sql",
@@ -61,7 +62,7 @@ class TeacherServiceTest {
 	@ParameterizedTest
 	@CsvSource({ "1", "2", "3" })
 	void testUpdateTeacherById_ShouldReturnUpdatedTeacher(int teacherId) {
-		Teacher expectedTeacher = new Teacher("Severus", "Snape", false, "snape@fakemail.com", "1234", null, null);
+		Teacher expectedTeacher = new Teacher("Severus", "Snape", false, "snape@fakemail.com", "1234", null);
 		expectedTeacher.setId(teacherId);
 
 		Assertions.assertEquals(expectedTeacher, teacherService.updateTeacherById(teacherId, expectedTeacher));
@@ -69,7 +70,7 @@ class TeacherServiceTest {
 
 	@Test
 	void testUpdateTeacherById_WhenIdNotFound_ShouldThrowNoSuchElementException() {
-		Teacher expectedTeacher = new Teacher("Severus", "Snape", false, "snape@fakemail.com", "1234", null, null);
+		Teacher expectedTeacher = new Teacher("Severus", "Snape", false, "snape@fakemail.com", "1234", null);
 		expectedTeacher.setId(1);
 
 		Exception noSuchElementException = assertThrows(Exception.class,
@@ -83,10 +84,9 @@ class TeacherServiceTest {
 		List<Teacher> expectedTeachersList = new ArrayList<>();
 		Optional<Course> course = courseRepository.findById(courseId);
 		Optional<Department> department = departmentRepository.findById(departmentId);
-		Teacher teacher = new Teacher("Albus", "Dumbledore", true, "albus@gmail.com", "1234", department.get(),
-				course.get());
+		Teacher teacher = new Teacher("Albus", "Dumbledore", true, "albus@gmail.com", "1234", department.get());
 		expectedTeachersList.add(teacher);
-		teacherService.createAndAssignTeacherToCourse(teacher);
+		teacherService.createAndAssignTeacherToCourse(teacher, course.get());
 
 		Assertions.assertEquals(expectedTeachersList,
 				teacherService.findTeachersRelatedToCourse(course.get().getCourseName()));
@@ -98,28 +98,12 @@ class TeacherServiceTest {
 		Optional<Course> course = courseRepository.findById(1);
 		Optional<Course> additionalCourse = courseRepository.findById(3);
 		Optional<Department> department = departmentRepository.findById(1);
-		Teacher teacher = new Teacher("Albus", "Dumbledore", true, "albus@gmail.com", "1234", department.get(),
-				course.get());
-		teacherService.createAndAssignTeacherToCourse(teacher);
+		Teacher teacher = new Teacher("Albus", "Dumbledore", true, "albus@gmail.com", "1234", department.get());
+		teacherService.createAndAssignTeacherToCourse(teacher, course.get());
 		teacherService.addTeacherToTheCourse(teacher.getId(), additionalCourse.get().getCourseName());
 
 		Assertions.assertEquals(1,
 				teacherService.removeTeacherFromCourse(teacher.getId(), additionalCourse.get().getCourseName()));
-	}
-
-	@ParameterizedTest
-	@CsvSource({ "3, 3", "2, 2", "1, 1" })
-	void testRemoveTeacherFromCourse_WhenTeacherRemoveFromMainCourse_ShouldThrowIllegalStateException(int courseId,
-			int departmentId) {
-		Optional<Course> course = courseRepository.findById(courseId);
-		Optional<Department> department = departmentRepository.findById(departmentId);
-		Teacher teacher = new Teacher("Albus", "Dumbledore", true, "albus_dumb@gmail.com", "1234", department.get(),
-				course.get());
-		teacherService.createAndAssignTeacherToCourse(teacher);
-
-		Exception illegalStateException = assertThrows(Exception.class,
-				() -> teacherService.removeTeacherFromCourse(teacher.getId(), course.get().getCourseName()));
-		Assertions.assertEquals("Teacher can't be removed from his main Course!", illegalStateException.getMessage());
 	}
 
 	@Test
@@ -127,9 +111,8 @@ class TeacherServiceTest {
 		Optional<Course> course = courseRepository.findById(1);
 		Optional<Course> additionalCourse = courseRepository.findById(3);
 		Optional<Department> department = departmentRepository.findById(1);
-		Teacher teacher = new Teacher("Albus", "Dumbledore", true, "albus@gmail.com", "1234", department.get(),
-				course.get());
-		teacherService.createAndAssignTeacherToCourse(teacher);
+		Teacher teacher = new Teacher("Albus", "Dumbledore", true, "albus@gmail.com", "1234", department.get());
+		teacherService.createAndAssignTeacherToCourse(teacher, course.get());
 
 		Exception illegalStateException = assertThrows(Exception.class,
 				() -> teacherService.removeTeacherFromCourse(teacher.getId(), additionalCourse.get().getCourseName()));

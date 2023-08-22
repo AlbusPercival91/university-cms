@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <title>University CMS</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+</head>
+
+<body>
+
+    <div th:replace="fragments/header :: header"></div>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Welcome to University CMS</h1>
+            <p>Manage your university's courses, professors, students, and departments efficiently.</p>
+        </div>
+    </section>
+
+    <section class="features">
+        <a th:href="@{~/admin/main}" class="feature-link">
+            <div class="feature">
+                <h2>University Management</h2>
+                <p>Create, update, delete and manage features offered by the university.</p>
+            </div>
+        </a>
+
+        <div class="feature">
+            <h2>Teacher Directory</h2>
+            <p>Access to all related information and features provided for teacher account.</p>
+        </div>
+        <div class="feature">
+            <h2>Student Directory</h2>
+            <p>Access to all related information and features provided for student account.</p>
+        </div>
+        <div class="feature">
+            <h2>Staff Directory</h2>
+            <p>Access to all related information and features provided for staff account.</p>
+        </div>
+    </section>
+
+    <div th:replace="fragments/footer :: footer"></div>
+
+</body>
+
+</html>

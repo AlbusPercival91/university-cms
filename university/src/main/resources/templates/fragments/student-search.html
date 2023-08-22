@@ -1,0 +1,74 @@
+<div class="container">
+    <h2>Search Panel</h2>
+
+    <div class="search-block">
+        <div class="search-container">
+            <!-- Search by Course Name -->
+            <div class="search-section">
+                <div class="search-square">
+                    <h3>Find Students related to Course</h3>
+                    <form th:action="@{/admin/student/search-result}" method="get">
+                        <input type="hidden" name="searchType" value="course" />
+                        <label for="courseName">Course Name:</label>
+                        <input type="text" id="courseName" name="courseName" required />
+                        <button type="submit">Search</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Search by Group Name -->
+            <div class="search-section">
+                <div class="search-square">
+                    <h3>Find Students by Group</h3>
+                    <form th:action="@{/admin/student/search-result}" method="get">
+                        <input type="hidden" name="searchType" value="group" />
+                        <label for="groupName">Group Name:</label>
+                        <input type="text" id="groupName" name="groupName" required />
+                        <button type="submit">Search</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Search by Faculty -->
+            <div class="search-section">
+                <div class="search-square">
+                    <h3>Find Students by Faculty</h3>
+                    <form th:action="@{/admin/student/search-result}" method="get">
+                        <input type="hidden" name="searchType" value="faculty" />
+                        <label for="facultyName">Faculty Name:</label>
+                        <input type="text" id="facultyName" name="facultyName" required />
+                        <button type="submit">Search</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Search by Student ID -->
+            <div class="search-section">
+                <div class="search-square">
+                    <h3>Find Student by ID</h3>
+                    <form th:action="@{/admin/student/search-result}" method="get">
+                        <input type="hidden" name="searchType" value="student" />
+                        <label for="studentId">Student ID:</label>
+                        <input type="text" id="studentId" name="studentId" required />
+                        <button type="submit">Search</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Search by Name and Family Name -->
+            <div class="search-section">
+                <div class="search-square">
+                    <h3>Find Student by Name</h3>
+                    <form th:action="@{/admin/student/search-result}" method="get">
+                        <input type="hidden" name="searchType" value="firstNameAndLastName" />
+                        <label for="firstName">Name:</label>
+                        <input type="text" id="firstName" name="firstName" required />
+                        <label for="lastName">Family Name:</label>
+                        <input type="text" id="lastName" name="lastName" required />
+                        <button type="submit">Search</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -48,14 +48,14 @@ VALUES
     ('David', 'Anderson', true, 'david.anderson@example.com', 'password6', 'Assistant Teacher');
 
 -- Generate test data for university.students
-INSERT INTO university.students (first_name, last_name, active, email, password, group_id)
+INSERT INTO university.student (first_name, last_name, active, email, password, group_id)
 VALUES
     ('Emily', 'Brown', true, 'emily.brown@example.com', 'password7', 1),
     ('Daniel', 'Davis', true, 'daniel.davis@example.com', 'password8', 2),
     ('Olivia', 'Johnson', true, 'olivia.johnson@example.com', 'password9', 3);
 
 -- Generate test data for university.teachers
-INSERT INTO university.teachers (first_name, last_name, active, email, password, course_id, department_id)
+INSERT INTO university.teacher (first_name, last_name, active, email, password, course_id, department_id)
 VALUES
     ('Jennifer', 'Smith', true, 'jennifer.smith@example.com', 'password10', 1, 1),
     ('James', 'Wilson', true, 'james.wilson@example.com', 'password11', 2, 2),

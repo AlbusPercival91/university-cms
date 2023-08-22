@@ -1,8 +1,10 @@
 package ua.foxminded.university.dao.entities;
 
-import java.util.Set;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -39,8 +41,8 @@ public class ClassRoom {
 	private int roomNumber;
 
 	@ToString.Exclude
-	@OneToMany(mappedBy = "classRoom")
-	private Set<TimeTable> timeTables;
+	@OneToMany(mappedBy = "classRoom", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<TimeTable> timeTables;
 
 	public ClassRoom(String street, int buildingNumber, int roomNumber) {
 		this.street = street;

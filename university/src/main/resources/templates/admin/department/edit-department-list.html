@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Department List</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" />
+</head>
+
+<div th:replace="fragments/header :: header"></div>
+
+<div th:replace="fragments/admin-panel :: div"></div>
+
+<div th:replace="fragments/department-search :: div"></div>
+
+<body>
+
+    <div class="container">
+        <h2>Department List</h2>
+        <table class="table table-bordered">
+            <caption hidden>All Departments Table</caption>
+            <thead>
+                <tr>
+                    <th style="border: none; width: 3vh;"></th>
+                    <th>ID</th>
+                    <th>Department</th>
+                    <th>Faculty Name</th>
+                    <th>Teachers</th>
+                    <th style="border: none; width: 3vh;"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="department, rowStat : ${departments}">
+                    <td style="border: none;">
+                        <!-- Edit Button -->
+                        <a th:href="@{/admin/department/department-card/{departmentId}(departmentId=${department.id})}">
+                            <button th:id="'editButton-' + ${rowStat.index}" class="icon-button">
+                                <i class="fas fa-edit edit-icon"></i>
+                            </button>
+                        </a>
+                    </td>
+                    <td th:text="${department.id}"></td>
+                    <td th:text="${department.name}"></td>
+                    <td th:text="${department.faculty.facultyName}"></td>
+                    <td>
+                        <select>
+                            <option th:each="teacher : ${department.teachers}"
+                                th:text="${'ID: ' + teacher.id + ', ' + teacher.firstName + ' ' + teacher.lastName}">
+                            </option>
+                        </select>
+                    </td>
+                    <td style="border: none;">
+                        <!-- Remove Button -->
+                        <form th:action="@{/admin/department/delete/{departmentId}(departmentId=${department.id})}"
+                            method="post">
+                            <input type="hidden" name="departmentId" th:value="${department.id}" />
+                            <button th:id="'removeButton-' + ${rowStat.index}" class="icon-button remove-button"
+                                type="submit">
+                                <i class="fas fa-trash-alt remove-icon"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div th:replace="fragments/message :: div"></div>
+    <div th:replace="fragments/footer :: footer"></div>
+
+    <script th:src="@{/js/work-panel.js}"></script>
+    <script th:src="@{/js/table-buttons.js}"></script>
+</body>
+
+</html>

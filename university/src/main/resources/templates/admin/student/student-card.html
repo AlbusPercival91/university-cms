@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Teacher Card</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" />
+</head>
+
+<body>
+
+    <div th:replace="fragments/header :: header"></div>
+    <div th:replace="fragments/admin-panel :: div"></div>
+
+    <div class="container-entity-card">
+
+        <!-- Block for student-details -->
+        <div class="entity-details">
+            <h2>Student Details</h2>
+            <form th:action="@{/admin/student/edit-student/{studentId}(studentId=${student.id})}" method="post">
+                <div class="form-group">
+                    <label for="firstName">First Name:</label>
+                    <input type="text" id="firstName" th:value="${student.firstName}" name="firstName" readonly
+                        required>
+                </div>
+                <div class="form-group">
+                    <label for="lastName">Last Name:</label>
+                    <input type="text" id="lastName" th:value="${student.lastName}" name="lastName" readonly required />
+                </div>
+                <div class="form-group">
+                    <label for="active">Active:</label>
+                    <select id="active" name="active" readonly required>
+                        <option th:text="True" th:selected="${student.active}">True</option>
+                        <option th:text="False" th:selected="${!student.active}">False</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" th:value="${student.email}" name="email" readonly required />
+                </div>
+                <div class="form-group">
+                    <label for="group">Group:</label>
+                    <select id="group" name="group" readonly required>
+                        <!-- Display the currently assigned group initially -->
+                        <option th:text="${'ID: ' + student.group.id + ', ' + student.group.groupName}">
+                        </option>
+                        <!-- Generate options for other groups using Thymeleaf -->
+                        <option th:each="group : ${groups}" th:value="${group.id}"
+                            th:text="${'ID: ' + group.id + ', ' + group.groupName}"
+                            th:selected="${student.group.id == group.id}">
+                        </option>
+                    </select>
+                </div>
+
+                <!-- Container for buttons -->
+                <div class="button-container">
+                    <button id="saveButton" type="submit" class="button-common-style">Save</button>
+                    <button id="editButton" type="button" class="button-common-style">Edit</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Block for Courses -->
+        <div class="courses">
+            <h2>Assigned Courses</h2>
+            <table class="table table-bordered">
+                <caption hidden>Assigned Courses Table</caption>
+                <thead>
+                    <tr>
+                        <th style="border: none; width: 3vh;"></th>
+                        <th style="border: none; width: 3vh;"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="course, rowStat : ${student.courses}">
+                        <td style="white-space: nowrap;" th:text="${course.courseName}"></td>
+                        <td style="border: none;">
+                            <!-- Remove Button -->
+                            <form
+                                th:action="@{/admin/student/remove-course/{studentId}/{courseName}(studentId=${student.id}, courseName=${course.courseName})}"
+                                method="post">
+                                <input type="hidden" name="courseName" th:value="${course.courseName}" />
+                                <button th:id="'removeButton-' + ${rowStat.index}" class="remove-icon" type="submit">
+                                    <i class="fas fa-trash-alt remove-icon"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <!-- Generate options for Additional courses using Thymeleaf -->
+            <form th:action="@{/admin/student/assign-course}" method="post">
+                <input type="hidden" name="studentId" th:value="${student.id}" />
+                <select name="courseName">
+                    <option value="">Select Additional Course</option>
+                    <option th:each="course : ${courses}" th:value="${course.courseName}"
+                        th:text="${course.courseName}">
+                    </option>
+                </select>
+                <br>
+                <button type="submit">Assign</button>
+            </form>
+        </div>
+
+        <!-- Block for student-timetable -->
+        <div class="entity-timetable">
+            <h2>Student Time-Table</h2>
+
+            <form th:action="@{/admin/timetable/selected-timetable/{studentId}(studentId=${student.id})}" method="get">
+                <div class="form-group">
+                    <label for="dateFrom">From:</label>
+                    <input type="date" id="dateFrom" name="dateFrom" required class="date-input"
+                        th:value="${param.dateFrom}" />
+                </div>
+                <div class="form-group">
+                    <label for="dateTo">To:</label>
+                    <input type="date" id="dateTo" name="dateTo" required class="date-input"
+                        th:value="${param.dateTo}" />
+                </div>
+
+                <!-- Container for both buttons -->
+                <div class="button-container">
+                    <!-- First button for the first action -->
+                    <button id="saveButton" type="submit" name="action" value="selected-timetable"
+                        class="button-common-style">
+                        Get Selected Date Time-Table
+                    </button>
+                    <!-- Second button for the second action -->
+                    <button id="saveButton" type="submit" class="button-common-style" name="action"
+                        value="selected-group-timetable">
+                        Get Selected Date Group Time-Table
+                    </button>
+                </div>
+            </form>
+
+            <!-- Container for Get All Time-Tables button -->
+            <div class="button-container">
+                <form th:action="@{/admin/timetable/student-timetable/{studentId}(studentId=${student.id})}"
+                    method="get">
+                    <button id="saveButton" type="submit" class="button-common-style">Get Full Student
+                        Time-Table</button>
+                </form>
+            </div>
+
+            <!-- Container for Get Full Group Time-Tables button -->
+            <div class="button-container">
+                <form th:action="@{/admin/timetable/timetable-group/{studentId}(studentId=${student.id})}" method="get">
+                    <button id="saveButton" type="submit" class="button-common-style">Get Full Group Time-Table</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <div th:replace="fragments/message :: div"></div>
+    <div th:replace="fragments/footer :: footer"></div>
+
+    <script th:src="@{/js/work-panel.js}"></script>
+    <script th:src="@{/js/enable-edit.js}"></script>
+
+
+
+</body>
+
+</html>

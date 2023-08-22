@@ -6,11 +6,19 @@ spring:
       username: university_admin
       password: '1234'
       pool-size: 30
-      
+
   jpa:
     hibernate:
-      ddl-auto: update
-      
+      ddl-auto: validate
+
   flyway:
     table: schema_history
     schemas: university
+
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    cache: false
+    mode: HTML
+    encoding: UTF-8
+    enabled: true

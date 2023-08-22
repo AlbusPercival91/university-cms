@@ -16,10 +16,12 @@ import ua.foxminded.university.dao.entities.Group;
 import ua.foxminded.university.dao.entities.Student;
 import ua.foxminded.university.dao.entities.Teacher;
 import ua.foxminded.university.dao.entities.TimeTable;
+import ua.foxminded.university.dao.exception.TimeTableValidationException;
 import ua.foxminded.university.dao.interfaces.GroupRepository;
 import ua.foxminded.university.dao.interfaces.StudentRepository;
 import ua.foxminded.university.dao.interfaces.TeacherRepository;
 import ua.foxminded.university.dao.interfaces.TimeTableRepository;
+import ua.foxminded.university.validation.TimeTableValidator;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -30,38 +32,46 @@ public class TimeTableService {
 	private final StudentRepository studentRepository;
 	private final TeacherRepository teacherRepository;
 	private final GroupRepository groupRepository;
+	private final TimeTableValidator timeTableValidator;
 
 	public TimeTable createGroupTimeTable(LocalDate date, LocalTime timeFrom, LocalTime timeTo, Teacher teacher,
 			Course course, Group group, ClassRoom classRoom) {
-		if (timeTableRepository.existsByDateAndTimeFromAndTimeToAndClassRoom(date, timeFrom, timeTo, classRoom)) {
-			throw new IllegalStateException("ClassRoom is busy, choose another Time");
+		try {
+			timeTableValidator.validate(date, timeFrom, timeTo, teacher, course, classRoom);
+
+			TimeTable timeTable = new TimeTable(date, timeFrom, timeTo, teacher, course, group, classRoom);
+			log.info("Timetable [date:{}, time from:{}, time to:{}] is scheduled successfully.", timeTable.getDate(),
+					timeTable.getTimeFrom(), timeTable.getTimeTo());
+			return timeTableRepository.save(timeTable);
+		} catch (TimeTableValidationException ex) {
+			throw new TimeTableValidationException(ex.getMessage());
 		}
-		TimeTable timeTable = new TimeTable(date, timeFrom, timeTo, teacher, course, group, classRoom);
-		log.info("Timetable [date::{}, time from::{}, time to::{}] is scheduled successfully.", timeTable.getDate(),
-				timeTable.getTimeFrom(), timeTable.getTimeTo());
-		return timeTableRepository.save(timeTable);
 	}
 
 	public TimeTable createTimeTableForStudentsAtCourse(LocalDate date, LocalTime timeFrom, LocalTime timeTo,
 			Teacher teacher, Course course, ClassRoom classRoom) {
-		if (timeTableRepository.existsByDateAndTimeFromAndTimeToAndClassRoom(date, timeFrom, timeTo, classRoom)) {
-			throw new IllegalStateException("ClassRoom is busy, choose another Time");
-		}
-		List<Student> studentsRelatedToCourse = studentRepository.findStudentsRelatedToCourse(course.getCourseName());
+		try {
+			timeTableValidator.validate(date, timeFrom, timeTo, teacher, course, classRoom);
 
-		if (!studentsRelatedToCourse.isEmpty()) {
-			TimeTable timeTable = new TimeTable(date, timeFrom, timeTo, teacher, course, classRoom,
-					studentsRelatedToCourse);
-			log.info("Timetable [date::{}, time from::{}, time to::{}] is scheduled successfully.", timeTable.getDate(),
-					timeTable.getTimeFrom(), timeTable.getTimeTo());
-			return timeTableRepository.save(timeTable);
-		} else {
-			log.warn("Students assigned to course {} not found", course.getCourseName());
-			throw new NoSuchElementException("Students at this course not found");
+			List<Student> studentsRelatedToCourse = studentRepository
+					.findStudentsRelatedToCourse(course.getCourseName());
+
+			if (!studentsRelatedToCourse.isEmpty()) {
+				TimeTable timeTable = new TimeTable(date, timeFrom, timeTo, teacher, course, classRoom,
+						studentsRelatedToCourse);
+				log.info("Timetable [date:{}, time from:{}, time to:{}] is scheduled successfully.",
+						timeTable.getDate(), timeTable.getTimeFrom(), timeTable.getTimeTo());
+				return timeTableRepository.save(timeTable);
+			} else {
+				log.warn("Students assigned to course {} not found", course.getCourseName());
+				throw new NoSuchElementException("Students at this course not found");
+			}
+		} catch (TimeTableValidationException ex) {
+			throw new TimeTableValidationException(ex.getMessage());
 		}
 	}
 
-	List<TimeTable> getStudentTimeTable(int studentId) {
+	public List<TimeTable> getStudentTimeTable(int studentId) {
 		Student existingStudent = studentRepository.findById(studentId).orElseThrow(() -> {
 			log.warn("Student with id {} not found", studentId);
 			return new NoSuchElementException("Student not found");
@@ -98,16 +108,18 @@ public class TimeTableService {
 		return timeTableRepository.findByGroupOrderByDateAscTimeFromAsc(existingGroup);
 	}
 
-	List<TimeTable> getStudentTimeTableByDate(LocalDate dateFrom, LocalDate dateTo, int studentId) {
+	public List<TimeTable> getStudentTimeTableByDate(LocalDate dateFrom, LocalDate dateTo, int studentId) {
 		Student existingStudent = studentRepository.findById(studentId).orElseThrow(() -> {
 			log.warn("Student with id {} not found", studentId);
 			return new NoSuchElementException("Student not found");
 		});
 
 		if (timeTableRepository.studentIsAssignedToAnyCourse(existingStudent.getId())) {
-			return timeTableRepository.findByDateAndStudentOrderByDateAscTimeFromAsc(dateFrom, dateTo, existingStudent.getId());
+			return timeTableRepository.findByDateAndStudentOrderByDateAscTimeFromAsc(dateFrom, dateTo,
+					existingStudent.getId());
 		} else {
-			return timeTableRepository.findByDateAndGroupOrderByDateAscTimeFromAsc(dateFrom, dateTo, existingStudent.getGroup());
+			return timeTableRepository.findByDateAndGroupOrderByDateAscTimeFromAsc(dateFrom, dateTo,
+					existingStudent.getGroup());
 		}
 	}
 
@@ -124,7 +136,8 @@ public class TimeTableService {
 			log.warn("Student with id {} not found", student.getId());
 			return new NoSuchElementException("Student not found");
 		});
-		return timeTableRepository.findByDateAndGroupOrderByDateAscTimeFromAsc(dateFrom, dateTo, existingStudent.getGroup());
+		return timeTableRepository.findByDateAndGroupOrderByDateAscTimeFromAsc(dateFrom, dateTo,
+				existingStudent.getGroup());
 	}
 
 	public List<TimeTable> getGroupTimeTableByDate(LocalDate dateFrom, LocalDate dateTo, Group group) {
@@ -135,11 +148,15 @@ public class TimeTableService {
 		return timeTableRepository.findByDateAndGroupOrderByDateAscTimeFromAsc(dateFrom, dateTo, existingGroup);
 	}
 
+	public List<TimeTable> getAllTimeTables() {
+		return timeTableRepository.findAll();
+	}
+
 	public List<TimeTable> getAllTimeTablesByDate(LocalDate dateFrom, LocalDate dateTo) {
 		return timeTableRepository.findByDateOrderByDateAscTimeFromAsc(dateFrom, dateTo);
 	}
 
-	public TimeTable updateTimeTabletById(int timeTableId, TimeTable targetTimeTable) {
+	public TimeTable updateTimeTableById(int timeTableId, TimeTable targetTimeTable) {
 		TimeTable existingTimeTable = timeTableRepository.findById(timeTableId).orElseThrow(() -> {
 			log.warn("TimeTable with id {} not found", timeTableId);
 			return new NoSuchElementException("TimeTable not found");
@@ -159,5 +176,21 @@ public class TimeTableService {
 			log.warn("TimeTable with id {} not found", timeTableId);
 			throw new NoSuchElementException("TimeTable not found");
 		}
+	}
+
+	public Optional<TimeTable> findTimeTableById(int timeTableId) {
+		return timeTableRepository.findById(timeTableId);
+	}
+
+	public List<TimeTable> findTimeTableByGroupName(String groupName) {
+		return timeTableRepository.findByGroupGroupNameOrderByDateAscTimeFromAsc(groupName);
+	}
+
+	public List<TimeTable> findTimeTableByCourseName(String groupName) {
+		return timeTableRepository.findByCourseCourseNameOrderByDateAscTimeFromAsc(groupName);
+	}
+
+	public List<TimeTable> findTimeTablesByDate(LocalDate date) {
+		return timeTableRepository.findByDateOrderByDateAscTimeFromAsc(date);
 	}
 }

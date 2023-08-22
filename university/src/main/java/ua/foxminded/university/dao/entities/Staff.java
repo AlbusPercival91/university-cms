@@ -16,7 +16,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Entity
 @Table(name = "staff", schema = "university")
-public class Staff extends Person {
+public class Staff extends User {
 
 	@Column(name = "position")
 	private String position;

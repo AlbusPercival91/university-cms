@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ua.foxminded.university.dao.entities.Staff;
 import ua.foxminded.university.dao.interfaces.StaffRepository;
+import ua.foxminded.university.validation.UniqueEmailValidator;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -17,11 +18,16 @@ import ua.foxminded.university.dao.interfaces.StaffRepository;
 @Transactional
 public class StaffService {
 	private final StaffRepository staffRepository;
+	private final UniqueEmailValidator emailValidator;
 
 	public int createStaff(Staff staff) {
-		Staff newStaff = staffRepository.save(staff);
-		log.info("Created staff with id: {}", newStaff.getId());
-		return newStaff.getId();
+		if (emailValidator.isValid(staff)) {
+			Staff newStaff = staffRepository.save(staff);
+			log.info("Created staff with id: {}", newStaff.getId());
+			return newStaff.getId();
+		}
+		log.warn("Email already registered");
+		throw new IllegalStateException("Email already registered");
 	}
 
 	public int deleteStaffById(int staffId) {
@@ -48,5 +54,17 @@ public class StaffService {
 
 	public List<Staff> getAllStaff() {
 		return staffRepository.findAll();
+	}
+
+	public Optional<Staff> findStaffById(int staffId) {
+		return staffRepository.findById(staffId);
+	}
+
+	public List<Staff> findStaffByName(String firstName, String lastName) {
+		return staffRepository.findStaffByFirstNameAndLastName(firstName, lastName);
+	}
+
+	public List<Staff> findStaffByPosition(String position) {
+		return staffRepository.findStaffByPosition(position);
 	}
 }

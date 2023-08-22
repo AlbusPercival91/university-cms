@@ -1,8 +1,8 @@
 DROP TABLE IF EXISTS university.students_courses CASCADE;
 DROP TABLE IF EXISTS university.teachers_courses CASCADE;
 DROP TABLE IF EXISTS university.timetable;
-DROP TABLE IF EXISTS university.teachers;
-DROP TABLE IF EXISTS university.students;
+DROP TABLE IF EXISTS university.teacher;
+DROP TABLE IF EXISTS university.student;
 DROP TABLE IF EXISTS university.staff;
 DROP TABLE IF EXISTS university.groups;
 DROP TABLE IF EXISTS university.departments;

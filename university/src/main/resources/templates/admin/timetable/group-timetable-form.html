@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Create Student</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+</head>
+
+<div th:replace="fragments/header :: header"></div>
+<div th:replace="fragments/admin-panel :: div"></div>
+
+<body>
+    <div class="container">
+        <h2>Create Group Time Table</h2>
+        <form th:action="@{/admin/timetable/group-timetable-form}" method="post">
+            <div class="form-group">
+                <label for="date">Date:</label>
+                <input type="date" id="date" name="date" required>
+            </div>
+            <div class="form-group">
+                <label for="timeFrom">Time From:</label>
+                <input type="time" id="timeFrom" name="timeFrom" required>
+            </div>
+            <div class="form-group">
+                <label for="timeTo">Time To:</label>
+                <input type="time" id="timeTo" name="timeTo" required>
+            </div>
+            <div class="form-group">
+                <label for="teacher">Teacher:</label>
+                <select id="teacher" name="teacher" required>
+                    <option value="">Select Teacher</option>
+                    <!-- Generate options for teachers using Thymeleaf -->
+                    <option th:each="teacher : ${teachers}" th:value="${teacher.id}"
+                        th:text="${'ID: ' + teacher.id + ', ' + teacher.firstName + ' ' + teacher.lastName}">
+                    </option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="course">Course:</label>
+                <select id="course" name="course" required>
+                    <option value="">Select Course</option>
+                    <!-- Generate options for courses using Thymeleaf -->
+                    <option th:each="course : ${courses}" th:value="${course.id}" th:text="${course.courseName}">
+                    </option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="group">Group:</label>
+                <select id="group" name="group" required>
+                    <option value="">Select Group</option>
+                    <!-- Generate options for groups using Thymeleaf -->
+                    <option th:each="group : ${groups}" th:value="${group.id}"
+                        th:text="${'ID: ' + group.id + ', ' + group.groupName}">
+                    </option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="classroom">Class Room:</label>
+                <select id="classRoom" name="classRoom" required>
+                    <option value="">Select Class Room</option>
+                    <!-- Generate options for classrooms using Thymeleaf -->
+                    <option th:each="classroom : ${classrooms}" th:value="${classroom.id}"
+                        th:text="${classroom.street + ', ' + classroom.buildingNumber + ', Room ' + classroom.roomNumber}">
+                    </option>
+                </select>
+            </div>
+
+
+            <button type="submit">Create Time Table</button>
+        </form>
+
+    </div>
+
+    <div th:replace="fragments/message :: div"></div>
+    <div th:replace="fragments/footer :: footer"></div>
+
+    <script th:src="@{/js/work-panel.js}"></script>
+</body>
+
+</html>

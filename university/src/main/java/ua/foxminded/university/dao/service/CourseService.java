@@ -25,6 +25,10 @@ public class CourseService {
 	private final StudentRepository studentRepository;
 
 	public int createCourse(Course course) {
+		if (findByCourseName(course.getCourseName()).isPresent()) {
+			log.warn("Course already exists");
+			throw new IllegalStateException("Course already exists");
+		}
 		Course newCourse = courseRepository.save(course);
 		log.info("Created course with id: {}", newCourse.getId());
 		return newCourse.getId();
@@ -56,7 +60,7 @@ public class CourseService {
 		return courseRepository.findAll();
 	}
 
-	List<Course> findCoursesRelatedToTeacher(int teacherId) {
+	public List<Course> findCoursesRelatedToTeacher(int teacherId) {
 		Teacher existingTeacher = teacherRepository.findById(teacherId).orElseThrow(() -> {
 			log.warn("Teacher with id {} not found", teacherId);
 			return new NoSuchElementException("Teacher not found");
@@ -64,7 +68,7 @@ public class CourseService {
 		return courseRepository.findCoursesRelatedToTeacher(existingTeacher.getId());
 	}
 
-	List<Course> findCoursesRelatedToStudent(int studentId) {
+	public List<Course> findCoursesRelatedToStudent(int studentId) {
 		Student existingStudent = studentRepository.findById(studentId).orElseThrow(() -> {
 			log.warn("Student with id {} not found", studentId);
 			return new NoSuchElementException("Student not found");
@@ -72,4 +76,11 @@ public class CourseService {
 		return courseRepository.findCoursesRelatedToStudent(existingStudent.getId());
 	}
 
+	public Optional<Course> findCourseById(int courseId) {
+		return courseRepository.findById(courseId);
+	}
+
+	public Optional<Course> findByCourseName(String courseName) {
+		return courseRepository.findByCourseName(courseName);
+	}
 }

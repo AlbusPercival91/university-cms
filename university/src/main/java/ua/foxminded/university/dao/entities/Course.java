@@ -1,6 +1,7 @@
 package ua.foxminded.university.dao.entities;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -11,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.PreRemove;
 import javax.persistence.Table;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -40,16 +42,16 @@ public class Course {
 	private String courseDescription;
 
 	@ToString.Exclude
-	@ManyToMany(mappedBy = "additionalCourses", cascade = { CascadeType.PERSIST }, fetch = FetchType.LAZY)
+	@ManyToMany(mappedBy = "assignedCourses")
 	private Set<Teacher> teachers = new HashSet<>();
 
 	@ToString.Exclude
-	@ManyToMany(mappedBy = "courses", cascade = { CascadeType.PERSIST }, fetch = FetchType.LAZY)
+	@ManyToMany(mappedBy = "courses")
 	private Set<Student> students = new HashSet<>();
 
 	@ToString.Exclude
-	@OneToMany(mappedBy = "course")
-	private Set<TimeTable> timeTables;
+	@OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<TimeTable> timeTables;
 
 	public Course(String courseName) {
 		this.courseName = courseName;
@@ -58,5 +60,11 @@ public class Course {
 	public Course(String courseName, String courseDescription) {
 		this.courseName = courseName;
 		this.courseDescription = courseDescription;
+	}
+
+	@PreRemove
+	private void removeTeacherAndStudentAssociations() {
+		teachers.forEach(teacher -> teacher.getAssignedCourses().remove(this));
+		students.forEach(student -> student.getCourses().remove(this));
 	}
 }

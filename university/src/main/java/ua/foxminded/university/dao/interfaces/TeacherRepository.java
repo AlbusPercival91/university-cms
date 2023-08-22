@@ -6,8 +6,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
-import ua.foxminded.university.dao.entities.Faculty;
 import ua.foxminded.university.dao.entities.Teacher;
 
 @Repository
@@ -29,6 +27,8 @@ public interface TeacherRepository extends JpaRepository<Teacher, Integer> {
 			""")
 	int removeTeacherFromCourse(@Param("teacherId") int teacherId, @Param("courseName") String courseName);
 
+	List<Teacher> findTeacherByFirstNameAndLastName(String firstName, String lastName);
+
 	@Query("""
 			SELECT t FROM Teacher t
 			     JOIN TeachersCourses tc ON t.id = tc.teacherId
@@ -39,7 +39,7 @@ public interface TeacherRepository extends JpaRepository<Teacher, Integer> {
 	/*
 	 * return all Teachers in Faculty
 	 */
-	List<Teacher> findAllByDepartmentFaculty(Faculty faculty);
+	List<Teacher> findAllByDepartmentFacultyFacultyName(String facultyName);
 
 	/*
 	 * return all Teachers in defined Department of special Faculty

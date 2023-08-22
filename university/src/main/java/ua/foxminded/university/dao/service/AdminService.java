@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ua.foxminded.university.dao.entities.Admin;
 import ua.foxminded.university.dao.interfaces.AdminRepository;
+import ua.foxminded.university.validation.UniqueEmailValidator;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -17,11 +18,14 @@ import ua.foxminded.university.dao.interfaces.AdminRepository;
 @Transactional
 public class AdminService {
 	private final AdminRepository adminRepository;
+	private final UniqueEmailValidator emailValidator;
 
 	public int createAdmin(Admin admin) {
-		Admin newAdmin = adminRepository.save(admin);
-		log.info("Created admin with id: {}", newAdmin.getId());
-		return newAdmin.getId();
+		if (emailValidator.isValid(admin)) {
+			return adminRepository.save(admin).getId();
+		}
+		log.warn("Email already registered");
+		throw new IllegalStateException("Email already registered");
 	}
 
 	public int deleteAdminById(int adminId) {
@@ -48,5 +52,9 @@ public class AdminService {
 
 	public List<Admin> getAllAdmins() {
 		return adminRepository.findAll();
+	}
+
+	public Optional<Admin> findAdminById(int adminId) {
+		return adminRepository.findById(adminId);
 	}
 }

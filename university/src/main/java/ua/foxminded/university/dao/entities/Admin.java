@@ -15,7 +15,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Entity
 @Table(name = "admin", schema = "university")
-public class Admin extends Person {
+public class Admin extends User {
 
 	public Admin(String firstName, String lastName, boolean isActive, String email, String password) {
 		super(firstName, lastName, isActive, email, password);
