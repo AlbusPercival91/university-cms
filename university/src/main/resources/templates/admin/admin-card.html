@@ -20,11 +20,12 @@
             <form th:action="@{/admin/edit-admin/{adminId}(adminId=${admin.id})}" method="post">
                 <div class="form-group">
                     <label for="firstName">First Name:</label>
-                    <input type="text" id="firstName" th:value="${admin.firstName}" name="firstName" readonly />
+                    <input type="text" id="firstName" th:value="${admin.firstName}" name="firstName" readonly
+                        required />
                 </div>
                 <div class="form-group">
                     <label for="lastName">Last Name:</label>
-                    <input type="text" id="lastName" th:value="${admin.lastName}" name="lastName" readonly />
+                    <input type="text" id="lastName" th:value="${admin.lastName}" name="lastName" readonly required />
                 </div>
                 <div class="form-group">
                     <label for="active">Active:</label>
@@ -35,7 +36,7 @@
                 </div>
                 <div class="form-group">
                     <label for="email">Email:</label>
-                    <input type="email" id="email" th:value="${admin.email}" name="email" readonly />
+                    <input type="email" id="email" th:value="${admin.email}" name="email" readonly required />
                 </div>
 
                 <!-- Container for buttons -->

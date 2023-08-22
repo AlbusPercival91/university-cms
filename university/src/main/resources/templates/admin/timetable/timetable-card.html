@@ -22,20 +22,21 @@
                 method="post">
                 <div class="form-group">
                     <label for="date">Date:</label>
-                    <input type="date" id="date" th:value="${timetable.date}" name="date" readonly />
+                    <input type="date" id="date" th:value="${timetable.date}" name="date" readonly required />
                 </div>
                 <div class="form-group">
                     <label for="timeFrom">Time From:</label>
-                    <input type="time" id="timeFrom" th:value="${timetable.timeFrom}" name="timeFrom" readonly />
+                    <input type="time" id="timeFrom" th:value="${timetable.timeFrom}" name="timeFrom" readonly
+                        required />
                 </div>
                 <div class="form-group">
                     <label for="timeTo">Time To:</label>
-                    <input type="time" id="timeTo" th:value="${timetable.timeTo}" name="timeTo" readonly />
+                    <input type="time" id="timeTo" th:value="${timetable.timeTo}" name="timeTo" readonly required />
                 </div>
 
                 <div class="form-group">
                     <label for="teacher">Teacher:</label>
-                    <select id="teacher" name="teacher" readonly>
+                    <select id="teacher" name="teacher" readonly required>
                         <!-- Display the currently assigned teacher initially -->
                         <option
                             th:text="${'ID: ' + timetable.teacher.id + ', ' + timetable.teacher.firstName + ' ' + timetable.teacher.lastName}">
@@ -50,7 +51,7 @@
 
                 <div class="form-group">
                     <label for="course">Course:</label>
-                    <select id="course" name="course" readonly>
+                    <select id="course" name="course" readonly required>
                         <!-- Display the currently assigned course initially -->
                         <option th:text="${'ID: ' + timetable.course.id + ', ' + timetable.course.courseName}">
                         </option>
@@ -64,7 +65,7 @@
 
                 <div class="form-group">
                     <label for="group">Group:</label>
-                    <select id="group" name="group" readonly>
+                    <select id="group" name="group" readonly required>
                         <!-- Display the currently assigned group or 'n/a' if group is null -->
                         <option th:if="${timetable.group == null}" value="n/a">N/A</option>
                         <option th:if="${timetable.group != null}"
@@ -80,7 +81,7 @@
 
                 <div class="form-group">
                     <label for="classRoom">Class Room:</label>
-                    <select id="classRoom" name="classRoom" readonly>
+                    <select id="classRoom" name="classRoom" readonly required>
                         <!-- Display the currently assigned classroom initially -->
                         <option
                             th:text="${'ID: ' + timetable.classRoom.id + ', ' + timetable.classRoom.street + ', ' + timetable.classRoom.buildingNumber + ', room ' + timetable.classRoom.roomNumber}">

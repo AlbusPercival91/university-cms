@@ -21,17 +21,17 @@
                 method="post">
                 <div class="form-group">
                     <label for="street">Street:</label>
-                    <input type="text" id="street" th:value="${classroom.street}" name="street" readonly />
+                    <input type="text" id="street" th:value="${classroom.street}" name="street" readonly required />
                 </div>
                 <div class="form-group">
                     <label for="buildingNumber">Building Number:</label>
                     <input type="number" id="buildingNumber" th:value="${classroom.buildingNumber}"
-                        name="buildingNumber" readonly />
+                        name="buildingNumber" readonly required />
                 </div>
                 <div class="form-group">
                     <label for="roomNumber">Room Number:</label>
-                    <input type="number" id="roomNumber" th:value="${classroom.roomNumber}" name="roomNumber"
-                        readonly />
+                    <input type="number" id="roomNumber" th:value="${classroom.roomNumber}" name="roomNumber" readonly
+                        required />
                 </div>
                 <!-- Container for buttons -->
                 <div class="button-container">
