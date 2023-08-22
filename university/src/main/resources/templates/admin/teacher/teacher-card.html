@@ -43,7 +43,7 @@
                     <label for="department">Department:</label>
                     <select id="department" name="department" readonly required>
                         <!-- Display the currently assigned department initially -->
-                        <option th:text="${'ID: ' + teacher.department.id + ', ' + teacher.department.name}">
+                        <option th:value="${'ID: ' + teacher.department.id + ', ' + teacher.department.name}">
                         </option>
                         <!-- Generate options for other departments using Thymeleaf -->
                         <option th:each="department : ${departments}" th:value="${department.id}"

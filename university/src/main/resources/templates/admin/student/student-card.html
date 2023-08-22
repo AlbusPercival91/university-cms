@@ -43,7 +43,7 @@
                     <label for="group">Group:</label>
                     <select id="group" name="group" readonly required>
                         <!-- Display the currently assigned group initially -->
-                        <option th:text="${'ID: ' + student.group.id + ', ' + student.group.groupName}">
+                        <option th:value="${'ID: ' + student.group.id + ', ' + student.group.groupName}">
                         </option>
                         <!-- Generate options for other groups using Thymeleaf -->
                         <option th:each="group : ${groups}" th:value="${group.id}"

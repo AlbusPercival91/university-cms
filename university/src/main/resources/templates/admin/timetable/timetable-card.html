@@ -39,7 +39,7 @@
                     <select id="teacher" name="teacher" readonly required>
                         <!-- Display the currently assigned teacher initially -->
                         <option
-                            th:text="${'ID: ' + timetable.teacher.id + ', ' + timetable.teacher.firstName + ' ' + timetable.teacher.lastName}">
+                            th:value="${'ID: ' + timetable.teacher.id + ', ' + timetable.teacher.firstName + ' ' + timetable.teacher.lastName}">
                         </option>
                         <!-- Generate options for other teachers using Thymeleaf -->
                         <option th:each="teacher : ${teachers}" th:value="${teacher.id}"
@@ -53,7 +53,7 @@
                     <label for="course">Course:</label>
                     <select id="course" name="course" readonly required>
                         <!-- Display the currently assigned course initially -->
-                        <option th:text="${'ID: ' + timetable.course.id + ', ' + timetable.course.courseName}">
+                        <option th:value="${'ID: ' + timetable.course.id + ', ' + timetable.course.courseName}">
                         </option>
                         <!-- Generate options for other courses using Thymeleaf -->
                         <option th:each="course : ${courses}" th:value="${course.id}"
@@ -69,7 +69,7 @@
                         <!-- Display the currently assigned group or 'n/a' if group is null -->
                         <option th:if="${timetable.group == null}" value="n/a">N/A</option>
                         <option th:if="${timetable.group != null}"
-                            th:text="${'ID: ' + timetable.group.id + ', ' + timetable.group.groupName}">
+                            th:value="${'ID: ' + timetable.group.id + ', ' + timetable.group.groupName}">
                         </option>
                         <!-- Generate options for other groups using Thymeleaf -->
                         <option th:each="group : ${groups}" th:value="${group.id}"
@@ -84,7 +84,7 @@
                     <select id="classRoom" name="classRoom" readonly required>
                         <!-- Display the currently assigned classroom initially -->
                         <option
-                            th:text="${'ID: ' + timetable.classRoom.id + ', ' + timetable.classRoom.street + ', ' + timetable.classRoom.buildingNumber + ', room ' + timetable.classRoom.roomNumber}">
+                            th:value="${'ID: ' + timetable.classRoom.id + ', ' + timetable.classRoom.street + ', ' + timetable.classRoom.buildingNumber + ', room ' + timetable.classRoom.roomNumber}">
                         </option>
                         <!-- Generate options for other classrooms using Thymeleaf -->
                         <option th:each="classroom : ${classrooms}" th:value="${classroom.id}"

@@ -27,7 +27,7 @@
                     <label for="faculty">Faculty:</label>
                     <select id="faculty" name="faculty" readonly required>
                         <!-- Display the currently assigned faculty initially -->
-                        <option th:text="${'ID: ' + department.faculty.id + ', ' + department.faculty.facultyName}">
+                        <option th:value="${'ID: ' + department.faculty.id + ', ' + department.faculty.facultyName}">
                         </option>
                         <!-- Generate options for other faculties using Thymeleaf -->
                         <option th:each="faculty : ${faculties}" th:value="${faculty.id}"
