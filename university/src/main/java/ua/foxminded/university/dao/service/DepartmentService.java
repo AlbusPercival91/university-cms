@@ -53,6 +53,12 @@ public class DepartmentService {
 			log.warn("Department with id {} not found", departmentId);
 			return new NoSuchElementException("Department not found");
 		});
+
+		if (existingDepartment.getFaculty().getDepartments().stream()
+				.anyMatch(d -> d.getName().equals(targetDepartment.getName()))) {
+			log.warn("Faculty already contains this Department");
+			throw new IllegalStateException("Faculty already contains this Department");
+		}
 		BeanUtils.copyProperties(targetDepartment, existingDepartment, "id");
 		return departmentRepository.save(existingDepartment);
 	}
@@ -60,7 +66,7 @@ public class DepartmentService {
 	public List<Department> getAllDepartments() {
 		return departmentRepository.findAll();
 	}
-	
+
 	public Optional<Department> findDepartmentById(int departmentId) {
 		return departmentRepository.findById(departmentId);
 	}

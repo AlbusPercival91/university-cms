@@ -136,8 +136,8 @@ public class AdminDepartmentController {
 				} else {
 					redirectAttributes.addFlashAttribute("errorMessage", "Failed to update Department");
 				}
-			} catch (NoSuchElementException ex) {
-				redirectAttributes.addFlashAttribute("errorMessage", "Department not found");
+			} catch (NoSuchElementException | IllegalStateException ex) {
+				redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
 			}
 		} else {
 			return "redirect:/admin/department/department-card/" + departmentId;

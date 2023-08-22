@@ -52,6 +52,12 @@ public class GroupService {
 			log.warn("Group with id {} not found", groupId);
 			return new NoSuchElementException("Group not found");
 		});
+
+		if (existingGroup.getFaculty().getGroups().stream()
+				.anyMatch(d -> d.getGroupName().equals(targetGroup.getGroupName()))) {
+			log.warn("Faculty already contains this Group");
+			throw new IllegalStateException("Faculty already contains this Group");
+		}
 		BeanUtils.copyProperties(targetGroup, existingGroup, "id");
 		return groupRepository.save(existingGroup);
 	}

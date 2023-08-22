@@ -136,8 +136,8 @@ public class AdminGroupController {
 				} else {
 					redirectAttributes.addFlashAttribute("errorMessage", "Failed to update Group");
 				}
-			} catch (NoSuchElementException ex) {
-				redirectAttributes.addFlashAttribute("errorMessage", "Group not found");
+			} catch (NoSuchElementException | IllegalStateException ex) {
+				redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
 			}
 		} else {
 			return "redirect:/admin/group/group-card/" + groupId;
