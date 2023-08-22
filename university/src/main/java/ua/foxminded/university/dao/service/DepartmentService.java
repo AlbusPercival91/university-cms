@@ -54,7 +54,7 @@ public class DepartmentService {
 			return new NoSuchElementException("Department not found");
 		});
 
-		if (existingDepartment.getFaculty().getDepartments().stream()
+		if (targetDepartment.getFaculty().getDepartments().stream()
 				.anyMatch(d -> d.getName().equals(targetDepartment.getName()))) {
 			log.warn("Faculty already contains this Department");
 			throw new IllegalStateException("Faculty already contains this Department");

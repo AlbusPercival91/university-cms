@@ -53,7 +53,7 @@ public class GroupService {
 			return new NoSuchElementException("Group not found");
 		});
 
-		if (existingGroup.getFaculty().getGroups().stream()
+		if (targetGroup.getFaculty().getGroups().stream()
 				.anyMatch(d -> d.getGroupName().equals(targetGroup.getGroupName()))) {
 			log.warn("Faculty already contains this Group");
 			throw new IllegalStateException("Faculty already contains this Group");
