@@ -25,6 +25,7 @@ import ua.foxminded.university.dao.entities.Faculty;
 import ua.foxminded.university.dao.entities.Group;
 import ua.foxminded.university.dao.entities.Student;
 import ua.foxminded.university.dao.service.CourseService;
+import ua.foxminded.university.dao.service.GroupService;
 import ua.foxminded.university.dao.service.StudentService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
 
@@ -41,6 +42,9 @@ class AdminStudentControllerTest {
 
 	@MockBean
 	private CourseService courseService;
+
+	@MockBean
+	private GroupService groupService;
 
 	@Test
 	void testGetAllStudentsListAsAdmin() throws Exception {

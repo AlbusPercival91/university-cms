@@ -62,10 +62,10 @@ class TimeTableServiceTest {
 		teacherRepository.addTeacherToTheCourse(teacherId, "Physics");
 		teacherRepository.addTeacherToTheCourse(teacherId, "Chemistry");
 
-		TimeTable timeTable = timeTableBuilder.saveGroupTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId,
+		TimeTable timeTable1 = timeTableBuilder.saveGroupTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId,
 				classRoomId);
 
-		Assertions.assertEquals(timeTableRepository.findById(1).get(), timeTable);
+		Assertions.assertEquals(timeTableRepository.findById(1).get(), timeTable1);
 	}
 
 	@ParameterizedTest
@@ -412,18 +412,20 @@ class TimeTableServiceTest {
 	}
 
 	@ParameterizedTest
-	@CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 1, 1", "2023-09-01, 12:00, 13:30, 2, 2, 2, 2",
-			"2023-09-02, 09:00, 10:30, 3, 3, 3, 3", "2023-09-02, 12:00, 13:30, 1, 1, 2, 3" })
+	@CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 1, 1", "2023-09-01, 12:00, 13:30, 2, 2, 2, 2" })
 	void testUpdateTimeTableById_ShouldReturnUpdatedTimeTable(LocalDate date, LocalTime timeFrom, LocalTime timeTo,
 			int teacherId, int courseId, int groupId, int classRoomId) {
 		teacherRepository.addTeacherToTheCourse(teacherId, "Mathematics");
 		teacherRepository.addTeacherToTheCourse(teacherId, "Physics");
 		teacherRepository.addTeacherToTheCourse(teacherId, "Chemistry");
 
-		TimeTable timeTable = timeTableBuilder.saveGroupTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId,
-				classRoomId);
-		TimeTable expectedTimeTable = new TimeTable(date.plusMonths(1), timeFrom.plusHours(1), timeTo.plusHours(1),
-				timeTable.getTeacher(), timeTable.getCourse(), timeTable.getGroup(), timeTable.getClassRoom());
+		teacherRepository.addTeacherToTheCourse(teacherId + 1, "Mathematics");
+		teacherRepository.addTeacherToTheCourse(teacherId + 1, "Physics");
+		teacherRepository.addTeacherToTheCourse(teacherId + 1, "Chemistry");
+
+		timeTableBuilder.saveGroupTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId, classRoomId);
+		TimeTable expectedTimeTable = timeTableBuilder.createTimeTable(date, timeFrom, timeTo, teacherId + 1,
+				courseId + 1, groupId + 1, classRoomId + 1);
 		expectedTimeTable.setId(1);
 
 		Assertions.assertEquals(expectedTimeTable, timeTableService.updateTimeTableById(1, expectedTimeTable));
@@ -444,6 +446,23 @@ class TimeTableServiceTest {
 		Exception noSuchElementException = assertThrows(Exception.class,
 				() -> timeTableService.updateTimeTableById(2, expectedTimeTable));
 		Assertions.assertEquals("TimeTable not found", noSuchElementException.getMessage());
+	}
+
+	@ParameterizedTest
+	@CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 1, 1" })
+	void testUpdateTimeTableById_WhenValidationFailed_ShouldThrowTimeTableValidationException(LocalDate date,
+			LocalTime timeFrom, LocalTime timeTo, int teacherId, int courseId, int groupId, int classRoomId) {
+		teacherRepository.addTeacherToTheCourse(teacherId, "Mathematics");
+
+		TimeTable timeTable = timeTableBuilder.saveGroupTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId,
+				classRoomId);
+		TimeTable expectedTimeTable = new TimeTable(date.plusMonths(1), timeFrom.plusHours(1), timeTo.plusHours(1),
+				timeTable.getTeacher(), timeTable.getCourse(), timeTable.getGroup(), timeTable.getClassRoom());
+		expectedTimeTable.setId(1);
+
+		Exception noSuchElementException = assertThrows(Exception.class,
+				() -> timeTableService.updateTimeTableById(1, expectedTimeTable));
+		Assertions.assertEquals("Validation failed while creating TimeTable", noSuchElementException.getMessage());
 	}
 
 	@ParameterizedTest
