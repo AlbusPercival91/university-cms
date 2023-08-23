@@ -176,8 +176,8 @@ public class AdminStudentController {
 				} else {
 					redirectAttributes.addFlashAttribute("errorMessage", "Failed to update Student");
 				}
-			} catch (NoSuchElementException ex) {
-				redirectAttributes.addFlashAttribute("errorMessage", "Student not found");
+			} catch (NoSuchElementException | IllegalStateException ex) {
+				redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
 			}
 		} else {
 			return "redirect:/admin/student/student-card/" + studentId;

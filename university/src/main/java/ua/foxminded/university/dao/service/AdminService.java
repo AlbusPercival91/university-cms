@@ -46,6 +46,11 @@ public class AdminService {
 			log.warn("Admin with id {} not found", adminId);
 			return new NoSuchElementException("Admin not found");
 		});
+
+		if (!emailValidator.isValid(targetAdmin)) {
+			log.warn("Email already registered");
+			throw new IllegalStateException("Email already registered");
+		}
 		BeanUtils.copyProperties(targetAdmin, existingAdmin, "id");
 		return adminRepository.save(existingAdmin);
 	}

@@ -48,6 +48,11 @@ public class StaffService {
 			log.warn("Staff with id {} not found", staffId);
 			return new NoSuchElementException("Staff not found");
 		});
+
+		if (!emailValidator.isValid(targetStaff)) {
+			log.warn("Email already registered");
+			throw new IllegalStateException("Email already registered");
+		}
 		BeanUtils.copyProperties(targetStaff, existingStaff, "id");
 		return staffRepository.save(existingStaff);
 	}

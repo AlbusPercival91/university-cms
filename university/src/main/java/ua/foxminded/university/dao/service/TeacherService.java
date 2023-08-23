@@ -52,6 +52,11 @@ public class TeacherService {
 			log.warn("Teacher with id {} not found", teacherId);
 			return new NoSuchElementException("Teacher not found");
 		});
+
+		if (!emailValidator.isValid(targetTeacher)) {
+			log.warn("Email already registered");
+			throw new IllegalStateException("Email already registered");
+		}
 		BeanUtils.copyProperties(targetTeacher, existingTeacher, "id", "assignedCourses");
 		return teacherRepository.save(existingTeacher);
 	}

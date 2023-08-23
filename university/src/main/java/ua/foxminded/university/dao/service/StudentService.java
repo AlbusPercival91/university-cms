@@ -56,6 +56,11 @@ public class StudentService {
 			log.warn("Student with id {} not found", studentId);
 			return new NoSuchElementException("Student not found");
 		});
+
+		if (!emailValidator.isValid(targetStudent)) {
+			log.warn("Email already registered");
+			throw new IllegalStateException("Email already registered");
+		}
 		BeanUtils.copyProperties(targetStudent, existingStudent, "id", "courses");
 		return studentRepository.save(existingStudent);
 	}

@@ -180,8 +180,8 @@ public class AdminTeacherController {
 				} else {
 					redirectAttributes.addFlashAttribute("errorMessage", "Failed to update Teacher");
 				}
-			} catch (NoSuchElementException ex) {
-				redirectAttributes.addFlashAttribute("errorMessage", "Teacher not found");
+			} catch (NoSuchElementException | IllegalStateException ex) {
+				redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
 			}
 		} else {
 			return "redirect:/admin/teacher/teacher-card/" + teacherId;

@@ -12,8 +12,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().mvcMatchers(staticResources).permitAll().antMatchers("/", "/about", "/contacts")
-				.permitAll().anyRequest().authenticated().and().formLogin().permitAll().and().logout().permitAll().and()
-				.httpBasic();
+		http.authorizeRequests().mvcMatchers(staticResources).permitAll()
+				.antMatchers("/", "/about", "/contacts", "/admin/**").permitAll().anyRequest().authenticated().and()
+				.formLogin().permitAll().and().logout().permitAll().and().httpBasic();
 	}
 }

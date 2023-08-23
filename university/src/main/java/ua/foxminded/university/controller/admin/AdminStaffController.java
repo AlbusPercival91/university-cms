@@ -127,8 +127,8 @@ public class AdminStaffController {
 				} else {
 					redirectAttributes.addFlashAttribute("errorMessage", "Failed to update Staff");
 				}
-			} catch (NoSuchElementException ex) {
-				redirectAttributes.addFlashAttribute("errorMessage", "Staff not found");
+			} catch (NoSuchElementException | IllegalStateException ex) {
+				redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
 			}
 		} else {
 			return "redirect:/admin/staff/staff-card/" + staffId;

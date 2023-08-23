@@ -109,8 +109,8 @@ public class AdminController {
 				} else {
 					redirectAttributes.addFlashAttribute("errorMessage", "Failed to update Admin");
 				}
-			} catch (NoSuchElementException ex) {
-				redirectAttributes.addFlashAttribute("errorMessage", "Admin not found");
+			} catch (NoSuchElementException | IllegalStateException ex) {
+				redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
 			}
 		} else {
 			return "redirect:/admin/admin-card/" + adminId;
