@@ -8,7 +8,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -42,8 +41,6 @@ public class User {
 	private String email;
 
 	@ToString.Exclude
-	@Getter(value = AccessLevel.NONE)
-	@Setter(value = AccessLevel.NONE)
 	@Column(name = "password")
 	private String hashedPassword;
 
