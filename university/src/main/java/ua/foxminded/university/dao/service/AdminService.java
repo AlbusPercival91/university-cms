@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ua.foxminded.university.dao.entities.Admin;
 import ua.foxminded.university.dao.interfaces.AdminRepository;
+import ua.foxminded.university.security.UserRole;
 import ua.foxminded.university.validation.UniqueEmailValidator;
 
 @Slf4j
@@ -22,6 +23,7 @@ public class AdminService {
 
 	public int createAdmin(Admin admin) {
 		if (emailValidator.isValid(admin)) {
+			admin.setRole(UserRole.ADMIN);
 			return adminRepository.save(admin).getId();
 		}
 		log.warn("Email already registered");

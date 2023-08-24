@@ -12,6 +12,7 @@ import ua.foxminded.university.dao.entities.Course;
 import ua.foxminded.university.dao.entities.Teacher;
 import ua.foxminded.university.dao.interfaces.CourseRepository;
 import ua.foxminded.university.dao.interfaces.TeacherRepository;
+import ua.foxminded.university.security.UserRole;
 import ua.foxminded.university.validation.UniqueEmailValidator;
 
 @Slf4j
@@ -25,6 +26,7 @@ public class TeacherService {
 
 	public int createAndAssignTeacherToCourse(Teacher teacher, Course course) {
 		if (emailValidator.isValid(teacher)) {
+			teacher.setRole(UserRole.TEACHER);
 			Teacher newTeacher = teacherRepository.save(teacher);
 			addTeacherToTheCourse(newTeacher.getId(), course.getCourseName());
 			log.info("Created teacher with id: {}", newTeacher.getId());

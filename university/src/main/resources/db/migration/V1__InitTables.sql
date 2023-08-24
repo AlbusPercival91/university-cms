@@ -6,7 +6,8 @@ CREATE TABLE IF NOT EXISTS university.admin (
     last_name VARCHAR(90) NOT NULL,
     active BOOLEAN NOT NULL,
     email VARCHAR(100) NOT NULL,
-    password VARCHAR(60) NOT NULL
+    password VARCHAR(60) NOT NULL,
+    role VARCHAR(8)
 );
 
 CREATE TABLE IF NOT EXISTS university.classroom (
@@ -49,7 +50,8 @@ CREATE TABLE IF NOT EXISTS university.staff (
     email VARCHAR(100) NOT NULL,
     password VARCHAR(60) NOT NULL,
     position VARCHAR(150) NOT NULL,
-    function TEXT
+    function TEXT,
+    role VARCHAR(8)
 );
 
 CREATE TABLE IF NOT EXISTS university.student (
@@ -60,6 +62,7 @@ CREATE TABLE IF NOT EXISTS university.student (
     email VARCHAR(100) NOT NULL,
     password VARCHAR(60) NOT NULL,
     group_id INT,
+    role VARCHAR(8),
     FOREIGN KEY (group_id) REFERENCES university.groups (group_id)
 );
 
@@ -71,6 +74,7 @@ CREATE TABLE IF NOT EXISTS university.teacher (
     email VARCHAR(100) NOT NULL,
     password VARCHAR(60) NOT NULL,
     department_id INT,
+    role VARCHAR(8),
     FOREIGN KEY (department_id) REFERENCES university.departments (department_id)
 );
 

@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ua.foxminded.university.dao.entities.Staff;
 import ua.foxminded.university.dao.interfaces.StaffRepository;
+import ua.foxminded.university.security.UserRole;
 import ua.foxminded.university.validation.UniqueEmailValidator;
 
 @Slf4j
@@ -22,6 +23,7 @@ public class StaffService {
 
 	public int createStaff(Staff staff) {
 		if (emailValidator.isValid(staff)) {
+			staff.setRole(UserRole.STAFF);
 			Staff newStaff = staffRepository.save(staff);
 			log.info("Created staff with id: {}", newStaff.getId());
 			return newStaff.getId();

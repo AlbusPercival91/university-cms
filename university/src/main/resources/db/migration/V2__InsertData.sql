@@ -1,6 +1,6 @@
 -- Insert sample data for university.admin
-INSERT INTO university.admin (first_name, last_name, active, email, password)
-VALUES ('Admin', 'Admin', true, 'admin@example.com', 'adminpassword');
+INSERT INTO university.admin (first_name, last_name, active, email, password, role)
+VALUES ('Admin', 'Admin', true, 'admin@example.com', 'adminpassword', 'ADMIN');
 
 -- Insert sample data for university.classroom
 INSERT INTO university.classroom (build_no, room_no, street)
@@ -63,35 +63,37 @@ VALUES
     ('Group 10', 5);
 
 -- Insert sample data for university.staff
-INSERT INTO university.staff (first_name, last_name, active, email, password, position, "function")
+INSERT INTO university.staff (first_name, last_name, active, email, password, position, "function", role)
 VALUES
-    ('John', 'Cole', true, 'johncole@example.com', 'password1', 'Administrator', 'Administrative tasks'),
-    ('Jane', 'Smith', true, 'janesmith@example.com', 'password2', 'Counselor', 'Student guidance'),
-    ('Michael', 'Johnson', true, 'michaeljohnson@example.com', 'password3', 'Librarian', 'Library management'),
-    ('Emily', 'Brown', true, 'emilybrown@example.com', 'password4', 'Advisor', 'Academic advising'),
-    ('David', 'Davis', true, 'daviddavis@example.com', 'password5', 'Coordinator', 'Program coordination');
+    ('John', 'Cole', true, 'johncole@example.com', 'password1', 'Administrator', 'Administrative tasks', 'STAFF'),
+    ('Jane', 'Smith', true, 'janesmith@example.com', 'password2', 'Counselor', 'Student guidance', 'STAFF'),
+    ('Michael', 'Johnson', true, 'michaeljohnson@example.com', 'password3', 'Librarian', 'Library management', 'STAFF'),
+    ('Emily', 'Brown', true, 'emilybrown@example.com', 'password4', 'Advisor', 'Academic advising', 'STAFF'),
+    ('David', 'Davis', true, 'daviddavis@example.com', 'password5', 'Coordinator', 'Program coordination', 'STAFF');
 
 -- Insert sample data for university.students
-INSERT INTO university.student (first_name, last_name, active, email, password, group_id)
+INSERT INTO university.student (first_name, last_name, active, email, password, group_id, role)
 SELECT
-    CONCAT('Studen Name', id),
+    CONCAT('Student Name', id),
     CONCAT('Student Surname', id),
     true,
     CONCAT('student', id, '@example.com'),
     CONCAT('student', id, 'password'),
-    FLOOR((id - 1) / 10) + 1
+    FLOOR((id - 1) / 10) + 1,
+    'STUDENT'
 FROM generate_series(1, 100) id;
 
 -- Insert sample data for university.teachers
-INSERT INTO university.teacher (first_name, last_name, active, email, password, department_id)
+INSERT INTO university.teacher (first_name, last_name, active, email, password, department_id, role)
 SELECT
     CONCAT('Teacher Name', id),
     CONCAT('Teacher Surname', id),
     true,
     CONCAT('teacher', id, '@example.com'),
     CONCAT('teacher', id, 'password'),
-    FLOOR((id - 1) / 2) + 1
-FROM generate_series(1, 20) id;
+    FLOOR((id - 1) / 2) + 1,
+    'TEACHER'
+    FROM generate_series(1, 20) id;
 
 -- Insert sample data for university.students_courses
 INSERT INTO university.students_courses (student_id, course_id)

@@ -12,6 +12,7 @@ import ua.foxminded.university.dao.entities.Course;
 import ua.foxminded.university.dao.entities.Student;
 import ua.foxminded.university.dao.interfaces.CourseRepository;
 import ua.foxminded.university.dao.interfaces.StudentRepository;
+import ua.foxminded.university.security.UserRole;
 import ua.foxminded.university.validation.UniqueEmailValidator;
 
 @Slf4j
@@ -27,6 +28,7 @@ public class StudentService {
 	public int createStudent(Student student) {
 		if (emailValidator.isValid(student)) {
 			if (groupService.getAllGroups().contains(student.getGroup())) {
+				student.setRole(UserRole.STUDENT);
 				Student newStudent = studentRepository.save(student);
 				log.info("Created student with id: {}", newStudent.getId());
 				return newStudent.getId();
