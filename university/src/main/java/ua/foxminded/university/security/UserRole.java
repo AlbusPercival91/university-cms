@@ -1,4 +1,4 @@
-package ua.foxminded.university.dao.entities;
+package ua.foxminded.university.security;
 
 public enum UserRole {
 	ADMIN, TEACHER, STUDENT, STAFF
