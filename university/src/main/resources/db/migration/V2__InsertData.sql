@@ -1,6 +1,8 @@
+CREATE EXTENSION pgcrypto;
+
 -- Insert sample data for university.admin
 INSERT INTO university.admin (first_name, last_name, active, email, password, role)
-VALUES ('Admin', 'Admin', true, 'admin@example.com', 'adminpassword', 'ADMIN');
+VALUES ('Admin', 'Admin', true, 'admin@example.com', crypt('1111', gen_salt('bf')), 'ADMIN');
 
 -- Insert sample data for university.classroom
 INSERT INTO university.classroom (build_no, room_no, street)
@@ -65,7 +67,7 @@ VALUES
 -- Insert sample data for university.staff
 INSERT INTO university.staff (first_name, last_name, active, email, password, position, "function", role)
 VALUES
-    ('John', 'Cole', true, 'johncole@example.com', 'password1', 'Administrator', 'Administrative tasks', 'STAFF'),
+    ('John', 'Cole', true, 'johncole@example.com', crypt('1111', gen_salt('bf')), 'Administrator', 'Administrative tasks', 'STAFF'),
     ('Jane', 'Smith', true, 'janesmith@example.com', 'password2', 'Counselor', 'Student guidance', 'STAFF'),
     ('Michael', 'Johnson', true, 'michaeljohnson@example.com', 'password3', 'Librarian', 'Library management', 'STAFF'),
     ('Emily', 'Brown', true, 'emilybrown@example.com', 'password4', 'Advisor', 'Academic advising', 'STAFF'),
@@ -78,7 +80,7 @@ SELECT
     CONCAT('Student Surname', id),
     true,
     CONCAT('student', id, '@example.com'),
-    CONCAT('student', id, 'password'),
+    crypt('1111', gen_salt('bf')),
     FLOOR((id - 1) / 10) + 1,
     'STUDENT'
 FROM generate_series(1, 100) id;
@@ -90,7 +92,7 @@ SELECT
     CONCAT('Teacher Surname', id),
     true,
     CONCAT('teacher', id, '@example.com'),
-    CONCAT('teacher', id, 'password'),
+    crypt('1111', gen_salt('bf')),
     FLOOR((id - 1) / 2) + 1,
     'TEACHER'
     FROM generate_series(1, 20) id;
