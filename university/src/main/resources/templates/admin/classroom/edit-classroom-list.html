@@ -47,8 +47,9 @@
                     <td th:text="${classroom.roomNumber}"></td>
                     <td>
                         <select>
-                            <option th:each="timetable : ${classroom.timeTables}"
-                                th:text="${'Date: ' + timetable.date + ', ' + timetable.timeFrom + '-' + timetable.timeTo + ', ' + timetable.course.courseName}">
+                            <option th:each="timetable : ${classroom.timeTables}" th:text="${'Date: ' + timetable.date + ', ' + timetable.timeFrom + '-' + timetable.timeTo + ', ' 
+                                            + timetable.course.courseName + ', ' + timetable.teacher.firstName + ' '
+                                            + timetable.teacher.lastName}">
                             </option>
                         </select>
                     </td>
