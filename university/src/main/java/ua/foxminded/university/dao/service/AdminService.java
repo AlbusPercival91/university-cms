@@ -49,11 +49,12 @@ public class AdminService {
 			return new NoSuchElementException("Admin not found");
 		});
 
-		if (!emailValidator.isValid(targetAdmin)) {
+		if (!emailValidator.isValid(targetAdmin) && !adminRepository.findByEmail(existingAdmin.getEmail()).get()
+				.getEmail().equals(targetAdmin.getEmail())) {
 			log.warn("Email already registered");
 			throw new IllegalStateException("Email already registered");
 		}
-		BeanUtils.copyProperties(targetAdmin, existingAdmin, "id");
+		BeanUtils.copyProperties(targetAdmin, existingAdmin, "id", "hashedPassword", "role");
 		return adminRepository.save(existingAdmin);
 	}
 

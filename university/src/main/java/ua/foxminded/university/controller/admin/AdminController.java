@@ -43,6 +43,28 @@ public class AdminController {
 		return "redirect:/login";
 	}
 
+	@PostMapping("/admin/update-personal/{adminId}")
+	public String updateOwnData(@PathVariable("adminId") int adminId,
+			@ModelAttribute("admin") @Validated Admin updatedAdmin, BindingResult bindingResult,
+			RedirectAttributes redirectAttributes) {
+		if (bindingValidator.validate(bindingResult, redirectAttributes)) {
+			try {
+				Admin resultAdmin = adminService.updateAdminById(adminId, updatedAdmin);
+
+				if (resultAdmin != null) {
+					redirectAttributes.addFlashAttribute("successMessage", "Data updated successfully");
+				} else {
+					redirectAttributes.addFlashAttribute("errorMessage", "Failed to update Data");
+				}
+			} catch (NoSuchElementException | IllegalStateException ex) {
+				redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
+			}
+		} else {
+			return "redirect:/admin/main";
+		}
+		return "redirect:/admin/main";
+	}
+
 	@GetMapping("/admin/edit-admin-list")
 	public String getAllAdminListAsAdmin(Model model) {
 		List<Admin> admins = adminService.getAllAdmins();

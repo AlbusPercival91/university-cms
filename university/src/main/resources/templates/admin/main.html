@@ -17,7 +17,7 @@
 
         <div class="entity-details">
             <h2>Personal Dashboard</h2>
-            <form th:action="@{/admin/edit-admin/{adminId}(adminId=${admin.id})}" method="post">
+            <form th:action="@{/admin/update-personal/{adminId}(adminId=${admin.id})}" method="post">
                 <div class="form-group">
                     <label for="firstName">First Name:</label>
                     <input type="text" id="firstName" th:value="${admin.firstName}" name="firstName" readonly
