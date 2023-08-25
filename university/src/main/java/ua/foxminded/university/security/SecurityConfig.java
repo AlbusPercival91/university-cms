@@ -15,8 +15,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests().mvcMatchers(staticResources).permitAll().antMatchers("/", "/about", "/contacts")
-				.permitAll().anyRequest().authenticated().and().formLogin().defaultSuccessUrl("/admin/main").permitAll()
-				.and().logout().permitAll();
+				.permitAll().anyRequest().authenticated().and().formLogin()
+				.successHandler(customAuthenticationSuccessHandler()).permitAll().and().logout().permitAll();
+
+	}
+
+	@Bean
+	public CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler() {
+		return new CustomAuthenticationSuccessHandler();
 	}
 
 	@Bean
