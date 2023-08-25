@@ -51,11 +51,12 @@ public class StaffService {
 			return new NoSuchElementException("Staff not found");
 		});
 
-		if (!emailValidator.isValid(targetStaff)) {
+		if (!emailValidator.isValid(targetStaff)
+				&& !findStaffByEmail(existingStaff.getEmail()).get().getEmail().equals(targetStaff.getEmail())) {
 			log.warn("Email already registered");
 			throw new IllegalStateException("Email already registered");
 		}
-		BeanUtils.copyProperties(targetStaff, existingStaff, "id");
+		BeanUtils.copyProperties(targetStaff, existingStaff, "id", "hashedPassword", "role");
 		return staffRepository.save(existingStaff);
 	}
 
@@ -73,5 +74,9 @@ public class StaffService {
 
 	public List<Staff> findStaffByPosition(String position) {
 		return staffRepository.findStaffByPosition(position);
+	}
+
+	public Optional<Staff> findStaffByEmail(String email) {
+		return staffRepository.findByEmail(email);
 	}
 }

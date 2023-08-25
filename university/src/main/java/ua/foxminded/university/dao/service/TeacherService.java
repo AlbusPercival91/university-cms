@@ -55,11 +55,12 @@ public class TeacherService {
 			return new NoSuchElementException("Teacher not found");
 		});
 
-		if (!emailValidator.isValid(targetTeacher)) {
+		if (!emailValidator.isValid(targetTeacher)
+				&& !findTeacherByEmail(existingTeacher.getEmail()).get().getEmail().equals(targetTeacher.getEmail())) {
 			log.warn("Email already registered");
 			throw new IllegalStateException("Email already registered");
 		}
-		BeanUtils.copyProperties(targetTeacher, existingTeacher, "id", "assignedCourses");
+		BeanUtils.copyProperties(targetTeacher, existingTeacher, "id", "assignedCourses", "hashedPassword", "role");
 		return teacherRepository.save(existingTeacher);
 	}
 
@@ -117,5 +118,9 @@ public class TeacherService {
 
 	public List<Teacher> findAllByDepartmentIdAndDepartmentFacultyId(int departmentId, int facultyId) {
 		return teacherRepository.findAllByDepartmentIdAndDepartmentFacultyId(departmentId, facultyId);
+	}
+
+	public Optional<Teacher> findTeacherByEmail(String email) {
+		return teacherRepository.findByEmail(email);
 	}
 }

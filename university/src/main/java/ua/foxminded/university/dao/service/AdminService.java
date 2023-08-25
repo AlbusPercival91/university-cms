@@ -49,8 +49,8 @@ public class AdminService {
 			return new NoSuchElementException("Admin not found");
 		});
 
-		if (!emailValidator.isValid(targetAdmin) && !adminRepository.findByEmail(existingAdmin.getEmail()).get()
-				.getEmail().equals(targetAdmin.getEmail())) {
+		if (!emailValidator.isValid(targetAdmin)
+				&& !findAdminByEmail(existingAdmin.getEmail()).get().getEmail().equals(targetAdmin.getEmail())) {
 			log.warn("Email already registered");
 			throw new IllegalStateException("Email already registered");
 		}

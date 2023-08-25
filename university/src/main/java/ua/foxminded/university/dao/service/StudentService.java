@@ -59,11 +59,12 @@ public class StudentService {
 			return new NoSuchElementException("Student not found");
 		});
 
-		if (!emailValidator.isValid(targetStudent)) {
+		if (!emailValidator.isValid(targetStudent)
+				&& !findStudentByEmail(existingStudent.getEmail()).get().getEmail().equals(targetStudent.getEmail())) {
 			log.warn("Email already registered");
 			throw new IllegalStateException("Email already registered");
 		}
-		BeanUtils.copyProperties(targetStudent, existingStudent, "id", "courses");
+		BeanUtils.copyProperties(targetStudent, existingStudent, "id", "courses", "hashedPassword", "role");
 		return studentRepository.save(existingStudent);
 	}
 
@@ -121,6 +122,10 @@ public class StudentService {
 
 	public List<Student> findStudentByName(String firstName, String lastName) {
 		return studentRepository.findStudentByFirstNameAndLastName(firstName, lastName);
+	}
+
+	public Optional<Student> findStudentByEmail(String email) {
+		return studentRepository.findByEmail(email);
 	}
 
 }

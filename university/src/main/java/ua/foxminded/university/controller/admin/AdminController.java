@@ -44,7 +44,7 @@ public class AdminController {
 	}
 
 	@PostMapping("/admin/update-personal/{adminId}")
-	public String updateOwnData(@PathVariable("adminId") int adminId,
+	public String updatePersonalData(@PathVariable("adminId") int adminId,
 			@ModelAttribute("admin") @Validated Admin updatedAdmin, BindingResult bindingResult,
 			RedirectAttributes redirectAttributes) {
 		if (bindingValidator.validate(bindingResult, redirectAttributes)) {
