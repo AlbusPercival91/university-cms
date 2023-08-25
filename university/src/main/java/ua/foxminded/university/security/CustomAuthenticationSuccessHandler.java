@@ -27,7 +27,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 				.anyMatch(authority -> authority.getAuthority().equals(UserRole.STAFF.toString()))) {
 			response.sendRedirect("/staff/main");
 		} else {
-			response.sendRedirect("/");
+			response.sendRedirect("/login");
 		}
 	}
 
