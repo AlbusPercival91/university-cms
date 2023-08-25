@@ -130,7 +130,7 @@ public class AdminTeacherController {
 			HttpServletRequest request) {
 		try {
 			teacherService.deleteTeacherById(teacherId);
-			redirectAttributes.addFlashAttribute("successMessage", "Teacher was deleted!");
+			redirectAttributes.addFlashAttribute("successMessage", "Teacher was deleted");
 		} catch (NoSuchElementException ex) {
 			redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
 		}
@@ -147,7 +147,7 @@ public class AdminTeacherController {
 			RedirectAttributes redirectAttributes) {
 		try {
 			teacherService.removeTeacherFromCourse(teacherId, courseName);
-			redirectAttributes.addFlashAttribute("successMessage", "Teacher unsubscribed from Course!");
+			redirectAttributes.addFlashAttribute("successMessage", "Teacher unsubscribed from Course");
 		} catch (IllegalStateException | NoSuchElementException ex) {
 			redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
 		}
@@ -159,7 +159,7 @@ public class AdminTeacherController {
 			RedirectAttributes redirectAttributes) {
 		try {
 			teacherService.addTeacherToTheCourse(teacherId, courseName);
-			redirectAttributes.addFlashAttribute("successMessage", "Teacher subscribed to Course!");
+			redirectAttributes.addFlashAttribute("successMessage", "Teacher subscribed to Course");
 		} catch (IllegalStateException | NoSuchElementException ex) {
 			redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
 		}
