@@ -5,6 +5,8 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -28,8 +30,17 @@ public class AdminController {
 	private ControllerBindingValidator bindingValidator;
 
 	@GetMapping("/admin/main")
-	public String adminMainPage() {
-		return "admin/main";
+	public String adminMainPage(Model model) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (authentication != null && authentication.isAuthenticated()) {
+			String email = authentication.getName();
+			Optional<Admin> admin = adminService.findAdminByEmail(email);
+			if (admin.isPresent()) {
+				model.addAttribute("admin", admin.get());
+				return "admin/main";
+			}
+		}
+		return "redirect:/login";
 	}
 
 	@GetMapping("/admin/edit-admin-list")

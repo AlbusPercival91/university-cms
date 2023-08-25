@@ -64,4 +64,8 @@ public class AdminService {
 	public Optional<Admin> findAdminById(int adminId) {
 		return adminRepository.findById(adminId);
 	}
+
+	public Optional<Admin> findAdminByEmail(String email) {
+		return adminRepository.findByEmail(email);
+	}
 }
