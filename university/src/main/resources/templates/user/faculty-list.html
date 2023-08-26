@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Faculty List</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+</head>
+
+<div th:replace="fragments/header :: header"></div>
+
+<div th:replace="fragments/user-panel :: div"></div>
+
+<body>
+
+    <div class="container">
+        <h2>Faculty List</h2>
+        <table class="table table-bordered">
+            <caption hidden>All Faculties Table</caption>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Faculty Name</th>
+                    <th>Groups</th>
+                    <th>Departments</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="faculty, rowStat : ${faculties}">
+                    <td th:text="${faculty.id}"></td>
+                    <td th:text="${faculty.facultyName}"></td>
+                    <td>
+                        <select>
+                            <option th:each="group : ${faculty.groups}" th:text="${group.groupName}"></option>
+                        </select>
+                    </td>
+                    <td>
+                        <select>
+                            <option th:each="department : ${faculty.departments}" th:text="${department.name}"></option>
+                        </select>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div th:replace="fragments/message :: div"></div>
+    <div th:replace="fragments/footer :: footer"></div>
+
+    <script th:src="@{/js/work-panel.js}"></script>
+</body>
+
+</html>

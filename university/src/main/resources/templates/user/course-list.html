@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Course List</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+</head>
+
+<div th:replace="fragments/header :: header"></div>
+
+<div th:replace="fragments/user-panel :: div"></div>
+
+<div th:replace="fragments/course-search :: div"></div>
+
+<body>
+
+    <div class="container">
+        <h2>Course List</h2>
+        <table class="table table-bordered">
+            <caption hidden>All Courses Table</caption>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Course Name</th>
+                    <th>Course Description</th>
+                    <th>Teachers Assigned</th>
+                    <th>Students Assigned</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="course, rowStat : ${courses}">
+                    <td th:text="${course.id}"></td>
+                    <td th:text="${course.courseName}"></td>
+                    <td th:text="${course.courseDescription}"></td>
+                    <td>
+                        <select>
+                            <option th:each="teacher : ${course.teachers}"
+                                th:text="${'ID: ' + teacher.id + ', ' + teacher.firstName + ' ' + teacher.lastName}">
+                            </option>
+                        </select>
+                    </td>
+                    <td>
+                        <select>
+                            <option th:each="student : ${course.students}"
+                                th:text="${'ID: ' + student.id + ', ' + student.firstName + ' ' + student.lastName}">
+                            </option>
+                        </select>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div th:replace="fragments/message :: div"></div>
+    <div th:replace="fragments/footer :: footer"></div>
+
+    <script th:src="@{/js/work-panel.js}"></script>
+</body>
+
+</html>

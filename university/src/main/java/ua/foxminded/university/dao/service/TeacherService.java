@@ -64,6 +64,20 @@ public class TeacherService {
 		return teacherRepository.save(existingTeacher);
 	}
 
+	public Teacher changeTeacherPasswordById(int teacherId, String oldPassword, String newPassword) {
+		Teacher existingTeacher = teacherRepository.findById(teacherId).orElseThrow(() -> {
+			log.warn("Admin with id {} not found", teacherId);
+			return new NoSuchElementException("Teacher not found");
+		});
+
+		if (!existingTeacher.isPasswordValid(oldPassword)) {
+			log.warn("Password incorrect");
+			throw new IllegalStateException("Password incorrect");
+		}
+		existingTeacher.setPassword(newPassword);
+		return teacherRepository.save(existingTeacher);
+	}
+
 	public int addTeacherToTheCourse(int teacherId, String courseName) {
 		Teacher existingTeacher = teacherRepository.findById(teacherId).orElseThrow(() -> {
 			log.warn("Teacher with id {} not found", teacherId);

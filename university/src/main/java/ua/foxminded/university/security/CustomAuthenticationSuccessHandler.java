@@ -19,7 +19,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 			response.sendRedirect("/admin/main");
 		} else if (authentication.getAuthorities().stream()
 				.anyMatch(authority -> authority.getAuthority().equals(UserRole.TEACHER.toString()))) {
-			response.sendRedirect("/teacher/main");
+			response.sendRedirect("user/teacher/main");
 		} else if (authentication.getAuthorities().stream()
 				.anyMatch(authority -> authority.getAuthority().equals(UserRole.STUDENT.toString()))) {
 			response.sendRedirect("/student/main");

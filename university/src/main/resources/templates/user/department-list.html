@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Department List</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+</head>
+
+<div th:replace="fragments/header :: header"></div>
+
+<div th:replace="fragments/user-panel :: div"></div>
+
+<div th:replace="fragments/department-search :: div"></div>
+
+<body>
+
+    <div class="container">
+        <h2>Department List</h2>
+        <table class="table table-bordered">
+            <caption hidden>All Departments Table</caption>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Department</th>
+                    <th>Faculty Name</th>
+                    <th>Teachers</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="department, rowStat : ${departments}">
+                    <td th:text="${department.id}"></td>
+                    <td th:text="${department.name}"></td>
+                    <td th:text="${department.faculty.facultyName}"></td>
+                    <td>
+                        <select>
+                            <option th:each="teacher : ${department.teachers}"
+                                th:text="${'ID: ' + teacher.id + ', ' + teacher.firstName + ' ' + teacher.lastName}">
+                            </option>
+                        </select>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div th:replace="fragments/message :: div"></div>
+    <div th:replace="fragments/footer :: footer"></div>
+
+    <script th:src="@{/js/work-panel.js}"></script>
+</body>
+
+</html>
