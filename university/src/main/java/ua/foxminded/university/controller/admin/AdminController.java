@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ua.foxminded.university.dao.entities.Admin;
 import ua.foxminded.university.dao.service.AdminService;
@@ -61,6 +62,22 @@ public class AdminController {
 			}
 		} else {
 			return "redirect:/admin/main";
+		}
+		return "redirect:/admin/main";
+	}
+
+	@PostMapping("/admin/update-password")
+	public String updatePassword(@RequestParam int adminId, @RequestParam String oldPassword,
+			@RequestParam String newPassword, RedirectAttributes redirectAttributes) {
+		try {
+			Admin resultAdmin = adminService.changeAdminPasswordById(adminId, oldPassword, newPassword);
+			if (resultAdmin != null) {
+				redirectAttributes.addFlashAttribute("successMessage", "Password changed successfully");
+			} else {
+				redirectAttributes.addFlashAttribute("errorMessage", "Failed to change Password");
+			}
+		} catch (NoSuchElementException | IllegalStateException ex) {
+			redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
 		}
 		return "redirect:/admin/main";
 	}

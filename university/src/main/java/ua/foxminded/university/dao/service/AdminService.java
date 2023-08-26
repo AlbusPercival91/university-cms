@@ -58,6 +58,20 @@ public class AdminService {
 		return adminRepository.save(existingAdmin);
 	}
 
+	public Admin changeAdminPasswordById(int adminId, String oldPassword, String newPassword) {
+		Admin existingAdmin = adminRepository.findById(adminId).orElseThrow(() -> {
+			log.warn("Admin with id {} not found", adminId);
+			return new NoSuchElementException("Admin not found");
+		});
+
+		if (!existingAdmin.isPasswordValid(oldPassword)) {
+			log.warn("Password incorrect");
+			throw new IllegalStateException("Password incorrect");
+		}
+		existingAdmin.setPassword(newPassword);
+		return adminRepository.save(existingAdmin);
+	}
+
 	public List<Admin> getAllAdmins() {
 		return adminRepository.findAll();
 	}

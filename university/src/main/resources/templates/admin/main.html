@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <title>Dashboard</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" />
 </head>
 
 <body>
@@ -39,8 +40,11 @@
                 </div>
                 <div class="form-group">
                     <label for="password">Password:</label>
-                    <input type="password" id="password" th:value="${admin.hashedPassword}" name="password" readonly
-                        required />
+                    <div class="password-field">
+                        <input type="password" id="password" th:value="${admin.hashedPassword}" name="password" readonly
+                            required />
+                        <i class="fas fa-edit edit-icon" id="passwordEditIcon"></i>
+                    </div>
                 </div>
 
                 <!-- Container for buttons -->
@@ -49,6 +53,29 @@
                     <button id="editButton" type="button" class="button-common-style">Edit</button>
                 </div>
             </form>
+
+            <!-- Change password modal-->
+            <div id="passwordModal" class="modal">
+                <div class="modal-content">
+                    <span class="close" id="modalClose">&times;</span>
+                    <h2>Change Password</h2>
+                    <form id="passwordChangeForm" th:action="@{/admin/update-password}" method="post">
+                        <input type="hidden" id="adminId" name="adminId" th:value="${admin.id}" />
+                        <div class="form-group">
+                            <label for="oldPassword">Old Password:</label>
+                            <input type="password" id="oldPassword" name="oldPassword" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="newPassword">New Password:</label>
+                            <input type="password" id="newPassword" name="newPassword" required />
+                        </div>
+                        <div class="button-container">
+                            <button type="submit" id="savePasswordButton" class="button-common-style">Save</button>
+                            <button type="button" id="cancelPasswordButton" class="button-common-style">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
 
     </div>
@@ -56,8 +83,9 @@
     <div th:replace="fragments/message :: div"></div>
     <div th:replace="fragments/footer :: footer"></div>
 
-    <script th:src="@{/js/work-panel.js}"></script>
+    <script th:src="@{/js/change-password.js}"></script>
     <script th:src="@{/js/enable-edit.js}"></script>
+    <script th:src="@{/js/work-panel.js}"></script>
 
 </body>
 
