@@ -11,9 +11,51 @@
 
 <div th:replace="fragments/user-panel :: div"></div>
 
-<div th:replace="fragments/staff-search :: div"></div>
-
 <body>
+
+    <div class="search-block">
+        <!-- Search by Staff  by ID -->
+        <div class="search-section">
+            <div class="search-square">
+                <h3>Find Staff by ID</h3>
+                <form th:action="@{/user/staff/search-result}" method="get">
+                    <input type="hidden" name="searchType" value="staff" />
+                    <label for="staffId">Staff ID:</label>
+                    <input type="text" id="staffId" name="staffId" required />
+                    <button type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Search by Staff  by Position -->
+        <div class="search-section">
+            <div class="search-square">
+                <h3>Find Staff by Position</h3>
+                <form th:action="@{/user/staff/search-result}" method="get">
+                    <input type="hidden" name="searchType" value="position" />
+                    <label for="position">Position:</label>
+                    <input type="text" id="position" name="position" required />
+                    <button type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Search by Name and Family Name -->
+        <div class="search-section">
+            <div class="search-square">
+                <h3>Find Staff by Name</h3>
+                <form th:action="@{/user/staff/search-result}" method="get">
+                    <input type="hidden" name="searchType" value="firstNameAndLastName" />
+                    <label for="firstName">Name:</label>
+                    <input type="text" id="firstName" name="firstName" required />
+                    <label for="lastName">Family Name:</label>
+                    <input type="text" id="lastName" name="lastName" required />
+                    <button type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>
 
     <div class="container">
         <h2>Staff List</h2>

@@ -9,11 +9,71 @@
 
 <div th:replace="fragments/header :: header"></div>
 
-<div th:replace="fragments/admin-panel :: div"></div>
-
-<div th:replace="fragments/timetable-search :: div"></div>
+<div th:replace="fragments/user-panel :: div"></div>
 
 <body>
+
+    <div class="container">
+        <h2>Search Panel</h2>
+
+        <div class="search-block">
+            <div class="search-container">
+
+                <!-- Search by Id -->
+                <div class="search-section">
+                    <div class="search-square">
+                        <h3>Find Time Table by ID</h3>
+                        <form th:action="@{/user/timetable/search-result}" method="get">
+                            <input type="hidden" name="searchType" value="timetable" />
+                            <label for="timetableId">Time-Table ID:</label>
+                            <input type="text" id="timetableId" name="timetableId" required />
+                            <button type="submit">Search</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Search by Course Name -->
+                <div class="search-section">
+                    <div class="search-square">
+                        <h3>Find Time Table by Course</h3>
+                        <form th:action="@{/user/timetable/search-result}" method="get">
+                            <input type="hidden" name="searchType" value="course" />
+                            <label for="courseName">Course Name:</label>
+                            <input type="text" id="courseName" name="courseName" required />
+                            <button type="submit">Search</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Search by Group Name -->
+                <div class="search-section">
+                    <div class="search-square">
+                        <h3>Find Time Table by Group</h3>
+                        <form th:action="@{/user/timetable/search-result}" method="get">
+                            <input type="hidden" name="searchType" value="group" />
+                            <label for="groupName">Group Name:</label>
+                            <input type="text" id="groupName" name="groupName" required />
+                            <button type="submit">Search</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Search by Date -->
+                <div class="search-section">
+                    <div class="search-square">
+                        <h3>Find Time Table by Date</h3>
+                        <form th:action="@{/user/timetable/search-result}" method="get">
+                            <input type="hidden" name="searchType" value="date" />
+                            <label for="date">Date:</label>
+                            <input type="date" id="date" name="date" required class="date-input" />
+                            <button type="submit">Search</button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
 
     <div class="container">
         <h2>Time Table Schedule</h2>
