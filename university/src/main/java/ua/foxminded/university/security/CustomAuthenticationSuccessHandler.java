@@ -1,11 +1,9 @@
 package ua.foxminded.university.security;
 
 import java.io.IOException;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
@@ -19,13 +17,13 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 			response.sendRedirect("/admin/main");
 		} else if (authentication.getAuthorities().stream()
 				.anyMatch(authority -> authority.getAuthority().equals(UserRole.TEACHER.toString()))) {
-			response.sendRedirect("user/teacher/main");
+			response.sendRedirect("/user/teacher/main");
 		} else if (authentication.getAuthorities().stream()
 				.anyMatch(authority -> authority.getAuthority().equals(UserRole.STUDENT.toString()))) {
-			response.sendRedirect("/student/main");
+			response.sendRedirect("/user/student/main");
 		} else if (authentication.getAuthorities().stream()
 				.anyMatch(authority -> authority.getAuthority().equals(UserRole.STAFF.toString()))) {
-			response.sendRedirect("/staff/main");
+			response.sendRedirect("/user/staff/main");
 		} else {
 			response.sendRedirect("/login");
 		}
