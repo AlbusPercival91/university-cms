@@ -1,6 +1,6 @@
 // Function to toggle input fields' readonly attribute
 function toggleInputsReadonly(readonly) {
-    var inputs = document.querySelectorAll('.form-group input');
+    var inputs = document.querySelectorAll('.form-group input:not([name="password"])');
     inputs.forEach(function(input) {
         input.readOnly = readonly;
     });
@@ -20,6 +20,6 @@ editButton.addEventListener('click', function() {
     // Enable the Save button and its container
     saveButton.disabled = false;
     buttonContainer.classList.remove('disabled');
-    // Make input fields editable
+    // Make input fields (except password) editable
     toggleInputsReadonly(false);
 });

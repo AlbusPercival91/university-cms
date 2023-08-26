@@ -54,7 +54,7 @@ public class AdminService {
 			log.warn("Email already registered");
 			throw new IllegalStateException("Email already registered");
 		}
-		BeanUtils.copyProperties(targetAdmin, existingAdmin, "id", "role");
+		BeanUtils.copyProperties(targetAdmin, existingAdmin, "id", "hashedPassword", "role");
 		return adminRepository.save(existingAdmin);
 	}
 
