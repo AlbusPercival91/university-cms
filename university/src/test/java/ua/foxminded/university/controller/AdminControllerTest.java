@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -30,15 +29,13 @@ class AdminControllerTest {
 	private AdminService adminService;
 
 	@Test
-	@WithMockUser(roles = { "ADMIN" })
 	void testAdminMainPage() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.get("/admin/main")).andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.view().name("admin/main"));
 	}
 
 	@Test
-	@WithMockUser(username = "admin")
-	void testGetAllAdminListAsAdmin() throws Exception {
+	void testGetAllAdmin() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.get("/admin/admin-list"))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.model().attributeExists("admins"))
@@ -46,7 +43,6 @@ class AdminControllerTest {
 	}
 
 	@Test
-	@WithMockUser(username = "admin")
 	void testDeleteAdmin() throws Exception {
 		int adminId = 1;
 		mockMvc.perform(MockMvcRequestBuilders.post("/admin/delete/{adminId}", adminId))
@@ -56,7 +52,6 @@ class AdminControllerTest {
 	}
 
 	@Test
-	@WithMockUser(username = "admin")
 	void testOpenAdminCard_WhenAdminExists() throws Exception {
 		Admin admin = new Admin();
 		admin.setId(1);
@@ -71,7 +66,6 @@ class AdminControllerTest {
 	}
 
 	@Test
-	@WithMockUser(username = "admin")
 	void testOpenAdminCard_WhenAdminDoesNotExist() throws Exception {
 		int adminId = 999;
 
@@ -83,7 +77,6 @@ class AdminControllerTest {
 	}
 
 	@Test
-	@WithMockUser(username = "admin")
 	void testShowCreateAdminForm() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.get("/admin/create-admin"))
 				.andExpect(MockMvcResultMatchers.status().isOk())
@@ -91,7 +84,6 @@ class AdminControllerTest {
 	}
 
 	@Test
-	@WithMockUser(username = "admin")
 	void testCreateAdmin() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.post("/admin/create-admin"))
 				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
