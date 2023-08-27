@@ -10,13 +10,13 @@
                         </a>
                     </div>
                 </li>
-                <div class="menu-item separate" sec:authorize="hasRole('ROLE_STUDENT')">
+                <li class="menu-item separate" sec:authorize="hasRole('ROLE_STUDENT')">
                     <div class="menu-item-box">
                         <a th:href="@{/user/student/main}">
                             My Space
                         </a>
                     </div>
-                </div>
+                </li>
 
                 <li class="menu-item">
                     <div class="menu-item-box">
