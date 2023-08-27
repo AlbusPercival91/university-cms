@@ -1,4 +1,4 @@
-package ua.foxminded.university.controller.admin;
+package ua.foxminded.university.controller;
 
 import static org.mockito.Mockito.when;
 import java.util.Arrays;
@@ -16,8 +16,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-
-import ua.foxminded.university.controller.GroupController;
 import ua.foxminded.university.dao.entities.Faculty;
 import ua.foxminded.university.dao.entities.Group;
 import ua.foxminded.university.dao.service.FacultyService;
@@ -27,7 +25,7 @@ import ua.foxminded.university.validation.ControllerBindingValidator;
 @WebMvcTest({ GroupController.class, ControllerBindingValidator.class })
 @ActiveProfiles("test-container")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
-class AdminGroupControllerTest {
+class GroupControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
