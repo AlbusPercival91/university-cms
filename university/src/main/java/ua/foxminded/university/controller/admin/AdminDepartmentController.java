@@ -34,15 +34,15 @@ public class AdminDepartmentController {
 	@Autowired
 	private ControllerBindingValidator bindingValidator;
 
-	@GetMapping("/admin/department/edit-department-list")
-	public String getAllDepartmentListAsAdmin(Model model) {
+	@GetMapping("/department/department-list")
+	public String getAllDepartmentList(Model model) {
 		List<Department> departments = departmentService.getAllDepartments();
 
 		model.addAttribute("departments", departments);
-		return "admin/department/edit-department-list";
+		return "department/department-list";
 	}
 
-	@PostMapping("admin/department/delete/{departmentId}")
+	@PostMapping("/department/delete/{departmentId}")
 	public String deleteDepartment(@PathVariable int departmentId, RedirectAttributes redirectAttributes,
 			HttpServletRequest request) {
 		try {
@@ -54,20 +54,20 @@ public class AdminDepartmentController {
 		String referrer = request.getHeader("referer");
 
 		if (referrer == null || referrer.isEmpty()) {
-			return "redirect:/admin/department/edit-department-list";
+			return "redirect:/department/department-list";
 		}
 		return "redirect:" + referrer;
 	}
 
-	@GetMapping("/admin/department/create-department")
+	@GetMapping("/department/create-department")
 	public String showCreateDepartmentForm(Model model) {
 		List<Faculty> faculties = facultyService.getAllFaculties();
 
 		model.addAttribute("faculties", faculties);
-		return "admin/department/create-department";
+		return "department/create-department";
 	}
 
-	@PostMapping("/admin/department/create-department")
+	@PostMapping("/department/create-department")
 	public String createDepartment(@ModelAttribute("department") @Validated Department department,
 			BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 		if (bindingValidator.validate(bindingResult, redirectAttributes)) {
@@ -82,14 +82,14 @@ public class AdminDepartmentController {
 			} catch (IllegalStateException ex) {
 				redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
 			}
-			return "redirect:/admin/department/create-department";
+			return "redirect:/department/create-department";
 		} else {
-			return "redirect:/admin/department/create-department";
+			return "redirect:/department/create-department";
 		}
 	}
 
-	@GetMapping("/admin/department/search-result")
-	public String searchDepartmentAsAdmin(@RequestParam("searchType") String searchType,
+	@GetMapping("/department/search-result")
+	public String searchDepartment(@RequestParam("searchType") String searchType,
 			@RequestParam(required = false) Integer departmentId, @RequestParam(required = false) String name,
 			@RequestParam(required = false) String facultyName, Model model) {
 		List<Department> departmentList;
@@ -105,10 +105,10 @@ public class AdminDepartmentController {
 			return "error";
 		}
 		model.addAttribute("departments", departmentList);
-		return "admin/department/edit-department-list";
+		return "department/department-list";
 	}
 
-	@GetMapping("/admin/department/department-card/{departmentId}")
+	@GetMapping("/department/department-card/{departmentId}")
 	public String openDepartmentCard(@PathVariable int departmentId, Model model) {
 		Optional<Department> optionalDepartment = departmentService.findDepartmentById(departmentId);
 		List<Faculty> faculties = facultyService.getAllFaculties();
@@ -117,13 +117,13 @@ public class AdminDepartmentController {
 			Department department = optionalDepartment.get();
 			model.addAttribute("department", department);
 			model.addAttribute("faculties", faculties);
-			return "admin/department/department-card";
+			return "department/department-card";
 		} else {
-			return "redirect:/admin/department/edit-department-list";
+			return "redirect:/department/department-list";
 		}
 	}
 
-	@PostMapping("/admin/department/edit-department/{departmentId}")
+	@PostMapping("/department/edit-department/{departmentId}")
 	public String updateDepartment(@PathVariable("departmentId") int departmentId,
 			@ModelAttribute("department") @Validated Department updatedDepartment, BindingResult bindingResult,
 			RedirectAttributes redirectAttributes) {
@@ -140,8 +140,8 @@ public class AdminDepartmentController {
 				redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
 			}
 		} else {
-			return "redirect:/admin/department/department-card/" + departmentId;
+			return "redirect:/department/department-card/" + departmentId;
 		}
-		return "redirect:/admin/department/department-card/" + departmentId;
+		return "redirect:/department/department-card/" + departmentId;
 	}
 }

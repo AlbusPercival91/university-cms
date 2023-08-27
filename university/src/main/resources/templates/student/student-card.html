@@ -18,7 +18,7 @@
         <!-- Block for student-details -->
         <div class="entity-details">
             <h2>Student Details</h2>
-            <form th:action="@{/admin/student/edit-student/{studentId}(studentId=${student.id})}" method="post">
+            <form th:action="@{/student/edit-student/{studentId}(studentId=${student.id})}" method="post">
                 <div class="form-group">
                     <label for="firstName">First Name:</label>
                     <input type="text" id="firstName" th:value="${student.firstName}" name="firstName" readonly
@@ -78,7 +78,7 @@
                         <td style="border: none;">
                             <!-- Remove Button -->
                             <form
-                                th:action="@{/admin/student/remove-course/{studentId}/{courseName}(studentId=${student.id}, courseName=${course.courseName})}"
+                                th:action="@{/student/remove-course/{studentId}/{courseName}(studentId=${student.id}, courseName=${course.courseName})}"
                                 method="post">
                                 <input type="hidden" name="courseName" th:value="${course.courseName}" />
                                 <button th:id="'removeButton-' + ${rowStat.index}" class="remove-icon" type="submit">
@@ -90,7 +90,7 @@
                 </tbody>
             </table>
             <!-- Generate options for Additional courses using Thymeleaf -->
-            <form th:action="@{/admin/student/assign-course}" method="post">
+            <form th:action="@{/student/assign-course}" method="post">
                 <input type="hidden" name="studentId" th:value="${student.id}" />
                 <select name="courseName">
                     <option value="">Select Additional Course</option>
@@ -107,7 +107,7 @@
         <div class="entity-timetable">
             <h2>Student Time-Table</h2>
 
-            <form th:action="@{/admin/timetable/selected-timetable/{studentId}(studentId=${student.id})}" method="get">
+            <form th:action="@{/timetable/selected-timetable/{studentId}(studentId=${student.id})}" method="get">
                 <div class="form-group">
                     <label for="dateFrom">From:</label>
                     <input type="date" id="dateFrom" name="dateFrom" required class="date-input"
@@ -136,7 +136,7 @@
 
             <!-- Container for Get All Time-Tables button -->
             <div class="button-container">
-                <form th:action="@{/admin/timetable/student-timetable/{studentId}(studentId=${student.id})}"
+                <form th:action="@{/timetable/student-timetable/{studentId}(studentId=${student.id})}"
                     method="get">
                     <button id="saveButton" type="submit" class="button-common-style">Get Full Student
                         Time-Table</button>
@@ -145,7 +145,7 @@
 
             <!-- Container for Get Full Group Time-Tables button -->
             <div class="button-container">
-                <form th:action="@{/admin/timetable/timetable-group/{studentId}(studentId=${student.id})}" method="get">
+                <form th:action="@{/timetable/timetable-group/{studentId}(studentId=${student.id})}" method="get">
                     <button id="saveButton" type="submit" class="button-common-style">Get Full Group Time-Table</button>
                 </form>
             </div>

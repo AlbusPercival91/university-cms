@@ -29,8 +29,8 @@ public class AdminClassRoomController {
 	@Autowired
 	private ControllerBindingValidator bindingValidator;
 
-	@GetMapping("/admin/classroom/edit-classroom-list")
-	public String getAllClassRoomListAsAdmin(Model model) {
+	@GetMapping("/classroom/classroom-list")
+	public String getAllClassRoomList(Model model) {
 		List<ClassRoom> classRooms = classRoomService.getAllClassRooms();
 
 		for (ClassRoom classroom : classRooms) {
@@ -38,10 +38,10 @@ public class AdminClassRoomController {
 		}
 
 		model.addAttribute("classrooms", classRooms);
-		return "admin/classroom/edit-classroom-list";
+		return "/classroom/classroom-list";
 	}
 
-	@PostMapping("/admin/classroom/delete/{classroomId}")
+	@PostMapping("/classroom/delete/{classroomId}")
 	public String deleteClassRoom(@PathVariable int classroomId, RedirectAttributes redirectAttributes,
 			HttpServletRequest request) {
 		try {
@@ -53,17 +53,17 @@ public class AdminClassRoomController {
 		String referrer = request.getHeader("referer");
 
 		if (referrer == null || referrer.isEmpty()) {
-			return "redirect:/admin/classroom/edit-classroom-list";
+			return "redirect:/classroom/classroom-list";
 		}
 		return "redirect:" + referrer;
 	}
 
-	@GetMapping("/admin/classroom/create-classroom")
+	@GetMapping("/classroom/create-classroom")
 	public String showCreateClassRoomForm() {
-		return "admin/classroom/create-classroom";
+		return "classroom/create-classroom";
 	}
 
-	@PostMapping("/admin/classroom/create-classroom")
+	@PostMapping("/classroom/create-classroom")
 	public String createClassRoom(@ModelAttribute("course") @Validated ClassRoom classroom, BindingResult bindingResult,
 			RedirectAttributes redirectAttributes) {
 		if (bindingValidator.validate(bindingResult, redirectAttributes)) {
@@ -78,14 +78,14 @@ public class AdminClassRoomController {
 			} catch (IllegalStateException ex) {
 				redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
 			}
-			return "redirect:/admin/classroom/create-classroom";
+			return "redirect:/classroom/create-classroom";
 		} else {
-			return "redirect:/admin/classroom/create-classroom";
+			return "redirect:/classroom/create-classroom";
 		}
 	}
 
-	@GetMapping("/admin/classroom/search-result")
-	public String searchClassRoomAsAdmin(@RequestParam("searchType") String searchType,
+	@GetMapping("/classroom/search-result")
+	public String searchClassRoom(@RequestParam("searchType") String searchType,
 			@RequestParam(required = false) Integer classroomId, @RequestParam(required = false) String street,
 			@RequestParam(required = false) Integer buildingNumber, @RequestParam(required = false) Integer roomNumber,
 			Model model) {
@@ -102,23 +102,23 @@ public class AdminClassRoomController {
 			return "error";
 		}
 		model.addAttribute("classrooms", classRoomList);
-		return "admin/classroom/edit-classroom-list";
+		return "classroom/classroom-list";
 	}
 
-	@GetMapping("/admin/classroom/classroom-card/{classroomId}")
+	@GetMapping("/classroom/classroom-card/{classroomId}")
 	public String openClassRoomCard(@PathVariable int classroomId, Model model) {
 		Optional<ClassRoom> optionalClassRoom = classRoomService.findClassRoomById(classroomId);
 
 		if (optionalClassRoom.isPresent()) {
 			ClassRoom classRoom = optionalClassRoom.get();
 			model.addAttribute("classroom", classRoom);
-			return "admin/classroom/classroom-card";
+			return "classroom/classroom-card";
 		} else {
-			return "redirect:/admin/classroom/edit-classroom-list";
+			return "redirect:/classroom/classroom-list";
 		}
 	}
 
-	@PostMapping("/admin/classroom/edit-classroom/{classroomId}")
+	@PostMapping("/classroom/edit-classroom/{classroomId}")
 	public String updateClassRoom(@PathVariable("classroomId") int classroomId,
 			@ModelAttribute("classroom") @Validated ClassRoom updatedClassRoom, BindingResult bindingResult,
 			RedirectAttributes redirectAttributes) {
@@ -135,8 +135,8 @@ public class AdminClassRoomController {
 				redirectAttributes.addFlashAttribute("errorMessage", "Class Room not found");
 			}
 		} else {
-			return "redirect:/admin/classroom/classroom-card/" + classroomId;
+			return "redirect:/classroom/classroom-card/" + classroomId;
 		}
-		return "redirect:/admin/classroom/classroom-card/" + classroomId;
+		return "redirect:/classroom/classroom-card/" + classroomId;
 	}
 }

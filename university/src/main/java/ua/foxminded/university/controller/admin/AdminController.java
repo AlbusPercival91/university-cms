@@ -82,12 +82,12 @@ public class AdminController {
 		return "redirect:/admin/main";
 	}
 
-	@GetMapping("/admin/edit-admin-list")
-	public String getAllAdminListAsAdmin(Model model) {
+	@GetMapping("/admin/admin-list")
+	public String getAllAdminList(Model model) {
 		List<Admin> admins = adminService.getAllAdmins();
 
 		model.addAttribute("admins", admins);
-		return "admin/edit-admin-list";
+		return "admin/admin-list";
 	}
 
 	@PostMapping("/admin/delete/{adminId}")

@@ -29,12 +29,12 @@ public class AdminStaffController {
 	@Autowired
 	private ControllerBindingValidator bindingValidator;
 
-	@GetMapping("/admin/staff/create-staff")
+	@GetMapping("/staff/create-staff")
 	public String showCreateStaffForm() {
-		return "admin/staff/create-staff";
+		return "staff/create-staff";
 	}
 
-	@PostMapping("/admin/staff/create-staff")
+	@PostMapping("/staff/create-staff")
 	public String createStaff(@ModelAttribute("staff") @Validated Staff staff, BindingResult bindingResult,
 			RedirectAttributes redirectAttributes) {
 		if (bindingValidator.validate(bindingResult, redirectAttributes)) {
@@ -49,21 +49,21 @@ public class AdminStaffController {
 			} catch (IllegalStateException ex) {
 				redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
 			}
-			return "redirect:/admin/staff/create-staff";
+			return "redirect:/staff/create-staff";
 		} else {
-			return "redirect:/admin/staff/create-staff";
+			return "redirect:/staff/create-staff";
 		}
 	}
 
-	@GetMapping("/admin/staff/edit-staff-list")
-	public String getAllStaffListAsAdmin(Model model) {
+	@GetMapping("/staff/staff-list")
+	public String getAllStaffList(Model model) {
 		List<Staff> staff = staffService.getAllStaff();
 
 		model.addAttribute("staff", staff);
-		return "admin/staff/edit-staff-list";
+		return "staff/staff-list";
 	}
 
-	@PostMapping("admin/staff/delete/{staffId}")
+	@PostMapping("/staff/delete/{staffId}")
 	public String deleteStaff(@PathVariable int staffId, RedirectAttributes redirectAttributes,
 			HttpServletRequest request) {
 		try {
@@ -75,13 +75,13 @@ public class AdminStaffController {
 		String referrer = request.getHeader("referer");
 
 		if (referrer == null || referrer.isEmpty()) {
-			return "redirect:/admin/staff/edit-staff-list";
+			return "redirect:/staff/staff-list";
 		}
 		return "redirect:" + referrer;
 	}
 
-	@GetMapping("/admin/staff/search-result")
-	public String searchStaffAsAdmin(@RequestParam("searchType") String searchType,
+	@GetMapping("/staff/search-result")
+	public String searchStaff(@RequestParam("searchType") String searchType,
 			@RequestParam(required = false) Integer staffId, @RequestParam(required = false) String firstName,
 			@RequestParam(required = false) String lastName, @RequestParam(required = false) String position,
 			Model model) {
@@ -98,23 +98,23 @@ public class AdminStaffController {
 			return "error";
 		}
 		model.addAttribute("staff", staffList);
-		return "admin/staff/edit-staff-list";
+		return "staff/staff-list";
 	}
 
-	@GetMapping("/admin/staff/staff-card/{staffId}")
+	@GetMapping("/staff/staff-card/{staffId}")
 	public String openStaffCard(@PathVariable int staffId, Model model) {
 		Optional<Staff> optionalStaff = staffService.findStaffById(staffId);
 
 		if (optionalStaff.isPresent()) {
 			Staff staff = optionalStaff.get();
 			model.addAttribute("staff", staff);
-			return "admin/staff/staff-card";
+			return "staff/staff-card";
 		} else {
-			return "redirect:/admin/staff/edit-staff-list";
+			return "redirect:/staff/staff-list";
 		}
 	}
 
-	@PostMapping("/admin/staff/edit-staff/{staffId}")
+	@PostMapping("/staff/edit-staff/{staffId}")
 	public String updateStaff(@PathVariable("staffId") int staffId,
 			@ModelAttribute("staff") @Validated Staff updatedStaff, BindingResult bindingResult,
 			RedirectAttributes redirectAttributes) {
@@ -131,9 +131,9 @@ public class AdminStaffController {
 				redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
 			}
 		} else {
-			return "redirect:/admin/staff/staff-card/" + staffId;
+			return "redirect:/staff/staff-card/" + staffId;
 		}
-		return "redirect:/admin/staff/staff-card/" + staffId;
+		return "redirect:/staff/staff-card/" + staffId;
 	}
 
 }

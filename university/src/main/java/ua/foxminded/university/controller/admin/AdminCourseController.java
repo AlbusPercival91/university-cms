@@ -29,15 +29,15 @@ public class AdminCourseController {
 	@Autowired
 	private ControllerBindingValidator bindingValidator;
 
-	@GetMapping("/admin/course/edit-course-list")
-	public String getAllCourseListAsAdmin(Model model) {
+	@GetMapping("/course/course-list")
+	public String getAllCourseList(Model model) {
 		List<Course> courses = courseService.getAllCourses();
 
 		model.addAttribute("courses", courses);
-		return "admin/course/edit-course-list";
+		return "course/course-list";
 	}
 
-	@PostMapping("admin/course/delete/{courseId}")
+	@PostMapping("/course/delete/{courseId}")
 	public String deleteCourse(@PathVariable int courseId, RedirectAttributes redirectAttributes,
 			HttpServletRequest request) {
 		try {
@@ -49,17 +49,17 @@ public class AdminCourseController {
 		String referrer = request.getHeader("referer");
 
 		if (referrer == null || referrer.isEmpty()) {
-			return "redirect:/admin/course/edit-course-list";
+			return "redirect:/course/course-list";
 		}
 		return "redirect:" + referrer;
 	}
 
-	@GetMapping("/admin/course/create-course")
+	@GetMapping("/course/create-course")
 	public String showCreateCourseForm() {
-		return "admin/course/create-course";
+		return "course/create-course";
 	}
 
-	@PostMapping("/admin/course/create-course")
+	@PostMapping("/course/create-course")
 	public String createCourse(@ModelAttribute("course") @Validated Course course, BindingResult bindingResult,
 			RedirectAttributes redirectAttributes) {
 		if (bindingValidator.validate(bindingResult, redirectAttributes)) {
@@ -74,14 +74,14 @@ public class AdminCourseController {
 			} catch (IllegalStateException ex) {
 				redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
 			}
-			return "redirect:/admin/course/create-course";
+			return "redirect:/course/create-course";
 		} else {
-			return "redirect:/admin/course/create-course";
+			return "redirect:/course/create-course";
 		}
 	}
 
-	@GetMapping("/admin/course/search-result")
-	public String searchCourseAsAdmin(@RequestParam("searchType") String searchType,
+	@GetMapping("/course/search-result")
+	public String searchCourse(@RequestParam("searchType") String searchType,
 			@RequestParam(required = false) Integer courseId, @RequestParam(required = false) String courseName,
 			@RequestParam(required = false) Integer teacherId, @RequestParam(required = false) Integer studentId,
 			Model model) {
@@ -101,23 +101,23 @@ public class AdminCourseController {
 			return "error";
 		}
 		model.addAttribute("courses", courseList);
-		return "admin/course/edit-course-list";
+		return "course/course-list";
 	}
 
-	@GetMapping("/admin/course/course-card/{courseId}")
+	@GetMapping("/course/course-card/{courseId}")
 	public String openCourseCard(@PathVariable int courseId, Model model) {
 		Optional<Course> optionalCourse = courseService.findCourseById(courseId);
 
 		if (optionalCourse.isPresent()) {
 			Course course = optionalCourse.get();
 			model.addAttribute("course", course);
-			return "admin/course/course-card";
+			return "course/course-card";
 		} else {
-			return "redirect:/admin/course/edit-course-list";
+			return "redirect:/course/course-list";
 		}
 	}
 
-	@PostMapping("/admin/course/edit-course/{courseId}")
+	@PostMapping("/course/edit-course/{courseId}")
 	public String updateCourse(@PathVariable("courseId") int courseId,
 			@ModelAttribute("course") @Validated Course updatedCourse, BindingResult bindingResult,
 			RedirectAttributes redirectAttributes) {
@@ -134,8 +134,8 @@ public class AdminCourseController {
 				redirectAttributes.addFlashAttribute("errorMessage", "Course not found");
 			}
 		} else {
-			return "redirect:/admin/course/course-card/" + courseId;
+			return "redirect:/course/course-card/" + courseId;
 		}
-		return "redirect:/admin/course/course-card/" + courseId;
+		return "redirect:/course/course-card/" + courseId;
 	}
 }

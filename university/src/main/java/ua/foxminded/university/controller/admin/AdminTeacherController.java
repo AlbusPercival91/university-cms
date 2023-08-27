@@ -6,6 +6,8 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -40,16 +42,73 @@ public class AdminTeacherController {
 	@Autowired
 	private ControllerBindingValidator bindingValidator;
 
-	@GetMapping("/admin/teacher/create-teacher")
+	@GetMapping("/teacher/main")
+	public String teacherDashboard(Model model) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (authentication != null && authentication.isAuthenticated()) {
+			String email = authentication.getName();
+			Optional<Teacher> teacher = teacherService.findTeacherByEmail(email);
+
+			if (teacher.isPresent()) {
+				List<Course> courses = courseService.getAllCourses();
+				List<Department> departments = departmentService.getAllDepartments();
+				model.addAttribute("teacher", teacher.get());
+				model.addAttribute("courses", courses);
+				model.addAttribute("departments", departments);
+				return "teacher/main";
+			}
+		}
+		return "redirect:/login";
+	}
+
+	@PostMapping("/teacher/update-personal/{teacherId}")
+	public String updatePersonalData(@PathVariable("teacherId") int teacherId,
+			@ModelAttribute("teacher") @Validated Teacher updatedTeacher, BindingResult bindingResult,
+			RedirectAttributes redirectAttributes) {
+		if (bindingValidator.validate(bindingResult, redirectAttributes)) {
+			try {
+				Teacher resultTeacher = teacherService.updateTeacherById(teacherId, updatedTeacher);
+
+				if (resultTeacher != null) {
+					redirectAttributes.addFlashAttribute("successMessage", "Data updated successfully");
+				} else {
+					redirectAttributes.addFlashAttribute("errorMessage", "Failed to update Data");
+				}
+			} catch (NoSuchElementException | IllegalStateException ex) {
+				redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
+			}
+		} else {
+			return "redirect:/teacher/main";
+		}
+		return "redirect:/teacher/main";
+	}
+
+	@PostMapping("/teacher/update-password")
+	public String updatePassword(@RequestParam int teacherId, @RequestParam String oldPassword,
+			@RequestParam String newPassword, RedirectAttributes redirectAttributes) {
+		try {
+			Teacher resultTeacher = teacherService.changeTeacherPasswordById(teacherId, oldPassword, newPassword);
+			if (resultTeacher != null) {
+				redirectAttributes.addFlashAttribute("successMessage", "Password changed successfully");
+			} else {
+				redirectAttributes.addFlashAttribute("errorMessage", "Failed to change Password");
+			}
+		} catch (NoSuchElementException | IllegalStateException ex) {
+			redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
+		}
+		return "redirect:/teacher/main";
+	}
+
+	@GetMapping("/teacher/create-teacher")
 	public String showCreateTeacherForm(Model model) {
 		List<Department> departments = departmentService.getAllDepartments();
 		List<Course> courses = courseService.getAllCourses();
 		model.addAttribute("departments", departments);
 		model.addAttribute("courses", courses);
-		return "admin/teacher/create-teacher";
+		return "teacher/create-teacher";
 	}
 
-	@PostMapping("/admin/teacher/create-teacher")
+	@PostMapping("/teacher/create-teacher")
 	public String createTeacher(@ModelAttribute("teacher") @Validated Teacher teacher, @Validated Course course,
 			BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 		if (bindingValidator.validate(bindingResult, redirectAttributes)) {
@@ -64,13 +123,13 @@ public class AdminTeacherController {
 			} catch (IllegalStateException ex) {
 				redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
 			}
-			return "redirect:/admin/teacher/create-teacher";
+			return "redirect:/teacher/create-teacher";
 		} else {
-			return "redirect:/admin/teacher/create-teacher";
+			return "redirect:/teacher/create-teacher";
 		}
 	}
 
-	@GetMapping("/admin/teacher/teacher-card/{teacherId}")
+	@GetMapping("/teacher/teacher-card/{teacherId}")
 	public String openTeacherCard(@PathVariable int teacherId, Model model) {
 		Optional<Teacher> optionalTeacher = teacherService.findTeacherById(teacherId);
 		List<Course> courses = courseService.getAllCourses();
@@ -81,25 +140,25 @@ public class AdminTeacherController {
 			model.addAttribute("teacher", teacher);
 			model.addAttribute("courses", courses);
 			model.addAttribute("departments", departments);
-			return "admin/teacher/teacher-card";
+			return "teacher/teacher-card";
 		} else {
-			return "redirect:/admin/teacher/edit-teacher-list";
+			return "redirect:/teacher/teacher-list";
 		}
 	}
 
-	@GetMapping("/admin/teacher/edit-teacher-list")
-	public String getAllTeachersListAsAdmin(Model model) {
+	@GetMapping("/teacher/teacher-list")
+	public String getAllTeachersList(Model model) {
 		List<Teacher> teachers = teacherService.getAllTeachers();
 
 		for (Teacher teacher : teachers) {
 			teacher.getAssignedCourses();
 		}
 		model.addAttribute("teachers", teachers);
-		return "admin/teacher/edit-teacher-list";
+		return "teacher/teacher-list";
 	}
 
-	@GetMapping("/admin/teacher/search-result")
-	public String searchTeachersAsAdmin(@RequestParam("searchType") String searchType,
+	@GetMapping("/teacher/search-result")
+	public String searchTeachers(@RequestParam("searchType") String searchType,
 			@RequestParam(required = false) String courseName, @RequestParam(required = false) String facultyName,
 			@RequestParam(required = false) Integer departmentId, @RequestParam(required = false) Integer facultyId,
 			@RequestParam(required = false) Integer teacherId, @RequestParam(required = false) String firstName,
@@ -122,10 +181,10 @@ public class AdminTeacherController {
 		}
 		teachers.forEach(Teacher::getAssignedCourses);
 		model.addAttribute("teachers", teachers);
-		return "admin/teacher/edit-teacher-list";
+		return "teacher/teacher-list";
 	}
 
-	@PostMapping("/admin/teacher/delete/{teacherId}")
+	@PostMapping("/teacher/delete/{teacherId}")
 	public String deleteTeacher(@PathVariable int teacherId, RedirectAttributes redirectAttributes,
 			HttpServletRequest request) {
 		try {
@@ -137,12 +196,12 @@ public class AdminTeacherController {
 		String referrer = request.getHeader("referer");
 
 		if (referrer == null || referrer.isEmpty()) {
-			return "redirect:/admin/teacher/edit-teacher-list";
+			return "redirect:/teacher/teacher-list";
 		}
 		return "redirect:" + referrer;
 	}
 
-	@PostMapping("/admin/teacher/remove-course/{teacherId}/{courseName}")
+	@PostMapping("/teacher/remove-course/{teacherId}/{courseName}")
 	public String removeTeacherFromCourse(@PathVariable int teacherId, @PathVariable String courseName,
 			RedirectAttributes redirectAttributes) {
 		try {
@@ -151,10 +210,10 @@ public class AdminTeacherController {
 		} catch (IllegalStateException | NoSuchElementException ex) {
 			redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
 		}
-		return "redirect:/admin/teacher/teacher-card/{teacherId}";
+		return "redirect:/teacher/teacher-card/{teacherId}";
 	}
 
-	@PostMapping("/admin/teacher/assign-course")
+	@PostMapping("/teacher/assign-course")
 	public String addTeacherToTheCourse(@RequestParam int teacherId, @RequestParam String courseName,
 			RedirectAttributes redirectAttributes) {
 		try {
@@ -163,11 +222,11 @@ public class AdminTeacherController {
 		} catch (IllegalStateException | NoSuchElementException ex) {
 			redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
 		}
-		UriComponentsBuilder builder = UriComponentsBuilder.fromPath("/admin/teacher/teacher-card/{teacherId}");
+		UriComponentsBuilder builder = UriComponentsBuilder.fromPath("/teacher/teacher-card/{teacherId}");
 		return "redirect:" + builder.buildAndExpand(teacherId).toUriString();
 	}
 
-	@PostMapping("/admin/teacher/edit-teacher/{teacherId}")
+	@PostMapping("/teacher/edit-teacher/{teacherId}")
 	public String updateTeacher(@PathVariable("teacherId") int teacherId,
 			@ModelAttribute("teacher") @Validated Teacher updatedTeacher, BindingResult bindingResult,
 			RedirectAttributes redirectAttributes) {
@@ -184,9 +243,9 @@ public class AdminTeacherController {
 				redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
 			}
 		} else {
-			return "redirect:/admin/teacher/teacher-card/" + teacherId;
+			return "redirect:/teacher/teacher-card/" + teacherId;
 		}
-		return "redirect:/admin/teacher/teacher-card/" + teacherId;
+		return "redirect:/teacher/teacher-card/" + teacherId;
 	}
 
 }

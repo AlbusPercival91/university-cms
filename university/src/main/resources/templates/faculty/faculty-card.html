@@ -16,7 +16,7 @@
 
         <div class="entity-details">
             <h2>Faculty Details</h2>
-            <form th:action="@{/admin/faculty/edit-faculty/{facultyId}(facultyId=${faculty.id})}" method="post">
+            <form th:action="@{/faculty/edit-faculty/{facultyId}(facultyId=${faculty.id})}" method="post">
                 <div class="form-group">
                     <label for="facultyName">Faculty Name:</label>
                     <input type="text" id="facultyName" th:value="${faculty.facultyName}" name="facultyName" readonly

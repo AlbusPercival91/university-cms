@@ -55,7 +55,7 @@ public class AdminTimeTableController {
 	@Autowired
 	private StudentService studentService;
 
-	@GetMapping("/admin/timetable/course-timetable-form")
+	@GetMapping("/timetable/course-timetable-form")
 	public String showFormCreateTimeTableForStudentsAtCourse(Model model) {
 		List<Teacher> teachers = teacherService.getAllTeachers();
 		List<Course> courses = courseService.getAllCourses();
@@ -63,10 +63,10 @@ public class AdminTimeTableController {
 		model.addAttribute("teachers", teachers);
 		model.addAttribute("courses", courses);
 		model.addAttribute("classrooms", classrooms);
-		return "admin/timetable/course-timetable-form";
+		return "timetable/course-timetable-form";
 	}
 
-	@PostMapping("/admin/timetable/course-timetable-form")
+	@PostMapping("/timetable/course-timetable-form")
 	public String ceateTimeTableForStudentsAtCourse(@ModelAttribute("timetable") @Validated TimeTable timetable,
 			BindingResult bindingResult, RedirectAttributes redirectAttributes,
 			@RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
@@ -85,10 +85,10 @@ public class AdminTimeTableController {
 		} catch (NoSuchElementException | TimeTableValidationException ex) {
 			redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
 		}
-		return "redirect:/admin/timetable/course-timetable-form";
+		return "redirect:/timetable/course-timetable-form";
 	}
 
-	@GetMapping("/admin/timetable/group-timetable-form")
+	@GetMapping("/timetable/group-timetable-form")
 	public String showFormCreateGroupTimeTable(Model model) {
 		List<Teacher> teachers = teacherService.getAllTeachers();
 		List<Course> courses = courseService.getAllCourses();
@@ -98,10 +98,10 @@ public class AdminTimeTableController {
 		model.addAttribute("courses", courses);
 		model.addAttribute("groups", groups);
 		model.addAttribute("classrooms", classrooms);
-		return "admin/timetable/group-timetable-form";
+		return "timetable/group-timetable-form";
 	}
 
-	@PostMapping("/admin/timetable/group-timetable-form")
+	@PostMapping("/timetable/group-timetable-form")
 	public String createGroupTimeTable(@ModelAttribute("timetable") @Validated TimeTable timetable,
 			BindingResult bindingResult, RedirectAttributes redirectAttributes,
 			@RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
@@ -120,10 +120,10 @@ public class AdminTimeTableController {
 		} catch (NoSuchElementException | TimeTableValidationException ex) {
 			redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
 		}
-		return "redirect:/admin/timetable/group-timetable-form";
+		return "redirect:/timetable/group-timetable-form";
 	}
 
-	@PostMapping("/admin/timetable/delete/{timetableId}")
+	@PostMapping("/timetable/delete/{timetableId}")
 	public String deleteTimetable(@PathVariable int timetableId, RedirectAttributes redirectAttributes,
 			HttpServletRequest request) {
 		try {
@@ -135,12 +135,12 @@ public class AdminTimeTableController {
 		String referrer = request.getHeader("referer");
 
 		if (referrer == null || referrer.isEmpty()) {
-			return "redirect:/admin/timetable/timetable/{timetableId}";
+			return "redirect:/timetable/timetable/{timetableId}";
 		}
 		return "redirect:" + referrer;
 	}
 
-	@GetMapping("/admin/timetable/teacher-timetable/{teacherId}")
+	@GetMapping("/timetable/teacher-timetable/{teacherId}")
 	public String getFullTeacherTimeTable(@PathVariable("teacherId") int teacherId, Model model) {
 		Optional<Teacher> teacher = teacherService.findTeacherById(teacherId);
 
@@ -156,10 +156,10 @@ public class AdminTimeTableController {
 			}
 			model.addAttribute("timetables", timetables);
 		}
-		return "admin/timetable/timetable";
+		return "timetable/timetable";
 	}
 
-	@GetMapping("/admin/timetable/teacher-selected-timetable/{teacherId}")
+	@GetMapping("/timetable/teacher-selected-timetable/{teacherId}")
 	public String getSelectedDateTeacherTimeTable(@PathVariable("teacherId") int teacherId,
 			@RequestParam("dateFrom") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateFrom,
 			@RequestParam("dateTo") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateTo, Model model) {
@@ -177,10 +177,10 @@ public class AdminTimeTableController {
 			}
 			model.addAttribute("timetables", timetables);
 		}
-		return "admin/timetable/timetable";
+		return "timetable/timetable";
 	}
 
-	@GetMapping("/admin/timetable/student-timetable/{studentId}")
+	@GetMapping("/timetable/student-timetable/{studentId}")
 	public String getFullStudentTimeTable(@PathVariable("studentId") int studentId, Model model) {
 		Optional<Student> student = studentService.findStudentById(studentId);
 
@@ -196,10 +196,10 @@ public class AdminTimeTableController {
 			}
 			model.addAttribute("timetables", timetables);
 		}
-		return "admin/timetable/timetable";
+		return "timetable/timetable";
 	}
 
-	@GetMapping("/admin/timetable/timetable-group/{studentId}")
+	@GetMapping("/timetable/timetable-group/{studentId}")
 	public String getFullGroupTimeTable(@PathVariable("studentId") int studentId, Model model) {
 		Optional<Student> student = studentService.findStudentById(studentId);
 
@@ -207,10 +207,10 @@ public class AdminTimeTableController {
 			List<TimeTable> timetables = timeTableService.getStudentsGroupTimeTable(student.get());
 			model.addAttribute("timetables", timetables);
 		}
-		return "admin/timetable/timetable";
+		return "timetable/timetable";
 	}
 
-	@GetMapping("/admin/timetable/selected-timetable/{studentId}")
+	@GetMapping("/timetable/selected-timetable/{studentId}")
 	public String getSelectedDateStudentAndGroupTimeTable(@PathVariable("studentId") int studentId,
 			@RequestParam("dateFrom") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateFrom,
 			@RequestParam("dateTo") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateTo,
@@ -234,11 +234,11 @@ public class AdminTimeTableController {
 			}
 			model.addAttribute("timetables", timetables);
 		}
-		return "admin/timetable/timetable";
+		return "timetable/timetable";
 	}
 
-	@GetMapping("/admin/timetable/edit-timetable-list")
-	public String getAllTimeTableListAsAdmin(Model model) {
+	@GetMapping("/timetable/timetable-list")
+	public String getAllTimeTableList(Model model) {
 		List<TimeTable> timetables = timeTableService.getAllTimeTables();
 
 		for (TimeTable timetable : timetables) {
@@ -249,10 +249,10 @@ public class AdminTimeTableController {
 			}
 		}
 		model.addAttribute("timetables", timetables);
-		return "admin/timetable/timetable";
+		return "timetable/timetable";
 	}
 
-	@GetMapping("/admin/timetable/timetable-card/{timetableId}")
+	@GetMapping("/timetable/timetable-card/{timetableId}")
 	public String openTimeTableCard(@PathVariable int timetableId, Model model) {
 		Optional<TimeTable> optionalTimeTable = timeTableService.findTimeTableById(timetableId);
 		List<Teacher> teachers = teacherService.getAllTeachers();
@@ -267,14 +267,14 @@ public class AdminTimeTableController {
 			model.addAttribute("courses", courses);
 			model.addAttribute("groups", groups);
 			model.addAttribute("classrooms", classRooms);
-			return "admin/timetable/timetable-card";
+			return "timetable/timetable-card";
 		} else {
-			return "redirect:/admin/timetable/timetable";
+			return "redirect:/timetable/timetable";
 		}
 	}
 
-	@GetMapping("/admin/timetable/search-result")
-	public String searchTimeTablesAsAdmin(@RequestParam("searchType") String searchType,
+	@GetMapping("/timetable/search-result")
+	public String searchTimeTables(@RequestParam("searchType") String searchType,
 			@RequestParam(required = false) Integer timetableId, @RequestParam(required = false) String courseName,
 			@RequestParam(required = false) String groupName,
 			@RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date, Model model) {
@@ -301,10 +301,10 @@ public class AdminTimeTableController {
 			}
 		}
 		model.addAttribute("timetables", timetables);
-		return "admin/timetable/timetable";
+		return "timetable/timetable";
 	}
 
-	@PostMapping("/admin/timetable/edit-timetable/{timetableId}")
+	@PostMapping("/timetable/edit-timetable/{timetableId}")
 	public String updateTimeTable(@PathVariable("timetableId") int timetableId,
 			@ModelAttribute("timetable") @Validated TimeTable updatedTimeTable, BindingResult bindingResult,
 			RedirectAttributes redirectAttributes) {
@@ -319,6 +319,6 @@ public class AdminTimeTableController {
 		} catch (NoSuchElementException | TimeTableValidationException ex) {
 			redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
 		}
-		return "redirect:/admin/timetable/timetable-card/" + timetableId;
+		return "redirect:/timetable/timetable-card/" + timetableId;
 	}
 }

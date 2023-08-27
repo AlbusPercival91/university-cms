@@ -27,15 +27,15 @@ public class AdminFacultyController {
 	@Autowired
 	private ControllerBindingValidator bindingValidator;
 
-	@GetMapping("/admin/faculty/edit-faculty-list")
-	public String getAllFacultyListAsAdmin(Model model) {
+	@GetMapping("/faculty/faculty-list")
+	public String getAllFacultyList(Model model) {
 		List<Faculty> faculties = facultyService.getAllFaculties();
 
 		model.addAttribute("faculties", faculties);
-		return "admin/faculty/edit-faculty-list";
+		return "faculty/faculty-list";
 	}
 
-	@PostMapping("admin/faculty/delete/{facultyId}")
+	@PostMapping("/faculty/delete/{facultyId}")
 	public String deleteFaculty(@PathVariable int facultyId, RedirectAttributes redirectAttributes,
 			HttpServletRequest request) {
 		try {
@@ -47,17 +47,17 @@ public class AdminFacultyController {
 		String referrer = request.getHeader("referer");
 
 		if (referrer == null || referrer.isEmpty()) {
-			return "redirect:/admin/faculty/edit-faculty-list";
+			return "redirect:/faculty/faculty-list";
 		}
 		return "redirect:" + referrer;
 	}
 
-	@GetMapping("/admin/faculty/create-faculty")
+	@GetMapping("/faculty/create-faculty")
 	public String showCreateFacultyForm() {
-		return "admin/faculty/create-faculty";
+		return "faculty/create-faculty";
 	}
 
-	@PostMapping("/admin/faculty/create-faculty")
+	@PostMapping("/faculty/create-faculty")
 	public String createFaculty(@ModelAttribute("faculty") @Validated Faculty faculty, BindingResult bindingResult,
 			RedirectAttributes redirectAttributes) {
 		if (bindingValidator.validate(bindingResult, redirectAttributes)) {
@@ -72,26 +72,26 @@ public class AdminFacultyController {
 			} catch (IllegalStateException ex) {
 				redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
 			}
-			return "redirect:/admin/faculty/create-faculty";
+			return "redirect:/faculty/create-faculty";
 		} else {
-			return "redirect:/admin/faculty/create-faculty";
+			return "redirect:/faculty/create-faculty";
 		}
 	}
 
-	@GetMapping("/admin/faculty/faculty-card/{facultyId}")
+	@GetMapping("/faculty/faculty-card/{facultyId}")
 	public String openFacultyCard(@PathVariable int facultyId, Model model) {
 		Optional<Faculty> optionalFaculty = facultyService.findFacultyById(facultyId);
 
 		if (optionalFaculty.isPresent()) {
 			Faculty faculty = optionalFaculty.get();
 			model.addAttribute("faculty", faculty);
-			return "admin/faculty/faculty-card";
+			return "faculty/faculty-card";
 		} else {
-			return "redirect:/admin/faculty/edit-faculty-list";
+			return "redirect:/faculty/faculty-list";
 		}
 	}
 
-	@PostMapping("/admin/faculty/edit-faculty/{facultyId}")
+	@PostMapping("/faculty/edit-faculty/{facultyId}")
 	public String updateFaculty(@PathVariable("facultyId") int facultyId,
 			@ModelAttribute("faculty") @Validated Faculty updatedFaculty, BindingResult bindingResult,
 			RedirectAttributes redirectAttributes) {
@@ -108,9 +108,9 @@ public class AdminFacultyController {
 				redirectAttributes.addFlashAttribute("errorMessage", "Faculty not found");
 			}
 		} else {
-			return "redirect:/admin/faculty/faculty-card/" + facultyId;
+			return "redirect:/faculty/faculty-card/" + facultyId;
 		}
-		return "redirect:/admin/faculty/faculty-card/" + facultyId;
+		return "redirect:/faculty/faculty-card/" + facultyId;
 	}
 
 }

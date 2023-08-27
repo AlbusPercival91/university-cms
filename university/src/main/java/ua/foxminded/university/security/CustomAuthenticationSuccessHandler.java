@@ -17,13 +17,13 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 			response.sendRedirect("/admin/main");
 		} else if (authentication.getAuthorities().stream()
 				.anyMatch(authority -> authority.getAuthority().equals("ROLE_" + UserRole.TEACHER.toString()))) {
-			response.sendRedirect("/user/teacher/main");
+			response.sendRedirect("/teacher/main");
 		} else if (authentication.getAuthorities().stream()
 				.anyMatch(authority -> authority.getAuthority().equals("ROLE_" + UserRole.STUDENT.toString()))) {
-			response.sendRedirect("/user/student/main");
+			response.sendRedirect("/student/main");
 		} else if (authentication.getAuthorities().stream()
 				.anyMatch(authority -> authority.getAuthority().equals("ROLE_" + UserRole.STAFF.toString()))) {
-			response.sendRedirect("/user/staff/main");
+			response.sendRedirect("/staff/main");
 		} else {
 			response.sendRedirect("/login");
 		}

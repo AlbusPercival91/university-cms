@@ -34,15 +34,15 @@ public class AdminGroupController {
 	@Autowired
 	private ControllerBindingValidator bindingValidator;
 
-	@GetMapping("/admin/group/edit-group-list")
-	public String getAllGroupListAsAdmin(Model model) {
+	@GetMapping("/group/group-list")
+	public String getAllGroupList(Model model) {
 		List<Group> groups = groupService.getAllGroups();
 
 		model.addAttribute("groups", groups);
-		return "admin/group/edit-group-list";
+		return "group/group-list";
 	}
 
-	@PostMapping("admin/group/delete/{groupId}")
+	@PostMapping("/group/delete/{groupId}")
 	public String deleteGroup(@PathVariable int groupId, RedirectAttributes redirectAttributes,
 			HttpServletRequest request) {
 		try {
@@ -54,20 +54,20 @@ public class AdminGroupController {
 		String referrer = request.getHeader("referer");
 
 		if (referrer == null || referrer.isEmpty()) {
-			return "redirect:/admin/group/edit-group-list";
+			return "redirect:/group/group-list";
 		}
 		return "redirect:" + referrer;
 	}
 
-	@GetMapping("/admin/group/create-group")
+	@GetMapping("/group/create-group")
 	public String showCreateGroupForm(Model model) {
 		List<Faculty> faculties = facultyService.getAllFaculties();
 
 		model.addAttribute("faculties", faculties);
-		return "admin/group/create-group";
+		return "group/create-group";
 	}
 
-	@PostMapping("/admin/group/create-group")
+	@PostMapping("/group/create-group")
 	public String createGroup(@ModelAttribute("group") @Validated Group group, BindingResult bindingResult,
 			RedirectAttributes redirectAttributes) {
 		if (bindingValidator.validate(bindingResult, redirectAttributes)) {
@@ -82,14 +82,14 @@ public class AdminGroupController {
 			} catch (IllegalStateException ex) {
 				redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
 			}
-			return "redirect:/admin/group/create-group";
+			return "redirect:/group/create-group";
 		} else {
-			return "redirect:/admin/group/create-group";
+			return "redirect:/group/create-group";
 		}
 	}
 
-	@GetMapping("/admin/group/search-result")
-	public String searchGroupAsAdmin(@RequestParam("searchType") String searchType,
+	@GetMapping("/group/search-result")
+	public String searchGroup(@RequestParam("searchType") String searchType,
 			@RequestParam(required = false) Integer groupId, @RequestParam(required = false) String groupName,
 			@RequestParam(required = false) String facultyName, Model model) {
 		List<Group> groupList;
@@ -105,10 +105,10 @@ public class AdminGroupController {
 			return "error";
 		}
 		model.addAttribute("groups", groupList);
-		return "admin/group/edit-group-list";
+		return "group/group-list";
 	}
 
-	@GetMapping("/admin/group/group-card/{groupId}")
+	@GetMapping("/group/group-card/{groupId}")
 	public String openGroupCard(@PathVariable int groupId, Model model) {
 		Optional<Group> optionalGroup = groupService.findGroupById(groupId);
 		List<Faculty> faculties = facultyService.getAllFaculties();
@@ -117,13 +117,13 @@ public class AdminGroupController {
 			Group group = optionalGroup.get();
 			model.addAttribute("group", group);
 			model.addAttribute("faculties", faculties);
-			return "admin/group/group-card";
+			return "group/group-card";
 		} else {
-			return "redirect:/admin/group/edit-group-list";
+			return "redirect:/group/group-list";
 		}
 	}
 
-	@PostMapping("/admin/group/edit-group/{groupId}")
+	@PostMapping("/group/edit-group/{groupId}")
 	public String updateGroup(@PathVariable("groupId") int groupId,
 			@ModelAttribute("group") @Validated Group updatedGroup, BindingResult bindingResult,
 			RedirectAttributes redirectAttributes) {
@@ -140,8 +140,8 @@ public class AdminGroupController {
 				redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
 			}
 		} else {
-			return "redirect:/admin/group/group-card/" + groupId;
+			return "redirect:/group/group-card/" + groupId;
 		}
-		return "redirect:/admin/group/group-card/" + groupId;
+		return "redirect:/group/group-card/" + groupId;
 	}
 }
