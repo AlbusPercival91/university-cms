@@ -68,10 +68,10 @@ VALUES
 INSERT INTO university.staff (first_name, last_name, active, email, password, position, "function", role)
 VALUES
     ('John', 'Cole', true, 'johncole@example.com', crypt('1111', gen_salt('bf')), 'Administrator', 'Administrative tasks', 'STAFF'),
-    ('Jane', 'Smith', true, 'janesmith@example.com', 'password2', 'Counselor', 'Student guidance', 'STAFF'),
-    ('Michael', 'Johnson', true, 'michaeljohnson@example.com', 'password3', 'Librarian', 'Library management', 'STAFF'),
-    ('Emily', 'Brown', true, 'emilybrown@example.com', 'password4', 'Advisor', 'Academic advising', 'STAFF'),
-    ('David', 'Davis', true, 'daviddavis@example.com', 'password5', 'Coordinator', 'Program coordination', 'STAFF');
+    ('Jane', 'Smith', true, 'janesmith@example.com', crypt('1111', gen_salt('bf')), 'Counselor', 'Student guidance', 'STAFF'),
+    ('Michael', 'Johnson', true, 'michaeljohnson@example.com', crypt('1111', gen_salt('bf')), 'Librarian', 'Library management', 'STAFF'),
+    ('Emily', 'Brown', true, 'emilybrown@example.com', crypt('1111', gen_salt('bf')), 'Advisor', 'Academic advising', 'STAFF'),
+    ('David', 'Davis', true, 'daviddavis@example.com', crypt('1111', gen_salt('bf')), 'Coordinator', 'Program coordination', 'STAFF');
 
 -- Insert sample data for university.students
 INSERT INTO university.student (first_name, last_name, active, email, password, group_id, role)
