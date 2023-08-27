@@ -15,7 +15,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests().mvcMatchers(staticResources).permitAll().antMatchers("/", "/about", "/contacts")
-				.permitAll().anyRequest().authenticated().and().formLogin()
+				.permitAll().anyRequest().authenticated().and().formLogin().loginPage("/login")
 				.successHandler(customAuthenticationSuccessHandler()).permitAll().and().logout().logoutUrl("/logout")
 				.logoutSuccessUrl("/").invalidateHttpSession(true).deleteCookies("JSESSIONID");
 	}
