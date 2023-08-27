@@ -21,6 +21,12 @@
                     </div>
                 </li>
 
+                <li class="menu-item separate" sec:authorize="hasRole('ROLE_STAFF')">
+                    <div class="menu-item-box">
+                        <a th:href="@{/staff/main}"> My Space </a>
+                    </div>
+                </li>
+
                 <li class="menu-item" sec:authorize="hasRole('ROLE_ADMIN')">
                     <div class="menu-item-box">
                         <span class="menu-item-title">Teacher</span>

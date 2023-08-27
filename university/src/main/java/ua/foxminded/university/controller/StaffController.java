@@ -6,6 +6,8 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -28,6 +30,58 @@ public class StaffController {
 
 	@Autowired
 	private ControllerBindingValidator bindingValidator;
+
+	@GetMapping("/staff/main")
+	public String staffMainPage(Model model) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (authentication != null && authentication.isAuthenticated()) {
+			String email = authentication.getName();
+			Optional<Staff> staff = staffService.findStaffByEmail(email);
+			if (staff.isPresent()) {
+				model.addAttribute("staff", staff.get());
+				return "staff/main";
+			}
+		}
+		return "redirect:/login";
+	}
+
+	@PostMapping("/staff/update-personal/{staffId}")
+	public String updatePersonalData(@PathVariable("staffId") int staffId,
+			@ModelAttribute("staff") @Validated Staff updatedStaff, BindingResult bindingResult,
+			RedirectAttributes redirectAttributes) {
+		if (bindingValidator.validate(bindingResult, redirectAttributes)) {
+			try {
+				Staff resultStaff = staffService.updateStaffById(staffId, updatedStaff);
+
+				if (resultStaff != null) {
+					redirectAttributes.addFlashAttribute("successMessage", "Data updated successfully");
+				} else {
+					redirectAttributes.addFlashAttribute("errorMessage", "Failed to update Data");
+				}
+			} catch (NoSuchElementException | IllegalStateException ex) {
+				redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
+			}
+		} else {
+			return "redirect:/staff/main";
+		}
+		return "redirect:/staff/main";
+	}
+
+	@PostMapping("/staff/update-password")
+	public String updatePassword(@RequestParam int staffId, @RequestParam String oldPassword,
+			@RequestParam String newPassword, RedirectAttributes redirectAttributes) {
+		try {
+			Staff resultStaff = staffService.changeStaffPasswordById(staffId, oldPassword, newPassword);
+			if (resultStaff != null) {
+				redirectAttributes.addFlashAttribute("successMessage", "Password changed successfully");
+			} else {
+				redirectAttributes.addFlashAttribute("errorMessage", "Failed to change Password");
+			}
+		} catch (NoSuchElementException | IllegalStateException ex) {
+			redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
+		}
+		return "redirect:/staff/main";
+	}
 
 	@GetMapping("/staff/create-staff")
 	public String showCreateStaffForm() {

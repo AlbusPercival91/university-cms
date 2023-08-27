@@ -60,6 +60,20 @@ public class StaffService {
 		return staffRepository.save(existingStaff);
 	}
 
+	public Staff changeStaffPasswordById(int staffId, String oldPassword, String newPassword) {
+		Staff existingStaff = staffRepository.findById(staffId).orElseThrow(() -> {
+			log.warn("Staff with id {} not found", staffId);
+			return new NoSuchElementException("Staff not found");
+		});
+
+		if (!existingStaff.isPasswordValid(oldPassword)) {
+			log.warn("Password incorrect");
+			throw new IllegalStateException("Password incorrect");
+		}
+		existingStaff.setPassword(newPassword);
+		return staffRepository.save(existingStaff);
+	}
+
 	public List<Staff> getAllStaff() {
 		return staffRepository.findAll();
 	}
