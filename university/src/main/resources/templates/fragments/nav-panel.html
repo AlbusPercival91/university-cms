@@ -11,13 +11,13 @@
 
                 <li class="menu-item separate" sec:authorize="hasRole('ROLE_TEACHER')">
                     <div class="menu-item-box">
-                        <a th:href="@{/user/teacher/main}"> My Space </a>
+                        <a th:href="@{/teacher/main}"> My Space </a>
                     </div>
                 </li>
 
                 <li class="menu-item separate" sec:authorize="hasRole('ROLE_STUDENT')">
                     <div class="menu-item-box">
-                        <a th:href="@{/user/student/main}"> My Space </a>
+                        <a th:href="@{/student/main}"> My Space </a>
                     </div>
                 </li>
 
@@ -25,8 +25,8 @@
                     <div class="menu-item-box">
                         <span class="menu-item-title">Teacher</span>
                         <ul class="submenu">
-                            <li><a th:href="@{~/admin/teacher/create-teacher}">Create New Teacher</a></li>
-                            <li><a th:href="@{~/admin/teacher/edit-teacher-list}">View All Teachers</a></li>
+                            <li><a th:href="@{/teacher/create-teacher}">Create New Teacher</a></li>
+                            <li><a th:href="@{/teacher/teacher-list}">View All Teachers</a></li>
                         </ul>
                     </div>
                 </li>
@@ -36,7 +36,7 @@
                     <div class="menu-item-box">
                         <span class="menu-item-title">Teacher</span>
                         <ul class="submenu">
-                            <li><a th:href="@{~/user/teacher-list}">View All Teachers</a></li>
+                            <li><a th:href="@{/teacher/teacher-list}">View All Teachers</a></li>
                         </ul>
                     </div>
                 </li>
@@ -45,8 +45,8 @@
                     <div class="menu-item-box">
                         <span class="menu-item-title">Student</span>
                         <ul class="submenu">
-                            <li><a th:href="@{~/admin/student/create-student}">Create New Student</a></li>
-                            <li><a th:href="@{~/admin/student/edit-student-list}">View All Students</a></li>
+                            <li><a th:href="@{/student/create-student}">Create New Student</a></li>
+                            <li><a th:href="@{/student/student-list}">View All Students</a></li>
                         </ul>
                     </div>
                 </li>
@@ -56,7 +56,7 @@
                     <div class="menu-item-box">
                         <span class="menu-item-title">Student</span>
                         <ul class="submenu">
-                            <li><a th:href="@{~/user/student-list}">View All Students</a></li>
+                            <li><a th:href="@{/student/student-list}">View All Students</a></li>
                         </ul>
                     </div>
                 </li>
@@ -65,8 +65,8 @@
                     <div class="menu-item-box">
                         <span class="menu-item-title">Staff</span>
                         <ul class="submenu">
-                            <li><a th:href="@{~/admin/staff/create-staff}">Create New Staff</a></li>
-                            <li><a th:href="@{~/admin/staff/edit-staff-list}">View All Staff</a></li>
+                            <li><a th:href="@{/staff/create-staff}">Create New Staff</a></li>
+                            <li><a th:href="@{/staff/staff-list}">View All Staff</a></li>
                         </ul>
                     </div>
                 </li>
@@ -76,7 +76,7 @@
                     <div class="menu-item-box">
                         <span class="menu-item-title">Staff</span>
                         <ul class="submenu">
-                            <li><a th:href="@{~/user/staff-list}">View All Staff</a></li>
+                            <li><a th:href="@{/staff/staff-list}">View All Staff</a></li>
                         </ul>
                     </div>
                 </li>
@@ -85,8 +85,8 @@
                     <div class="menu-item-box">
                         <span class="menu-item-title">Faculty</span>
                         <ul class="submenu">
-                            <li><a th:href="@{~/admin/faculty/create-faculty}">Create New Faculty</a></li>
-                            <li><a th:href="@{~/admin/faculty/edit-faculty-list}">View All Faculties</a></li>
+                            <li><a th:href="@{/faculty/create-faculty}">Create New Faculty</a></li>
+                            <li><a th:href="@{/faculty/faculty-list}">View All Faculties</a></li>
                         </ul>
                     </div>
                 </li>
@@ -96,7 +96,7 @@
                     <div class="menu-item-box">
                         <span class="menu-item-title">Faculty</span>
                         <ul class="submenu">
-                            <li><a th:href="@{~/user/faculty-list}">View All Faculties</a></li>
+                            <li><a th:href="@{/faculty/faculty-list}">View All Faculties</a></li>
                         </ul>
                     </div>
                 </li>
@@ -105,8 +105,8 @@
                     <div class="menu-item-box">
                         <span class="menu-item-title">Department</span>
                         <ul class="submenu">
-                            <li><a th:href="@{~/admin/department/create-department}">Create New Department</a></li>
-                            <li><a th:href="@{~/admin/department/edit-department-list}">View All Departments</a></li>
+                            <li><a th:href="@{/department/create-department}">Create New Department</a></li>
+                            <li><a th:href="@{/department/department-list}">View All Departments</a></li>
                         </ul>
                     </div>
                 </li>
@@ -116,7 +116,7 @@
                     <div class="menu-item-box">
                         <span class="menu-item-title">Department</span>
                         <ul class="submenu">
-                            <li><a th:href="@{~/user/department-list}">View All Departments</a></li>
+                            <li><a th:href="@{/department/department-list}">View All Departments</a></li>
                         </ul>
                     </div>
                 </li>
@@ -125,8 +125,8 @@
                     <div class="menu-item-box">
                         <span class="menu-item-title">Group</span>
                         <ul class="submenu">
-                            <li><a th:href="@{~/admin/group/create-group}">Create New Group</a></li>
-                            <li><a th:href="@{~/admin/group/edit-group-list}">View All Groups</a></li>
+                            <li><a th:href="@{/group/create-group}">Create New Group</a></li>
+                            <li><a th:href="@{/group/group-list}">View All Groups</a></li>
                         </ul>
                     </div>
                 </li>
@@ -136,7 +136,7 @@
                     <div class="menu-item-box">
                         <span class="menu-item-title">Group</span>
                         <ul class="submenu">
-                            <li><a th:href="@{~/user/group-list}">View All Groups</a></li>
+                            <li><a th:href="@{/group/group-list}">View All Groups</a></li>
                         </ul>
                     </div>
                 </li>
@@ -145,8 +145,8 @@
                     <div class="menu-item-box">
                         <span class="menu-item-title">Course</span>
                         <ul class="submenu">
-                            <li><a th:href="@{~/admin/course/create-course}">Create New Course</a></li>
-                            <li><a th:href="@{~/admin/course/edit-course-list}">View All Coursees</a></li>
+                            <li><a th:href="@{/course/create-course}">Create New Course</a></li>
+                            <li><a th:href="@{/course/course-list}">View All Coursees</a></li>
                         </ul>
                     </div>
                 </li>
@@ -156,7 +156,7 @@
                     <div class="menu-item-box">
                         <span class="menu-item-title">Course</span>
                         <ul class="submenu">
-                            <li><a th:href="@{~/user/course-list}">View All Coursees</a></li>
+                            <li><a th:href="@{/course/course-list}">View All Coursees</a></li>
                         </ul>
                     </div>
                 </li>
@@ -165,8 +165,8 @@
                     <div class="menu-item-box">
                         <span class="menu-item-title">ClassRoom</span>
                         <ul class="submenu">
-                            <li><a th:href="@{~/admin/classroom/create-classroom}">Create New Class-Room</a></li>
-                            <li><a th:href="@{~/admin/classroom/edit-classroom-list}">View All Class-Rooms</a></li>
+                            <li><a th:href="@{/classroom/create-classroom}">Create New Class-Room</a></li>
+                            <li><a th:href="@{/classroom/classroom-list}">View All Class-Rooms</a></li>
                         </ul>
                     </div>
                 </li>
@@ -176,7 +176,7 @@
                     <div class="menu-item-box">
                         <span class="menu-item-title">ClassRoom</span>
                         <ul class="submenu">
-                            <li><a th:href="@{~/user/classroom-list}">View All Class-Rooms</a></li>
+                            <li><a th:href="@{/classromm/classroom-list}">View All Class-Rooms</a></li>
                         </ul>
                     </div>
                 </li>
@@ -185,10 +185,10 @@
                     <div class="menu-item-box">
                         <span class="menu-item-title">TimeTable</span>
                         <ul class="submenu">
-                            <li><a th:href="@{~/admin/timetable/group-timetable-form}">Create Group Time-Table</a></li>
-                            <li><a th:href="@{~/admin/timetable/course-timetable-form}">Create Course Time-Table</a>
+                            <li><a th:href="@{/timetable/group-timetable-form}">Create Group Time-Table</a></li>
+                            <li><a th:href="@{/timetable/course-timetable-form}">Create Course Time-Table</a>
                             </li>
-                            <li><a th:href="@{~/admin/timetable/edit-timetable-list}">View All TimeTables</a></li>
+                            <li><a th:href="@{/timetable/timetable-list}">View All TimeTables</a></li>
                         </ul>
                     </div>
                 </li>
@@ -197,7 +197,7 @@
                     <div class="menu-item-box">
                         <span class="menu-item-title">TimeTable</span>
                         <ul class="submenu">
-                            <li><a th:href="@{~/user/timetable}">View All TimeTables</a></li>
+                            <li><a th:href="@{/timetable/timetable}">View All TimeTables</a></li>
                         </ul>
                     </div>
                 </li>
@@ -206,8 +206,8 @@
                     <div class="menu-item-box">
                         <span class="menu-item-title">Admin</span>
                         <ul class="submenu">
-                            <li><a th:href="@{~/admin/create-admin}">Create New Admin</a></li>
-                            <li><a th:href="@{~/admin/edit-admin-list}">View All Admins</a></li>
+                            <li><a th:href="@{/admin/create-admin}">Create New Admin</a></li>
+                            <li><a th:href="@{/admin/admin-list}">View All Admins</a></li>
                         </ul>
                     </div>
                 </li>

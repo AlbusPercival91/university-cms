@@ -97,16 +97,16 @@ public class TeacherController {
 		return "redirect:/user/teacher/main";
 	}
 
-	@GetMapping("/user/teacher-list")
-	public String getAllTeachersList(Model model) {
-		List<Teacher> teachers = teacherService.getAllTeachers();
-
-		for (Teacher teacher : teachers) {
-			teacher.getAssignedCourses();
-		}
-		model.addAttribute("teachers", teachers);
-		return "user/teacher-list";
-	}
+//	@GetMapping("/user/teacher-list")
+//	public String getAllTeachersList(Model model) {
+//		List<Teacher> teachers = teacherService.getAllTeachers();
+//
+//		for (Teacher teacher : teachers) {
+//			teacher.getAssignedCourses();
+//		}
+//		model.addAttribute("teachers", teachers);
+//		return "user/teacher-list";
+//	}
 
 	@GetMapping("/user/teacher/search-result")
 	public String searchTeachers(@RequestParam("searchType") String searchType,
