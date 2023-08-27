@@ -46,6 +46,11 @@ public class FacultyService {
 			log.warn("Faculty with id {} not found", facultyId);
 			return new NoSuchElementException("Faculty not found");
 		});
+
+		if (getAllFaculties().stream().anyMatch(f -> f.getFacultyName().equals(targetFaculty.getFacultyName()))) {
+			log.warn("Faculty already exists");
+			throw new IllegalStateException("Faculty already exists");
+		}
 		BeanUtils.copyProperties(targetFaculty, existingFaculty, "id");
 		return facultyRepository.save(existingFaculty);
 	}

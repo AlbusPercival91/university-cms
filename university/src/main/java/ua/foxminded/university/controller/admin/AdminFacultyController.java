@@ -104,8 +104,8 @@ public class AdminFacultyController {
 				} else {
 					redirectAttributes.addFlashAttribute("errorMessage", "Failed to update the Faculty");
 				}
-			} catch (NoSuchElementException ex) {
-				redirectAttributes.addFlashAttribute("errorMessage", "Faculty not found");
+			} catch (NoSuchElementException | IllegalStateException ex) {
+				redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
 			}
 		} else {
 			return "redirect:/faculty/faculty-card/" + facultyId;
