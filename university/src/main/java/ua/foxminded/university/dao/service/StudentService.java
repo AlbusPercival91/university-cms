@@ -68,6 +68,20 @@ public class StudentService {
 		return studentRepository.save(existingStudent);
 	}
 
+	public Student changeStudentPasswordById(int studentId, String oldPassword, String newPassword) {
+		Student existingStudent = studentRepository.findById(studentId).orElseThrow(() -> {
+			log.warn("Student with id {} not found", studentId);
+			return new NoSuchElementException("Student not found");
+		});
+
+		if (!existingStudent.isPasswordValid(oldPassword)) {
+			log.warn("Password incorrect");
+			throw new IllegalStateException("Password incorrect");
+		}
+		existingStudent.setPassword(newPassword);
+		return studentRepository.save(existingStudent);
+	}
+
 	public List<Student> getAllStudents() {
 		return studentRepository.findAll();
 	}

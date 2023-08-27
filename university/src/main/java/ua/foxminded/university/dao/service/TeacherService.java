@@ -66,7 +66,7 @@ public class TeacherService {
 
 	public Teacher changeTeacherPasswordById(int teacherId, String oldPassword, String newPassword) {
 		Teacher existingTeacher = teacherRepository.findById(teacherId).orElseThrow(() -> {
-			log.warn("Admin with id {} not found", teacherId);
+			log.warn("Teacher with id {} not found", teacherId);
 			return new NoSuchElementException("Teacher not found");
 		});
 
