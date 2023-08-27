@@ -1,4 +1,4 @@
-package ua.foxminded.university.controller.admin;
+package ua.foxminded.university.controller;
 
 import java.util.Collections;
 import java.util.List;
@@ -21,7 +21,7 @@ import ua.foxminded.university.dao.service.ClassRoomService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
 
 @Controller
-public class AdminClassRoomController {
+public class ClassRoomController {
 
 	@Autowired
 	private ClassRoomService classRoomService;

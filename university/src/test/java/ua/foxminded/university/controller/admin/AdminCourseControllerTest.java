@@ -15,11 +15,13 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import ua.foxminded.university.controller.CourseController;
 import ua.foxminded.university.dao.entities.Course;
 import ua.foxminded.university.dao.service.CourseService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
 
-@WebMvcTest({ AdminCourseController.class, ControllerBindingValidator.class })
+@WebMvcTest({ CourseController.class, ControllerBindingValidator.class })
 @ActiveProfiles("test-container")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class AdminCourseControllerTest {

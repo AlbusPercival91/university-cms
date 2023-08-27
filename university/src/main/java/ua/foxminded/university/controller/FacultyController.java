@@ -1,4 +1,4 @@
-package ua.foxminded.university.controller.admin;
+package ua.foxminded.university.controller;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -19,7 +19,7 @@ import ua.foxminded.university.dao.service.FacultyService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
 
 @Controller
-public class AdminFacultyController {
+public class FacultyController {
 
 	@Autowired
 	private FacultyService facultyService;

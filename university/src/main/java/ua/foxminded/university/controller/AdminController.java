@@ -1,4 +1,4 @@
-package ua.foxminded.university.controller.admin;
+package ua.foxminded.university.controller;
 
 import java.util.List;
 import java.util.NoSuchElementException;

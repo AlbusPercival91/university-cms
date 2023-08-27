@@ -7,6 +7,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import ua.foxminded.university.controller.WelcomeController;
+
 @WebMvcTest(WelcomeController.class)
 class WelcomeControllerTest {
 

@@ -1,4 +1,4 @@
-package ua.foxminded.university.controller.admin;
+package ua.foxminded.university.controller;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -35,7 +35,7 @@ import ua.foxminded.university.dao.service.TeacherService;
 import ua.foxminded.university.dao.service.TimeTableService;
 
 @Controller
-public class AdminTimeTableController {
+public class TimeTableController {
 
 	@Autowired
 	private TimeTableService timeTableService;

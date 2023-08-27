@@ -1,4 +1,4 @@
-package ua.foxminded.university.controller.admin;
+package ua.foxminded.university.controller;
 
 import java.util.Collections;
 import java.util.List;
@@ -28,7 +28,7 @@ import ua.foxminded.university.dao.service.StudentService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
 
 @Controller
-public class AdminStudentController {
+public class StudentController {
 
 	@Autowired
 	private StudentService studentService;

@@ -1,4 +1,4 @@
-package ua.foxminded.university.controller.admin;
+package ua.foxminded.university.controller;
 
 import java.util.Collections;
 import java.util.List;
@@ -23,7 +23,7 @@ import ua.foxminded.university.dao.service.GroupService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
 
 @Controller
-public class AdminGroupController {
+public class GroupController {
 
 	@Autowired
 	private GroupService groupService;
