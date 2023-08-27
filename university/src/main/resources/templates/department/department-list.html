@@ -22,7 +22,7 @@
             <div class="search-section">
                 <div class="search-square">
                     <h3>Find Department by ID</h3>
-                    <form th:action="@{/admin/department/search-result}" method="get">
+                    <form th:action="@{/department/search-result}" method="get">
                         <input type="hidden" name="searchType" value="department" />
                         <label for="departmentId">Department ID:</label>
                         <input type="text" id="departmentId" name="departmentId" required />
@@ -35,7 +35,7 @@
             <div class="search-section">
                 <div class="search-square">
                     <h3>Find Department by Name</h3>
-                    <form th:action="@{/admin/department/search-result}" method="get">
+                    <form th:action="@{/department/search-result}" method="get">
                         <input type="hidden" name="searchType" value="name" />
                         <label for="name">Department Name:</label>
                         <input type="text" id="name" name="name" required />
@@ -48,7 +48,7 @@
             <div class="search-section">
                 <div class="search-square">
                     <h3>Find Department by Faculty</h3>
-                    <form th:action="@{/admin/department/search-result}" method="get">
+                    <form th:action="@{/department/search-result}" method="get">
                         <input type="hidden" name="searchType" value="faculty" />
                         <label for="facultyName">Faculty Name:</label>
                         <input type="text" id="facultyName" name="facultyName" required />
@@ -65,19 +65,19 @@
             <caption hidden>All Departments Table</caption>
             <thead>
                 <tr>
-                    <th style="border: none; width: 3vh;"></th>
+                    <th style="border: none; width: 3vh;" sec:authorize="hasRole('ROLE_ADMIN')"></th>
                     <th>ID</th>
                     <th>Department</th>
                     <th>Faculty Name</th>
                     <th>Teachers</th>
-                    <th style="border: none; width: 3vh;"></th>
+                    <th style="border: none; width: 3vh;" sec:authorize="hasRole('ROLE_ADMIN')"></th>
                 </tr>
             </thead>
             <tbody>
                 <tr th:each="department, rowStat : ${departments}">
-                    <td style="border: none;">
+                    <td style="border: none;" sec:authorize="hasRole('ROLE_ADMIN')">
                         <!-- Edit Button -->
-                        <a th:href="@{/admin/department/department-card/{departmentId}(departmentId=${department.id})}">
+                        <a th:href="@{/department/department-card/{departmentId}(departmentId=${department.id})}">
                             <button th:id="'editButton-' + ${rowStat.index}" class="icon-button">
                                 <i class="fas fa-edit edit-icon"></i>
                             </button>
@@ -93,9 +93,9 @@
                             </option>
                         </select>
                     </td>
-                    <td style="border: none;">
+                    <td style="border: none;" sec:authorize="hasRole('ROLE_ADMIN')">
                         <!-- Remove Button -->
-                        <form th:action="@{/admin/department/delete/{departmentId}(departmentId=${department.id})}"
+                        <form th:action="@{/department/delete/{departmentId}(departmentId=${department.id})}"
                             method="post">
                             <input type="hidden" name="departmentId" th:value="${department.id}" />
                             <button th:id="'removeButton-' + ${rowStat.index}" class="icon-button remove-button"

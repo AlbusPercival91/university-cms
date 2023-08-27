@@ -20,19 +20,19 @@
             <caption hidden>All Faculties Table</caption>
             <thead>
                 <tr>
-                    <th style="border: none; width: 3vh;"></th>
+                    <th style="border: none; width: 3vh;" sec:authorize="hasRole('ROLE_ADMIN')"></th>
                     <th>ID</th>
                     <th>Faculty Name</th>
                     <th>Groups</th>
                     <th>Departments</th>
-                    <th style="border: none; width: 3vh;"></th>
+                    <th style="border: none; width: 3vh;" sec:authorize="hasRole('ROLE_ADMIN')"></th>
                 </tr>
             </thead>
             <tbody>
                 <tr th:each="faculty, rowStat : ${faculties}">
-                    <td style="border: none;">
+                    <td style="border: none;" sec:authorize="hasRole('ROLE_ADMIN')">
                         <!-- Edit Button -->
-                        <a th:href="@{/admin/faculty/faculty-card/{facultyId}(facultyId=${faculty.id})}">
+                        <a th:href="@{/faculty/faculty-card/{facultyId}(facultyId=${faculty.id})}">
                             <button th:id="'editButton-' + ${rowStat.index}" class="icon-button">
                                 <i class="fas fa-edit edit-icon"></i>
                             </button>
@@ -50,9 +50,9 @@
                             <option th:each="department : ${faculty.departments}" th:text="${department.name}"></option>
                         </select>
                     </td>
-                    <td style="border: none;">
+                    <td style="border: none;" sec:authorize="hasRole('ROLE_ADMIN')">
                         <!-- Remove Button -->
-                        <form th:action="@{/admin/faculty/delete/{facultyId}(facultyId=${faculty.id})}" method="post">
+                        <form th:action="@{/faculty/delete/{facultyId}(facultyId=${faculty.id})}" method="post">
                             <input type="hidden" name="facultyId" th:value="${faculty.id}" />
                             <button th:id="'removeButton-' + ${rowStat.index}" class="icon-button remove-button"
                                 type="submit">

@@ -24,7 +24,7 @@
                 <div class="search-section">
                     <div class="search-square">
                         <h3>Find Time Table by ID</h3>
-                        <form th:action="@{/admin/timetable/search-result}" method="get">
+                        <form th:action="@{/timetable/search-result}" method="get">
                             <input type="hidden" name="searchType" value="timetable" />
                             <label for="timetableId">Time-Table ID:</label>
                             <input type="text" id="timetableId" name="timetableId" required />
@@ -37,7 +37,7 @@
                 <div class="search-section">
                     <div class="search-square">
                         <h3>Find Time Table by Course</h3>
-                        <form th:action="@{/admin/timetable/search-result}" method="get">
+                        <form th:action="@{/timetable/search-result}" method="get">
                             <input type="hidden" name="searchType" value="course" />
                             <label for="courseName">Course Name:</label>
                             <input type="text" id="courseName" name="courseName" required />
@@ -50,7 +50,7 @@
                 <div class="search-section">
                     <div class="search-square">
                         <h3>Find Time Table by Group</h3>
-                        <form th:action="@{/admin/timetable/search-result}" method="get">
+                        <form th:action="@{/timetable/search-result}" method="get">
                             <input type="hidden" name="searchType" value="group" />
                             <label for="groupName">Group Name:</label>
                             <input type="text" id="groupName" name="groupName" required />
@@ -63,7 +63,7 @@
                 <div class="search-section">
                     <div class="search-square">
                         <h3>Find Time Table by Date</h3>
-                        <form th:action="@{/admin/timetable/search-result}" method="get">
+                        <form th:action="@{/timetable/search-result}" method="get">
                             <input type="hidden" name="searchType" value="date" />
                             <label for="date">Date:</label>
                             <input type="date" id="date" name="date" required class="date-input" />
@@ -82,7 +82,7 @@
             <caption hidden>Scheduled Time Table</caption>
             <thead>
                 <tr>
-                    <th style="border: none; width: 3vh;"></th>
+                    <th style="border: none; width: 3vh;" sec:authorize="hasRole('ROLE_ADMIN')"></th>
                     <th>ID</th>
                     <th>Date</th>
                     <th>Time From</th>
@@ -92,14 +92,14 @@
                     <th>Group</th>
                     <th>Class-Room</th>
                     <th>Students Assigned</th>
-                    <th style="border: none; width: 3vh;"></th>
+                    <th style="border: none; width: 3vh;" sec:authorize="hasRole('ROLE_ADMIN')"></th>
                 </tr>
             </thead>
             <tbody>
                 <tr th:each="timetable, rowStat : ${timetables}">
-                    <td style="border: none;">
+                    <td style="border: none;" sec:authorize="hasRole('ROLE_ADMIN')">
                         <!-- Edit Button -->
-                        <a th:href="@{/admin/timetable/timetable-card/{timetableId}(timetableId=${timetable.id})}">
+                        <a th:href="@{/timetable/timetable-card/{timetableId}(timetableId=${timetable.id})}">
                             <button th:id="'editButton-' + ${rowStat.index}" class="icon-button">
                                 <i class="fas fa-edit edit-icon"></i>
                             </button>
@@ -129,10 +129,9 @@
                         <span th:unless="${not #lists.isEmpty(timetable.studentsRelatedToCourse)}">N/A</span>
                     </td>
 
-                    <td style="border: none;">
+                    <td style="border: none;" sec:authorize="hasRole('ROLE_ADMIN')">
                         <!-- Remove Button -->
-                        <form th:action="@{/admin/timetable/delete/{timetableId}(timetableId=${timetable.id})}"
-                            method="post">
+                        <form th:action="@{/timetable/delete/{timetableId}(timetableId=${timetable.id})}" method="post">
                             <input type="hidden" name="timetableId" th:value="${timetable.id}" />
                             <button th:id="'removeButton-' + ${rowStat.index}" class="icon-button remove-button"
                                 type="submit">

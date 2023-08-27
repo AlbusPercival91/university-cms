@@ -20,18 +20,18 @@
             <caption hidden>All Admins Table</caption>
             <thead>
                 <tr>
-                    <th style="border: none; width: 3vh;"></th>
+                    <th style="border: none; width: 3vh;" sec:authorize="hasRole('ROLE_ADMIN')"></th>
                     <th>ID</th>
                     <th>First Name</th>
                     <th>Last Name</th>
                     <th>Active</th>
                     <th>Email</th>
-                    <th style="border: none; width: 3vh;"></th>
+                    <th style="border: none; width: 3vh;" sec:authorize="hasRole('ROLE_ADMIN')"></th>
                 </tr>
             </thead>
             <tbody>
                 <tr th:each="admin, rowStat : ${admins}">
-                    <td style="border: none;">
+                    <td style="border: none;" sec:authorize="hasRole('ROLE_ADMIN')">
                         <!-- Edit Button -->
                         <a th:href="@{/admin/admin-card/{adminId}(adminId=${admin.id})}">
                             <button th:id="'editButton-' + ${rowStat.index}" class="icon-button">
@@ -45,7 +45,7 @@
                     <td th:text="${admin.active}"></td>
                     <td th:text="${admin.email}"></td>
 
-                    <td style="border: none;">
+                    <td style="border: none;" sec:authorize="hasRole('ROLE_ADMIN')">
                         <!-- Remove Button -->
                         <form th:action="@{/admin/delete/{adminId}(adminId=${admin.id})}" method="post">
                             <input type="hidden" name="adminId" th:value="${admin.id}" />

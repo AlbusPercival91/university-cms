@@ -22,7 +22,7 @@
             <div class="search-section">
                 <div class="search-square">
                     <h3>Find Group by ID</h3>
-                    <form th:action="@{/admin/group/search-result}" method="get">
+                    <form th:action="@{/group/search-result}" method="get">
                         <input type="hidden" name="searchType" value="group" />
                         <label for="departmentId">Group ID:</label>
                         <input type="text" id="grouptId" name="groupId" required />
@@ -35,7 +35,7 @@
             <div class="search-section">
                 <div class="search-square">
                     <h3>Find Group by Name</h3>
-                    <form th:action="@{/admin/group/search-result}" method="get">
+                    <form th:action="@{/group/search-result}" method="get">
                         <input type="hidden" name="searchType" value="groupName" />
                         <label for="groupName">Group Name:</label>
                         <input type="text" id="groupName" name="groupName" required />
@@ -48,7 +48,7 @@
             <div class="search-section">
                 <div class="search-square">
                     <h3>Find Group by Faculty</h3>
-                    <form th:action="@{/admin/group/search-result}" method="get">
+                    <form th:action="@{/group/search-result}" method="get">
                         <input type="hidden" name="searchType" value="faculty" />
                         <label for="facultyName">Faculty Name:</label>
                         <input type="text" id="facultyName" name="facultyName" required />
@@ -65,19 +65,19 @@
             <caption hidden>All Groups Table</caption>
             <thead>
                 <tr>
-                    <th style="border: none; width: 3vh;"></th>
+                    <th style="border: none; width: 3vh;" sec:authorize="hasRole('ROLE_ADMIN')"></th>
                     <th>ID</th>
                     <th>Group Name</th>
                     <th>Faculty Name</th>
                     <th>Students</th>
-                    <th style="border: none; width: 3vh;"></th>
+                    <th style="border: none; width: 3vh;" sec:authorize="hasRole('ROLE_ADMIN')"></th>
                 </tr>
             </thead>
             <tbody>
                 <tr th:each="group, rowStat : ${groups}">
-                    <td style="border: none;">
+                    <td style="border: none;" sec:authorize="hasRole('ROLE_ADMIN')">
                         <!-- Edit Button -->
-                        <a th:href="@{/admin/group/group-card/{groupId}(groupId=${group.id})}">
+                        <a th:href="@{/group/group-card/{groupId}(groupId=${group.id})}">
                             <button th:id="'editButton-' + ${rowStat.index}" class="icon-button">
                                 <i class="fas fa-edit edit-icon"></i>
                             </button>
@@ -93,9 +93,9 @@
                             </option>
                         </select>
                     </td>
-                    <td style="border: none;">
+                    <td style="border: none;" sec:authorize="hasRole('ROLE_ADMIN')">
                         <!-- Remove Button -->
-                        <form th:action="@{/admin/group/delete/{groupId}(groupId=${group.id})}" method="post">
+                        <form th:action="@{/group/delete/{groupId}(groupId=${group.id})}" method="post">
                             <input type="hidden" name="groupId" th:value="${group.id}" />
                             <button th:id="'removeButton-' + ${rowStat.index}" class="icon-button remove-button"
                                 type="submit">

@@ -22,7 +22,7 @@
             <div class="search-section">
                 <div class="search-square">
                     <h3>Find Course by ID</h3>
-                    <form th:action="@{/admin/course/search-result}" method="get">
+                    <form th:action="@{/course/search-result}" method="get">
                         <input type="hidden" name="searchType" value="course" />
                         <label for="courseId">Course ID:</label>
                         <input type="text" id="courseId" name="courseId" required />
@@ -35,7 +35,7 @@
             <div class="search-section">
                 <div class="search-square">
                     <h3>Find Course by Name</h3>
-                    <form th:action="@{/admin/course/search-result}" method="get">
+                    <form th:action="@{/course/search-result}" method="get">
                         <input type="hidden" name="searchType" value="courseName" />
                         <label for="courseName">Course Name:</label>
                         <input type="text" id="courseName" name="courseName" required />
@@ -48,7 +48,7 @@
             <div class="search-section">
                 <div class="search-square">
                     <h3>Find Courses related to Teacher</h3>
-                    <form th:action="@{/admin/course/search-result}" method="get">
+                    <form th:action="@{/course/search-result}" method="get">
                         <input type="hidden" name="searchType" value="teacher" />
                         <label for="teacherId">Teacher ID:</label>
                         <input type="text" id="teacherId" name="teacherId" required />
@@ -61,7 +61,7 @@
             <div class="search-section">
                 <div class="search-square">
                     <h3>Find Courses related to Student</h3>
-                    <form th:action="@{/admin/course/search-result}" method="get">
+                    <form th:action="@{/course/search-result}" method="get">
                         <input type="hidden" name="searchType" value="student" />
                         <label for="studentId">Student ID:</label>
                         <input type="text" id="studentId" name="studentId" required />
@@ -78,20 +78,20 @@
             <caption hidden>All Courses Table</caption>
             <thead>
                 <tr>
-                    <th style="border: none; width: 3vh;"></th>
+                    <th style="border: none; width: 3vh;" sec:authorize="hasRole('ROLE_ADMIN')"></th>
                     <th>ID</th>
                     <th>Course Name</th>
                     <th>Course Description</th>
                     <th>Teachers Assigned</th>
                     <th>Students Assigned</th>
-                    <th style="border: none; width: 3vh;"></th>
+                    <th style="border: none; width: 3vh;" sec:authorize="hasRole('ROLE_ADMIN')"></th>
                 </tr>
             </thead>
             <tbody>
                 <tr th:each="course, rowStat : ${courses}">
-                    <td style="border: none;">
+                    <td style="border: none;" sec:authorize="hasRole('ROLE_ADMIN')">
                         <!-- Edit Button -->
-                        <a th:href="@{/admin/course/course-card/{courseId}(courseId=${course.id})}">
+                        <a th:href="@{/course/course-card/{courseId}(courseId=${course.id})}">
                             <button th:id="'editButton-' + ${rowStat.index}" class="icon-button">
                                 <i class="fas fa-edit edit-icon"></i>
                             </button>
@@ -114,9 +114,9 @@
                             </option>
                         </select>
                     </td>
-                    <td style="border: none;">
+                    <td style="border: none;" sec:authorize="hasRole('ROLE_ADMIN')">
                         <!-- Remove Button -->
-                        <form th:action="@{/admin/course/delete/{courseId}(courseId=${course.id})}" method="post">
+                        <form th:action="@{/course/delete/{courseId}(courseId=${course.id})}" method="post">
                             <input type="hidden" name="courseId" th:value="${course.id}" />
                             <button th:id="'removeButton-' + ${rowStat.index}" class="icon-button remove-button"
                                 type="submit">

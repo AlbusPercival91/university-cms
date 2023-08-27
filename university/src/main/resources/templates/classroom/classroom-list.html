@@ -22,7 +22,7 @@
             <div class="search-section">
                 <div class="search-square">
                     <h3>Find Class Room by ID</h3>
-                    <form th:action="@{/admin/classroom/search-result}" method="get">
+                    <form th:action="@{/classroom/search-result}" method="get">
                         <input type="hidden" name="searchType" value="classroom" />
                         <label for="classroomId">Class Room ID:</label>
                         <input type="text" id="classroomId" name="classroomId" required />
@@ -35,7 +35,7 @@
             <div class="search-section">
                 <div class="search-square">
                     <h3>Find Class Room by Street</h3>
-                    <form th:action="@{/admin/classroom/search-result}" method="get">
+                    <form th:action="@{/classroom/search-result}" method="get">
                         <input type="hidden" name="searchType" value="street" />
                         <label for="street">Street Name:</label>
                         <input type="text" id="street" name="street" required />
@@ -48,7 +48,7 @@
             <div class="search-section">
                 <div class="search-square">
                     <h3>Find Class Room by Street and Building</h3>
-                    <form th:action="@{/admin/classroom/search-result}" method="get">
+                    <form th:action="@{/classroom/search-result}" method="get">
                         <input type="hidden" name="searchType" value="streetAndBuildingNumber" />
                         <label for="street">Street Name:</label>
                         <input type="text" id="street" name="street" required />
@@ -69,20 +69,20 @@
             <caption hidden>All Class-Room Table</caption>
             <thead>
                 <tr>
-                    <th style="border: none; width: 3vh;"></th>
+                    <th style="border: none; width: 3vh;" sec:authorize="hasRole('ROLE_ADMIN')"></th>
                     <th>ID</th>
                     <th>Street Name</th>
                     <th>Building Number</th>
                     <th>Room Number</th>
                     <th>Lessons Scheduled</th>
-                    <th style="border: none; width: 3vh;"></th>
+                    <th style="border: none; width: 3vh;" sec:authorize="hasRole('ROLE_ADMIN')"></th>
                 </tr>
             </thead>
             <tbody>
                 <tr th:each="classroom, rowStat : ${classrooms}">
-                    <td style="border: none;">
+                    <td style="border: none;" sec:authorize="hasRole('ROLE_ADMIN')">
                         <!-- Edit Button -->
-                        <a th:href="@{/admin/classroom/classroom-card/{classroomId}(classroomId=${classroom.id})}">
+                        <a th:href="@{/classroom/classroom-card/{classroomId}(classroomId=${classroom.id})}">
                             <button th:id="'editButton-' + ${rowStat.index}" class="icon-button">
                                 <i class="fas fa-edit edit-icon"></i>
                             </button>
@@ -100,10 +100,9 @@
                             </option>
                         </select>
                     </td>
-                    <td style="border: none;">
+                    <td style="border: none;" sec:authorize="hasRole('ROLE_ADMIN')">
                         <!-- Remove Button -->
-                        <form th:action="@{/admin/classroom/delete/{classroomId}(classroomId=${classroom.id})}"
-                            method="post">
+                        <form th:action="@{/classroom/delete/{classroomId}(classroomId=${classroom.id})}" method="post">
                             <input type="hidden" name="classroomId" th:value="${classroom.id}" />
                             <button th:id="'removeButton-' + ${rowStat.index}" class="icon-button remove-button"
                                 type="submit">
