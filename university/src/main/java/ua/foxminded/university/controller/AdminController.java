@@ -118,7 +118,7 @@ public class AdminController {
 			model.addAttribute("admin", admin);
 			return "admin/admin-card";
 		} else {
-			return "redirect:/admin/edit-admin-list";
+			return "redirect:/admin/admin-list";
 		}
 	}
 
