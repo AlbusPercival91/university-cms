@@ -1,6 +1,7 @@
 package ua.foxminded.university.controller;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -44,7 +45,7 @@ class CourseControllerTest {
 	@WithMockUser(roles = "ADMIN")
 	void testDeleteCourse() throws Exception {
 		int courseId = 1;
-		mockMvc.perform(MockMvcRequestBuilders.post("/course/delete/{courseId}", courseId))
+		mockMvc.perform(MockMvcRequestBuilders.post("/course/delete/{courseId}", courseId).with(csrf().asHeader()))
 				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
 				.andExpect(MockMvcResultMatchers.flash().attributeExists("successMessage"))
 				.andExpect(MockMvcResultMatchers.redirectedUrl("/course/course-list"));
@@ -61,7 +62,7 @@ class CourseControllerTest {
 	@Test
 	@WithMockUser(roles = "ADMIN")
 	void testCreateCourse() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.post("/course/create-course"))
+		mockMvc.perform(MockMvcRequestBuilders.post("/course/create-course").with(csrf().asHeader()))
 				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
 				.andExpect(MockMvcResultMatchers.flash().attributeCount(1))
 				.andExpect(MockMvcResultMatchers.flash().attributeExists("successMessage"));

@@ -1,6 +1,7 @@
 package ua.foxminded.university.controller;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import java.util.Optional;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -49,7 +50,7 @@ class AdminControllerTest {
 	@WithMockUser(roles = "ADMIN")
 	void testDeleteAdmin() throws Exception {
 		int adminId = 1;
-		mockMvc.perform(MockMvcRequestBuilders.post("/admin/delete/{adminId}", adminId))
+		mockMvc.perform(MockMvcRequestBuilders.post("/admin/delete/{adminId}", adminId).with(csrf().asHeader()))
 				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
 				.andExpect(MockMvcResultMatchers.flash().attributeExists("successMessage"))
 				.andExpect(MockMvcResultMatchers.redirectedUrl("/admin/admin-list"));
@@ -93,7 +94,7 @@ class AdminControllerTest {
 	@Test
 	@WithMockUser(roles = "ADMIN")
 	void testCreateAdmin() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.post("/admin/create-admin"))
+		mockMvc.perform(MockMvcRequestBuilders.post("/admin/create-admin").with(csrf().asHeader()))
 				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
 				.andExpect(MockMvcResultMatchers.flash().attributeCount(1))
 				.andExpect(MockMvcResultMatchers.flash().attributeExists("successMessage"));

@@ -4,6 +4,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -16,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -47,21 +49,24 @@ class TeacherControllerTest {
 	private CourseService courseService;
 
 	@Test
+	@WithMockUser(roles = "ADMIN")
 	void testShowCreateTeacherForm() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.get("/admin/teacher/create-teacher"))
+		mockMvc.perform(MockMvcRequestBuilders.get("/teacher/create-teacher"))
 				.andExpect(MockMvcResultMatchers.status().isOk())
-				.andExpect(MockMvcResultMatchers.view().name("admin/teacher/create-teacher"));
+				.andExpect(MockMvcResultMatchers.view().name("teacher/create-teacher"));
 	}
 
 	@Test
+	@WithMockUser(roles = "ADMIN")
 	void testCreateTeacher() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.post("/admin/teacher/create-teacher"))
+		mockMvc.perform(MockMvcRequestBuilders.post("/teacher/create-teacher").with(csrf().asHeader()))
 				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
 				.andExpect(MockMvcResultMatchers.flash().attributeCount(1))
 				.andExpect(MockMvcResultMatchers.flash().attributeExists("successMessage"));
 	}
 
 	@Test
+	@WithMockUser(roles = "ADMIN")
 	void testOpenTeacherCard_WhenTeacherExists() throws Exception {
 		Faculty faculty = new Faculty("Grifindor");
 		Department department = new Department("Department A", faculty);
@@ -70,35 +75,38 @@ class TeacherControllerTest {
 
 		when(teacherService.findTeacherById(teacher.getId())).thenReturn(Optional.of(teacher));
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/admin/teacher/teacher-card/{teacherId}", teacher.getId()))
+		mockMvc.perform(MockMvcRequestBuilders.get("/teacher/teacher-card/{teacherId}", teacher.getId()))
 				.andExpect(MockMvcResultMatchers.status().isOk())
-				.andExpect(MockMvcResultMatchers.view().name("admin/teacher/teacher-card"))
+				.andExpect(MockMvcResultMatchers.view().name("teacher/teacher-card"))
 				.andExpect(MockMvcResultMatchers.model().attributeExists("teacher"))
 				.andExpect(MockMvcResultMatchers.model().attributeExists("courses"))
 				.andExpect(MockMvcResultMatchers.model().attribute("teacher", Matchers.sameInstance(teacher)));
 	}
 
 	@Test
+	@WithMockUser(roles = "ADMIN")
 	void testOpenTeacherCard_WhenTeacherDoesNotExist() throws Exception {
 		int teacherId = 999;
 
 		when(teacherService.findTeacherById(teacherId)).thenReturn(Optional.empty());
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/admin/teacher/teacher-card/{teacherId}", teacherId))
+		mockMvc.perform(MockMvcRequestBuilders.get("/teacher/teacher-card/{teacherId}", teacherId))
 				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-				.andExpect(MockMvcResultMatchers.redirectedUrl("/admin/teacher/edit-teacher-list"));
+				.andExpect(MockMvcResultMatchers.redirectedUrl("/teacher/teacher-list"));
 	}
 
 	@Test
-	void testGetAllTeachersListAsAdmin() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.get("/admin/teacher/edit-teacher-list"))
+	@WithMockUser(roles = { "ADMIN", "STUDENT", "TEACHER", "STAFF" })
+	void testGetAllTeachersList() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.get("/teacher/teacher-list"))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.model().attributeExists("teachers"))
-				.andExpect(MockMvcResultMatchers.view().name("admin/teacher/edit-teacher-list"));
+				.andExpect(MockMvcResultMatchers.view().name("teacher/teacher-list"));
 	}
 
 	@Test
-	void testSearchTeachersAsAdmin_WhenSearchTypeIsTeacher() throws Exception {
+	@WithMockUser(roles = { "ADMIN", "STUDENT", "TEACHER", "STAFF" })
+	void testSearchTeachers_WhenSearchTypeIsTeacher() throws Exception {
 		Faculty faculty = new Faculty("Grifindor");
 		Department department = new Department("Department A", faculty);
 		Teacher teacher = new Teacher("Madam", "Trix", true, "trix@mail.com", "1234", department);
@@ -106,16 +114,17 @@ class TeacherControllerTest {
 
 		when(teacherService.findTeacherById(teacher.getId())).thenReturn(Optional.of(teacher));
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/admin/teacher/search-result").param("searchType", "teacher")
+		mockMvc.perform(MockMvcRequestBuilders.get("/teacher/search-result").param("searchType", "teacher")
 				.param("teacherId", String.valueOf(teacher.getId()))).andExpect(MockMvcResultMatchers.status().isOk())
-				.andExpect(MockMvcResultMatchers.view().name("admin/teacher/edit-teacher-list"))
+				.andExpect(MockMvcResultMatchers.view().name("teacher/teacher-list"))
 				.andExpect(MockMvcResultMatchers.model().attributeExists("teachers"))
 				.andExpect(MockMvcResultMatchers.model().attribute("teachers", Matchers.hasSize(1)))
 				.andExpect(MockMvcResultMatchers.model().attribute("teachers", Matchers.contains(teacher)));
 	}
 
 	@Test
-	void testSearchTeachersAsAdmin_WhenSearchTypeIsFirstNameAndLastName() throws Exception {
+	@WithMockUser(roles = { "ADMIN", "STUDENT", "TEACHER", "STAFF" })
+	void testSearchTeachers_WhenSearchTypeIsFirstNameAndLastName() throws Exception {
 		Faculty faculty = new Faculty("Grifindor");
 		Department department = new Department("Department A", faculty);
 		Teacher teacher = new Teacher("Madam", "Trix", true, "trix@mail.com", "1234", department);
@@ -124,18 +133,18 @@ class TeacherControllerTest {
 		when(teacherService.findTeacherByName(teacher.getFirstName(), teacher.getLastName()))
 				.thenReturn(Collections.singletonList(teacher));
 
-		mockMvc.perform(
-				MockMvcRequestBuilders.get("/admin/teacher/search-result").param("searchType", "firstNameAndLastName")
-						.param("firstName", teacher.getFirstName()).param("lastName", teacher.getLastName()))
+		mockMvc.perform(MockMvcRequestBuilders.get("/teacher/search-result").param("searchType", "firstNameAndLastName")
+				.param("firstName", teacher.getFirstName()).param("lastName", teacher.getLastName()))
 				.andExpect(MockMvcResultMatchers.status().isOk())
-				.andExpect(MockMvcResultMatchers.view().name("admin/teacher/edit-teacher-list"))
+				.andExpect(MockMvcResultMatchers.view().name("teacher/teacher-list"))
 				.andExpect(MockMvcResultMatchers.model().attributeExists("teachers"))
 				.andExpect(MockMvcResultMatchers.model().attribute("teachers", Matchers.hasSize(1)))
 				.andExpect(MockMvcResultMatchers.model().attribute("teachers", Matchers.contains(teacher)));
 	}
 
 	@Test
-	void testSearchTeachersAsAdmin_WhenSearchTypeIsFaculty() throws Exception {
+	@WithMockUser(roles = { "ADMIN", "STUDENT", "TEACHER", "STAFF" })
+	void testSearchTeachers_WhenSearchTypeIsFaculty() throws Exception {
 		Faculty faculty = new Faculty("Grifindor");
 		Department department = new Department("Department A", faculty);
 		Teacher teacher1 = new Teacher("Madam", "Trix", true, "trix@mail.com", "1234", department);
@@ -147,16 +156,17 @@ class TeacherControllerTest {
 
 		when(teacherService.findAllByFacultyName(faculty.getFacultyName())).thenReturn(teachers);
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/admin/teacher/search-result").param("searchType", "faculty")
+		mockMvc.perform(MockMvcRequestBuilders.get("/teacher/search-result").param("searchType", "faculty")
 				.param("facultyName", faculty.getFacultyName())).andExpect(MockMvcResultMatchers.status().isOk())
-				.andExpect(MockMvcResultMatchers.view().name("admin/teacher/edit-teacher-list"))
+				.andExpect(MockMvcResultMatchers.view().name("teacher/teacher-list"))
 				.andExpect(MockMvcResultMatchers.model().attributeExists("teachers"))
 				.andExpect(MockMvcResultMatchers.model().attribute("teachers", Matchers.hasSize(2)))
 				.andExpect(MockMvcResultMatchers.model().attribute("teachers", Matchers.contains(teacher1, teacher2)));
 	}
 
 	@Test
-	void testSearchTeachersAsAdmin_WhenSearchTypeIsDepartment() throws Exception {
+	@WithMockUser(roles = { "ADMIN", "STUDENT", "TEACHER", "STAFF" })
+	void testSearchTeachers_WhenSearchTypeIsDepartment() throws Exception {
 		Faculty faculty = new Faculty("Grifindor");
 		faculty.setId(1);
 		Department department = new Department("Department A", faculty);
@@ -171,17 +181,18 @@ class TeacherControllerTest {
 		when(teacherService.findAllByDepartmentIdAndDepartmentFacultyId(department.getId(), faculty.getId()))
 				.thenReturn(teachers);
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/admin/teacher/search-result").param("searchType", "department")
+		mockMvc.perform(MockMvcRequestBuilders.get("/teacher/search-result").param("searchType", "department")
 				.param("departmentId", String.valueOf(department.getId()))
 				.param("facultyId", String.valueOf(faculty.getId()))).andExpect(MockMvcResultMatchers.status().isOk())
-				.andExpect(MockMvcResultMatchers.view().name("admin/teacher/edit-teacher-list"))
+				.andExpect(MockMvcResultMatchers.view().name("teacher/teacher-list"))
 				.andExpect(MockMvcResultMatchers.model().attributeExists("teachers"))
 				.andExpect(MockMvcResultMatchers.model().attribute("teachers", Matchers.hasSize(2)))
 				.andExpect(MockMvcResultMatchers.model().attribute("teachers", Matchers.contains(teacher1, teacher2)));
 	}
 
 	@Test
-	void testSearchTeachersAsAdmin_WhenSearchTypeIsCourse() throws Exception {
+	@WithMockUser(roles = { "ADMIN", "STUDENT", "TEACHER", "STAFF" })
+	void testSearchTeachers_WhenSearchTypeIsCourse() throws Exception {
 		String courseName = "Brooms";
 		Faculty faculty = new Faculty("Grifindor");
 		faculty.setId(1);
@@ -194,49 +205,54 @@ class TeacherControllerTest {
 
 		when(teacherService.findTeachersRelatedToCourse(courseName)).thenReturn(teachers);
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/admin/teacher/search-result").param("searchType", "course")
+		mockMvc.perform(MockMvcRequestBuilders.get("/teacher/search-result").param("searchType", "course")
 				.param("courseName", courseName).param("departmentId", String.valueOf(department.getId())))
 				.andExpect(MockMvcResultMatchers.status().isOk())
-				.andExpect(MockMvcResultMatchers.view().name("admin/teacher/edit-teacher-list"))
+				.andExpect(MockMvcResultMatchers.view().name("teacher/teacher-list"))
 				.andExpect(MockMvcResultMatchers.model().attributeExists("teachers"))
 				.andExpect(MockMvcResultMatchers.model().attribute("teachers", Matchers.contains(teacher)));
 	}
 
 	@Test
+	@WithMockUser(roles = "ADMIN")
 	void testDeleteTeacher() throws Exception {
 		int teacherId = 1;
-		mockMvc.perform(MockMvcRequestBuilders.post("/admin/teacher/delete/{teachertId}", teacherId))
+		mockMvc.perform(MockMvcRequestBuilders.post("/teacher/delete/{teachertId}", teacherId).with(csrf().asHeader()))
 				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
 				.andExpect(MockMvcResultMatchers.flash().attributeExists("successMessage"))
-				.andExpect(MockMvcResultMatchers.redirectedUrl("/admin/teacher/edit-teacher-list"));
+				.andExpect(MockMvcResultMatchers.redirectedUrl("/teacher/teacher-list"));
 	}
 
 	@Test
+	@WithMockUser(roles = "ADMIN")
 	void testRemoveTeacherFromCourse() throws Exception {
 		int teacherId = 1;
 		Course course = new Course("Herbology");
 
-		mockMvc.perform(MockMvcRequestBuilders.post("/admin/teacher/remove-course/{teacherId}/{courseName}", teacherId,
-				course.getCourseName())).andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+		mockMvc.perform(MockMvcRequestBuilders
+				.post("/teacher/remove-course/{teacherId}/{courseName}", teacherId, course.getCourseName())
+				.with(csrf().asHeader())).andExpect(MockMvcResultMatchers.status().is3xxRedirection())
 				.andExpect(MockMvcResultMatchers.flash().attributeExists("successMessage"))
-				.andExpect(MockMvcResultMatchers.redirectedUrl("/admin/teacher/teacher-card/" + teacherId));
+				.andExpect(MockMvcResultMatchers.redirectedUrl("/teacher/teacher-card/" + teacherId));
 	}
 
 	@Test
+	@WithMockUser(roles = "ADMIN")
 	void testAddTeacherToTheCourse_Success() throws Exception {
 		int teacherId = 1;
 		String courseName = "Math";
 
-		mockMvc.perform(MockMvcRequestBuilders.post("/admin/teacher/assign-course")
-				.param("teacherId", String.valueOf(teacherId)).param("courseName", courseName))
+		mockMvc.perform(MockMvcRequestBuilders.post("/teacher/assign-course")
+				.param("teacherId", String.valueOf(teacherId)).param("courseName", courseName).with(csrf().asHeader()))
 				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
 				.andExpect(MockMvcResultMatchers.flash().attributeExists("successMessage"))
-				.andExpect(MockMvcResultMatchers.redirectedUrl("/admin/teacher/teacher-card/" + teacherId));
+				.andExpect(MockMvcResultMatchers.redirectedUrl("/teacher/teacher-card/" + teacherId));
 
 		verify(teacherService, times(1)).addTeacherToTheCourse(teacherId, courseName);
 	}
 
 	@Test
+	@WithMockUser(roles = "ADMIN")
 	void testAddTeacherToTheCourse_Failure_IllegalStateException() throws Exception {
 		int teacherId = 1;
 		String courseName = "Math";
@@ -244,16 +260,17 @@ class TeacherControllerTest {
 		doThrow(new IllegalStateException("Error message")).when(teacherService).addTeacherToTheCourse(teacherId,
 				courseName);
 
-		mockMvc.perform(MockMvcRequestBuilders.post("/admin/teacher/assign-course")
-				.param("teacherId", String.valueOf(teacherId)).param("courseName", courseName))
+		mockMvc.perform(MockMvcRequestBuilders.post("/teacher/assign-course")
+				.param("teacherId", String.valueOf(teacherId)).param("courseName", courseName).with(csrf().asHeader()))
 				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
 				.andExpect(MockMvcResultMatchers.flash().attributeExists("errorMessage"))
-				.andExpect(MockMvcResultMatchers.redirectedUrl("/admin/teacher/teacher-card/" + teacherId));
+				.andExpect(MockMvcResultMatchers.redirectedUrl("/teacher/teacher-card/" + teacherId));
 
 		verify(teacherService, times(1)).addTeacherToTheCourse(teacherId, courseName);
 	}
 
 	@Test
+	@WithMockUser(roles = "ADMIN")
 	void testAddTeacherToTheCourse_Failure_NoSuchElementException() throws Exception {
 		int studentId = 1;
 		String courseName = "Math";
@@ -261,11 +278,11 @@ class TeacherControllerTest {
 		doThrow(new NoSuchElementException("Error message")).when(teacherService).addTeacherToTheCourse(studentId,
 				courseName);
 
-		mockMvc.perform(MockMvcRequestBuilders.post("/admin/teacher/assign-course")
-				.param("teacherId", String.valueOf(studentId)).param("courseName", courseName))
+		mockMvc.perform(MockMvcRequestBuilders.post("/teacher/assign-course")
+				.param("teacherId", String.valueOf(studentId)).param("courseName", courseName).with(csrf().asHeader()))
 				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
 				.andExpect(MockMvcResultMatchers.flash().attributeExists("errorMessage"))
-				.andExpect(MockMvcResultMatchers.redirectedUrl("/admin/teacher/teacher-card/" + studentId));
+				.andExpect(MockMvcResultMatchers.redirectedUrl("/teacher/teacher-card/" + studentId));
 
 		verify(teacherService, times(1)).addTeacherToTheCourse(studentId, courseName);
 	}

@@ -1,6 +1,7 @@
 package ua.foxminded.university.controller;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import java.util.Collections;
 import java.util.Optional;
 import org.hamcrest.Matchers;
@@ -43,7 +44,8 @@ class ClassRoomControllerTest {
 	@WithMockUser(roles = "ADMIN")
 	void testDeleteClassRoom() throws Exception {
 		int classRoomId = 1;
-		mockMvc.perform(MockMvcRequestBuilders.post("/classroom/delete/{classroomId}", classRoomId))
+		mockMvc.perform(MockMvcRequestBuilders.post("/classroom/delete/{classroomId}", classRoomId).with(csrf()
+				.asHeader()))
 				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
 				.andExpect(MockMvcResultMatchers.flash().attributeExists("successMessage"))
 				.andExpect(MockMvcResultMatchers.redirectedUrl("/classroom/classroom-list"));
@@ -60,7 +62,8 @@ class ClassRoomControllerTest {
 	@Test
 	@WithMockUser(roles = "ADMIN")
 	void testCreateClassRoom() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.post("/classroom/create-classroom"))
+		mockMvc.perform(MockMvcRequestBuilders.post("/classroom/create-classroom").with(csrf()
+				.asHeader()))
 				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
 				.andExpect(MockMvcResultMatchers.flash().attributeCount(1))
 				.andExpect(MockMvcResultMatchers.flash().attributeExists("successMessage"));

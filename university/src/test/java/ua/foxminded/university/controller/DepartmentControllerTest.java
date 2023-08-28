@@ -1,6 +1,7 @@
 package ua.foxminded.university.controller;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -37,56 +39,63 @@ class DepartmentControllerTest {
 	private FacultyService facultyService;
 
 	@Test
-	void testGetAllDepartmentListAsAdmin() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.get("/admin/department/edit-department-list"))
+	@WithMockUser(roles = { "ADMIN", "STUDENT", "TEACHER", "STAFF" })
+	void testGetAllDepartmentList() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.get("/department/department-list"))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.model().attributeExists("departments"))
-				.andExpect(MockMvcResultMatchers.view().name("admin/department/edit-department-list"));
+				.andExpect(MockMvcResultMatchers.view().name("department/department-list"));
 	}
 
 	@Test
+	@WithMockUser(roles = "ADMIN")
 	void testDeleteDepartment() throws Exception {
 		int departmentId = 1;
-		mockMvc.perform(MockMvcRequestBuilders.post("/admin/department/delete/{departmentId}", departmentId))
+		mockMvc.perform(
+				MockMvcRequestBuilders.post("/department/delete/{departmentId}", departmentId).with(csrf().asHeader()))
 				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
 				.andExpect(MockMvcResultMatchers.flash().attributeExists("successMessage"))
-				.andExpect(MockMvcResultMatchers.redirectedUrl("/admin/department/edit-department-list"));
+				.andExpect(MockMvcResultMatchers.redirectedUrl("/department/department-list"));
 	}
 
 	@Test
+	@WithMockUser(roles = "ADMIN")
 	void testShowCreateDepartmentForm() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.get("/admin/department/create-department"))
+		mockMvc.perform(MockMvcRequestBuilders.get("/department/create-department"))
 				.andExpect(MockMvcResultMatchers.status().isOk())
-				.andExpect(MockMvcResultMatchers.view().name("admin/department/create-department"));
+				.andExpect(MockMvcResultMatchers.view().name("department/create-department"));
 	}
 
 	@Test
+	@WithMockUser(roles = "ADMIN")
 	void testCreateDepartment() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.post("/admin/department/create-department"))
+		mockMvc.perform(MockMvcRequestBuilders.post("/department/create-department").with(csrf().asHeader()))
 				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
 				.andExpect(MockMvcResultMatchers.flash().attributeCount(1))
 				.andExpect(MockMvcResultMatchers.flash().attributeExists("successMessage"));
 	}
 
 	@Test
-	void testSearchDepartmentAsAdmin_WhenSearchTypeIsDepartment() throws Exception {
+	@WithMockUser(roles = { "ADMIN", "STUDENT", "TEACHER", "STAFF" })
+	void testSearchDepartment_WhenSearchTypeIsDepartment() throws Exception {
 		Faculty faculty = new Faculty("Faculty A");
 		Department department = new Department("Department A", faculty);
 		department.setId(1);
 
 		when(departmentService.findDepartmentById(department.getId())).thenReturn(Optional.of(department));
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/admin/department/search-result").param("searchType", "department")
+		mockMvc.perform(MockMvcRequestBuilders.get("/department/search-result").param("searchType", "department")
 				.param("departmentId", String.valueOf(department.getId())))
 				.andExpect(MockMvcResultMatchers.status().isOk())
-				.andExpect(MockMvcResultMatchers.view().name("admin/department/edit-department-list"))
+				.andExpect(MockMvcResultMatchers.view().name("department/department-list"))
 				.andExpect(MockMvcResultMatchers.model().attributeExists("departments"))
 				.andExpect(MockMvcResultMatchers.model().attribute("departments", Matchers.hasSize(1)))
 				.andExpect(MockMvcResultMatchers.model().attribute("departments", Matchers.contains(department)));
 	}
 
 	@Test
-	void testSearchDepartmentAsAdmin_WhenSearchTypeIsName() throws Exception {
+	@WithMockUser(roles = { "ADMIN", "STUDENT", "TEACHER", "STAFF" })
+	void testSearchDepartment_WhenSearchTypeIsName() throws Exception {
 		Faculty faculty = new Faculty("Faculty A");
 		Department department = new Department("Department A", faculty);
 		department.setId(1);
@@ -94,16 +103,17 @@ class DepartmentControllerTest {
 		when(departmentService.findDepartmentByName(department.getName()))
 				.thenReturn(Collections.singletonList(department));
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/admin/department/search-result").param("searchType", "name")
+		mockMvc.perform(MockMvcRequestBuilders.get("/department/search-result").param("searchType", "name")
 				.param("name", department.getName())).andExpect(MockMvcResultMatchers.status().isOk())
-				.andExpect(MockMvcResultMatchers.view().name("admin/department/edit-department-list"))
+				.andExpect(MockMvcResultMatchers.view().name("department/department-list"))
 				.andExpect(MockMvcResultMatchers.model().attributeExists("departments"))
 				.andExpect(MockMvcResultMatchers.model().attribute("departments", Matchers.hasSize(1)))
 				.andExpect(MockMvcResultMatchers.model().attribute("departments", Matchers.contains(department)));
 	}
 
 	@Test
-	void testSearchDepartmentAsAdmin_WhenSearchTypeIsFaculty() throws Exception {
+	@WithMockUser(roles = { "ADMIN", "STUDENT", "TEACHER", "STAFF" })
+	void testSearchDepartment_WhenSearchTypeIsFaculty() throws Exception {
 		Faculty faculty = new Faculty("Faculty A");
 		Department department1 = new Department("Department A", faculty);
 		department1.setId(1);
@@ -113,9 +123,9 @@ class DepartmentControllerTest {
 
 		when(departmentService.findAllByFacultyName(faculty.getFacultyName())).thenReturn(departments);
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/admin/department/search-result").param("searchType", "faculty")
+		mockMvc.perform(MockMvcRequestBuilders.get("/department/search-result").param("searchType", "faculty")
 				.param("facultyName", faculty.getFacultyName())).andExpect(MockMvcResultMatchers.status().isOk())
-				.andExpect(MockMvcResultMatchers.view().name("admin/department/edit-department-list"))
+				.andExpect(MockMvcResultMatchers.view().name("department/department-list"))
 				.andExpect(MockMvcResultMatchers.model().attributeExists("departments"))
 				.andExpect(MockMvcResultMatchers.model().attribute("departments", Matchers.hasSize(2)))
 				.andExpect(MockMvcResultMatchers.model().attribute("departments",
@@ -123,6 +133,7 @@ class DepartmentControllerTest {
 	}
 
 	@Test
+	@WithMockUser(roles = "ADMIN")
 	void testOpenDepartmentCard_WhenDepartmentExists() throws Exception {
 		Faculty faculty = new Faculty("Faculty A");
 		Department department = new Department("Department A", faculty);
@@ -130,22 +141,22 @@ class DepartmentControllerTest {
 
 		when(departmentService.findDepartmentById(department.getId())).thenReturn(Optional.of(department));
 
-		mockMvc.perform(
-				MockMvcRequestBuilders.get("/admin/department/department-card/{departmentId}", department.getId()))
+		mockMvc.perform(MockMvcRequestBuilders.get("/department/department-card/{departmentId}", department.getId()))
 				.andExpect(MockMvcResultMatchers.status().isOk())
-				.andExpect(MockMvcResultMatchers.view().name("admin/department/department-card"))
+				.andExpect(MockMvcResultMatchers.view().name("department/department-card"))
 				.andExpect(MockMvcResultMatchers.model().attributeExists("department"))
 				.andExpect(MockMvcResultMatchers.model().attribute("department", Matchers.sameInstance(department)));
 	}
 
 	@Test
+	@WithMockUser(roles = "ADMIN")
 	void testOpenDepartmentCard_WhenDepartmentDoesNotExist() throws Exception {
 		int departmentId = 999;
 
 		when(departmentService.findDepartmentById(departmentId)).thenReturn(Optional.empty());
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/admin/department/department-card/{departmentId}", departmentId))
+		mockMvc.perform(MockMvcRequestBuilders.get("/department/department-card/{departmentId}", departmentId))
 				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-				.andExpect(MockMvcResultMatchers.redirectedUrl("/admin/department/edit-department-list"));
+				.andExpect(MockMvcResultMatchers.redirectedUrl("/department/department-list"));
 	}
 }

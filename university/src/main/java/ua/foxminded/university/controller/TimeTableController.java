@@ -147,6 +147,7 @@ public class TimeTableController {
 		return "redirect:" + referrer;
 	}
 
+	@RolesAllowed({ "ADMIN", "TEACHER" })
 	@GetMapping("/timetable/teacher-timetable/{teacherId}")
 	public String getFullTeacherTimeTable(@PathVariable("teacherId") int teacherId, Model model) {
 		Optional<Teacher> teacher = teacherService.findTeacherById(teacherId);
@@ -166,6 +167,7 @@ public class TimeTableController {
 		return "timetable/timetable";
 	}
 
+	@RolesAllowed({ "ADMIN", "TEACHER" })
 	@GetMapping("/timetable/teacher-selected-timetable/{teacherId}")
 	public String getSelectedDateTeacherTimeTable(@PathVariable("teacherId") int teacherId,
 			@RequestParam("dateFrom") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateFrom,
@@ -187,6 +189,7 @@ public class TimeTableController {
 		return "timetable/timetable";
 	}
 
+	@RolesAllowed({ "ADMIN", "STUDENT" })
 	@GetMapping("/timetable/student-timetable/{studentId}")
 	public String getFullStudentTimeTable(@PathVariable("studentId") int studentId, Model model) {
 		Optional<Student> student = studentService.findStudentById(studentId);
@@ -206,6 +209,7 @@ public class TimeTableController {
 		return "timetable/timetable";
 	}
 
+	@RolesAllowed({ "ADMIN", "STUDENT" })
 	@GetMapping("/timetable/timetable-group/{studentId}")
 	public String getFullGroupTimeTable(@PathVariable("studentId") int studentId, Model model) {
 		Optional<Student> student = studentService.findStudentById(studentId);
@@ -217,6 +221,7 @@ public class TimeTableController {
 		return "timetable/timetable";
 	}
 
+	@RolesAllowed({ "ADMIN", "STUDENT" })
 	@GetMapping("/timetable/selected-timetable/{studentId}")
 	public String getSelectedDateStudentAndGroupTimeTable(@PathVariable("studentId") int studentId,
 			@RequestParam("dateFrom") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateFrom,
@@ -244,6 +249,7 @@ public class TimeTableController {
 		return "timetable/timetable";
 	}
 
+	@RolesAllowed({ "ADMIN", "TEACHER", "STUDENT", "STAFF" })
 	@GetMapping("/timetable/timetable-list")
 	public String getAllTimeTableList(Model model) {
 		List<TimeTable> timetables = timeTableService.getAllTimeTables();
