@@ -18,10 +18,15 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import ua.foxminded.university.dao.entities.Admin;
 import ua.foxminded.university.dao.service.AdminService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 @WebMvcTest({ AdminController.class, ControllerBindingValidator.class })
 @ActiveProfiles("test-container")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+@WithMockUser(roles = "ADMIN")
 class AdminControllerTest {
 
 	@Autowired
@@ -31,14 +36,22 @@ class AdminControllerTest {
 	private AdminService adminService;
 
 	@Test
-	@WithMockUser(roles = "ADMIN")
 	void testAdminDashboard() throws Exception {
+		Admin admin = new Admin();
+
+		when(adminService.findAdminByEmail("admin@example.com")).thenReturn(Optional.of(admin));
+
+		Authentication auth = new UsernamePasswordAuthenticationToken("admin@example.com", null,
+				AuthorityUtils.createAuthorityList("ROLE_ADMIN"));
+		SecurityContextHolder.getContext().setAuthentication(auth);
+
 		mockMvc.perform(MockMvcRequestBuilders.get("/admin/main")).andExpect(MockMvcResultMatchers.status().isOk())
-				.andExpect(MockMvcResultMatchers.view().name("admin/main"));
+				.andExpect(MockMvcResultMatchers.view().name("admin/main"))
+				.andExpect(MockMvcResultMatchers.model().attributeExists("admin"))
+				.andExpect(MockMvcResultMatchers.model().attribute("admin", admin));
 	}
 
 	@Test
-	@WithMockUser(roles = "ADMIN")
 	void testGetAllAdmin() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.get("/admin/admin-list"))
 				.andExpect(MockMvcResultMatchers.status().isOk())
@@ -47,7 +60,6 @@ class AdminControllerTest {
 	}
 
 	@Test
-	@WithMockUser(roles = "ADMIN")
 	void testDeleteAdmin() throws Exception {
 		int adminId = 1;
 		mockMvc.perform(MockMvcRequestBuilders.post("/admin/delete/{adminId}", adminId).with(csrf().asHeader()))
@@ -57,7 +69,6 @@ class AdminControllerTest {
 	}
 
 	@Test
-	@WithMockUser(roles = "ADMIN")
 	void testOpenAdminCard_WhenAdminExists() throws Exception {
 		Admin admin = new Admin();
 		admin.setId(1);
@@ -72,7 +83,6 @@ class AdminControllerTest {
 	}
 
 	@Test
-	@WithMockUser(roles = "ADMIN")
 	void testOpenAdminCard_WhenAdminDoesNotExist() throws Exception {
 		int adminId = 999;
 
@@ -84,7 +94,6 @@ class AdminControllerTest {
 	}
 
 	@Test
-	@WithMockUser(roles = "ADMIN")
 	void testShowCreateAdminForm() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.get("/admin/create-admin"))
 				.andExpect(MockMvcResultMatchers.status().isOk())
@@ -92,7 +101,6 @@ class AdminControllerTest {
 	}
 
 	@Test
-	@WithMockUser(roles = "ADMIN")
 	void testCreateAdmin() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.post("/admin/create-admin").with(csrf().asHeader()))
 				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
