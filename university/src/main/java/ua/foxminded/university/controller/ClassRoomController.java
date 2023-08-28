@@ -39,7 +39,7 @@ public class ClassRoomController {
 		}
 
 		model.addAttribute("classrooms", classRooms);
-		return "/classroom/classroom-list";
+		return "classroom/classroom-list";
 	}
 
 	@RolesAllowed("ADMIN")

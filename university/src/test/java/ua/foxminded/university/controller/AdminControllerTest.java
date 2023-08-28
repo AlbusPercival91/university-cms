@@ -31,7 +31,7 @@ class AdminControllerTest {
 
 	@Test
 	@WithMockUser("ADMIN")
-	void testAdminMainPage() throws Exception {
+	void testAdminDashboard() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.get("/admin/main")).andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.view().name("admin/main"));
 	}
