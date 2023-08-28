@@ -17,6 +17,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -47,6 +51,32 @@ class TeacherControllerTest {
 
 	@MockBean
 	private CourseService courseService;
+
+	@Test
+	void testTeacherDashboard_WhenUserAuthenticated() throws Exception {
+		Faculty faculty = new Faculty("Grifindor");
+		Department department = new Department("Department A", faculty);
+		Teacher teacher = new Teacher("Madam", "Trix", true, "trix@mail.com", "1234", department);
+
+		when(teacherService.findTeacherByEmail(teacher.getEmail())).thenReturn(Optional.of(teacher));
+
+		Authentication auth = new UsernamePasswordAuthenticationToken(teacher.getEmail(), null,
+				AuthorityUtils.createAuthorityList("ROLE_TEACHER"));
+		SecurityContextHolder.getContext().setAuthentication(auth);
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/teacher/main")).andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.view().name("teacher/main"))
+				.andExpect(MockMvcResultMatchers.model().attributeExists("teacher"))
+				.andExpect(MockMvcResultMatchers.model().attribute("teacher", teacher));
+	}
+
+	@Test
+	@WithMockUser(roles = "TEACHER")
+	void testTeacherDashboard_WhenUserNotAuthenticated() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.get("/teacher/main"))
+				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+				.andExpect(MockMvcResultMatchers.redirectedUrl("/login"));
+	}
 
 	@Test
 	@WithMockUser(roles = "ADMIN")

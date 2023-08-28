@@ -13,6 +13,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -32,6 +36,31 @@ class StaffControllerTest {
 
 	@MockBean
 	private StaffService staffService;
+
+	@Test
+	void testStaffDashboard_WhenUserAuthenticated() throws Exception {
+		Staff staff = new Staff();
+		staff.setEmail("staff@example.ua");
+
+		when(staffService.findStaffByEmail(staff.getEmail())).thenReturn(Optional.of(staff));
+
+		Authentication auth = new UsernamePasswordAuthenticationToken(staff.getEmail(), null,
+				AuthorityUtils.createAuthorityList("ROLE_STAFF"));
+		SecurityContextHolder.getContext().setAuthentication(auth);
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/staff/main")).andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.view().name("staff/main"))
+				.andExpect(MockMvcResultMatchers.model().attributeExists("staff"))
+				.andExpect(MockMvcResultMatchers.model().attribute("staff", staff));
+	}
+
+	@Test
+	@WithMockUser(roles = "STAFF")
+	void testStaffDashboard_WhenUserNotAuthenticated() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.get("/staff/main"))
+				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+				.andExpect(MockMvcResultMatchers.redirectedUrl("/login"));
+	}
 
 	@Test
 	@WithMockUser(roles = { "ADMIN", "STUDENT", "TEACHER", "STAFF" })

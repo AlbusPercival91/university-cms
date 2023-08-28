@@ -36,12 +36,13 @@ class AdminControllerTest {
 	private AdminService adminService;
 
 	@Test
-	void testAdminDashboard() throws Exception {
+	void testAdminDashboard_WhenUserAuthenticated() throws Exception {
 		Admin admin = new Admin();
+		admin.setEmail("admin@example.ua");
 
-		when(adminService.findAdminByEmail("admin@example.com")).thenReturn(Optional.of(admin));
+		when(adminService.findAdminByEmail(admin.getEmail())).thenReturn(Optional.of(admin));
 
-		Authentication auth = new UsernamePasswordAuthenticationToken("admin@example.com", null,
+		Authentication auth = new UsernamePasswordAuthenticationToken(admin.getEmail(), null,
 				AuthorityUtils.createAuthorityList("ROLE_ADMIN"));
 		SecurityContextHolder.getContext().setAuthentication(auth);
 
@@ -49,6 +50,13 @@ class AdminControllerTest {
 				.andExpect(MockMvcResultMatchers.view().name("admin/main"))
 				.andExpect(MockMvcResultMatchers.model().attributeExists("admin"))
 				.andExpect(MockMvcResultMatchers.model().attribute("admin", admin));
+	}
+
+	@Test
+	void testAdminDashboard_WhenUserNotAuthenticated() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.get("/admin/main"))
+				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+				.andExpect(MockMvcResultMatchers.redirectedUrl("/login"));
 	}
 
 	@Test
