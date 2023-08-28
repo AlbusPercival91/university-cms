@@ -16,6 +16,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import ua.foxminded.university.dao.entities.Admin;
 import ua.foxminded.university.dao.interfaces.AdminRepository;
+import ua.foxminded.university.security.UserRole;
 import ua.foxminded.university.validation.UniqueEmailValidator;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = { AdminService.class,
@@ -51,6 +52,7 @@ class AdminServiceTest {
 	void testUpdateAdminById_ShouldReturnUpdatedAdmin(int adminId) {
 		Admin expectedAdmin = new Admin("Albus", "Dumbledore", false, "albus@fakemail.com", "1234");
 		expectedAdmin.setId(adminId);
+		expectedAdmin.setRole(UserRole.ADMIN);
 
 		Assertions.assertEquals(expectedAdmin, adminService.updateAdminById(adminId, expectedAdmin));
 	}

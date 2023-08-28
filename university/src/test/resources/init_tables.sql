@@ -6,7 +6,8 @@ CREATE TABLE IF NOT EXISTS university.admin (
     last_name VARCHAR(90) NOT NULL,
     active BOOLEAN NOT NULL,
     email VARCHAR(100) NOT NULL,
-    password VARCHAR(60) NOT NULL
+    password VARCHAR(60) NOT NULL,
+    role VARCHAR(8)
 );
 
 CREATE TABLE IF NOT EXISTS university.classroom (
@@ -49,7 +50,8 @@ CREATE TABLE IF NOT EXISTS university.staff (
     email VARCHAR(100) NOT NULL,
     password VARCHAR(60) NOT NULL,
     position VARCHAR(150) NOT NULL,
-    function TEXT
+    function TEXT,
+    role VARCHAR(8)
 );
 
 CREATE TABLE IF NOT EXISTS university.student (
@@ -60,6 +62,7 @@ CREATE TABLE IF NOT EXISTS university.student (
     email VARCHAR(100) NOT NULL,
     password VARCHAR(60) NOT NULL,
     group_id INT,
+    role VARCHAR(8),
     FOREIGN KEY (group_id) REFERENCES university.groups (group_id)
 );
 
@@ -70,28 +73,26 @@ CREATE TABLE IF NOT EXISTS university.teacher (
     active BOOLEAN NOT NULL,
     email VARCHAR(100) NOT NULL,
     password VARCHAR(60) NOT NULL,
-    course_id INT,
     department_id INT,
-    FOREIGN KEY (course_id) REFERENCES university.courses (course_id),
+    role VARCHAR(8),
     FOREIGN KEY (department_id) REFERENCES university.departments (department_id)
 );
 
 CREATE TABLE IF NOT EXISTS university.students_courses (
+    id SERIAL PRIMARY KEY,
     student_id INT,
     course_id INT,
-    PRIMARY KEY (student_id, course_id),
     FOREIGN KEY (student_id) REFERENCES university.student (id),
     FOREIGN KEY (course_id) REFERENCES university.courses (course_id)
 );
 
 CREATE TABLE IF NOT EXISTS university.teachers_courses (
+    id SERIAL PRIMARY KEY,
     teacher_id INT,
     course_id INT,
-    PRIMARY KEY (teacher_id, course_id),
     FOREIGN KEY (teacher_id) REFERENCES university.teacher (id),
     FOREIGN KEY (course_id) REFERENCES university.courses (course_id)
 );
-
 
 CREATE TABLE IF NOT EXISTS university.timetable (
     timetable_id SERIAL PRIMARY KEY,
