@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -31,8 +32,9 @@ public class StaffController {
 	@Autowired
 	private ControllerBindingValidator bindingValidator;
 
+	@RolesAllowed("STAFF")
 	@GetMapping("/staff/main")
-	public String staffMainPage(Model model) {
+	public String staffDashboard(Model model) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (authentication != null && authentication.isAuthenticated()) {
 			String email = authentication.getName();
@@ -45,6 +47,7 @@ public class StaffController {
 		return "redirect:/login";
 	}
 
+	@RolesAllowed("STAFF")
 	@PostMapping("/staff/update-personal/{staffId}")
 	public String updatePersonalData(@PathVariable("staffId") int staffId,
 			@ModelAttribute("staff") @Validated Staff updatedStaff, BindingResult bindingResult,
@@ -67,6 +70,7 @@ public class StaffController {
 		return "redirect:/staff/main";
 	}
 
+	@RolesAllowed("STAFF")
 	@PostMapping("/staff/update-password")
 	public String updatePassword(@RequestParam int staffId, @RequestParam String oldPassword,
 			@RequestParam String newPassword, RedirectAttributes redirectAttributes) {
@@ -83,11 +87,13 @@ public class StaffController {
 		return "redirect:/staff/main";
 	}
 
+	@RolesAllowed("ADMIN")
 	@GetMapping("/staff/create-staff")
 	public String showCreateStaffForm() {
 		return "staff/create-staff";
 	}
 
+	@RolesAllowed("ADMIN")
 	@PostMapping("/staff/create-staff")
 	public String createStaff(@ModelAttribute("staff") @Validated Staff staff, BindingResult bindingResult,
 			RedirectAttributes redirectAttributes) {
@@ -117,6 +123,7 @@ public class StaffController {
 		return "staff/staff-list";
 	}
 
+	@RolesAllowed("ADMIN")
 	@PostMapping("/staff/delete/{staffId}")
 	public String deleteStaff(@PathVariable int staffId, RedirectAttributes redirectAttributes,
 			HttpServletRequest request) {
@@ -155,6 +162,7 @@ public class StaffController {
 		return "staff/staff-list";
 	}
 
+	@RolesAllowed("ADMIN")
 	@GetMapping("/staff/staff-card/{staffId}")
 	public String openStaffCard(@PathVariable int staffId, Model model) {
 		Optional<Staff> optionalStaff = staffService.findStaffById(staffId);
@@ -168,6 +176,7 @@ public class StaffController {
 		}
 	}
 
+	@RolesAllowed("ADMIN")
 	@PostMapping("/staff/edit-staff/{staffId}")
 	public String updateStaff(@PathVariable("staffId") int staffId,
 			@ModelAttribute("staff") @Validated Staff updatedStaff, BindingResult bindingResult,

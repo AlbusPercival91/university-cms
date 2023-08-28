@@ -3,6 +3,7 @@ package ua.foxminded.university.controller;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -22,6 +23,7 @@ import ua.foxminded.university.dao.service.AdminService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
 
 @Controller
+@RolesAllowed("ADMIN")
 public class AdminController {
 
 	@Autowired
@@ -31,7 +33,7 @@ public class AdminController {
 	private ControllerBindingValidator bindingValidator;
 
 	@GetMapping("/admin/main")
-	public String adminMainPage(Model model) {
+	public String adminDashboard(Model model) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (authentication != null && authentication.isAuthenticated()) {
 			String email = authentication.getName();

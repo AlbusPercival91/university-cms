@@ -3,6 +3,7 @@ package ua.foxminded.university.controller;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -35,6 +36,7 @@ public class FacultyController {
 		return "faculty/faculty-list";
 	}
 
+	@RolesAllowed("ADMIN")
 	@PostMapping("/faculty/delete/{facultyId}")
 	public String deleteFaculty(@PathVariable int facultyId, RedirectAttributes redirectAttributes,
 			HttpServletRequest request) {
@@ -52,11 +54,13 @@ public class FacultyController {
 		return "redirect:" + referrer;
 	}
 
+	@RolesAllowed("ADMIN")
 	@GetMapping("/faculty/create-faculty")
 	public String showCreateFacultyForm() {
 		return "faculty/create-faculty";
 	}
 
+	@RolesAllowed("ADMIN")
 	@PostMapping("/faculty/create-faculty")
 	public String createFaculty(@ModelAttribute("faculty") @Validated Faculty faculty, BindingResult bindingResult,
 			RedirectAttributes redirectAttributes) {
@@ -78,6 +82,7 @@ public class FacultyController {
 		}
 	}
 
+	@RolesAllowed("ADMIN")
 	@GetMapping("/faculty/faculty-card/{facultyId}")
 	public String openFacultyCard(@PathVariable int facultyId, Model model) {
 		Optional<Faculty> optionalFaculty = facultyService.findFacultyById(facultyId);
@@ -91,6 +96,7 @@ public class FacultyController {
 		}
 	}
 
+	@RolesAllowed("ADMIN")
 	@PostMapping("/faculty/edit-faculty/{facultyId}")
 	public String updateFaculty(@PathVariable("facultyId") int facultyId,
 			@ModelAttribute("faculty") @Validated Faculty updatedFaculty, BindingResult bindingResult,

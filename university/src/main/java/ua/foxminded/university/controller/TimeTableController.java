@@ -7,6 +7,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+
+import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -55,6 +57,7 @@ public class TimeTableController {
 	@Autowired
 	private StudentService studentService;
 
+	@RolesAllowed("ADMIN")
 	@GetMapping("/timetable/course-timetable-form")
 	public String showFormCreateTimeTableForStudentsAtCourse(Model model) {
 		List<Teacher> teachers = teacherService.getAllTeachers();
@@ -66,6 +69,7 @@ public class TimeTableController {
 		return "timetable/course-timetable-form";
 	}
 
+	@RolesAllowed("ADMIN")
 	@PostMapping("/timetable/course-timetable-form")
 	public String ceateTimeTableForStudentsAtCourse(@ModelAttribute("timetable") @Validated TimeTable timetable,
 			BindingResult bindingResult, RedirectAttributes redirectAttributes,
@@ -88,6 +92,7 @@ public class TimeTableController {
 		return "redirect:/timetable/course-timetable-form";
 	}
 
+	@RolesAllowed("ADMIN")
 	@GetMapping("/timetable/group-timetable-form")
 	public String showFormCreateGroupTimeTable(Model model) {
 		List<Teacher> teachers = teacherService.getAllTeachers();
@@ -101,6 +106,7 @@ public class TimeTableController {
 		return "timetable/group-timetable-form";
 	}
 
+	@RolesAllowed("ADMIN")
 	@PostMapping("/timetable/group-timetable-form")
 	public String createGroupTimeTable(@ModelAttribute("timetable") @Validated TimeTable timetable,
 			BindingResult bindingResult, RedirectAttributes redirectAttributes,
@@ -123,6 +129,7 @@ public class TimeTableController {
 		return "redirect:/timetable/group-timetable-form";
 	}
 
+	@RolesAllowed("ADMIN")
 	@PostMapping("/timetable/delete/{timetableId}")
 	public String deleteTimetable(@PathVariable int timetableId, RedirectAttributes redirectAttributes,
 			HttpServletRequest request) {
@@ -252,6 +259,7 @@ public class TimeTableController {
 		return "timetable/timetable";
 	}
 
+	@RolesAllowed("ADMIN")
 	@GetMapping("/timetable/timetable-card/{timetableId}")
 	public String openTimeTableCard(@PathVariable int timetableId, Model model) {
 		Optional<TimeTable> optionalTimeTable = timeTableService.findTimeTableById(timetableId);
@@ -304,6 +312,7 @@ public class TimeTableController {
 		return "timetable/timetable";
 	}
 
+	@RolesAllowed("ADMIN")
 	@PostMapping("/timetable/edit-timetable/{timetableId}")
 	public String updateTimeTable(@PathVariable("timetableId") int timetableId,
 			@ModelAttribute("timetable") @Validated TimeTable updatedTimeTable, BindingResult bindingResult,

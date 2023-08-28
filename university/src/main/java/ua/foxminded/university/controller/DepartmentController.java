@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -42,6 +43,7 @@ public class DepartmentController {
 		return "department/department-list";
 	}
 
+	@RolesAllowed("ADMIN")
 	@PostMapping("/department/delete/{departmentId}")
 	public String deleteDepartment(@PathVariable int departmentId, RedirectAttributes redirectAttributes,
 			HttpServletRequest request) {
@@ -59,6 +61,7 @@ public class DepartmentController {
 		return "redirect:" + referrer;
 	}
 
+	@RolesAllowed("ADMIN")
 	@GetMapping("/department/create-department")
 	public String showCreateDepartmentForm(Model model) {
 		List<Faculty> faculties = facultyService.getAllFaculties();
@@ -67,6 +70,7 @@ public class DepartmentController {
 		return "department/create-department";
 	}
 
+	@RolesAllowed("ADMIN")
 	@PostMapping("/department/create-department")
 	public String createDepartment(@ModelAttribute("department") @Validated Department department,
 			BindingResult bindingResult, RedirectAttributes redirectAttributes) {
@@ -108,6 +112,7 @@ public class DepartmentController {
 		return "department/department-list";
 	}
 
+	@RolesAllowed("ADMIN")
 	@GetMapping("/department/department-card/{departmentId}")
 	public String openDepartmentCard(@PathVariable int departmentId, Model model) {
 		Optional<Department> optionalDepartment = departmentService.findDepartmentById(departmentId);
@@ -123,6 +128,7 @@ public class DepartmentController {
 		}
 	}
 
+	@RolesAllowed("ADMIN")
 	@PostMapping("/department/edit-department/{departmentId}")
 	public String updateDepartment(@PathVariable("departmentId") int departmentId,
 			@ModelAttribute("department") @Validated Department updatedDepartment, BindingResult bindingResult,

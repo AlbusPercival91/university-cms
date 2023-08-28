@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -42,6 +43,7 @@ public class GroupController {
 		return "group/group-list";
 	}
 
+	@RolesAllowed("ADMIN")
 	@PostMapping("/group/delete/{groupId}")
 	public String deleteGroup(@PathVariable int groupId, RedirectAttributes redirectAttributes,
 			HttpServletRequest request) {
@@ -59,6 +61,7 @@ public class GroupController {
 		return "redirect:" + referrer;
 	}
 
+	@RolesAllowed("ADMIN")
 	@GetMapping("/group/create-group")
 	public String showCreateGroupForm(Model model) {
 		List<Faculty> faculties = facultyService.getAllFaculties();
@@ -67,6 +70,7 @@ public class GroupController {
 		return "group/create-group";
 	}
 
+	@RolesAllowed("ADMIN")
 	@PostMapping("/group/create-group")
 	public String createGroup(@ModelAttribute("group") @Validated Group group, BindingResult bindingResult,
 			RedirectAttributes redirectAttributes) {
@@ -108,6 +112,7 @@ public class GroupController {
 		return "group/group-list";
 	}
 
+	@RolesAllowed("ADMIN")
 	@GetMapping("/group/group-card/{groupId}")
 	public String openGroupCard(@PathVariable int groupId, Model model) {
 		Optional<Group> optionalGroup = groupService.findGroupById(groupId);
@@ -123,6 +128,7 @@ public class GroupController {
 		}
 	}
 
+	@RolesAllowed("ADMIN")
 	@PostMapping("/group/edit-group/{groupId}")
 	public String updateGroup(@PathVariable("groupId") int groupId,
 			@ModelAttribute("group") @Validated Group updatedGroup, BindingResult bindingResult,

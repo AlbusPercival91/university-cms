@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -41,6 +42,7 @@ public class ClassRoomController {
 		return "/classroom/classroom-list";
 	}
 
+	@RolesAllowed("ADMIN")
 	@PostMapping("/classroom/delete/{classroomId}")
 	public String deleteClassRoom(@PathVariable int classroomId, RedirectAttributes redirectAttributes,
 			HttpServletRequest request) {
@@ -58,11 +60,13 @@ public class ClassRoomController {
 		return "redirect:" + referrer;
 	}
 
+	@RolesAllowed("ADMIN")
 	@GetMapping("/classroom/create-classroom")
 	public String showCreateClassRoomForm() {
 		return "classroom/create-classroom";
 	}
 
+	@RolesAllowed("ADMIN")
 	@PostMapping("/classroom/create-classroom")
 	public String createClassRoom(@ModelAttribute("course") @Validated ClassRoom classroom, BindingResult bindingResult,
 			RedirectAttributes redirectAttributes) {
@@ -105,6 +109,7 @@ public class ClassRoomController {
 		return "classroom/classroom-list";
 	}
 
+	@RolesAllowed("ADMIN")
 	@GetMapping("/classroom/classroom-card/{classroomId}")
 	public String openClassRoomCard(@PathVariable int classroomId, Model model) {
 		Optional<ClassRoom> optionalClassRoom = classRoomService.findClassRoomById(classroomId);
@@ -118,6 +123,7 @@ public class ClassRoomController {
 		}
 	}
 
+	@RolesAllowed("ADMIN")
 	@PostMapping("/classroom/edit-classroom/{classroomId}")
 	public String updateClassRoom(@PathVariable("classroomId") int classroomId,
 			@ModelAttribute("classroom") @Validated ClassRoom updatedClassRoom, BindingResult bindingResult,

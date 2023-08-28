@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -42,6 +43,7 @@ public class TeacherController {
 	@Autowired
 	private ControllerBindingValidator bindingValidator;
 
+	@RolesAllowed("TEACHER")
 	@GetMapping("/teacher/main")
 	public String teacherDashboard(Model model) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -61,6 +63,7 @@ public class TeacherController {
 		return "redirect:/login";
 	}
 
+	@RolesAllowed("TEACHER")
 	@PostMapping("/teacher/update-personal/{teacherId}")
 	public String updatePersonalData(@PathVariable("teacherId") int teacherId,
 			@ModelAttribute("teacher") @Validated Teacher updatedTeacher, BindingResult bindingResult,
@@ -83,6 +86,7 @@ public class TeacherController {
 		return "redirect:/teacher/main";
 	}
 
+	@RolesAllowed("TEACHER")
 	@PostMapping("/teacher/update-password")
 	public String updatePassword(@RequestParam int teacherId, @RequestParam String oldPassword,
 			@RequestParam String newPassword, RedirectAttributes redirectAttributes) {
@@ -99,6 +103,7 @@ public class TeacherController {
 		return "redirect:/teacher/main";
 	}
 
+	@RolesAllowed("ADMIN")
 	@GetMapping("/teacher/create-teacher")
 	public String showCreateTeacherForm(Model model) {
 		List<Department> departments = departmentService.getAllDepartments();
@@ -108,6 +113,7 @@ public class TeacherController {
 		return "teacher/create-teacher";
 	}
 
+	@RolesAllowed("ADMIN")
 	@PostMapping("/teacher/create-teacher")
 	public String createTeacher(@ModelAttribute("teacher") @Validated Teacher teacher, @Validated Course course,
 			BindingResult bindingResult, RedirectAttributes redirectAttributes) {
@@ -129,6 +135,7 @@ public class TeacherController {
 		}
 	}
 
+	@RolesAllowed("ADMIN")
 	@GetMapping("/teacher/teacher-card/{teacherId}")
 	public String openTeacherCard(@PathVariable int teacherId, Model model) {
 		Optional<Teacher> optionalTeacher = teacherService.findTeacherById(teacherId);
@@ -184,6 +191,7 @@ public class TeacherController {
 		return "teacher/teacher-list";
 	}
 
+	@RolesAllowed("ADMIN")
 	@PostMapping("/teacher/delete/{teacherId}")
 	public String deleteTeacher(@PathVariable int teacherId, RedirectAttributes redirectAttributes,
 			HttpServletRequest request) {
@@ -201,6 +209,7 @@ public class TeacherController {
 		return "redirect:" + referrer;
 	}
 
+	@RolesAllowed("ADMIN")
 	@PostMapping("/teacher/remove-course/{teacherId}/{courseName}")
 	public String removeTeacherFromCourse(@PathVariable int teacherId, @PathVariable String courseName,
 			RedirectAttributes redirectAttributes) {
@@ -213,6 +222,7 @@ public class TeacherController {
 		return "redirect:/teacher/teacher-card/{teacherId}";
 	}
 
+	@RolesAllowed("ADMIN")
 	@PostMapping("/teacher/assign-course")
 	public String addTeacherToTheCourse(@RequestParam int teacherId, @RequestParam String courseName,
 			RedirectAttributes redirectAttributes) {
@@ -226,6 +236,7 @@ public class TeacherController {
 		return "redirect:" + builder.buildAndExpand(teacherId).toUriString();
 	}
 
+	@RolesAllowed("ADMIN")
 	@PostMapping("/teacher/edit-teacher/{teacherId}")
 	public String updateTeacher(@PathVariable("teacherId") int teacherId,
 			@ModelAttribute("teacher") @Validated Teacher updatedTeacher, BindingResult bindingResult,

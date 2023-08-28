@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -42,6 +43,7 @@ public class StudentController {
 	@Autowired
 	private ControllerBindingValidator bindingValidator;
 
+	@RolesAllowed("STUDENT")
 	@GetMapping("/student/main")
 	public String studentDashboard(Model model) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -61,6 +63,7 @@ public class StudentController {
 		return "redirect:/login";
 	}
 
+	@RolesAllowed("STUDENT")
 	@PostMapping("/student/update-personal/{studentId}")
 	public String updatePersonalData(@PathVariable("studentId") int studentId,
 			@ModelAttribute("student") @Validated Student updatedStudent, BindingResult bindingResult,
@@ -83,6 +86,7 @@ public class StudentController {
 		return "redirect:/student/main";
 	}
 
+	@RolesAllowed("STUDENT")
 	@PostMapping("/student/update-password")
 	public String updatePassword(@RequestParam int studentId, @RequestParam String oldPassword,
 			@RequestParam String newPassword, RedirectAttributes redirectAttributes) {
@@ -110,6 +114,7 @@ public class StudentController {
 		return "student/student-list";
 	}
 
+	@RolesAllowed("ADMIN")
 	@PostMapping("/student/delete/{studentId}")
 	public String deleteStudent(@PathVariable int studentId, RedirectAttributes redirectAttributes,
 			HttpServletRequest request) {
@@ -127,6 +132,7 @@ public class StudentController {
 		return "redirect:" + referrer;
 	}
 
+	@RolesAllowed("ADMIN")
 	@GetMapping("/student/student-card/{studentId}")
 	public String openStudentCard(@PathVariable int studentId, Model model) {
 		Optional<Student> optionalStudent = studentService.findStudentById(studentId);
@@ -144,6 +150,7 @@ public class StudentController {
 		}
 	}
 
+	@RolesAllowed("ADMIN")
 	@PostMapping("/student/remove-course/{studentId}/{courseName}")
 	public String removeStudentFromCourse(@PathVariable int studentId, @PathVariable String courseName,
 			RedirectAttributes redirectAttributes) {
@@ -156,6 +163,7 @@ public class StudentController {
 		return "redirect:/student/student-card/{studentId}";
 	}
 
+	@RolesAllowed("ADMIN")
 	@PostMapping("/student/assign-course")
 	public String addStudentToTheCourse(@RequestParam int studentId, @RequestParam String courseName,
 			RedirectAttributes redirectAttributes) {
@@ -196,11 +204,13 @@ public class StudentController {
 		return "student/student-list";
 	}
 
+	@RolesAllowed("ADMIN")
 	@GetMapping("/student/create-student")
 	public String showCreateStudentForm() {
 		return "student/create-student";
 	}
 
+	@RolesAllowed("ADMIN")
 	@PostMapping("/student/create-student")
 	public String createStudent(@ModelAttribute("student") @Validated Student student, BindingResult bindingResult,
 			RedirectAttributes redirectAttributes) {
@@ -222,6 +232,7 @@ public class StudentController {
 		}
 	}
 
+	@RolesAllowed("ADMIN")
 	@PostMapping("/student/edit-student/{studentId}")
 	public String updateStudent(@PathVariable("studentId") int studentId,
 			@ModelAttribute("student") @Validated Student updatedStudent, BindingResult bindingResult,

@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -37,6 +38,7 @@ public class CourseController {
 		return "course/course-list";
 	}
 
+	@RolesAllowed("ADMIN")
 	@PostMapping("/course/delete/{courseId}")
 	public String deleteCourse(@PathVariable int courseId, RedirectAttributes redirectAttributes,
 			HttpServletRequest request) {
@@ -54,11 +56,13 @@ public class CourseController {
 		return "redirect:" + referrer;
 	}
 
+	@RolesAllowed("ADMIN")
 	@GetMapping("/course/create-course")
 	public String showCreateCourseForm() {
 		return "course/create-course";
 	}
 
+	@RolesAllowed("ADMIN")
 	@PostMapping("/course/create-course")
 	public String createCourse(@ModelAttribute("course") @Validated Course course, BindingResult bindingResult,
 			RedirectAttributes redirectAttributes) {
@@ -104,6 +108,7 @@ public class CourseController {
 		return "course/course-list";
 	}
 
+	@RolesAllowed("ADMIN")
 	@GetMapping("/course/course-card/{courseId}")
 	public String openCourseCard(@PathVariable int courseId, Model model) {
 		Optional<Course> optionalCourse = courseService.findCourseById(courseId);
@@ -117,6 +122,7 @@ public class CourseController {
 		}
 	}
 
+	@RolesAllowed("ADMIN")
 	@PostMapping("/course/edit-course/{courseId}")
 	public String updateCourse(@PathVariable("courseId") int courseId,
 			@ModelAttribute("course") @Validated Course updatedCourse, BindingResult bindingResult,
