@@ -30,7 +30,7 @@ class AdminControllerTest {
 	private AdminService adminService;
 
 	@Test
-	@WithMockUser("ADMIN")
+	@WithMockUser(roles = "ADMIN")
 	void testAdminDashboard() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.get("/admin/main")).andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.view().name("admin/main"));

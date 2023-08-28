@@ -104,7 +104,7 @@ public class AdminController {
 		String referrer = request.getHeader("referer");
 
 		if (referrer == null || referrer.isEmpty()) {
-			return "redirect:/admin/edit-admin-list";
+			return "redirect:/admin/admin-list";
 		}
 		return "redirect:" + referrer;
 	}
