@@ -19,6 +19,7 @@ import ua.foxminded.university.dao.entities.Course;
 import ua.foxminded.university.dao.entities.Student;
 import ua.foxminded.university.dao.interfaces.CourseRepository;
 import ua.foxminded.university.dao.interfaces.StudentRepository;
+import ua.foxminded.university.security.UserRole;
 import ua.foxminded.university.validation.UniqueEmailValidator;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = { StudentService.class,
@@ -57,6 +58,7 @@ class StudentServiceTest {
 	void testUpdateStudentById_ShouldReturnUpdatedStudent(int studentId) {
 		Student expectedStudent = new Student("John", "Connor", false, "johnconnor@fakemail.com", "1234", null);
 		expectedStudent.setId(studentId);
+		expectedStudent.setRole(UserRole.STUDENT);
 
 		Assertions.assertEquals(expectedStudent, studentService.updateStudentById(studentId, expectedStudent));
 	}
