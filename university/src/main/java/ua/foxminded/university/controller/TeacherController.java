@@ -135,7 +135,7 @@ public class TeacherController {
 		}
 	}
 
-	@RolesAllowed("ADMIN")
+	@RolesAllowed({ "ADMIN", "TEACHER" })
 	@GetMapping("/teacher/teacher-card/{teacherId}")
 	public String openTeacherCard(@PathVariable int teacherId, Model model) {
 		Optional<Teacher> optionalTeacher = teacherService.findTeacherById(teacherId);

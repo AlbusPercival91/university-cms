@@ -54,7 +54,7 @@
                 </div>
 
                 <!-- Container for buttons -->
-                <div class="button-container">
+                <div class="button-container" sec:authorize="hasRole('ROLE_ADMIN')">
                     <button id="saveButton" type="submit" class="button-common-style">Save</button>
                     <button id="editButton" type="button" class="button-common-style">Edit</button>
                 </div>
@@ -69,7 +69,7 @@
                 <thead>
                     <tr>
                         <th style="border: none; width: 3vh;"></th>
-                        <th style="border: none; width: 3vh;"></th>
+                        <th style="border: none; width: 3vh;" sec:authorize="hasRole('ROLE_ADMIN')"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -82,7 +82,7 @@
                                 method="post">
                                 <input type="hidden" name="courseName" th:value="${course.courseName}" />
                                 <button th:id="'removeButton-' + ${rowStat.index}" class="remove-icon" type="submit">
-                                    <i class="fas fa-trash-alt remove-icon"></i>
+                                    <i class="fas fa-trash-alt remove-icon" sec:authorize="hasRole('ROLE_ADMIN')"></i>
                                 </button>
                             </form>
                         </td>
@@ -92,14 +92,14 @@
             <!-- Generate options for Additional courses using Thymeleaf -->
             <form th:action="@{/teacher/assign-course}" method="post">
                 <input type="hidden" name="teacherId" th:value="${teacher.id}" />
-                <select name="courseName">
+                <select name="courseName" sec:authorize="hasRole('ROLE_ADMIN')">
                     <option value="">Select Additional Course</option>
                     <option th:each="course : ${courses}" th:value="${course.courseName}"
                         th:text="${course.courseName}">
                     </option>
                 </select>
                 <br>
-                <button type="submit">Assign</button>
+                <button type="submit" sec:authorize="hasRole('ROLE_ADMIN')">Assign</button>
             </form>
         </div>
 
@@ -120,7 +120,7 @@
 
                 <!-- Container for Get Selected Date Time-Table button -->
                 <div class="button-container">
-                    <button id="saveButton" type="submit" class="button-common-style">Get Selected Date
+                    <button id="getSelectedTimetableButton" type="submit" class="button-common-style">Get Selected Date
                         Time-Table</button>
                 </div>
             </form>
@@ -128,9 +128,9 @@
 
             <!-- Container for Get All Time-Tables button -->
             <div class="button-container">
-                <form th:action="@{/timetable/teacher-timetable/{teacherId}(teacherId=${teacher.id})}"
-                    method="get">
-                    <button id="saveButton" type="submit" class="button-common-style">Get Full Time-Table List</button>
+                <form th:action="@{/timetable/teacher-timetable/{teacherId}(teacherId=${teacher.id})}" method="get">
+                    <button id="getFullTimeTable" type="submit" class="button-common-style">Get Full Time-Table
+                        List</button>
                 </form>
             </div>
         </div>
