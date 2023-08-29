@@ -161,4 +161,36 @@ class CourseControllerTest {
 				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
 				.andExpect(MockMvcResultMatchers.redirectedUrl("/course/course-list"));
 	}
+
+	@Test
+	@WithMockUser(roles = "ADMIN")
+	void testUpdateCourse_Success() throws Exception {
+		int courseId = 1;
+		Course updatedCourse = new Course();
+		updatedCourse.setId(courseId);
+
+		when(courseService.updateCourseById(courseId, updatedCourse)).thenReturn(updatedCourse);
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/course/edit-course/{courseId}", courseId)
+				.flashAttr("course", updatedCourse).with(csrf().asHeader()))
+				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+				.andExpect(MockMvcResultMatchers.flash().attributeExists("successMessage"))
+				.andExpect(MockMvcResultMatchers.redirectedUrl("/course/course-card/" + courseId));
+	}
+
+	@Test
+	@WithMockUser(roles = "ADMIN")
+	void testUpdateCourse_Failure() throws Exception {
+		int courseId = 1;
+		Course updatedCourse = new Course();
+		updatedCourse.setId(courseId);
+
+		when(courseService.updateCourseById(courseId, updatedCourse)).thenReturn(null);
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/course/edit-course/{courseId}", courseId)
+				.flashAttr("course", updatedCourse).with(csrf().asHeader()))
+				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+				.andExpect(MockMvcResultMatchers.flash().attributeExists("errorMessage"))
+				.andExpect(MockMvcResultMatchers.redirectedUrl("/course/course-card/" + courseId));
+	}
 }

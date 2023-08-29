@@ -411,4 +411,35 @@ class TimeTableControllerTest {
 				.andExpect(MockMvcResultMatchers.model().attribute("timetables", Matchers.contains(timetable)));
 	}
 
+	@Test
+	@WithMockUser(roles = "ADMIN")
+	void testUpdateTimeTable_Success() throws Exception {
+		int timeTableId = 1;
+		TimeTable updatedTimeTable = new TimeTable();
+		updatedTimeTable.setId(timeTableId);
+
+		when(timeTableService.updateTimeTableById(timeTableId, updatedTimeTable)).thenReturn(updatedTimeTable);
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/timetable/edit-timetable/{timetableId}", timeTableId)
+				.flashAttr("timetable", updatedTimeTable).with(csrf().asHeader()))
+				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+				.andExpect(MockMvcResultMatchers.flash().attributeExists("successMessage"))
+				.andExpect(MockMvcResultMatchers.redirectedUrl("/timetable/timetable-card/" + timeTableId));
+	}
+
+	@Test
+	@WithMockUser(roles = "ADMIN")
+	void testUpdateTimeTable_Failure() throws Exception {
+		int timeTableId = 1;
+		TimeTable updatedTimeTable = new TimeTable();
+		updatedTimeTable.setId(timeTableId);
+
+		when(timeTableService.updateTimeTableById(timeTableId, updatedTimeTable)).thenReturn(null);
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/timetable/edit-timetable/{timetableId}", timeTableId)
+				.flashAttr("timetable", updatedTimeTable).with(csrf().asHeader()))
+				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+				.andExpect(MockMvcResultMatchers.flash().attributeExists("errorMessage"))
+				.andExpect(MockMvcResultMatchers.redirectedUrl("/timetable/timetable-card/" + timeTableId));
+	}
 }

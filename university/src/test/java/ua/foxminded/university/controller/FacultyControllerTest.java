@@ -92,4 +92,36 @@ class FacultyControllerTest {
 				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
 				.andExpect(MockMvcResultMatchers.redirectedUrl("/faculty/faculty-list"));
 	}
+
+	@Test
+	@WithMockUser(roles = "ADMIN")
+	void testUpdateFaculty_Success() throws Exception {
+		int facultyId = 1;
+		Faculty updatedFaculty = new Faculty();
+		updatedFaculty.setId(facultyId);
+
+		when(facultyService.updateFacultyById(facultyId, updatedFaculty)).thenReturn(updatedFaculty);
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/faculty/edit-faculty/{facultyId}", facultyId)
+				.flashAttr("faculty", updatedFaculty).with(csrf().asHeader()))
+				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+				.andExpect(MockMvcResultMatchers.flash().attributeExists("successMessage"))
+				.andExpect(MockMvcResultMatchers.redirectedUrl("/faculty/faculty-card/" + facultyId));
+	}
+
+	@Test
+	@WithMockUser(roles = "ADMIN")
+	void testUpdateFaculty_Failure() throws Exception {
+		int facultyId = 1;
+		Faculty updatedFaculty = new Faculty();
+		updatedFaculty.setId(facultyId);
+
+		when(facultyService.updateFacultyById(facultyId, updatedFaculty)).thenReturn(null);
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/faculty/edit-faculty/{facultyId}", facultyId)
+				.flashAttr("faculty", updatedFaculty).with(csrf().asHeader()))
+				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+				.andExpect(MockMvcResultMatchers.flash().attributeExists("errorMessage"))
+				.andExpect(MockMvcResultMatchers.redirectedUrl("/faculty/faculty-card/" + facultyId));
+	}
 }

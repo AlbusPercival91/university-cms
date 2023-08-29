@@ -159,4 +159,36 @@ class DepartmentControllerTest {
 				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
 				.andExpect(MockMvcResultMatchers.redirectedUrl("/department/department-list"));
 	}
+
+	@Test
+	@WithMockUser(roles = "ADMIN")
+	void testUpdateDepartment_Success() throws Exception {
+		int departmentId = 1;
+		Department updatedDepartment = new Department();
+		updatedDepartment.setId(departmentId);
+
+		when(departmentService.updateDepartmentById(departmentId, updatedDepartment)).thenReturn(updatedDepartment);
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/department/edit-department/{departmentId}", departmentId)
+				.flashAttr("department", updatedDepartment).with(csrf().asHeader()))
+				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+				.andExpect(MockMvcResultMatchers.flash().attributeExists("successMessage"))
+				.andExpect(MockMvcResultMatchers.redirectedUrl("/department/department-card/" + departmentId));
+	}
+
+	@Test
+	@WithMockUser(roles = "ADMIN")
+	void testUpdateDepartment_Failure() throws Exception {
+		int departmentId = 1;
+		Department updatedDepartment = new Department();
+		updatedDepartment.setId(departmentId);
+
+		when(departmentService.updateDepartmentById(departmentId, updatedDepartment)).thenReturn(null);
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/department/edit-department/{departmentId}", departmentId)
+				.flashAttr("department", updatedDepartment).with(csrf().asHeader()))
+				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+				.andExpect(MockMvcResultMatchers.flash().attributeExists("errorMessage"))
+				.andExpect(MockMvcResultMatchers.redirectedUrl("/department/department-card/" + departmentId));
+	}
 }

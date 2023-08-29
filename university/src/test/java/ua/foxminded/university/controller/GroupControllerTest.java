@@ -155,4 +155,36 @@ class GroupControllerTest {
 				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
 				.andExpect(MockMvcResultMatchers.redirectedUrl("/group/group-list"));
 	}
+
+	@Test
+	@WithMockUser(roles = "ADMIN")
+	void testUpdateGroup_Success() throws Exception {
+		int groupId = 1;
+		Group updatedGroup = new Group();
+		updatedGroup.setId(groupId);
+
+		when(groupService.updateGroupById(groupId, updatedGroup)).thenReturn(updatedGroup);
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/group/edit-group/{groupId}", groupId)
+				.flashAttr("group", updatedGroup).with(csrf().asHeader()))
+				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+				.andExpect(MockMvcResultMatchers.flash().attributeExists("successMessage"))
+				.andExpect(MockMvcResultMatchers.redirectedUrl("/group/group-card/" + groupId));
+	}
+
+	@Test
+	@WithMockUser(roles = "ADMIN")
+	void testUpdateGroup_Failure() throws Exception {
+		int groupId = 1;
+		Group updatedGroup = new Group();
+		updatedGroup.setId(groupId);
+
+		when(groupService.updateGroupById(groupId, updatedGroup)).thenReturn(null);
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/group/edit-group/{groupId}", groupId)
+				.flashAttr("group", updatedGroup).with(csrf().asHeader()))
+				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+				.andExpect(MockMvcResultMatchers.flash().attributeExists("errorMessage"))
+				.andExpect(MockMvcResultMatchers.redirectedUrl("/group/group-card/" + groupId));
+	}
 }
