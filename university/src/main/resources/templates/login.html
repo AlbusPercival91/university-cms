@@ -28,6 +28,12 @@
                 <button type="submit" class="button-common-style">Login</button>
             </div>
         </form>
+
+    </div>
+
+    <!-- Display flash message for login error -->
+    <div id="error-message-container" th:if="${param.error}">
+        Wrong username or password. Please try again.
     </div>
 
     <div th:replace="fragments/footer :: footer"></div>
