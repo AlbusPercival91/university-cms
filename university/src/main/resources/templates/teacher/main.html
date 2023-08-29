@@ -115,7 +115,8 @@
         <div class="entity-timetable">
             <h2>Teacher Time-Table</h2>
 
-            <form th:action="@{timetable/teacher-selected-timetable/{teacherId}(teacherId=${teacher.id})}" method="get">
+            <form th:action="@{/timetable/teacher-selected-timetable/{teacherId}(teacherId=${teacher.id})}"
+                method="get">
                 <div class="form-group">
                     <label for="dateFrom">From:</label>
                     <input type="date" id="dateFrom" name="dateFrom" required class="date-input" />
