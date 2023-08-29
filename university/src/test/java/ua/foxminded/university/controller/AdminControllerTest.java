@@ -7,6 +7,8 @@ import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -57,6 +59,84 @@ class AdminControllerTest {
 		mockMvc.perform(MockMvcRequestBuilders.get("/admin/main"))
 				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
 				.andExpect(MockMvcResultMatchers.redirectedUrl("/login"));
+	}
+
+	public void testUpdatePersonalData_Success() throws Exception {
+		int adminId = 1;
+		Admin updatedAdmin = new Admin();
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/admin/update-personal/{adminId}", adminId).flashAttr("admin",
+				updatedAdmin)).andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+				.andExpect(MockMvcResultMatchers.flash().attributeExists("successMessage"))
+				.andExpect(MockMvcResultMatchers.redirectedUrl("/admin/main"));
+	}
+
+	@Test
+	void testUpdatePersonalData_Failure() throws Exception {
+		int adminId = 1;
+		mockMvc.perform(
+				MockMvcRequestBuilders.post("/admin/update-personal/{adminId}", adminId).with(csrf().asHeader()))
+				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+				.andExpect(MockMvcResultMatchers.flash().attributeExists("errorMessage"))
+				.andExpect(MockMvcResultMatchers.redirectedUrl("/admin/main"));
+	}
+
+	@ParameterizedTest
+	@CsvSource({ "1, password, newPassword" })
+	void testUpdatePassword_Success(int adminId, String oldPassword, String newPassword) throws Exception {
+		Admin resultAdmin = new Admin();
+		resultAdmin.setId(1);
+		resultAdmin.setHashedPassword(newPassword);
+
+		when(adminService.changeAdminPasswordById(adminId, oldPassword, newPassword)).thenReturn(resultAdmin);
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/admin/update-password").param("adminId", String.valueOf(adminId))
+				.param("oldPassword", oldPassword).param("newPassword", newPassword).with(csrf().asHeader()))
+				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+				.andExpect(MockMvcResultMatchers.flash().attributeExists("successMessage"))
+				.andExpect(MockMvcResultMatchers.redirectedUrl("/admin/main"));
+	}
+
+	@ParameterizedTest
+	@CsvSource({ "-1, password, newPassword" })
+	void testUpdatePassword_Failure_NoSuchElementException(int adminId, String oldPassword, String newPassword)
+			throws Exception {
+		when(adminService.changeAdminPasswordById(adminId, oldPassword, newPassword))
+				.thenReturn(null);
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/admin/update-password").param("adminId", String.valueOf(adminId))
+				.param("oldPassword", oldPassword).param("newPassword", newPassword).with(csrf().asHeader()))
+				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+				.andExpect(MockMvcResultMatchers.flash().attributeExists("errorMessage"))
+				.andExpect(MockMvcResultMatchers.redirectedUrl("/admin/main"));
+	}
+
+	@ParameterizedTest
+	@CsvSource({ "1, wrongOldpassword, newPassword" })
+	void testUpdatePassword_Failure_WrongOldPassword(int adminId, String wrongOldPassword, String newPassword)
+			throws Exception {
+		when(adminService.changeAdminPasswordById(adminId, wrongOldPassword, newPassword))
+				.thenThrow(IllegalStateException.class);
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/admin/update-password").param("adminId", String.valueOf(adminId))
+				.param("oldPassword", wrongOldPassword).param("newPassword", newPassword).with(csrf().asHeader()))
+				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+				.andExpect(MockMvcResultMatchers.redirectedUrl("/admin/main"));
+	}
+
+	@Test
+	void testUpdateAdmin() throws Exception {
+		int adminId = 1;
+		Admin updatedAdmin = new Admin();
+		updatedAdmin.setId(adminId);
+
+		when(adminService.updateAdminById(adminId, updatedAdmin)).thenReturn(updatedAdmin);
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/admin/edit-admin/{adminId}", adminId)
+				.flashAttr("admin", updatedAdmin).with(csrf().asHeader()))
+				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+				.andExpect(MockMvcResultMatchers.flash().attributeExists("successMessage"))
+				.andExpect(MockMvcResultMatchers.redirectedUrl("/admin/admin-card/" + adminId));
 	}
 
 	@Test
