@@ -132,7 +132,7 @@ public class StudentController {
 		return "redirect:" + referrer;
 	}
 
-	@RolesAllowed("ADMIN")
+	@RolesAllowed({ "ADMIN", "TEACHER" })
 	@GetMapping("/student/student-card/{studentId}")
 	public String openStudentCard(@PathVariable int studentId, Model model) {
 		Optional<Student> optionalStudent = studentService.findStudentById(studentId);

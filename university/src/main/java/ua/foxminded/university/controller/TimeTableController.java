@@ -189,7 +189,7 @@ public class TimeTableController {
 		return "timetable/timetable";
 	}
 
-	@RolesAllowed({ "ADMIN", "STUDENT" })
+	@RolesAllowed({ "ADMIN", "STUDENT", "TEACHER" })
 	@GetMapping("/timetable/student-timetable/{studentId}")
 	public String getFullStudentTimeTable(@PathVariable("studentId") int studentId, Model model) {
 		Optional<Student> student = studentService.findStudentById(studentId);
@@ -209,7 +209,7 @@ public class TimeTableController {
 		return "timetable/timetable";
 	}
 
-	@RolesAllowed({ "ADMIN", "STUDENT" })
+	@RolesAllowed({ "ADMIN", "STUDENT", "TEACHER" })
 	@GetMapping("/timetable/timetable-group/{studentId}")
 	public String getFullGroupTimeTable(@PathVariable("studentId") int studentId, Model model) {
 		Optional<Student> student = studentService.findStudentById(studentId);
@@ -221,7 +221,7 @@ public class TimeTableController {
 		return "timetable/timetable";
 	}
 
-	@RolesAllowed({ "ADMIN", "STUDENT" })
+	@RolesAllowed({ "ADMIN", "STUDENT", "TEACHER" })
 	@GetMapping("/timetable/selected-timetable/{studentId}")
 	public String getSelectedDateStudentAndGroupTimeTable(@PathVariable("studentId") int studentId,
 			@RequestParam("dateFrom") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateFrom,

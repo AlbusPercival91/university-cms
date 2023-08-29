@@ -54,7 +54,7 @@
                 </div>
 
                 <!-- Container for buttons -->
-                <div class="button-container">
+                <div class="button-container" sec:authorize="hasRole('ROLE_ADMIN')">
                     <button id="saveButton" type="submit" class="button-common-style">Save</button>
                     <button id="editButton" type="button" class="button-common-style">Edit</button>
                 </div>
@@ -69,7 +69,7 @@
                 <thead>
                     <tr>
                         <th style="border: none; width: 3vh;"></th>
-                        <th style="border: none; width: 3vh;"></th>
+                        <th style="border: none; width: 3vh;" sec:authorize="hasRole('ROLE_ADMIN')"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -82,24 +82,25 @@
                                 method="post">
                                 <input type="hidden" name="courseName" th:value="${course.courseName}" />
                                 <button th:id="'removeButton-' + ${rowStat.index}" class="remove-icon" type="submit">
-                                    <i class="fas fa-trash-alt remove-icon"></i>
+                                    <i class="fas fa-trash-alt remove-icon" sec:authorize="hasRole('ROLE_ADMIN')"></i>
                                 </button>
                             </form>
                         </td>
                     </tr>
                 </tbody>
             </table>
+
             <!-- Generate options for Additional courses using Thymeleaf -->
             <form th:action="@{/student/assign-course}" method="post">
                 <input type="hidden" name="studentId" th:value="${student.id}" />
-                <select name="courseName">
+                <select name="courseName" sec:authorize="hasRole('ROLE_ADMIN')">
                     <option value="">Select Additional Course</option>
                     <option th:each="course : ${courses}" th:value="${course.courseName}"
                         th:text="${course.courseName}">
                     </option>
                 </select>
                 <br>
-                <button type="submit">Assign</button>
+                <button type="submit" sec:authorize="hasRole('ROLE_ADMIN')">Assign</button>
             </form>
         </div>
 
@@ -122,12 +123,12 @@
                 <!-- Container for both buttons -->
                 <div class="button-container">
                     <!-- First button for the first action -->
-                    <button id="saveButton" type="submit" name="action" value="selected-timetable"
+                    <button id="getSelectedTimetableButton" type="submit" name="action" value="selected-timetable"
                         class="button-common-style">
                         Get Selected Date Time-Table
                     </button>
                     <!-- Second button for the second action -->
-                    <button id="saveButton" type="submit" class="button-common-style" name="action"
+                    <button id="getSelectedGroupTimetableButton" type="submit" class="button-common-style" name="action"
                         value="selected-group-timetable">
                         Get Selected Date Group Time-Table
                     </button>
@@ -136,9 +137,9 @@
 
             <!-- Container for Get All Time-Tables button -->
             <div class="button-container">
-                <form th:action="@{/timetable/student-timetable/{studentId}(studentId=${student.id})}"
-                    method="get">
-                    <button id="saveButton" type="submit" class="button-common-style">Get Full Student
+                <form th:action="@{/timetable/student-timetable/{studentId}(studentId=${student.id})}" method="get">
+                    <button id="getFullStudentTimetableButton" type="submit" class="button-common-style">Get Full
+                        Student
                         Time-Table</button>
                 </form>
             </div>
@@ -146,7 +147,8 @@
             <!-- Container for Get Full Group Time-Tables button -->
             <div class="button-container">
                 <form th:action="@{/timetable/timetable-group/{studentId}(studentId=${student.id})}" method="get">
-                    <button id="saveButton" type="submit" class="button-common-style">Get Full Group Time-Table</button>
+                    <button id="getFullGroupTimetableButton" type="submit" class="button-common-style">Get Full Group
+                        Time-Table</button>
                 </form>
             </div>
         </div>
