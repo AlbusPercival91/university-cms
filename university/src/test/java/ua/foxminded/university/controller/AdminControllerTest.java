@@ -125,7 +125,7 @@ class AdminControllerTest {
 	}
 
 	@Test
-	void testUpdateAdmin() throws Exception {
+	void testUpdateAdmin_Success() throws Exception {
 		int adminId = 1;
 		Admin updatedAdmin = new Admin();
 		updatedAdmin.setId(adminId);
@@ -136,6 +136,21 @@ class AdminControllerTest {
 				.flashAttr("admin", updatedAdmin).with(csrf().asHeader()))
 				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
 				.andExpect(MockMvcResultMatchers.flash().attributeExists("successMessage"))
+				.andExpect(MockMvcResultMatchers.redirectedUrl("/admin/admin-card/" + adminId));
+	}
+
+	@Test
+	void testUpdateAdmin_Failure() throws Exception {
+		int adminId = 1;
+		Admin updatedAdmin = new Admin();
+		updatedAdmin.setId(adminId);
+
+		when(adminService.updateAdminById(adminId, updatedAdmin)).thenReturn(null);
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/admin/edit-admin/{adminId}", adminId)
+				.flashAttr("admin", updatedAdmin).with(csrf().asHeader()))
+				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+				.andExpect(MockMvcResultMatchers.flash().attributeExists("errorMessage"))
 				.andExpect(MockMvcResultMatchers.redirectedUrl("/admin/admin-card/" + adminId));
 	}
 

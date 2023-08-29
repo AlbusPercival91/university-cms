@@ -129,7 +129,7 @@ class ClassRoomControllerTest {
 
 	@Test
 	@WithMockUser(roles = "ADMIN")
-	void testUpdateClassRoom() throws Exception {
+	void testUpdateClassRoom_Success() throws Exception {
 		int classRoomId = 1;
 		ClassRoom updatedClassRomm = new ClassRoom();
 		updatedClassRomm.setId(classRoomId);
@@ -140,6 +140,22 @@ class ClassRoomControllerTest {
 				.flashAttr("classroom", updatedClassRomm).with(csrf().asHeader()))
 				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
 				.andExpect(MockMvcResultMatchers.flash().attributeExists("successMessage"))
+				.andExpect(MockMvcResultMatchers.redirectedUrl("/classroom/classroom-card/" + classRoomId));
+	}
+
+	@Test
+	@WithMockUser(roles = "ADMIN")
+	void testUpdateClassRoom_Failure() throws Exception {
+		int classRoomId = 1;
+		ClassRoom updatedClassRomm = new ClassRoom();
+		updatedClassRomm.setId(classRoomId);
+
+		when(classRoomService.updateClassRoomById(classRoomId, updatedClassRomm)).thenReturn(null);
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/classroom/edit-classroom/{classroomId}", classRoomId)
+				.flashAttr("classroom", updatedClassRomm).with(csrf().asHeader()))
+				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+				.andExpect(MockMvcResultMatchers.flash().attributeExists("errorMessage"))
 				.andExpect(MockMvcResultMatchers.redirectedUrl("/classroom/classroom-card/" + classRoomId));
 	}
 }
