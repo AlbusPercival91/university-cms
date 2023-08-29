@@ -23,7 +23,6 @@ import ua.foxminded.university.dao.service.AdminService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
 
 @Controller
-@RolesAllowed("ADMIN")
 public class AdminController {
 
 	@Autowired
@@ -84,6 +83,7 @@ public class AdminController {
 		return "redirect:/admin/main";
 	}
 
+	@RolesAllowed("ADMIN")
 	@GetMapping("/admin/admin-list")
 	public String getAllAdminList(Model model) {
 		List<Admin> admins = adminService.getAllAdmins();
@@ -92,6 +92,7 @@ public class AdminController {
 		return "admin/admin-list";
 	}
 
+	@RolesAllowed("ADMIN")
 	@PostMapping("/admin/delete/{adminId}")
 	public String deleteAdmin(@PathVariable int adminId, RedirectAttributes redirectAttributes,
 			HttpServletRequest request) {
@@ -109,6 +110,7 @@ public class AdminController {
 		return "redirect:" + referrer;
 	}
 
+	@RolesAllowed("ADMIN")
 	@GetMapping("/admin/admin-card/{adminId}")
 	public String openAdminCard(@PathVariable int adminId, Model model) {
 		Optional<Admin> optionalAdmin = adminService.findAdminById(adminId);
@@ -122,11 +124,13 @@ public class AdminController {
 		}
 	}
 
+	@RolesAllowed("ADMIN")
 	@GetMapping("/admin/create-admin")
 	public String showCreateAdminForm() {
 		return "admin/create-admin";
 	}
 
+	@RolesAllowed("ADMIN")
 	@PostMapping("/admin/create-admin")
 	public String createAdmin(@ModelAttribute("admin") @Validated Admin admin, BindingResult bindingResult,
 			RedirectAttributes redirectAttributes) {
@@ -148,6 +152,7 @@ public class AdminController {
 		}
 	}
 
+	@RolesAllowed("ADMIN")
 	@PostMapping("/admin/edit-admin/{adminId}")
 	public String updateAdmin(@PathVariable("adminId") int adminId,
 			@ModelAttribute("admin") @Validated Admin updatedAdmin, BindingResult bindingResult,

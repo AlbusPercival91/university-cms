@@ -43,7 +43,6 @@ public class StudentController {
 	@Autowired
 	private ControllerBindingValidator bindingValidator;
 
-	@RolesAllowed("STUDENT")
 	@GetMapping("/student/main")
 	public String studentDashboard(Model model) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -63,7 +62,6 @@ public class StudentController {
 		return "redirect:/login";
 	}
 
-	@RolesAllowed("STUDENT")
 	@PostMapping("/student/update-personal/{studentId}")
 	public String updatePersonalData(@PathVariable("studentId") int studentId,
 			@ModelAttribute("student") @Validated Student updatedStudent, BindingResult bindingResult,
@@ -86,7 +84,6 @@ public class StudentController {
 		return "redirect:/student/main";
 	}
 
-	@RolesAllowed("STUDENT")
 	@PostMapping("/student/update-password")
 	public String updatePassword(@RequestParam int studentId, @RequestParam String oldPassword,
 			@RequestParam String newPassword, RedirectAttributes redirectAttributes) {

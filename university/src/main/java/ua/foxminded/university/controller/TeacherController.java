@@ -43,7 +43,6 @@ public class TeacherController {
 	@Autowired
 	private ControllerBindingValidator bindingValidator;
 
-	@RolesAllowed("TEACHER")
 	@GetMapping("/teacher/main")
 	public String teacherDashboard(Model model) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -63,7 +62,6 @@ public class TeacherController {
 		return "redirect:/login";
 	}
 
-	@RolesAllowed("TEACHER")
 	@PostMapping("/teacher/update-personal/{teacherId}")
 	public String updatePersonalData(@PathVariable("teacherId") int teacherId,
 			@ModelAttribute("teacher") @Validated Teacher updatedTeacher, BindingResult bindingResult,
@@ -86,7 +84,6 @@ public class TeacherController {
 		return "redirect:/teacher/main";
 	}
 
-	@RolesAllowed("TEACHER")
 	@PostMapping("/teacher/update-password")
 	public String updatePassword(@RequestParam int teacherId, @RequestParam String oldPassword,
 			@RequestParam String newPassword, RedirectAttributes redirectAttributes) {

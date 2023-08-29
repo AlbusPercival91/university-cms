@@ -32,7 +32,6 @@ public class StaffController {
 	@Autowired
 	private ControllerBindingValidator bindingValidator;
 
-	@RolesAllowed("STAFF")
 	@GetMapping("/staff/main")
 	public String staffDashboard(Model model) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -47,7 +46,6 @@ public class StaffController {
 		return "redirect:/login";
 	}
 
-	@RolesAllowed("STAFF")
 	@PostMapping("/staff/update-personal/{staffId}")
 	public String updatePersonalData(@PathVariable("staffId") int staffId,
 			@ModelAttribute("staff") @Validated Staff updatedStaff, BindingResult bindingResult,
@@ -70,7 +68,6 @@ public class StaffController {
 		return "redirect:/staff/main";
 	}
 
-	@RolesAllowed("STAFF")
 	@PostMapping("/staff/update-password")
 	public String updatePassword(@RequestParam int staffId, @RequestParam String oldPassword,
 			@RequestParam String newPassword, RedirectAttributes redirectAttributes) {
