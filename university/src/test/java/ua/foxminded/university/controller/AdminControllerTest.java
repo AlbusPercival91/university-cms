@@ -61,12 +61,15 @@ class AdminControllerTest {
 				.andExpect(MockMvcResultMatchers.redirectedUrl("/login"));
 	}
 
-	public void testUpdatePersonalData_Success() throws Exception {
+	@Test
+	void testUpdatePersonalData_Success() throws Exception {
 		int adminId = 1;
 		Admin updatedAdmin = new Admin();
 
-		mockMvc.perform(MockMvcRequestBuilders.post("/admin/update-personal/{adminId}", adminId).flashAttr("admin",
-				updatedAdmin)).andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+		when(adminService.updateAdminById(adminId, updatedAdmin)).thenReturn(updatedAdmin);
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/admin/update-personal/{adminId}", adminId).with(csrf().asHeader())
+				.flashAttr("admin", updatedAdmin)).andExpect(MockMvcResultMatchers.status().is3xxRedirection())
 				.andExpect(MockMvcResultMatchers.flash().attributeExists("successMessage"))
 				.andExpect(MockMvcResultMatchers.redirectedUrl("/admin/main"));
 	}

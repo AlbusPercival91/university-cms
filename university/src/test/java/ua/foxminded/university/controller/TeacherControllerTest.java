@@ -14,6 +14,8 @@ import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -76,6 +78,111 @@ class TeacherControllerTest {
 		mockMvc.perform(MockMvcRequestBuilders.get("/teacher/main"))
 				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
 				.andExpect(MockMvcResultMatchers.redirectedUrl("/login"));
+	}
+
+	@Test
+	@WithMockUser(roles = "TEACHER")
+	void testUpdatePersonalData_Success() throws Exception {
+		int teacherId = 1;
+		Teacher updatedTeacher = new Teacher();
+
+		when(teacherService.updateTeacherById(teacherId, updatedTeacher)).thenReturn(updatedTeacher);
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/teacher/update-personal/{teacherId}", teacherId)
+				.with(csrf().asHeader()).flashAttr("teacher", updatedTeacher))
+				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+				.andExpect(MockMvcResultMatchers.flash().attributeExists("successMessage"))
+				.andExpect(MockMvcResultMatchers.redirectedUrl("/teacher/main"));
+	}
+
+	@Test
+	@WithMockUser(roles = "TEACHER")
+	void testUpdatePersonalData_Failure() throws Exception {
+		int teacherId = 1;
+		mockMvc.perform(
+				MockMvcRequestBuilders.post("/teacher/update-personal/{teacherId}", teacherId).with(csrf().asHeader()))
+				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+				.andExpect(MockMvcResultMatchers.flash().attributeExists("errorMessage"))
+				.andExpect(MockMvcResultMatchers.redirectedUrl("/teacher/main"));
+	}
+
+	@ParameterizedTest
+	@CsvSource({ "1, password, newPassword" })
+	@WithMockUser(roles = "TEACHER")
+	void testUpdatePassword_Success(int teacherId, String oldPassword, String newPassword) throws Exception {
+		Teacher resultTeacher = new Teacher();
+		resultTeacher.setId(1);
+		resultTeacher.setHashedPassword(newPassword);
+
+		when(teacherService.changeTeacherPasswordById(teacherId, oldPassword, newPassword)).thenReturn(resultTeacher);
+
+		mockMvc.perform(
+				MockMvcRequestBuilders.post("/teacher/update-password").param("teacherId", String.valueOf(teacherId))
+						.param("oldPassword", oldPassword).param("newPassword", newPassword).with(csrf().asHeader()))
+				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+				.andExpect(MockMvcResultMatchers.flash().attributeExists("successMessage"))
+				.andExpect(MockMvcResultMatchers.redirectedUrl("/teacher/main"));
+	}
+
+	@ParameterizedTest
+	@CsvSource({ "-1, password, newPassword" })
+	@WithMockUser(roles = "TEACHER")
+	void testUpdatePassword_Failure_NoSuchElementException(int teacherId, String oldPassword, String newPassword)
+			throws Exception {
+		when(teacherService.changeTeacherPasswordById(teacherId, oldPassword, newPassword))
+				.thenReturn(null);
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/teacher/update-password").param("teacherId", String.valueOf(teacherId))
+				.param("oldPassword", oldPassword).param("newPassword", newPassword).with(csrf().asHeader()))
+				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+				.andExpect(MockMvcResultMatchers.flash().attributeExists("errorMessage"))
+				.andExpect(MockMvcResultMatchers.redirectedUrl("/teacher/main"));
+	}
+
+	@ParameterizedTest
+	@CsvSource({ "1, wrongOldpassword, newPassword" })
+	@WithMockUser(roles = "TEACHER")
+	void testUpdatePassword_Failure_WrongOldPassword(int teacherId, String wrongOldPassword, String newPassword)
+			throws Exception {
+		when(teacherService.changeTeacherPasswordById(teacherId, wrongOldPassword, newPassword))
+				.thenThrow(IllegalStateException.class);
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/teacher/update-password").param("teacherId", String.valueOf(teacherId))
+				.param("oldPassword", wrongOldPassword).param("newPassword", newPassword).with(csrf().asHeader()))
+				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+				.andExpect(MockMvcResultMatchers.redirectedUrl("/teacher/main"));
+	}
+
+	@Test
+	@WithMockUser(roles = "ADMIN")
+	void testUpdateTeacherSuccess() throws Exception {
+		int teacherId = 1;
+		Teacher updatedTeacher = new Teacher();
+		updatedTeacher.setId(teacherId);
+
+		when(teacherService.updateTeacherById(teacherId, updatedTeacher)).thenReturn(updatedTeacher);
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/teacher/edit-teacher/{teacherId}", teacherId)
+				.flashAttr("teacher", updatedTeacher).with(csrf().asHeader()))
+				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+				.andExpect(MockMvcResultMatchers.flash().attributeExists("successMessage"))
+				.andExpect(MockMvcResultMatchers.redirectedUrl("/teacher/teacher-card/" + teacherId));
+	}
+
+	@Test
+	@WithMockUser(roles = "ADMIN")
+	void testUpdateTeacher_Failure() throws Exception {
+		int teacherId = 1;
+		Teacher updatedTeacher = new Teacher();
+		updatedTeacher.setId(teacherId);
+
+		when(teacherService.updateTeacherById(teacherId, updatedTeacher)).thenReturn(null);
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/teacher/edit-teacher/{teacherId}", teacherId)
+				.flashAttr("teacher", updatedTeacher).with(csrf().asHeader()))
+				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+				.andExpect(MockMvcResultMatchers.flash().attributeExists("errorMessage"))
+				.andExpect(MockMvcResultMatchers.redirectedUrl("/teacher/teacher-card/" + teacherId));
 	}
 
 	@Test
