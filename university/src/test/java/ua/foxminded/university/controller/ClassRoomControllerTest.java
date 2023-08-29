@@ -44,8 +44,8 @@ class ClassRoomControllerTest {
 	@WithMockUser(roles = "ADMIN")
 	void testDeleteClassRoom() throws Exception {
 		int classRoomId = 1;
-		mockMvc.perform(MockMvcRequestBuilders.post("/classroom/delete/{classroomId}", classRoomId).with(csrf()
-				.asHeader()))
+		mockMvc.perform(
+				MockMvcRequestBuilders.post("/classroom/delete/{classroomId}", classRoomId).with(csrf().asHeader()))
 				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
 				.andExpect(MockMvcResultMatchers.flash().attributeExists("successMessage"))
 				.andExpect(MockMvcResultMatchers.redirectedUrl("/classroom/classroom-list"));
@@ -62,8 +62,7 @@ class ClassRoomControllerTest {
 	@Test
 	@WithMockUser(roles = "ADMIN")
 	void testCreateClassRoom() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.post("/classroom/create-classroom").with(csrf()
-				.asHeader()))
+		mockMvc.perform(MockMvcRequestBuilders.post("/classroom/create-classroom").with(csrf().asHeader()))
 				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
 				.andExpect(MockMvcResultMatchers.flash().attributeCount(1))
 				.andExpect(MockMvcResultMatchers.flash().attributeExists("successMessage"));
@@ -126,5 +125,21 @@ class ClassRoomControllerTest {
 		mockMvc.perform(MockMvcRequestBuilders.get("/classroom/classroom-card/{classroomId}", classroomId))
 				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
 				.andExpect(MockMvcResultMatchers.redirectedUrl("/classroom/classroom-list"));
+	}
+
+	@Test
+	@WithMockUser(roles = "ADMIN")
+	void testUpdateClassRoom() throws Exception {
+		int classRoomId = 1;
+		ClassRoom updatedClassRomm = new ClassRoom();
+		updatedClassRomm.setId(classRoomId);
+
+		when(classRoomService.updateClassRoomById(classRoomId, updatedClassRomm)).thenReturn(updatedClassRomm);
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/classroom/edit-classroom/{classroomId}", classRoomId)
+				.flashAttr("classroom", updatedClassRomm).with(csrf().asHeader()))
+				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+				.andExpect(MockMvcResultMatchers.flash().attributeExists("successMessage"))
+				.andExpect(MockMvcResultMatchers.redirectedUrl("/classroom/classroom-card/" + classRoomId));
 	}
 }
