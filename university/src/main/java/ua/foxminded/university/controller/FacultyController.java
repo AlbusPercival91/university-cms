@@ -22,101 +22,97 @@ import ua.foxminded.university.validation.ControllerBindingValidator;
 @Controller
 public class FacultyController {
 
-	@Autowired
-	private FacultyService facultyService;
+    @Autowired
+    private FacultyService facultyService;
 
-	@Autowired
-	private ControllerBindingValidator bindingValidator;
+    @Autowired
+    private ControllerBindingValidator bindingValidator;
 
-	@GetMapping("/faculty/faculty-list")
-	public String getAllFacultyList(Model model) {
-		List<Faculty> faculties = facultyService.getAllFaculties();
+    @GetMapping("/faculty/faculty-list")
+    public String getAllFacultyList(Model model) {
+        List<Faculty> faculties = facultyService.getAllFaculties();
 
-		model.addAttribute("faculties", faculties);
-		return "faculty/faculty-list";
-	}
+        model.addAttribute("faculties", faculties);
+        return "faculty/faculty-list";
+    }
 
-	@RolesAllowed("ADMIN")
-	@PostMapping("/faculty/delete/{facultyId}")
-	public String deleteFaculty(@PathVariable int facultyId, RedirectAttributes redirectAttributes,
-			HttpServletRequest request) {
-		try {
-			facultyService.deleteFacultyById(facultyId);
-			redirectAttributes.addFlashAttribute("successMessage", "Faculty was deleted!");
-		} catch (NoSuchElementException ex) {
-			redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
-		}
-		String referrer = request.getHeader("referer");
+    @RolesAllowed("ADMIN")
+    @PostMapping("/faculty/delete/{facultyId}")
+    public String deleteFaculty(@PathVariable int facultyId, RedirectAttributes redirectAttributes,
+            HttpServletRequest request) {
+        try {
+            facultyService.deleteFacultyById(facultyId);
+            redirectAttributes.addFlashAttribute("successMessage", "Faculty was deleted!");
+        } catch (NoSuchElementException ex) {
+            redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
+        }
+        String referrer = request.getHeader("referer");
 
-		if (referrer == null || referrer.isEmpty()) {
-			return "redirect:/faculty/faculty-list";
-		}
-		return "redirect:" + referrer;
-	}
+        if (referrer == null || referrer.isEmpty()) {
+            return "redirect:/faculty/faculty-list";
+        }
+        return "redirect:" + referrer;
+    }
 
-	@RolesAllowed("ADMIN")
-	@GetMapping("/faculty/create-faculty")
-	public String showCreateFacultyForm() {
-		return "faculty/create-faculty";
-	}
+    @RolesAllowed("ADMIN")
+    @GetMapping("/faculty/create-faculty")
+    public String showCreateFacultyForm() {
+        return "faculty/create-faculty";
+    }
 
-	@RolesAllowed("ADMIN")
-	@PostMapping("/faculty/create-faculty")
-	public String createFaculty(@ModelAttribute("faculty") @Validated Faculty faculty, BindingResult bindingResult,
-			RedirectAttributes redirectAttributes) {
-		if (bindingValidator.validate(bindingResult, redirectAttributes)) {
-			try {
-				int createdFaculty = facultyService.createFaculty(faculty);
+    @RolesAllowed("ADMIN")
+    @PostMapping("/faculty/create-faculty")
+    public String createFaculty(@ModelAttribute("faculty") @Validated Faculty faculty, BindingResult bindingResult,
+            RedirectAttributes redirectAttributes) {
+        if (bindingValidator.validate(bindingResult, redirectAttributes)) {
+            try {
+                int createdFaculty = facultyService.createFaculty(faculty);
 
-				if (createdFaculty != faculty.getId()) {
-					redirectAttributes.addFlashAttribute("errorMessage", "Failed to create the Faculty");
-				} else {
-					redirectAttributes.addFlashAttribute("successMessage", "Faculty created successfully");
-				}
-			} catch (IllegalStateException ex) {
-				redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
-			}
-			return "redirect:/faculty/create-faculty";
-		} else {
-			return "redirect:/faculty/create-faculty";
-		}
-	}
+                if (createdFaculty != faculty.getId()) {
+                    redirectAttributes.addFlashAttribute("errorMessage", "Failed to create the Faculty");
+                } else {
+                    redirectAttributes.addFlashAttribute("successMessage", "Faculty created successfully");
+                }
+            } catch (IllegalStateException ex) {
+                redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
+            }
+        }
+        return "redirect:/faculty/create-faculty";
+    }
 
-	@RolesAllowed("ADMIN")
-	@GetMapping("/faculty/faculty-card/{facultyId}")
-	public String openFacultyCard(@PathVariable int facultyId, Model model) {
-		Optional<Faculty> optionalFaculty = facultyService.findFacultyById(facultyId);
+    @RolesAllowed("ADMIN")
+    @GetMapping("/faculty/faculty-card/{facultyId}")
+    public String openFacultyCard(@PathVariable int facultyId, Model model) {
+        Optional<Faculty> optionalFaculty = facultyService.findFacultyById(facultyId);
 
-		if (optionalFaculty.isPresent()) {
-			Faculty faculty = optionalFaculty.get();
-			model.addAttribute("faculty", faculty);
-			return "faculty/faculty-card";
-		} else {
-			return "redirect:/faculty/faculty-list";
-		}
-	}
+        if (optionalFaculty.isPresent()) {
+            Faculty faculty = optionalFaculty.get();
+            model.addAttribute("faculty", faculty);
+            return "faculty/faculty-card";
+        } else {
+            return "redirect:/faculty/faculty-list";
+        }
+    }
 
-	@RolesAllowed("ADMIN")
-	@PostMapping("/faculty/edit-faculty/{facultyId}")
-	public String updateFaculty(@PathVariable("facultyId") int facultyId,
-			@ModelAttribute("faculty") @Validated Faculty updatedFaculty, BindingResult bindingResult,
-			RedirectAttributes redirectAttributes) {
-		if (bindingValidator.validate(bindingResult, redirectAttributes)) {
-			try {
-				Faculty resultFaculty = facultyService.updateFacultyById(facultyId, updatedFaculty);
+    @RolesAllowed("ADMIN")
+    @PostMapping("/faculty/edit-faculty/{facultyId}")
+    public String updateFaculty(@PathVariable("facultyId") int facultyId,
+            @ModelAttribute("faculty") @Validated Faculty updatedFaculty, BindingResult bindingResult,
+            RedirectAttributes redirectAttributes) {
+        if (bindingValidator.validate(bindingResult, redirectAttributes)) {
+            try {
+                Faculty resultFaculty = facultyService.updateFacultyById(facultyId, updatedFaculty);
 
-				if (resultFaculty != null) {
-					redirectAttributes.addFlashAttribute("successMessage", "Faculty updated successfully");
-				} else {
-					redirectAttributes.addFlashAttribute("errorMessage", "Failed to update the Faculty");
-				}
-			} catch (NoSuchElementException | IllegalStateException ex) {
-				redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
-			}
-		} else {
-			return "redirect:/faculty/faculty-card/" + facultyId;
-		}
-		return "redirect:/faculty/faculty-card/" + facultyId;
-	}
+                if (resultFaculty != null) {
+                    redirectAttributes.addFlashAttribute("successMessage", "Faculty updated successfully");
+                } else {
+                    redirectAttributes.addFlashAttribute("errorMessage", "Failed to update the Faculty");
+                }
+            } catch (NoSuchElementException | IllegalStateException ex) {
+                redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
+            }
+        }
+        return "redirect:/faculty/faculty-card/" + facultyId;
+    }
 
 }

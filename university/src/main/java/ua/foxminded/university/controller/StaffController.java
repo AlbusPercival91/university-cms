@@ -1,5 +1,6 @@
 package ua.foxminded.university.controller;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -62,8 +63,6 @@ public class StaffController {
             } catch (NoSuchElementException | IllegalStateException ex) {
                 redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
             }
-        } else {
-            return "redirect:/staff/main";
         }
         return "redirect:/staff/main";
     }
@@ -106,10 +105,8 @@ public class StaffController {
             } catch (IllegalStateException ex) {
                 redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
             }
-            return "redirect:/staff/create-staff";
-        } else {
-            return "redirect:/staff/create-staff";
         }
+        return "redirect:/staff/create-staff";
     }
 
     @GetMapping("/staff/staff-list")
@@ -143,7 +140,7 @@ public class StaffController {
             @RequestParam(required = false) Integer staffId, @RequestParam(required = false) String firstName,
             @RequestParam(required = false) String lastName, @RequestParam(required = false) String position,
             Model model) {
-        List<Staff> staffList;
+        List<Staff> staffList = new ArrayList<>();
 
         if ("staff".equals(searchType)) {
             Optional<Staff> optionalStaff = staffService.findStaffById(staffId);
@@ -152,8 +149,6 @@ public class StaffController {
             staffList = staffService.findStaffByName(firstName, lastName);
         } else if ("position".equals(searchType)) {
             staffList = staffService.findStaffByPosition(position);
-        } else {
-            return "error";
         }
         model.addAttribute("staff", staffList);
         return "staff/staff-list";
@@ -190,8 +185,6 @@ public class StaffController {
             } catch (NoSuchElementException | IllegalStateException ex) {
                 redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
             }
-        } else {
-            return "redirect:/staff/staff-card/" + staffId;
         }
         return "redirect:/staff/staff-card/" + staffId;
     }

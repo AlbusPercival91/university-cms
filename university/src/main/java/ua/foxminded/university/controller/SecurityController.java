@@ -12,17 +12,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class SecurityController {
 
-	@GetMapping("/login")
-	public String login(@RequestParam(value = "error", required = false) String error, Model model) {
-		if (error != null) {
-			model.addAttribute("loginError", true);
-		}
-		return "login";
-	}
+    @GetMapping("/login")
+    public String login(@RequestParam(value = "error", required = false) String error, Model model) {
+        if (error != null) {
+            model.addAttribute("loginError", true);
+        }
+        return "login";
+    }
 
-	@GetMapping("/logout")
-	public String logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-		new SecurityContextLogoutHandler().logout(request, response, authentication);
-		return "redirect:/";
-	}
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
+        new SecurityContextLogoutHandler().logout(request, response, authentication);
+        return "redirect:/";
+    }
 }
