@@ -46,7 +46,7 @@
                     <input type="text" id="function" th:value="${staff.function}" name="function" readonly />
                 </div>
                 <!-- Container for buttons -->
-                <div class="button-container">
+                <div class="button-container" sec:authorize="hasRole('ROLE_ADMIN')">
                     <button id="saveButton" type="submit" class="button-common-style">Save</button>
                     <button id="editButton" type="button" class="button-common-style">Edit</button>
                 </div>
