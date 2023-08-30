@@ -5,31 +5,32 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(jsr250Enabled = true)
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
-	private static final String[] staticResources = { "/css/**", "/js/**" };
+public class SecurityConfig {
+    private static final String[] staticResources = { "/css/**", "/js/**" };
+    private static final String[] allowedPages = { "/", "/about", "/contacts" };
 
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().mvcMatchers(staticResources).permitAll().antMatchers("/", "/about", "/contacts")
-				.permitAll().anyRequest().authenticated().and().formLogin().loginPage("/login")
-				.successHandler(customAuthenticationSuccessHandler()).permitAll().and().logout().logoutUrl("/logout")
-				.logoutSuccessUrl("/").invalidateHttpSession(true).deleteCookies("JSESSIONID");
-	}
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        return http.authorizeHttpRequests().mvcMatchers(staticResources).permitAll().mvcMatchers(allowedPages)
+                .permitAll().anyRequest().authenticated().and().formLogin().loginPage("/login")
+                .successHandler(customAuthenticationSuccessHandler()).permitAll().and().logout().logoutUrl("/logout")
+                .logoutSuccessUrl("/").invalidateHttpSession(true).deleteCookies("JSESSIONID").and().build();
+    }
 
-	@Bean
-	public CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler() {
-		return new CustomAuthenticationSuccessHandler();
-	}
+    @Bean
+    public CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler() {
+        return new CustomAuthenticationSuccessHandler();
+    }
 
-	@Bean
-	public BCryptPasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
 }
