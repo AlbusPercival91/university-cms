@@ -1,4 +1,4 @@
-package ua.foxminded.university.controller;
+package ua.foxminded.university.validation;
 
 public final class Message {
     public static final String SUCCESS = "successMessage";

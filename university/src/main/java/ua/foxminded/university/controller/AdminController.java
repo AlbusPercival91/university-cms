@@ -21,6 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ua.foxminded.university.dao.entities.Admin;
 import ua.foxminded.university.dao.service.AdminService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
+import ua.foxminded.university.validation.Message;
 
 @Controller
 public class AdminController {
