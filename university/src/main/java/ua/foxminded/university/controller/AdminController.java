@@ -54,9 +54,9 @@ public class AdminController {
                 Admin resultAdmin = adminService.updateAdminById(adminId, updatedAdmin);
 
                 if (resultAdmin != null) {
-                    redirectAttributes.addFlashAttribute("successMessage", "Data updated successfully");
+                    redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.UPDATE_SUCCESS);
                 } else {
-                    redirectAttributes.addFlashAttribute("errorMessage", "Failed to update Data");
+                    redirectAttributes.addFlashAttribute(Message.ERROR, Message.FAILURE);
                 }
             } catch (NoSuchElementException | IllegalStateException ex) {
                 redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
@@ -71,9 +71,9 @@ public class AdminController {
         try {
             Admin resultAdmin = adminService.changeAdminPasswordById(adminId, oldPassword, newPassword);
             if (resultAdmin != null) {
-                redirectAttributes.addFlashAttribute("successMessage", "Password changed successfully");
+                redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.UPDATE_SUCCESS);
             } else {
-                redirectAttributes.addFlashAttribute("errorMessage", "Failed to change Password");
+                redirectAttributes.addFlashAttribute(Message.ERROR, Message.FAILURE);
             }
         } catch (NoSuchElementException | IllegalStateException ex) {
             redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
@@ -96,9 +96,9 @@ public class AdminController {
             HttpServletRequest request) {
         try {
             adminService.deleteAdminById(adminId);
-            redirectAttributes.addFlashAttribute("successMessage", "Admin was deleted!");
+            redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.DELETE_SUCCESS);
         } catch (NoSuchElementException ex) {
-            redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
+            redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
         }
         String referrer = request.getHeader("referer");
 
@@ -137,9 +137,9 @@ public class AdminController {
                 int createdAdmin = adminService.createAdmin(admin);
 
                 if (createdAdmin != admin.getId()) {
-                    redirectAttributes.addFlashAttribute("errorMessage", "Failed to create the admin");
+                    redirectAttributes.addFlashAttribute(Message.ERROR, Message.FAILURE);
                 } else {
-                    redirectAttributes.addFlashAttribute("successMessage", "Admin created successfully");
+                    redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.CREATE_SUCCESS);
                 }
             } catch (IllegalStateException ex) {
                 redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
@@ -158,12 +158,12 @@ public class AdminController {
                 Admin resultAdmin = adminService.updateAdminById(adminId, updatedAdmin);
 
                 if (resultAdmin != null) {
-                    redirectAttributes.addFlashAttribute("successMessage", "Admin updated successfully");
+                    redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.UPDATE_SUCCESS);
                 } else {
-                    redirectAttributes.addFlashAttribute("errorMessage", "Failed to update Admin");
+                    redirectAttributes.addFlashAttribute(Message.ERROR, Message.FAILURE);
                 }
             } catch (NoSuchElementException | IllegalStateException ex) {
-                redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
+                redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
             }
         }
         return "redirect:/admin/admin-card/" + adminId;
