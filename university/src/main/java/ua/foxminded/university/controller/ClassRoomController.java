@@ -136,7 +136,7 @@ public class ClassRoomController {
                     redirectAttributes.addFlashAttribute(Message.ERROR, Message.FAILURE);
                 }
             } catch (NoSuchElementException ex) {
-                redirectAttributes.addFlashAttribute(Message.ERROR, Message.NOT_FOUND);
+                redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
             }
         }
         return "redirect:/classroom/classroom-card/" + classroomId;
