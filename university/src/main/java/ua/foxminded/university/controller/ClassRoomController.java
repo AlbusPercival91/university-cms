@@ -135,7 +135,7 @@ public class ClassRoomController {
                 } else {
                     redirectAttributes.addFlashAttribute(Message.ERROR, Message.FAILURE);
                 }
-            } catch (NoSuchElementException ex) {
+            } catch (NoSuchElementException | IllegalStateException ex) {
                 redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
             }
         }
