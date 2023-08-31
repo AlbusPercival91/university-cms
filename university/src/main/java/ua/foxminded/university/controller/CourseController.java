@@ -21,6 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ua.foxminded.university.dao.entities.Course;
 import ua.foxminded.university.dao.service.CourseService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
+import ua.foxminded.university.validation.Message;
 
 @Controller
 public class CourseController {
@@ -45,9 +46,9 @@ public class CourseController {
             HttpServletRequest request) {
         try {
             courseService.deleteCourseById(courseId);
-            redirectAttributes.addFlashAttribute("successMessage", "Course was deleted!");
+            redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.DELETE_SUCCESS);
         } catch (NoSuchElementException ex) {
-            redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
+            redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
         }
         String referrer = request.getHeader("referer");
 
@@ -72,12 +73,12 @@ public class CourseController {
                 int createdCourse = courseService.createCourse(course);
 
                 if (createdCourse != course.getId()) {
-                    redirectAttributes.addFlashAttribute("errorMessage", "Failed to create Course");
+                    redirectAttributes.addFlashAttribute(Message.ERROR, Message.FAILURE);
                 } else {
-                    redirectAttributes.addFlashAttribute("successMessage", "Course created successfully");
+                    redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.CREATE_SUCCESS);
                 }
             } catch (IllegalStateException ex) {
-                redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
+                redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
             }
         }
         return "redirect:/course/create-course";
@@ -129,12 +130,12 @@ public class CourseController {
                 Course resultCourse = courseService.updateCourseById(courseId, updatedCourse);
 
                 if (resultCourse != null) {
-                    redirectAttributes.addFlashAttribute("successMessage", "Course updated successfully");
+                    redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.UPDATE_SUCCESS);
                 } else {
-                    redirectAttributes.addFlashAttribute("errorMessage", "Failed to update Course");
+                    redirectAttributes.addFlashAttribute(Message.ERROR, Message.FAILURE);
                 }
             } catch (NoSuchElementException ex) {
-                redirectAttributes.addFlashAttribute("errorMessage", "Course not found");
+                redirectAttributes.addFlashAttribute(Message.ERROR, Message.NOT_FOUND);
             }
         }
         return "redirect:/course/course-card/" + courseId;

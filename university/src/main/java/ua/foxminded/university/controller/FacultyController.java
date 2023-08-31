@@ -18,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ua.foxminded.university.dao.entities.Faculty;
 import ua.foxminded.university.dao.service.FacultyService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
+import ua.foxminded.university.validation.Message;
 
 @Controller
 public class FacultyController {
@@ -42,9 +43,9 @@ public class FacultyController {
             HttpServletRequest request) {
         try {
             facultyService.deleteFacultyById(facultyId);
-            redirectAttributes.addFlashAttribute("successMessage", "Faculty was deleted!");
+            redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.DELETE_SUCCESS);
         } catch (NoSuchElementException ex) {
-            redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
+            redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
         }
         String referrer = request.getHeader("referer");
 
@@ -69,12 +70,12 @@ public class FacultyController {
                 int createdFaculty = facultyService.createFaculty(faculty);
 
                 if (createdFaculty != faculty.getId()) {
-                    redirectAttributes.addFlashAttribute("errorMessage", "Failed to create the Faculty");
+                    redirectAttributes.addFlashAttribute(Message.ERROR, Message.FAILURE);
                 } else {
-                    redirectAttributes.addFlashAttribute("successMessage", "Faculty created successfully");
+                    redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.CREATE_SUCCESS);
                 }
             } catch (IllegalStateException ex) {
-                redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
+                redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
             }
         }
         return "redirect:/faculty/create-faculty";
@@ -104,12 +105,12 @@ public class FacultyController {
                 Faculty resultFaculty = facultyService.updateFacultyById(facultyId, updatedFaculty);
 
                 if (resultFaculty != null) {
-                    redirectAttributes.addFlashAttribute("successMessage", "Faculty updated successfully");
+                    redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.UPDATE_SUCCESS);
                 } else {
-                    redirectAttributes.addFlashAttribute("errorMessage", "Failed to update the Faculty");
+                    redirectAttributes.addFlashAttribute(Message.ERROR, Message.FAILURE);
                 }
             } catch (NoSuchElementException | IllegalStateException ex) {
-                redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
+                redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
             }
         }
         return "redirect:/faculty/faculty-card/" + facultyId;

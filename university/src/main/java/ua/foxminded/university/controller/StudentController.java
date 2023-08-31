@@ -28,6 +28,7 @@ import ua.foxminded.university.dao.service.CourseService;
 import ua.foxminded.university.dao.service.GroupService;
 import ua.foxminded.university.dao.service.StudentService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
+import ua.foxminded.university.validation.Message;
 
 @Controller
 public class StudentController {
@@ -72,12 +73,12 @@ public class StudentController {
                 Student resultStudent = studentService.updateStudentById(studentId, updatedStudent);
 
                 if (resultStudent != null) {
-                    redirectAttributes.addFlashAttribute("successMessage", "Data updated successfully");
+                    redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.UPDATE_SUCCESS);
                 } else {
-                    redirectAttributes.addFlashAttribute("errorMessage", "Failed to update Data");
+                    redirectAttributes.addFlashAttribute(Message.ERROR, Message.FAILURE);
                 }
             } catch (NoSuchElementException | IllegalStateException ex) {
-                redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
+                redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
             }
         }
         return "redirect:/student/main";
@@ -89,12 +90,12 @@ public class StudentController {
         try {
             Student resultStudent = studentService.changeStudentPasswordById(studentId, oldPassword, newPassword);
             if (resultStudent != null) {
-                redirectAttributes.addFlashAttribute("successMessage", "Password changed successfully");
+                redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.UPDATE_SUCCESS);
             } else {
-                redirectAttributes.addFlashAttribute("errorMessage", "Failed to change Password");
+                redirectAttributes.addFlashAttribute(Message.ERROR, Message.FAILURE);
             }
         } catch (NoSuchElementException | IllegalStateException ex) {
-            redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
+            redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
         }
         return "redirect:/student/main";
     }
@@ -116,9 +117,9 @@ public class StudentController {
             HttpServletRequest request) {
         try {
             studentService.deleteStudentById(studentId);
-            redirectAttributes.addFlashAttribute("successMessage", "Student was deleted");
+            redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.DELETE_SUCCESS);
         } catch (NoSuchElementException ex) {
-            redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
+            redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
         }
         String referrer = request.getHeader("referer");
 
@@ -152,9 +153,9 @@ public class StudentController {
             RedirectAttributes redirectAttributes) {
         try {
             studentService.removeStudentFromCourse(studentId, courseName);
-            redirectAttributes.addFlashAttribute("successMessage", "Student unsubscribed from Course");
+            redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.REASSIGNED);
         } catch (IllegalStateException | NoSuchElementException ex) {
-            redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
+            redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
         }
         return "redirect:/student/student-card/{studentId}";
     }
@@ -165,9 +166,9 @@ public class StudentController {
             RedirectAttributes redirectAttributes) {
         try {
             studentService.addStudentToTheCourse(studentId, courseName);
-            redirectAttributes.addFlashAttribute("successMessage", "Student subscribed to the Course");
+            redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.ASSIGNED);
         } catch (IllegalStateException | NoSuchElementException ex) {
-            redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
+            redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
         }
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath("/student/student-card/{studentId}");
         return "redirect:" + builder.buildAndExpand(studentId).toUriString();
@@ -213,12 +214,12 @@ public class StudentController {
                 int createdStudent = studentService.createStudent(student);
 
                 if (createdStudent != student.getId()) {
-                    redirectAttributes.addFlashAttribute("errorMessage", "Failed to create the student");
+                    redirectAttributes.addFlashAttribute(Message.ERROR, Message.FAILURE);
                 } else {
-                    redirectAttributes.addFlashAttribute("successMessage", "Student created successfully");
+                    redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.CREATE_SUCCESS);
                 }
             } catch (NoSuchElementException | IllegalStateException ex) {
-                redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
+                redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
             }
         }
         return "redirect:/student/create-student";
@@ -234,12 +235,12 @@ public class StudentController {
                 Student resultStudent = studentService.updateStudentById(studentId, updatedStudent);
 
                 if (resultStudent != null) {
-                    redirectAttributes.addFlashAttribute("successMessage", "Student updated successfully");
+                    redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.UPDATE_SUCCESS);
                 } else {
-                    redirectAttributes.addFlashAttribute("errorMessage", "Failed to update Student");
+                    redirectAttributes.addFlashAttribute(Message.ERROR, Message.FAILURE);
                 }
             } catch (NoSuchElementException | IllegalStateException ex) {
-                redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
+                redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
             }
         }
         return "redirect:/student/student-card/" + studentId;

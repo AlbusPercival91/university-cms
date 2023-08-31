@@ -21,6 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ua.foxminded.university.dao.entities.ClassRoom;
 import ua.foxminded.university.dao.service.ClassRoomService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
+import ua.foxminded.university.validation.Message;
 
 @Controller
 public class ClassRoomController {
@@ -49,9 +50,9 @@ public class ClassRoomController {
             HttpServletRequest request) {
         try {
             classRoomService.deleteClassRoomById(classroomId);
-            redirectAttributes.addFlashAttribute("successMessage", "Class Room was deleted!");
+            redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.DELETE_SUCCESS);
         } catch (NoSuchElementException ex) {
-            redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
+            redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
         }
         String referrer = request.getHeader("referer");
 
@@ -76,12 +77,12 @@ public class ClassRoomController {
                 int createdClassRoom = classRoomService.createClassRoom(classroom);
 
                 if (createdClassRoom != classroom.getId()) {
-                    redirectAttributes.addFlashAttribute("errorMessage", "Failed to create Class Room");
+                    redirectAttributes.addFlashAttribute(Message.ERROR, Message.FAILURE);
                 } else {
-                    redirectAttributes.addFlashAttribute("successMessage", "Class Room created successfully");
+                    redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.CREATE_SUCCESS);
                 }
             } catch (IllegalStateException ex) {
-                redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
+                redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
             }
         }
         return "redirect:/classroom/create-classroom";
@@ -130,12 +131,12 @@ public class ClassRoomController {
                 ClassRoom resultClassRoom = classRoomService.updateClassRoomById(classroomId, updatedClassRoom);
 
                 if (resultClassRoom != null) {
-                    redirectAttributes.addFlashAttribute("successMessage", "Class Room updated successfully");
+                    redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.UPDATE_SUCCESS);
                 } else {
-                    redirectAttributes.addFlashAttribute("errorMessage", "Failed to update the Class Room");
+                    redirectAttributes.addFlashAttribute(Message.ERROR, Message.FAILURE);
                 }
             } catch (NoSuchElementException ex) {
-                redirectAttributes.addFlashAttribute("errorMessage", "Class Room not found");
+                redirectAttributes.addFlashAttribute(Message.ERROR, Message.NOT_FOUND);
             }
         }
         return "redirect:/classroom/classroom-card/" + classroomId;

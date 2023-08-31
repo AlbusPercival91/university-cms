@@ -23,6 +23,7 @@ import ua.foxminded.university.dao.entities.Group;
 import ua.foxminded.university.dao.service.FacultyService;
 import ua.foxminded.university.dao.service.GroupService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
+import ua.foxminded.university.validation.Message;
 
 @Controller
 public class GroupController {
@@ -50,9 +51,9 @@ public class GroupController {
             HttpServletRequest request) {
         try {
             groupService.deleteGroupById(groupId);
-            redirectAttributes.addFlashAttribute("successMessage", "Group was deleted!");
+            redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.DELETE_SUCCESS);
         } catch (NoSuchElementException ex) {
-            redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
+            redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
         }
         String referrer = request.getHeader("referer");
 
@@ -80,12 +81,12 @@ public class GroupController {
                 int createdGroup = groupService.createGroup(group);
 
                 if (createdGroup != group.getId()) {
-                    redirectAttributes.addFlashAttribute("errorMessage", "Failed to create Group");
+                    redirectAttributes.addFlashAttribute(Message.ERROR, Message.FAILURE);
                 } else {
-                    redirectAttributes.addFlashAttribute("successMessage", "Group created successfully");
+                    redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.CREATE_SUCCESS);
                 }
             } catch (IllegalStateException ex) {
-                redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
+                redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
             }
         }
         return "redirect:/group/create-group";
@@ -135,12 +136,12 @@ public class GroupController {
                 Group resultGroup = groupService.updateGroupById(groupId, updatedGroup);
 
                 if (resultGroup != null) {
-                    redirectAttributes.addFlashAttribute("successMessage", "Group updated successfully");
+                    redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.UPDATE_SUCCESS);
                 } else {
-                    redirectAttributes.addFlashAttribute("errorMessage", "Failed to update Group");
+                    redirectAttributes.addFlashAttribute(Message.ERROR, Message.FAILURE);
                 }
             } catch (NoSuchElementException | IllegalStateException ex) {
-                redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
+                redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
             }
         }
         return "redirect:/group/group-card/" + groupId;

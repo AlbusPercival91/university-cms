@@ -9,13 +9,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import ua.foxminded.university.validation.Message;
+
 @Controller
 public class SecurityController {
 
     @GetMapping("/login")
     public String login(@RequestParam(value = "error", required = false) String error, Model model) {
         if (error != null) {
-            model.addAttribute("loginError", true);
+            model.addAttribute(Message.LOGIN_ERROR, true);
         }
         return "login";
     }

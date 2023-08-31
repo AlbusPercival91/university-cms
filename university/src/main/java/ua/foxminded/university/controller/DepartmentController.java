@@ -23,6 +23,7 @@ import ua.foxminded.university.dao.entities.Faculty;
 import ua.foxminded.university.dao.service.DepartmentService;
 import ua.foxminded.university.dao.service.FacultyService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
+import ua.foxminded.university.validation.Message;
 
 @Controller
 public class DepartmentController {
@@ -50,9 +51,9 @@ public class DepartmentController {
             HttpServletRequest request) {
         try {
             departmentService.deleteDepartmentById(departmentId);
-            redirectAttributes.addFlashAttribute("successMessage", "Department was deleted!");
+            redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.DELETE_SUCCESS);
         } catch (NoSuchElementException ex) {
-            redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
+            redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
         }
         String referrer = request.getHeader("referer");
 
@@ -80,12 +81,12 @@ public class DepartmentController {
                 int createdDepartment = departmentService.createDepartment(department);
 
                 if (createdDepartment != department.getId()) {
-                    redirectAttributes.addFlashAttribute("errorMessage", "Failed to create Department");
+                    redirectAttributes.addFlashAttribute(Message.ERROR, Message.FAILURE);
                 } else {
-                    redirectAttributes.addFlashAttribute("successMessage", "Department created successfully");
+                    redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.CREATE_SUCCESS);
                 }
             } catch (IllegalStateException ex) {
-                redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
+                redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
             }
         }
         return "redirect:/department/create-department";
@@ -135,12 +136,12 @@ public class DepartmentController {
                 Department resultDepartment = departmentService.updateDepartmentById(departmentId, updatedDepartment);
 
                 if (resultDepartment != null) {
-                    redirectAttributes.addFlashAttribute("successMessage", "Department updated successfully");
+                    redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.UPDATE_SUCCESS);
                 } else {
-                    redirectAttributes.addFlashAttribute("errorMessage", "Failed to update Department");
+                    redirectAttributes.addFlashAttribute(Message.ERROR, Message.FAILURE);
                 }
             } catch (NoSuchElementException | IllegalStateException ex) {
-                redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
+                redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
             }
         }
         return "redirect:/department/department-card/" + departmentId;

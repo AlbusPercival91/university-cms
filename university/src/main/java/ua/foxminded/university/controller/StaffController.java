@@ -23,6 +23,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ua.foxminded.university.dao.entities.Staff;
 import ua.foxminded.university.dao.service.StaffService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
+import ua.foxminded.university.validation.Message;
 
 @Controller
 public class StaffController {
@@ -56,12 +57,12 @@ public class StaffController {
                 Staff resultStaff = staffService.updateStaffById(staffId, updatedStaff);
 
                 if (resultStaff != null) {
-                    redirectAttributes.addFlashAttribute("successMessage", "Data updated successfully");
+                    redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.UPDATE_SUCCESS);
                 } else {
-                    redirectAttributes.addFlashAttribute("errorMessage", "Failed to update Data");
+                    redirectAttributes.addFlashAttribute(Message.ERROR, Message.FAILURE);
                 }
             } catch (NoSuchElementException | IllegalStateException ex) {
-                redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
+                redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
             }
         }
         return "redirect:/staff/main";
@@ -73,12 +74,12 @@ public class StaffController {
         try {
             Staff resultStaff = staffService.changeStaffPasswordById(staffId, oldPassword, newPassword);
             if (resultStaff != null) {
-                redirectAttributes.addFlashAttribute("successMessage", "Password changed successfully");
+                redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.UPDATE_SUCCESS);
             } else {
-                redirectAttributes.addFlashAttribute("errorMessage", "Failed to change Password");
+                redirectAttributes.addFlashAttribute(Message.ERROR, Message.FAILURE);
             }
         } catch (NoSuchElementException | IllegalStateException ex) {
-            redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
+            redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
         }
         return "redirect:/staff/main";
     }
@@ -98,12 +99,12 @@ public class StaffController {
                 int createdStaff = staffService.createStaff(staff);
 
                 if (createdStaff != staff.getId()) {
-                    redirectAttributes.addFlashAttribute("errorMessage", "Failed to create the Staff member");
+                    redirectAttributes.addFlashAttribute(Message.ERROR, Message.FAILURE);
                 } else {
-                    redirectAttributes.addFlashAttribute("successMessage", "Staff created successfully");
+                    redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.CREATE_SUCCESS);
                 }
             } catch (IllegalStateException ex) {
-                redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
+                redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
             }
         }
         return "redirect:/staff/create-staff";
@@ -123,9 +124,9 @@ public class StaffController {
             HttpServletRequest request) {
         try {
             staffService.deleteStaffById(staffId);
-            redirectAttributes.addFlashAttribute("successMessage", "Staff member was deleted!");
+            redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.DELETE_SUCCESS);
         } catch (NoSuchElementException ex) {
-            redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
+            redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
         }
         String referrer = request.getHeader("referer");
 
@@ -178,12 +179,12 @@ public class StaffController {
                 Staff resultStaff = staffService.updateStaffById(staffId, updatedStaff);
 
                 if (resultStaff != null) {
-                    redirectAttributes.addFlashAttribute("successMessage", "Staff updated successfully");
+                    redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.UPDATE_SUCCESS);
                 } else {
-                    redirectAttributes.addFlashAttribute("errorMessage", "Failed to update Staff");
+                    redirectAttributes.addFlashAttribute(Message.ERROR, Message.FAILURE);
                 }
             } catch (NoSuchElementException | IllegalStateException ex) {
-                redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
+                redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
             }
         }
         return "redirect:/staff/staff-card/" + staffId;

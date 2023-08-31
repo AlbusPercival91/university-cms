@@ -35,6 +35,7 @@ import ua.foxminded.university.dao.service.GroupService;
 import ua.foxminded.university.dao.service.StudentService;
 import ua.foxminded.university.dao.service.TeacherService;
 import ua.foxminded.university.dao.service.TimeTableService;
+import ua.foxminded.university.validation.Message;
 
 @Controller
 public class TimeTableController {
@@ -82,12 +83,12 @@ public class TimeTableController {
 
             if (!createdTimeTable.getDate().equals(date) && !createdTimeTable.getTimeFrom().equals(timeTo)
                     && !createdTimeTable.getTimeTo().equals(timeTo)) {
-                redirectAttributes.addFlashAttribute("errorMessage", "Failed to create Time Table");
+                redirectAttributes.addFlashAttribute(Message.ERROR, Message.FAILURE);
             } else {
-                redirectAttributes.addFlashAttribute("successMessage", "Time Table created successfully");
+                redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.CREATE_SUCCESS);
             }
         } catch (NoSuchElementException | TimeTableValidationException ex) {
-            redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
+            redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
         }
         return "redirect:/timetable/course-timetable-form";
     }
@@ -119,12 +120,12 @@ public class TimeTableController {
 
             if (!createdTimeTable.getDate().equals(date) && !createdTimeTable.getTimeFrom().equals(timeTo)
                     && !createdTimeTable.getTimeTo().equals(timeTo)) {
-                redirectAttributes.addFlashAttribute("errorMessage", "Failed to create Time Table");
+                redirectAttributes.addFlashAttribute(Message.ERROR, Message.FAILURE);
             } else {
-                redirectAttributes.addFlashAttribute("successMessage", "Time Table created successfully");
+                redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.CREATE_SUCCESS);
             }
         } catch (NoSuchElementException | TimeTableValidationException ex) {
-            redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
+            redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
         }
         return "redirect:/timetable/group-timetable-form";
     }
@@ -135,9 +136,9 @@ public class TimeTableController {
             HttpServletRequest request) {
         try {
             timeTableService.deleteTimeTableById(timetableId);
-            redirectAttributes.addFlashAttribute("successMessage", "Time Table was deleted!");
+            redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.DELETE_SUCCESS);
         } catch (NoSuchElementException ex) {
-            redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
+            redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
         }
         String referrer = request.getHeader("referer");
 
@@ -325,12 +326,12 @@ public class TimeTableController {
             TimeTable resultTimeTable = timeTableService.updateTimeTableById(timetableId, updatedTimeTable);
 
             if (resultTimeTable != null) {
-                redirectAttributes.addFlashAttribute("successMessage", "Time Table updated successfully");
+                redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.UPDATE_SUCCESS);
             } else {
-                redirectAttributes.addFlashAttribute("errorMessage", "Failed to update Time Table");
+                redirectAttributes.addFlashAttribute(Message.ERROR, Message.FAILURE);
             }
         } catch (NoSuchElementException | TimeTableValidationException ex) {
-            redirectAttributes.addFlashAttribute("errorMessage", ex.getLocalizedMessage());
+            redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
         }
         return "redirect:/timetable/timetable-card/" + timetableId;
     }
