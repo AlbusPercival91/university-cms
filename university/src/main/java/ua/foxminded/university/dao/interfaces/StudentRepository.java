@@ -12,34 +12,37 @@ import ua.foxminded.university.dao.entities.Student;
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Integer> {
 
-	@Modifying
-	@Query("""
-			 INSERT INTO StudentsCourses (studentId, courseId)
-			     SELECT s.id, c.id FROM Student s, Course c
-			     WHERE s.id = :studentId AND c.courseName = :courseName
-			""")
-	int addStudentToTheCourse(@Param("studentId") int studentId, @Param("courseName") String courseName);
+    @Modifying
+    @Query("""
+             INSERT INTO StudentsCourses (studentId, courseId)
+                 SELECT s.id, c.id FROM Student s, Course c
+                 WHERE s.id = :studentId AND c.courseName = :courseName
+            """)
+    int addStudentToTheCourse(@Param("studentId") int studentId, @Param("courseName") String courseName);
 
-	@Modifying
-	@Query("""
-			 DELETE FROM StudentsCourses sc
-			     WHERE sc.studentId = :studentId
-			     AND sc.courseId IN (SELECT c.id FROM Course c WHERE c.courseName = :courseName)
-			""")
-	int removeStudentFromCourse(@Param("studentId") int studentId, @Param("courseName") String courseName);
+    @Modifying
+    @Query("""
+             DELETE FROM StudentsCourses sc
+                 WHERE sc.studentId = :studentId
+                 AND sc.courseId IN (SELECT c.id FROM Course c WHERE c.courseName = :courseName)
+            """)
+    int removeStudentFromCourse(@Param("studentId") int studentId, @Param("courseName") String courseName);
 
-	@Query("""
-			SELECT s FROM Student s
-			     JOIN StudentsCourses sc ON s.id = sc.studentId
-			     JOIN Course c ON c.id = sc.courseId WHERE c.courseName = :courseName
-			""")
-	List<Student> findStudentsRelatedToCourse(@Param("courseName") String courseName);
+    @Query("SELECT CASE WHEN COUNT(c) > 0 THEN true ELSE false END FROM Student s JOIN s.courses c WHERE s.id = :studentId")
+    boolean studentIsAssignedToAnyCourse(@Param("studentId") int studentId);
 
-	List<Student> findAllByGroupGroupName(String groupName);
+    @Query("""
+            SELECT s FROM Student s
+                 JOIN StudentsCourses sc ON s.id = sc.studentId
+                 JOIN Course c ON c.id = sc.courseId WHERE c.courseName = :courseName
+            """)
+    List<Student> findStudentsRelatedToCourse(@Param("courseName") String courseName);
 
-	List<Student> findAllByGroupFacultyFacultyName(String facultyName);
+    List<Student> findAllByGroupGroupName(String groupName);
 
-	List<Student> findStudentByFirstNameAndLastName(String firstName, String lastName);
+    List<Student> findAllByGroupFacultyFacultyName(String facultyName);
 
-	Optional<Student> findByEmail(String email);
+    List<Student> findStudentByFirstNameAndLastName(String firstName, String lastName);
+
+    Optional<Student> findByEmail(String email);
 }
