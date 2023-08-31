@@ -82,7 +82,8 @@
             <caption hidden>Scheduled Time Table</caption>
             <thead>
                 <tr>
-                    <th style="border: none; width: 3vh;" sec:authorize="hasRole('ROLE_ADMIN')"></th>
+                    <th style="border: none; width: 3vh;"
+                        sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_STAFF')"></th>
                     <th>ID</th>
                     <th>Date</th>
                     <th>Time From</th>
@@ -92,12 +93,13 @@
                     <th>Group</th>
                     <th>Class-Room</th>
                     <th>Students Assigned</th>
-                    <th style="border: none; width: 3vh;" sec:authorize="hasRole('ROLE_ADMIN')"></th>
+                    <th style="border: none; width: 3vh;"
+                        sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_STAFF')"></th>
                 </tr>
             </thead>
             <tbody>
                 <tr th:each="timetable, rowStat : ${timetables}">
-                    <td style="border: none;" sec:authorize="hasRole('ROLE_ADMIN')">
+                    <td style="border: none;" sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_STAFF')">
                         <!-- Edit Button -->
                         <a th:href="@{/timetable/timetable-card/{timetableId}(timetableId=${timetable.id})}">
                             <button th:id="'editButton-' + ${rowStat.index}" class="icon-button">
@@ -129,7 +131,7 @@
                         <span th:unless="${not #lists.isEmpty(timetable.studentsRelatedToCourse)}">N/A</span>
                     </td>
 
-                    <td style="border: none;" sec:authorize="hasRole('ROLE_ADMIN')">
+                    <td style="border: none;" sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_STAFF')">
                         <!-- Remove Button -->
                         <form th:action="@{/timetable/delete/{timetableId}(timetableId=${timetable.id})}" method="post">
                             <input type="hidden" name="timetableId" th:value="${timetable.id}" />

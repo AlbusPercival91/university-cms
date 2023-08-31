@@ -129,7 +129,7 @@ public class StudentController {
         return "redirect:" + referrer;
     }
 
-    @RolesAllowed({ "ADMIN", "TEACHER" })
+    @RolesAllowed({ "ADMIN", "TEACHER", "STAFF" })
     @GetMapping("/student/student-card/{studentId}")
     public String openStudentCard(@PathVariable int studentId, Model model) {
         Optional<Student> optionalStudent = studentService.findStudentById(studentId);
@@ -147,7 +147,7 @@ public class StudentController {
         }
     }
 
-    @RolesAllowed("ADMIN")
+    @RolesAllowed({ "ADMIN", "STAFF" })
     @PostMapping("/student/remove-course/{studentId}/{courseName}")
     public String removeStudentFromCourse(@PathVariable int studentId, @PathVariable String courseName,
             RedirectAttributes redirectAttributes) {
@@ -160,7 +160,7 @@ public class StudentController {
         return "redirect:/student/student-card/{studentId}";
     }
 
-    @RolesAllowed("ADMIN")
+    @RolesAllowed({ "ADMIN", "STAFF" })
     @PostMapping("/student/assign-course")
     public String addStudentToTheCourse(@RequestParam int studentId, @RequestParam String courseName,
             RedirectAttributes redirectAttributes) {

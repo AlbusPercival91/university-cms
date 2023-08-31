@@ -18,8 +18,7 @@
         <!-- Block for timetable details -->
         <div class="entity-details">
             <h2>Time-Table Details</h2>
-            <form th:action="@{/timetable/edit-timetable/{timetableId}(timetableId=${timetable.id})}"
-                method="post">
+            <form th:action="@{/timetable/edit-timetable/{timetableId}(timetableId=${timetable.id})}" method="post">
                 <div class="form-group">
                     <label for="date">Date:</label>
                     <input type="date" id="date" th:value="${timetable.date}" name="date" readonly required />

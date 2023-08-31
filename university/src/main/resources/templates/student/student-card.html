@@ -69,7 +69,8 @@
                 <thead>
                     <tr>
                         <th style="border: none; width: 3vh;"></th>
-                        <th style="border: none; width: 3vh;" sec:authorize="hasRole('ROLE_ADMIN')"></th>
+                        <th style="border: none; width: 3vh;"
+                            sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_STAFF')"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -82,7 +83,8 @@
                                 method="post">
                                 <input type="hidden" name="courseName" th:value="${course.courseName}" />
                                 <button th:id="'removeButton-' + ${rowStat.index}" class="remove-icon" type="submit">
-                                    <i class="fas fa-trash-alt remove-icon" sec:authorize="hasRole('ROLE_ADMIN')"></i>
+                                    <i class="fas fa-trash-alt remove-icon"
+                                        sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_STAFF')"></i>
                                 </button>
                             </form>
                         </td>
@@ -93,14 +95,14 @@
             <!-- Generate options for Additional courses using Thymeleaf -->
             <form th:action="@{/student/assign-course}" method="post">
                 <input type="hidden" name="studentId" th:value="${student.id}" />
-                <select name="courseName" sec:authorize="hasRole('ROLE_ADMIN')">
+                <select name="courseName" sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_STAFF')">
                     <option value="">Select Additional Course</option>
                     <option th:each="course : ${courses}" th:value="${course.courseName}"
                         th:text="${course.courseName}">
                     </option>
                 </select>
                 <br>
-                <button type="submit" sec:authorize="hasRole('ROLE_ADMIN')">Assign</button>
+                <button type="submit" sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_STAFF')">Assign</button>
             </form>
         </div>
 

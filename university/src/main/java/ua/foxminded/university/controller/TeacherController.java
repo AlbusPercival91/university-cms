@@ -130,7 +130,7 @@ public class TeacherController {
         return "redirect:/teacher/create-teacher";
     }
 
-    @RolesAllowed({ "ADMIN", "TEACHER" })
+    @RolesAllowed({ "ADMIN", "TEACHER", "STAFF" })
     @GetMapping("/teacher/teacher-card/{teacherId}")
     public String openTeacherCard(@PathVariable int teacherId, Model model) {
         Optional<Teacher> optionalTeacher = teacherService.findTeacherById(teacherId);
@@ -202,7 +202,7 @@ public class TeacherController {
         return "redirect:" + referrer;
     }
 
-    @RolesAllowed("ADMIN")
+    @RolesAllowed({ "ADMIN", "STAFF" })
     @PostMapping("/teacher/remove-course/{teacherId}/{courseName}")
     public String removeTeacherFromCourse(@PathVariable int teacherId, @PathVariable String courseName,
             RedirectAttributes redirectAttributes) {
@@ -215,7 +215,7 @@ public class TeacherController {
         return "redirect:/teacher/teacher-card/{teacherId}";
     }
 
-    @RolesAllowed("ADMIN")
+    @RolesAllowed({ "ADMIN", "STAFF" })
     @PostMapping("/teacher/assign-course")
     public String addTeacherToTheCourse(@RequestParam int teacherId, @RequestParam String courseName,
             RedirectAttributes redirectAttributes) {
