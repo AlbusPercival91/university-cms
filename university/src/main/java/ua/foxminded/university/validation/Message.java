@@ -37,6 +37,7 @@ public final class Message {
     public static final String FACULTY_EXISTS = "Faculty already exists";
     public static final String GROUP_EXISTS = "Faculty already contains this Group";
     public static final String TIMETABLE_SCHEDULED = "Timetable [date:{}, time from:{}, time to:{}] is scheduled successfully";
+
     /*
      * TimeTable validation Message Constants
      */
