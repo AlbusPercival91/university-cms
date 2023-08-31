@@ -20,6 +20,14 @@ public final class Message {
     public static final String ASSIGNED = "User assigned to the Course";
     public static final String REASSIGNED = "User reassigned from Course";
 
+    /*
+     * TimeTable validation Message Constants
+     */
+    public static final String VALIDATION_FAILED = "Validation failed while creating TimeTable";
+    public static final String TIMING_WRONG = "'Time From' can't be after 'Time To'";
+    public static final String IS_NOT_TEACHER_COURSE = "Teacher is not assigned with such Course";
+    public static final String TEACHER_BUSY = "Teacher is busy during this time";
+
     private Message() {
 
     }
