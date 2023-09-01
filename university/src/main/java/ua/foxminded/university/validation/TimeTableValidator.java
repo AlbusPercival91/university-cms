@@ -2,9 +2,7 @@ package ua.foxminded.university.validation;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-
 import org.springframework.stereotype.Component;
-
 import lombok.RequiredArgsConstructor;
 import ua.foxminded.university.dao.entities.ClassRoom;
 import ua.foxminded.university.dao.entities.Course;
