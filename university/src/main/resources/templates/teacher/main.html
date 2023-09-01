@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Teacher Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" />
+</head>
+
+<body>
+
+    <div th:replace="fragments/header :: header"></div>
+    <div th:replace="fragments/nav-panel :: div"></div>
+
+    <div class="container-entity-card">
+
+        <!-- Block for teacher-details -->
+        <div class="entity-details">
+            <h2>Personal Dashboard</h2>
+            <form th:action="@{/teacher/update-personal/{teacherId}(teacherId=${teacher.id})}" method="post">
+                <div class="form-group">
+                    <label for="firstName">First Name:</label>
+                    <input type="text" id="firstName" th:value="${teacher.firstName}" name="firstName" readonly
+                        required />
+                </div>
+                <div class="form-group">
+                    <label for="lastName">Last Name:</label>
+                    <input type="text" id="lastName" th:value="${teacher.lastName}" name="lastName" readonly required />
+                </div>
+                <div class="form-group">
+                    <label for="active">Active:</label>
+                    <select id="active" name="active" readonly required>
+                        <option th:text="True" th:selected="${teacher.active}">True</option>
+                        <option th:text="False" th:selected="${!teacher.active}">False</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" th:value="${teacher.email}" name="email" readonly required />
+                </div>
+                <div class="form-group">
+                    <label for="department">Department:</label>
+                    <select id="department" name="department" readonly required>
+                        <!-- Display the currently assigned department initially -->
+                        <option th:value="${'ID: ' + teacher.department.id + ', ' + teacher.department.name}">
+                        </option>
+                        <!-- Generate options for other departments using Thymeleaf -->
+                        <option th:each="department : ${departments}" th:value="${department.id}"
+                            th:text="${'ID: ' + department.id + ', ' + department.name}"
+                            th:selected="${teacher.department.id == department.id}">
+                        </option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <div class="password-field">
+                        <input type="password" id="password" th:value="${teacher.hashedPassword}" name="password"
+                            readonly required />
+                        <i class="fas fa-edit edit-icon" id="passwordEditIcon"></i>
+                    </div>
+                </div>
+
+                <!-- Container for buttons -->
+                <div class="button-container">
+                    <button id="saveButton" type="submit" class="button-common-style">Save</button>
+                    <button id="editButton" type="button" class="button-common-style">Edit</button>
+                </div>
+            </form>
+
+            <!-- Change password modal-->
+            <div id="passwordModal" class="modal">
+                <div class="modal-content">
+                    <span class="close" id="modalClose">&times;</span>
+                    <h2>Change Password</h2>
+                    <form id="passwordChangeForm" th:action="@{/teacher/update-password}" method="post">
+                        <input type="hidden" id="teacherId" name="teacherId" th:value="${teacher.id}" />
+                        <div class="form-group">
+                            <label for="oldPassword">Old Password:</label>
+                            <input type="password" id="oldPassword" name="oldPassword" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="newPassword">New Password:</label>
+                            <input type="password" id="newPassword" name="newPassword" required />
+                        </div>
+                        <div class="button-container">
+                            <button type="submit" id="savePasswordButton" class="button-common-style">Save</button>
+                            <button type="button" id="cancelPasswordButton" class="button-common-style">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Block for Courses -->
+        <div class="courses">
+            <h2>Assigned Courses</h2>
+            <table class="table table-bordered">
+                <caption hidden>Assigned Courses Table</caption>
+                <thead>
+                    <tr>
+                        <th style="border: none; width: 3vh;"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="course, rowStat : ${teacher.assignedCourses}">
+                        <td style="white-space: nowrap;" th:text="${course.courseName}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Block for teacher-timetable -->
+        <div class="entity-timetable">
+            <h2>Teacher Time-Table</h2>
+
+            <form th:action="@{/timetable/teacher-selected-timetable/{teacherId}(teacherId=${teacher.id})}"
+                method="get">
+                <div class="form-group">
+                    <label for="dateFrom">From:</label>
+                    <input type="date" id="dateFrom" name="dateFrom" required class="date-input" />
+                </div>
+                <div class="form-group">
+                    <label for="dateTo">To:</label>
+                    <input type="date" id="dateTo" name="dateTo" required class="date-input" />
+                </div>
+
+                <!-- Container for Get Selected Date Time-Table button -->
+                <div class="button-container">
+                    <button id="saveButton" type="submit" class="button-common-style">Get Selected Date
+                        Time-Table</button>
+                </div>
+            </form>
+            <br><br>
+
+            <!-- Container for Get All Time-Tables button -->
+            <div class="button-container">
+                <form th:action="@{/timetable/teacher-timetable/{teacherId}(teacherId=${teacher.id})}" method="get">
+                    <button id="saveButton" type="submit" class="button-common-style">Get Full Time-Table List</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <div th:replace="fragments/message :: div"></div>
+    <div th:replace="fragments/footer :: footer"></div>
+
+    <script th:src="@{/js/change-password.js}"></script>
+    <script th:src="@{/js/enable-edit.js}"></script>
+    <script th:src="@{/js/work-panel.js}"></script>
+
+</body>
+
+</html>

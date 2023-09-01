@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Create Faculty</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+</head>
+
+<div th:replace="fragments/header :: header"></div>
+<div th:replace="fragments/nav-panel :: div"></div>
+
+<body>
+    <div class="container">
+        <h2>Create New Faculty</h2>
+        <form th:action="@{/faculty/create-faculty}" method="post">
+            <div class="form-group">
+                <label for="facultyName">Faculty Name:</label>
+                <input type="text" id="facultyName" name="facultyName" required>
+            </div>
+
+            <button type="submit">Create Faculty</button>
+        </form>
+
+    </div>
+
+    <div th:replace="fragments/message :: div"></div>
+    <div th:replace="fragments/footer :: footer"></div>
+
+    <script th:src="@{/js/work-panel.js}"></script>
+</body>
+
+</html>

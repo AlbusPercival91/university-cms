@@ -12,70 +12,71 @@ import ua.foxminded.university.dao.entities.Department;
 import ua.foxminded.university.dao.entities.Faculty;
 import ua.foxminded.university.dao.interfaces.DepartmentRepository;
 import ua.foxminded.university.dao.interfaces.FacultyRepository;
+import ua.foxminded.university.validation.Message;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
 @Transactional
 public class DepartmentService {
-	private final DepartmentRepository departmentRepository;
-	private final FacultyRepository facultyRepository;
+    private final DepartmentRepository departmentRepository;
+    private final FacultyRepository facultyRepository;
 
-	public int createDepartment(Department department) {
-		String facultyName = department.getFaculty().getFacultyName();
-		Optional<Faculty> faculty = facultyRepository.findFacultyByFacultyName(facultyName);
+    public int createDepartment(Department department) {
+        String facultyName = department.getFaculty().getFacultyName();
+        Optional<Faculty> faculty = facultyRepository.findFacultyByFacultyName(facultyName);
 
-		if (faculty.get().getDepartments().stream().anyMatch(d -> d.getName().equals(department.getName()))) {
-			log.warn("Faculty already contains this Department");
-			throw new IllegalStateException("Faculty already contains this Department");
-		}
+        if (faculty.get().getDepartments().stream().anyMatch(d -> d.getName().equals(department.getName()))) {
+            log.warn(Message.DEPARTMENT_EXISTS);
+            throw new IllegalStateException(Message.DEPARTMENT_EXISTS);
+        }
 
-		Department newDepartment = departmentRepository.save(department);
-		log.info("Created department with id: {}", newDepartment.getId());
-		return newDepartment.getId();
-	}
+        Department newDepartment = departmentRepository.save(department);
+        log.info(Message.CREATE_SUCCESS);
+        return newDepartment.getId();
+    }
 
-	public int deleteDepartmentById(int departmentId) {
-		Optional<Department> optionalDepartment = departmentRepository.findById(departmentId);
+    public int deleteDepartmentById(int departmentId) {
+        Optional<Department> optionalDepartment = departmentRepository.findById(departmentId);
 
-		if (optionalDepartment.isPresent()) {
-			departmentRepository.deleteById(departmentId);
-			log.info("Deleted department with id: {}", departmentId);
-			return departmentId;
-		} else {
-			log.warn("Department with id {} not found", departmentId);
-			throw new NoSuchElementException("Department not found");
-		}
-	}
+        if (optionalDepartment.isPresent()) {
+            departmentRepository.deleteById(departmentId);
+            log.info(Message.DELETE_SUCCESS);
+            return departmentId;
+        } else {
+            log.warn(Message.DEPARTMENT_NOT_FOUND);
+            throw new NoSuchElementException(Message.DEPARTMENT_NOT_FOUND);
+        }
+    }
 
-	public Department updateDepartmentById(int departmentId, Department targetDepartment) {
-		Department existingDepartment = departmentRepository.findById(departmentId).orElseThrow(() -> {
-			log.warn("Department with id {} not found", departmentId);
-			return new NoSuchElementException("Department not found");
-		});
+    public Department updateDepartmentById(int departmentId, Department targetDepartment) {
+        Department existingDepartment = departmentRepository.findById(departmentId).orElseThrow(() -> {
+            log.warn(Message.DEPARTMENT_NOT_FOUND);
+            return new NoSuchElementException(Message.DEPARTMENT_NOT_FOUND);
+        });
 
-		if (existingDepartment.getFaculty().getDepartments().stream()
-				.anyMatch(d -> d.getName().equals(targetDepartment.getName()))) {
-			log.warn("Faculty already contains this Department");
-			throw new IllegalStateException("Faculty already contains this Department");
-		}
-		BeanUtils.copyProperties(targetDepartment, existingDepartment, "id");
-		return departmentRepository.save(existingDepartment);
-	}
+        if (targetDepartment.getFaculty().getDepartments().stream()
+                .anyMatch(d -> d.getName().equals(targetDepartment.getName()))) {
+            log.warn(Message.DEPARTMENT_EXISTS);
+            throw new IllegalStateException(Message.DEPARTMENT_EXISTS);
+        }
+        BeanUtils.copyProperties(targetDepartment, existingDepartment, "id");
+        return departmentRepository.save(existingDepartment);
+    }
 
-	public List<Department> getAllDepartments() {
-		return departmentRepository.findAll();
-	}
+    public List<Department> getAllDepartments() {
+        return departmentRepository.findAll();
+    }
 
-	public Optional<Department> findDepartmentById(int departmentId) {
-		return departmentRepository.findById(departmentId);
-	}
+    public Optional<Department> findDepartmentById(int departmentId) {
+        return departmentRepository.findById(departmentId);
+    }
 
-	public List<Department> findAllByFacultyName(String facultyName) {
-		return departmentRepository.findAllByFacultyFacultyName(facultyName);
-	}
+    public List<Department> findAllByFacultyName(String facultyName) {
+        return departmentRepository.findAllByFacultyFacultyName(facultyName);
+    }
 
-	public List<Department> findDepartmentByName(String departmentName) {
-		return departmentRepository.findDepartmentByName(departmentName);
-	}
+    public List<Department> findDepartmentByName(String departmentName) {
+        return departmentRepository.findDepartmentByName(departmentName);
+    }
 }

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Class Room Card</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+</head>
+
+<body>
+
+    <div th:replace="fragments/header :: header"></div>
+    <div th:replace="fragments/nav-panel :: div"></div>
+
+    <div class="container-entity-card">
+
+        <div class="entity-details">
+            <h2>Class Room Details</h2>
+            <form th:action="@{/classroom/edit-classroom/{classroomId}(classroomId=${classroom.id})}"
+                method="post">
+                <div class="form-group">
+                    <label for="street">Street:</label>
+                    <input type="text" id="street" th:value="${classroom.street}" name="street" readonly required />
+                </div>
+                <div class="form-group">
+                    <label for="buildingNumber">Building Number:</label>
+                    <input type="number" id="buildingNumber" th:value="${classroom.buildingNumber}"
+                        name="buildingNumber" readonly required />
+                </div>
+                <div class="form-group">
+                    <label for="roomNumber">Room Number:</label>
+                    <input type="number" id="roomNumber" th:value="${classroom.roomNumber}" name="roomNumber" readonly
+                        required />
+                </div>
+                <!-- Container for buttons -->
+                <div class="button-container">
+                    <button id="saveButton" type="submit" class="button-common-style">Save</button>
+                    <button id="editButton" type="button" class="button-common-style">Edit</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+    <div th:replace="fragments/message :: div"></div>
+    <div th:replace="fragments/footer :: footer"></div>
+
+    <script th:src="@{/js/work-panel.js}"></script>
+    <script th:src="@{/js/enable-edit.js}"></script>
+
+</body>
+
+</html>

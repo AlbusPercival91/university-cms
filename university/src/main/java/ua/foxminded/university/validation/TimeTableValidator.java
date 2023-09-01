@@ -16,25 +16,25 @@ import ua.foxminded.university.dao.interfaces.TimeTableRepository;
 @RequiredArgsConstructor
 @Component
 public class TimeTableValidator {
-	private final TimeTableRepository timeTableRepository;
-	private final TeacherRepository teacherRepository;
+    private final TimeTableRepository timeTableRepository;
+    private final TeacherRepository teacherRepository;
 
-	public void validate(LocalDate date, LocalTime timeFrom, LocalTime timeTo, Teacher teacher, Course course,
-			ClassRoom classRoom) {
-		if (timeTableRepository.timeTableValidationFailed(date, timeFrom, timeTo, classRoom)) {
-			throw new TimeTableValidationException("Validation failed while creating TimeTable");
-		}
+    public void validate(LocalDate date, LocalTime timeFrom, LocalTime timeTo, Teacher teacher, Course course,
+            ClassRoom classRoom) {
+        if (timeTableRepository.timeTableValidationFailed(date, timeFrom, timeTo, classRoom)) {
+            throw new TimeTableValidationException(Message.VALIDATION_FAILED);
+        }
 
-		if (timeFrom.isAfter(timeTo)) {
-			throw new TimeTableValidationException("Timing is wrong");
-		}
+        if (timeFrom.isAfter(timeTo)) {
+            throw new TimeTableValidationException(Message.TIMING_WRONG);
+        }
 
-		if (!teacherRepository.findTeachersRelatedToCourse(course.getCourseName()).contains(teacher)) {
-			throw new TimeTableValidationException("Teacher is not assigned with such Course");
-		}
+        if (!teacherRepository.findTeachersRelatedToCourse(course.getCourseName()).contains(teacher)) {
+            throw new TimeTableValidationException(Message.IS_NOT_TEACHER_COURSE);
+        }
 
-		if (timeTableRepository.teacherIsBusy(date, timeFrom, timeTo, teacher)) {
-			throw new TimeTableValidationException("Teacher is busy during this time");
-		}
-	}
+        if (timeTableRepository.teacherIsBusy(date, timeFrom, timeTo, teacher)) {
+            throw new TimeTableValidationException(Message.TEACHER_BUSY);
+        }
+    }
 }

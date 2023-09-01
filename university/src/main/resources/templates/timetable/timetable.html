@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Time Table</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" />
+</head>
+
+<div th:replace="fragments/header :: header"></div>
+
+<div th:replace="fragments/nav-panel :: div"></div>
+
+<body>
+
+    <div class="container">
+        <h2>Search Panel</h2>
+
+        <div class="search-block">
+            <div class="search-container">
+
+                <!-- Search by Id -->
+                <div class="search-section">
+                    <div class="search-square">
+                        <h3>Find Time Table by ID</h3>
+                        <form th:action="@{/timetable/search-result}" method="get">
+                            <input type="hidden" name="searchType" value="timetable" />
+                            <label for="timetableId">Time-Table ID:</label>
+                            <input type="text" id="timetableId" name="timetableId" required />
+                            <button type="submit">Search</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Search by Course Name -->
+                <div class="search-section">
+                    <div class="search-square">
+                        <h3>Find Time Table by Course</h3>
+                        <form th:action="@{/timetable/search-result}" method="get">
+                            <input type="hidden" name="searchType" value="course" />
+                            <label for="courseName">Course Name:</label>
+                            <input type="text" id="courseName" name="courseName" required />
+                            <button type="submit">Search</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Search by Group Name -->
+                <div class="search-section">
+                    <div class="search-square">
+                        <h3>Find Time Table by Group</h3>
+                        <form th:action="@{/timetable/search-result}" method="get">
+                            <input type="hidden" name="searchType" value="group" />
+                            <label for="groupName">Group Name:</label>
+                            <input type="text" id="groupName" name="groupName" required />
+                            <button type="submit">Search</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Search by Date -->
+                <div class="search-section">
+                    <div class="search-square">
+                        <h3>Find Time Table by Date</h3>
+                        <form th:action="@{/timetable/search-result}" method="get">
+                            <input type="hidden" name="searchType" value="date" />
+                            <label for="date">Date:</label>
+                            <input type="date" id="date" name="date" required class="date-input" />
+                            <button type="submit">Search</button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>Time Table Schedule</h2>
+        <table class="table table-bordered">
+            <caption hidden>Scheduled Time Table</caption>
+            <thead>
+                <tr>
+                    <th style="border: none; width: 3vh;" sec:authorize="hasRole('ROLE_ADMIN')"></th>
+                    <th>ID</th>
+                    <th>Date</th>
+                    <th>Time From</th>
+                    <th>Time To</th>
+                    <th>Teacher</th>
+                    <th>Course</th>
+                    <th>Group</th>
+                    <th>Class-Room</th>
+                    <th>Students Assigned</th>
+                    <th style="border: none; width: 3vh;" sec:authorize="hasRole('ROLE_ADMIN')"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="timetable, rowStat : ${timetables}">
+                    <td style="border: none;" sec:authorize="hasRole('ROLE_ADMIN')">
+                        <!-- Edit Button -->
+                        <a th:href="@{/timetable/timetable-card/{timetableId}(timetableId=${timetable.id})}">
+                            <button th:id="'editButton-' + ${rowStat.index}" class="icon-button">
+                                <i class="fas fa-edit edit-icon"></i>
+                            </button>
+                        </a>
+                    </td>
+                    <td th:text="${timetable.id}"></td>
+                    <td th:text="${timetable.date}"></td>
+                    <td th:text="${timetable.timeFrom}"></td>
+                    <td th:text="${timetable.timeTo}"></td>
+                    <td
+                        th:text="${'ID: ' + timetable.teacher.id + ', ' + timetable.teacher.firstName + ' ' + timetable.teacher.lastName}">
+                    </td>
+                    <td th:text="${timetable.course.courseName}"></td>
+                    <td th:text="${timetable.group != null ? timetable.group.groupName : 'N/A'}"></td>
+                    <td
+                        th:text="${timetable.classRoom.street + ', ' + timetable.classRoom.buildingNumber + ', Room ' + timetable.classRoom.roomNumber}">
+                    </td>
+
+                    <td>
+                        <span th:if="${not #lists.isEmpty(timetable.studentsRelatedToCourse)}">
+                            <select>
+                                <option th:each="student : ${timetable.studentsRelatedToCourse}"
+                                    th:text="${'ID: ' + student.id + ', ' + student.firstName + ' ' + student.lastName}">
+                                </option>
+                            </select>
+                        </span>
+                        <span th:unless="${not #lists.isEmpty(timetable.studentsRelatedToCourse)}">N/A</span>
+                    </td>
+
+                    <td style="border: none;" sec:authorize="hasRole('ROLE_ADMIN')">
+                        <!-- Remove Button -->
+                        <form th:action="@{/timetable/delete/{timetableId}(timetableId=${timetable.id})}" method="post">
+                            <input type="hidden" name="timetableId" th:value="${timetable.id}" />
+                            <button th:id="'removeButton-' + ${rowStat.index}" class="icon-button remove-button"
+                                type="submit">
+                                <i class="fas fa-trash-alt remove-icon"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div th:replace="fragments/message :: div"></div>
+    <div th:replace="fragments/footer :: footer"></div>
+
+    <script th:src="@{/js/work-panel.js}"></script>
+    <script th:src="@{/js/table-buttons.js}"></script>
+</body>
+
+</html>

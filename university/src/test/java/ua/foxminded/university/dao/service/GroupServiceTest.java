@@ -1,6 +1,7 @@
 package ua.foxminded.university.dao.service;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -49,10 +50,12 @@ class GroupServiceTest {
 	@ParameterizedTest
 	@CsvSource({ "1", "2", "3" })
 	void testUpdateGroupById_ShouldReturnUpdatedGroup(int groupId) {
-		Group expectedGroup = new Group("fake-01", null);
-		expectedGroup.setId(groupId);
+		Optional<Group> group = groupRepository.findById(groupId);
 
-		Assertions.assertEquals(expectedGroup, groupService.updateGroupById(groupId, expectedGroup));
+		Group updatedGroup = new Group("Department of Medicine", group.get().getFaculty());
+		updatedGroup.setId(groupId);
+
+		Assertions.assertEquals(updatedGroup, groupService.updateGroupById(groupId, updatedGroup));
 	}
 
 	@Test

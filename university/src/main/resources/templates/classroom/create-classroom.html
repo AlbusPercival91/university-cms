@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Create Class-Room</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+</head>
+
+<div th:replace="fragments/header :: header"></div>
+<div th:replace="fragments/nav-panel :: div"></div>
+
+<body>
+    <div class="container">
+        <h2>Create New Class-Room</h2>
+        <form th:action="@{/classroom/create-classroom}" method="post">
+            <div class="form-group">
+                <label for="street">Street Name:</label>
+                <input type="text" id="street" name="street" required>
+            </div>
+            <div class="form-group">
+                <label for="buildingNumber">Building Number:</label>
+                <input type="number" id="buildingNumber" name="buildingNumber">
+            </div>
+            <div class="form-group">
+                <label for="roomNumber">Room Number:</label>
+                <input type="number" id="roomNumber" name="roomNumber">
+            </div>
+
+            <button type="submit">Create Class Room</button>
+        </form>
+
+    </div>
+
+    <div th:replace="fragments/message :: div"></div>
+    <div th:replace="fragments/footer :: footer"></div>
+
+    <script th:src="@{/js/work-panel.js}"></script>
+</body>
+
+</html>

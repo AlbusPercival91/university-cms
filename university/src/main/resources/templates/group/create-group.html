@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Create Group</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+</head>
+
+<div th:replace="fragments/header :: header"></div>
+<div th:replace="fragments/nav-panel :: div"></div>
+
+<body>
+    <div class="container">
+        <h2>Create New Group</h2>
+        <form th:action="@{/group/create-group}" method="post">
+            <div class="form-group">
+                <label for="groupName">Group Name:</label>
+                <input type="text" id="groupName" name="groupName" required>
+            </div>
+            <div class="form-group">
+                <label for="faculty">Faculty:</label>
+                <select id="faculty" name="faculty" required>
+                    <option value="">Select Faculty</option>
+                    <!-- Generate options for courses using Thymeleaf -->
+                    <option th:each="faculty : ${faculties}" th:value="${faculty.id}" th:text="${faculty.facultyName}">
+                    </option>
+                </select>
+            </div>
+
+            <button type="submit">Create Group</button>
+        </form>
+
+    </div>
+
+    <div th:replace="fragments/message :: div"></div>
+    <div th:replace="fragments/footer :: footer"></div>
+
+    <script th:src="@{/js/work-panel.js}"></script>
+</body>
+
+</html>

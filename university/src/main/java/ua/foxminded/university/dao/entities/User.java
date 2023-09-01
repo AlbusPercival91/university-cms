@@ -1,17 +1,19 @@
 package ua.foxminded.university.dao.entities;
 
 import javax.persistence.Column;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import ua.foxminded.university.security.UserRole;
 
 @Getter
 @Setter
@@ -39,10 +41,12 @@ public class User {
 	private String email;
 
 	@ToString.Exclude
-	@Getter(value = AccessLevel.NONE)
-	@Setter(value = AccessLevel.NONE)
 	@Column(name = "password")
 	private String hashedPassword;
+
+	@Enumerated(EnumType.STRING)
+	@Column(name = "role")
+	private UserRole role;
 
 	public User(String firstName, String lastName, boolean isActive, String email, String password) {
 		this.firstName = firstName;

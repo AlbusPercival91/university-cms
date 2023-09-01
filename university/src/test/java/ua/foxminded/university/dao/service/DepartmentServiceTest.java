@@ -1,6 +1,9 @@
 package ua.foxminded.university.dao.service;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.util.Optional;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -50,11 +53,13 @@ class DepartmentServiceTest {
 	@ParameterizedTest
 	@CsvSource({ "1", "2", "3" })
 	void testUpdateDepartmentById_ShouldReturnUpdatedDepartment(int departmentId) {
-		Department expectedDepartment = new Department("Education Department", null);
-		expectedDepartment.setId(departmentId);
+		Optional<Department> department = departmentRepository.findById(departmentId);
 
-		Assertions.assertEquals(expectedDepartment,
-				departmentService.updateDepartmentById(departmentId, expectedDepartment));
+		Department updatedDapertment = new Department("Department of Medicine", department.get().getFaculty());
+		updatedDapertment.setId(departmentId);
+
+		Assertions.assertEquals(updatedDapertment,
+				departmentService.updateDepartmentById(departmentId, updatedDapertment));
 	}
 
 	@Test

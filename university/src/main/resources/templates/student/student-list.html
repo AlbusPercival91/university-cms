@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Students List</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" />
+</head>
+
+<div th:replace="fragments/header :: header"></div>
+
+<div th:replace="fragments/nav-panel :: div"></div>
+
+<body>
+
+    <div class="container">
+        <h2>Search Panel</h2>
+
+        <div class="search-block">
+            <div class="search-container">
+                <!-- Search by Course Name -->
+                <div class="search-section">
+                    <div class="search-square">
+                        <h3>Find Students related to Course</h3>
+                        <form th:action="@{/student/search-result}" method="get">
+                            <input type="hidden" name="searchType" value="course" />
+                            <label for="courseName">Course Name:</label>
+                            <input type="text" id="courseName" name="courseName" required />
+                            <button type="submit">Search</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Search by Group Name -->
+                <div class="search-section">
+                    <div class="search-square">
+                        <h3>Find Students by Group</h3>
+                        <form th:action="@{/student/search-result}" method="get">
+                            <input type="hidden" name="searchType" value="group" />
+                            <label for="groupName">Group Name:</label>
+                            <input type="text" id="groupName" name="groupName" required />
+                            <button type="submit">Search</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Search by Faculty -->
+                <div class="search-section">
+                    <div class="search-square">
+                        <h3>Find Students by Faculty</h3>
+                        <form th:action="@{/student/search-result}" method="get">
+                            <input type="hidden" name="searchType" value="faculty" />
+                            <label for="facultyName">Faculty Name:</label>
+                            <input type="text" id="facultyName" name="facultyName" required />
+                            <button type="submit">Search</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Search by Student ID -->
+                <div class="search-section">
+                    <div class="search-square">
+                        <h3>Find Student by ID</h3>
+                        <form th:action="@{/student/search-result}" method="get">
+                            <input type="hidden" name="searchType" value="student" />
+                            <label for="studentId">Student ID:</label>
+                            <input type="text" id="studentId" name="studentId" required />
+                            <button type="submit">Search</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Search by Name and Family Name -->
+                <div class="search-section">
+                    <div class="search-square">
+                        <h3>Find Student by Name</h3>
+                        <form th:action="@{/student/search-result}" method="get">
+                            <input type="hidden" name="searchType" value="firstNameAndLastName" />
+                            <label for="firstName">Name:</label>
+                            <input type="text" id="firstName" name="firstName" required />
+                            <label for="lastName">Family Name:</label>
+                            <input type="text" id="lastName" name="lastName" required />
+                            <button type="submit">Search</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>Students List</h2>
+        <table class="table table-bordered">
+            <caption hidden>All Students Table</caption>
+            <thead>
+                <tr>
+                    <th style="border: none; width: 3vh;"
+                        sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_TEACHER')"></th>
+                    <th>ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Active</th>
+                    <th>Group</th>
+                    <th>Assigned Courses</th>
+                    <th style="border: none; width: 3vh;" sec:authorize="hasRole('ROLE_ADMIN')"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="student, rowStat : ${students}">
+                    <td style="border: none;" sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_TEACHER')">
+                        <!-- Edit Button -->
+                        <a th:href="@{/student/student-card/{studentId}(studentId=${student.id})}">
+                            <button th:id="'editButton-' + ${rowStat.index}" class="icon-button">
+                                <i class="fas fa-edit edit-icon"></i>
+                            </button>
+                        </a>
+                    </td>
+                    <td th:text="${student.id}"></td>
+                    <td th:text="${student.firstName}"></td>
+                    <td th:text="${student.lastName}"></td>
+                    <td th:text="${student.active}"></td>
+                    <td th:text="${student.group.groupName}"></td>
+                    <td>
+                        <select>
+                            <option th:each="course : ${student.courses}" th:text="${course.courseName}"></option>
+                        </select>
+                    </td>
+
+                    <td style="border: none;" sec:authorize="hasRole('ROLE_ADMIN')">
+                        <!-- Remove Button -->
+                        <form th:action="@{/student/delete/{studentId}(studentId=${student.id})}" method="post">
+                            <input type="hidden" name="studentId" th:value="${student.id}" />
+                            <button th:id="'removeButton-' + ${rowStat.index}" class="icon-button remove-button"
+                                type="submit">
+                                <i class="fas fa-trash-alt remove-icon"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div th:replace="fragments/message :: div"></div>
+    <div th:replace="fragments/footer :: footer"></div>
+
+    <script th:src="@{/js/work-panel.js}"></script>
+    <script th:src="@{/js/table-buttons.js}"></script>
+</body>
+
+</html>
