@@ -460,9 +460,10 @@ class TimeTableServiceTest {
                 timeTable.getTeacher(), timeTable.getCourse(), timeTable.getGroup(), timeTable.getClassRoom());
         expectedTimeTable.setId(1);
 
-        Exception noSuchElementException = assertThrows(Exception.class,
+        Exception timeTableValidationException = assertThrows(Exception.class,
                 () -> timeTableService.updateTimeTableById(1, expectedTimeTable));
-        Assertions.assertEquals("Validation failed while creating TimeTable", noSuchElementException.getMessage());
+        Assertions.assertEquals("Validation failed while creating TimeTable",
+                timeTableValidationException.getMessage());
     }
 
     @ParameterizedTest
