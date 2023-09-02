@@ -58,7 +58,7 @@ public class TimeTableController {
     @Autowired
     private StudentService studentService;
 
-    @RolesAllowed("ADMIN")
+    @RolesAllowed({ "ADMIN", "STAFF" })
     @GetMapping("/timetable/course-timetable-form")
     public String showFormCreateTimeTableForStudentsAtCourse(Model model) {
         List<Teacher> teachers = teacherService.getAllTeachers();
@@ -70,7 +70,7 @@ public class TimeTableController {
         return "timetable/course-timetable-form";
     }
 
-    @RolesAllowed("ADMIN")
+    @RolesAllowed({ "ADMIN", "STAFF" })
     @PostMapping("/timetable/course-timetable-form")
     public String ceateTimeTableForStudentsAtCourse(@ModelAttribute("timetable") @Validated TimeTable timetable,
             BindingResult bindingResult, RedirectAttributes redirectAttributes,
@@ -93,7 +93,7 @@ public class TimeTableController {
         return "redirect:/timetable/course-timetable-form";
     }
 
-    @RolesAllowed("ADMIN")
+    @RolesAllowed({ "ADMIN", "STAFF" })
     @GetMapping("/timetable/group-timetable-form")
     public String showFormCreateGroupTimeTable(Model model) {
         List<Teacher> teachers = teacherService.getAllTeachers();
@@ -107,7 +107,7 @@ public class TimeTableController {
         return "timetable/group-timetable-form";
     }
 
-    @RolesAllowed("ADMIN")
+    @RolesAllowed({ "ADMIN", "STAFF" })
     @PostMapping("/timetable/group-timetable-form")
     public String createGroupTimeTable(@ModelAttribute("timetable") @Validated TimeTable timetable,
             BindingResult bindingResult, RedirectAttributes redirectAttributes,
@@ -130,7 +130,7 @@ public class TimeTableController {
         return "redirect:/timetable/group-timetable-form";
     }
 
-    @RolesAllowed("ADMIN")
+    @RolesAllowed({ "ADMIN", "STAFF" })
     @PostMapping("/timetable/delete/{timetableId}")
     public String deleteTimetable(@PathVariable int timetableId, RedirectAttributes redirectAttributes,
             HttpServletRequest request) {
@@ -148,7 +148,7 @@ public class TimeTableController {
         return "redirect:" + referrer;
     }
 
-    @RolesAllowed({ "ADMIN", "TEACHER" })
+    @RolesAllowed({ "ADMIN", "TEACHER", "STAFF" })
     @GetMapping("/timetable/teacher-timetable/{teacherId}")
     public String getFullTeacherTimeTable(@PathVariable("teacherId") int teacherId, Model model) {
         Optional<Teacher> teacher = teacherService.findTeacherById(teacherId);
@@ -168,7 +168,7 @@ public class TimeTableController {
         return "timetable/timetable";
     }
 
-    @RolesAllowed({ "ADMIN", "TEACHER" })
+    @RolesAllowed({ "ADMIN", "TEACHER", "STAFF" })
     @GetMapping("/timetable/teacher-selected-timetable/{teacherId}")
     public String getSelectedDateTeacherTimeTable(@PathVariable("teacherId") int teacherId,
             @RequestParam("dateFrom") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateFrom,
@@ -190,7 +190,6 @@ public class TimeTableController {
         return "timetable/timetable";
     }
 
-    @RolesAllowed({ "ADMIN", "STUDENT", "TEACHER" })
     @GetMapping("/timetable/student-timetable/{studentId}")
     public String getFullStudentTimeTable(@PathVariable("studentId") int studentId, Model model) {
         Optional<Student> student = studentService.findStudentById(studentId);
@@ -210,7 +209,6 @@ public class TimeTableController {
         return "timetable/timetable";
     }
 
-    @RolesAllowed({ "ADMIN", "STUDENT", "TEACHER" })
     @GetMapping("/timetable/timetable-group/{studentId}")
     public String getFullGroupTimeTable(@PathVariable("studentId") int studentId, Model model) {
         Optional<Student> student = studentService.findStudentById(studentId);
@@ -222,7 +220,6 @@ public class TimeTableController {
         return "timetable/timetable";
     }
 
-    @RolesAllowed({ "ADMIN", "STUDENT", "TEACHER" })
     @GetMapping("/timetable/selected-timetable/{studentId}")
     public String getSelectedDateStudentAndGroupTimeTable(@PathVariable("studentId") int studentId,
             @RequestParam("dateFrom") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateFrom,
@@ -250,7 +247,6 @@ public class TimeTableController {
         return "timetable/timetable";
     }
 
-    @RolesAllowed({ "ADMIN", "TEACHER", "STUDENT", "STAFF" })
     @GetMapping("/timetable/timetable-list")
     public String getAllTimeTableList(Model model) {
         List<TimeTable> timetables = timeTableService.getAllTimeTables();
@@ -266,7 +262,7 @@ public class TimeTableController {
         return "timetable/timetable";
     }
 
-    @RolesAllowed("ADMIN")
+    @RolesAllowed({ "ADMIN", "STAFF" })
     @GetMapping("/timetable/timetable-card/{timetableId}")
     public String openTimeTableCard(@PathVariable int timetableId, Model model) {
         Optional<TimeTable> optionalTimeTable = timeTableService.findTimeTableById(timetableId);
@@ -317,7 +313,7 @@ public class TimeTableController {
         return "timetable/timetable";
     }
 
-    @RolesAllowed("ADMIN")
+    @RolesAllowed({ "ADMIN", "STAFF" })
     @PostMapping("/timetable/edit-timetable/{timetableId}")
     public String updateTimeTable(@PathVariable("timetableId") int timetableId,
             @ModelAttribute("timetable") @Validated TimeTable updatedTimeTable, BindingResult bindingResult,

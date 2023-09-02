@@ -155,7 +155,7 @@ public class StaffController {
         return "staff/staff-list";
     }
 
-    @RolesAllowed({ "ADMIN", "TEACHER" })
+    @RolesAllowed({ "ADMIN", "TEACHER", "STAFF" })
     @GetMapping("/staff/staff-card/{staffId}")
     public String openStaffCard(@PathVariable int staffId, Model model) {
         Optional<Staff> optionalStaff = staffService.findStaffById(staffId);

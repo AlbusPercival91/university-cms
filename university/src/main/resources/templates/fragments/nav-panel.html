@@ -27,183 +27,105 @@
                     </div>
                 </li>
 
-                <li class="menu-item" sec:authorize="hasRole('ROLE_ADMIN')">
+                <li class="menu-item">
                     <div class="menu-item-box">
                         <span class="menu-item-title">Teacher</span>
                         <ul class="submenu">
-                            <li><a th:href="@{/teacher/create-teacher}">Create New Teacher</a></li>
+                            <li><a th:href="@{/teacher/create-teacher}" sec:authorize="hasRole('ROLE_ADMIN')">Create New
+                                    Teacher</a></li>
                             <li><a th:href="@{/teacher/teacher-list}">View All Teachers</a></li>
                         </ul>
                     </div>
                 </li>
 
-                <li class="menu-item"
-                    sec:authorize="hasRole('ROLE_STUDENT') or hasRole('ROLE_TEACHER') or hasRole('ROLE_STAFF')">
-                    <div class="menu-item-box">
-                        <span class="menu-item-title">Teacher</span>
-                        <ul class="submenu">
-                            <li><a th:href="@{/teacher/teacher-list}">View All Teachers</a></li>
-                        </ul>
-                    </div>
-                </li>
-
-                <li class="menu-item" sec:authorize="hasRole('ROLE_ADMIN')">
+                <li class="menu-item">
                     <div class="menu-item-box">
                         <span class="menu-item-title">Student</span>
                         <ul class="submenu">
-                            <li><a th:href="@{/student/create-student}">Create New Student</a></li>
+                            <li><a th:href="@{/student/create-student}" sec:authorize="hasRole('ROLE_ADMIN')">Create New
+                                    Student</a></li>
                             <li><a th:href="@{/student/student-list}">View All Students</a></li>
                         </ul>
                     </div>
                 </li>
 
-                <li class="menu-item"
-                    sec:authorize="hasRole('ROLE_STUDENT') or hasRole('ROLE_TEACHER') or hasRole('ROLE_STAFF')">
-                    <div class="menu-item-box">
-                        <span class="menu-item-title">Student</span>
-                        <ul class="submenu">
-                            <li><a th:href="@{/student/student-list}">View All Students</a></li>
-                        </ul>
-                    </div>
-                </li>
-
-                <li class="menu-item" sec:authorize="hasRole('ROLE_ADMIN')">
+                <li class="menu-item">
                     <div class="menu-item-box">
                         <span class="menu-item-title">Staff</span>
                         <ul class="submenu">
-                            <li><a th:href="@{/staff/create-staff}">Create New Staff</a></li>
+                            <li><a th:href="@{/staff/create-staff}" sec:authorize="hasRole('ROLE_ADMIN')">Create New
+                                    Staff</a></li>
                             <li><a th:href="@{/staff/staff-list}">View All Staff</a></li>
                         </ul>
                     </div>
                 </li>
 
-                <li class="menu-item"
-                    sec:authorize="hasRole('ROLE_STUDENT') or hasRole('ROLE_TEACHER') or hasRole('ROLE_STAFF')">
-                    <div class="menu-item-box">
-                        <span class="menu-item-title">Staff</span>
-                        <ul class="submenu">
-                            <li><a th:href="@{/staff/staff-list}">View All Staff</a></li>
-                        </ul>
-                    </div>
-                </li>
-
-                <li class="menu-item" sec:authorize="hasRole('ROLE_ADMIN')">
+                <li class="menu-item">
                     <div class="menu-item-box">
                         <span class="menu-item-title">Faculty</span>
                         <ul class="submenu">
-                            <li><a th:href="@{/faculty/create-faculty}">Create New Faculty</a></li>
+                            <li><a th:href="@{/faculty/create-faculty}" sec:authorize="hasRole('ROLE_ADMIN')">Create New
+                                    Faculty</a></li>
                             <li><a th:href="@{/faculty/faculty-list}">View All Faculties</a></li>
                         </ul>
                     </div>
                 </li>
 
-                <li class="menu-item"
-                    sec:authorize="hasRole('ROLE_STUDENT') or hasRole('ROLE_TEACHER') or hasRole('ROLE_STAFF')">
-                    <div class="menu-item-box">
-                        <span class="menu-item-title">Faculty</span>
-                        <ul class="submenu">
-                            <li><a th:href="@{/faculty/faculty-list}">View All Faculties</a></li>
-                        </ul>
-                    </div>
-                </li>
-
-                <li class="menu-item" sec:authorize="hasRole('ROLE_ADMIN')">
+                <li class="menu-item">
                     <div class="menu-item-box">
                         <span class="menu-item-title">Department</span>
                         <ul class="submenu">
-                            <li><a th:href="@{/department/create-department}">Create New Department</a></li>
+                            <li><a th:href="@{/department/create-department}"
+                                    sec:authorize="hasRole('ROLE_ADMIN')">Create New Department</a></li>
                             <li><a th:href="@{/department/department-list}">View All Departments</a></li>
                         </ul>
                     </div>
                 </li>
 
-                <li class="menu-item"
-                    sec:authorize="hasRole('ROLE_STUDENT') or hasRole('ROLE_TEACHER') or hasRole('ROLE_STAFF')">
-                    <div class="menu-item-box">
-                        <span class="menu-item-title">Department</span>
-                        <ul class="submenu">
-                            <li><a th:href="@{/department/department-list}">View All Departments</a></li>
-                        </ul>
-                    </div>
-                </li>
-
-                <li class="menu-item" sec:authorize="hasRole('ROLE_ADMIN')">
+                <li class="menu-item">
                     <div class="menu-item-box">
                         <span class="menu-item-title">Group</span>
                         <ul class="submenu">
-                            <li><a th:href="@{/group/create-group}">Create New Group</a></li>
+                            <li><a th:href="@{/group/create-group}" sec:authorize="hasRole('ROLE_ADMIN')">Create New
+                                    Group</a></li>
                             <li><a th:href="@{/group/group-list}">View All Groups</a></li>
                         </ul>
                     </div>
                 </li>
 
-                <li class="menu-item"
-                    sec:authorize="hasRole('ROLE_STUDENT') or hasRole('ROLE_TEACHER') or hasRole('ROLE_STAFF')">
-                    <div class="menu-item-box">
-                        <span class="menu-item-title">Group</span>
-                        <ul class="submenu">
-                            <li><a th:href="@{/group/group-list}">View All Groups</a></li>
-                        </ul>
-                    </div>
-                </li>
-
-                <li class="menu-item" sec:authorize="hasRole('ROLE_ADMIN')">
+                <li class="menu-item">
                     <div class="menu-item-box">
                         <span class="menu-item-title">Course</span>
                         <ul class="submenu">
-                            <li><a th:href="@{/course/create-course}">Create New Course</a></li>
+                            <li><a th:href="@{/course/create-course}" sec:authorize="hasRole('ROLE_ADMIN')">Create New
+                                    Course</a></li>
                             <li><a th:href="@{/course/course-list}">View All Coursees</a></li>
                         </ul>
                     </div>
                 </li>
 
-                <li class="menu-item"
-                    sec:authorize="hasRole('ROLE_STUDENT') or hasRole('ROLE_TEACHER') or hasRole('ROLE_STAFF')">
-                    <div class="menu-item-box">
-                        <span class="menu-item-title">Course</span>
-                        <ul class="submenu">
-                            <li><a th:href="@{/course/course-list}">View All Coursees</a></li>
-                        </ul>
-                    </div>
-                </li>
-
-                <li class="menu-item" sec:authorize="hasRole('ROLE_ADMIN')">
+                <li class="menu-item">
                     <div class="menu-item-box">
                         <span class="menu-item-title">ClassRoom</span>
                         <ul class="submenu">
-                            <li><a th:href="@{/classroom/create-classroom}">Create New Class-Room</a></li>
+                            <li><a th:href="@{/classroom/create-classroom}" sec:authorize="hasRole('ROLE_ADMIN')">Create
+                                    New Class-Room</a></li>
                             <li><a th:href="@{/classroom/classroom-list}">View All Class-Rooms</a></li>
                         </ul>
                     </div>
                 </li>
 
-                <li class="menu-item"
-                    sec:authorize="hasRole('ROLE_STUDENT') or hasRole('ROLE_TEACHER') or hasRole('ROLE_STAFF')">
-                    <div class="menu-item-box">
-                        <span class="menu-item-title">ClassRoom</span>
-                        <ul class="submenu">
-                            <li><a th:href="@{/classroom/classroom-list}">View All Class-Rooms</a></li>
-                        </ul>
-                    </div>
-                </li>
-
-                <li class="menu-item" sec:authorize="hasRole('ROLE_ADMIN')">
+                <li class="menu-item">
                     <div class="menu-item-box">
                         <span class="menu-item-title">TimeTable</span>
                         <ul class="submenu">
-                            <li><a th:href="@{/timetable/group-timetable-form}">Create Group Time-Table</a></li>
-                            <li><a th:href="@{/timetable/course-timetable-form}">Create Course Time-Table</a>
+                            <li><a th:href="@{/timetable/group-timetable-form}"
+                                    sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_STAFF')">Create Group
+                                    Time-Table</a></li>
+                            <li><a th:href="@{/timetable/course-timetable-form}"
+                                    sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_STAFF')">Create Course
+                                    Time-Table</a>
                             </li>
-                            <li><a th:href="@{/timetable/timetable-list}">View All TimeTables</a></li>
-                        </ul>
-                    </div>
-                </li>
-
-                <li class="menu-item"
-                    sec:authorize="hasRole('ROLE_STUDENT') or hasRole('ROLE_TEACHER') or hasRole('ROLE_STAFF')">
-                    <div class="menu-item-box">
-                        <span class="menu-item-title">TimeTable</span>
-                        <ul class="submenu">
                             <li><a th:href="@{/timetable/timetable-list}">View All TimeTables</a></li>
                         </ul>
                     </div>

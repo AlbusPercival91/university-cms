@@ -36,6 +36,7 @@ public final class Message {
     public static final String DEPARTMENT_EXISTS = "Faculty already contains this Department";
     public static final String FACULTY_EXISTS = "Faculty already exists";
     public static final String GROUP_EXISTS = "Faculty already contains this Group";
+    public static final String ADDRESS_BUSY = "Class Room with such address already exists";
     public static final String TIMETABLE_SCHEDULED = "Timetable [date:{}, time from:{}, time to:{}] is scheduled successfully";
 
     /*

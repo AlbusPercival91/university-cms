@@ -77,7 +77,7 @@ public class TimeTableService {
             return new NoSuchElementException(Message.STUDENT_NOT_FOUND);
         });
 
-        if (timeTableRepository.studentIsAssignedToAnyCourse(existingStudent.getId())) {
+        if (studentRepository.studentIsAssignedToAnyCourse(existingStudent.getId())) {
             return timeTableRepository.findByStudentOrderByDateAscTimeFromAsc(existingStudent.getId());
         } else {
             return timeTableRepository.findByGroupOrderByDateAscTimeFromAsc(existingStudent.getGroup());
@@ -114,7 +114,7 @@ public class TimeTableService {
             return new NoSuchElementException(Message.STUDENT_NOT_FOUND);
         });
 
-        if (timeTableRepository.studentIsAssignedToAnyCourse(existingStudent.getId())) {
+        if (studentRepository.studentIsAssignedToAnyCourse(existingStudent.getId())) {
             return timeTableRepository.findByDateAndStudentOrderByDateAscTimeFromAsc(dateFrom, dateTo,
                     existingStudent.getId());
         } else {

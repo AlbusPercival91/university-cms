@@ -96,7 +96,7 @@
             <thead>
                 <tr>
                     <th style="border: none; width: 3vh;"
-                        sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_TEACHER')"></th>
+                        sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_TEACHER') or hasRole('ROLE_STAFF')"></th>
                     <th>ID</th>
                     <th>First Name</th>
                     <th>Last Name</th>
@@ -108,7 +108,8 @@
             </thead>
             <tbody>
                 <tr th:each="student, rowStat : ${students}">
-                    <td style="border: none;" sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_TEACHER')">
+                    <td style="border: none;"
+                        sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_TEACHER') or hasRole('ROLE_STAFF')">
                         <!-- Edit Button -->
                         <a th:href="@{/student/student-card/{studentId}(studentId=${student.id})}">
                             <button th:id="'editButton-' + ${rowStat.index}" class="icon-button">

@@ -47,6 +47,11 @@ public class ClassRoomService {
             log.warn(Message.ROOM_NOT_FOUND, classRoomId);
             return new NoSuchElementException(Message.ROOM_NOT_FOUND);
         });
+
+        if (classRoomRepository.existsByStreetAndBuildingNumberAndRoomNumber(targetClassRoom.getStreet(),
+                targetClassRoom.getBuildingNumber(), targetClassRoom.getRoomNumber())) {
+            throw new IllegalStateException(Message.RECORD_EXISTS);
+        }
         BeanUtils.copyProperties(targetClassRoom, existingClassRoom, "id");
         return classRoomRepository.save(existingClassRoom);
     }
