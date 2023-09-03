@@ -8,30 +8,49 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" />
 </head>
 
-<div th:replace="fragments/header :: header"></div>
-
-<div th:replace="fragments/nav-panel :: div"></div>
-
 <body>
+    <div th:replace="fragments/header :: header"></div>
+
+    <div th:replace="fragments/nav-panel :: div"></div>
 
     <div class="container">
-        <h2>Alerts</h2>
-        <div th:if="${alerts}">
-            <ul>
-                <li th:each="alert : ${alerts}">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    <span th:text="${alert.message}"></span>
-                </li>
-            </ul>
-        </div>
-        <div th:if="${not alerts}">
-            <p>There are no alerts.</p>
-        </div>
+        <h2>Alert List</h2>
+        <table class="table table-bordered">
+            <caption hidden>Alert Table</caption>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Message</th>
+                    <th style="border: none; width: 3vh;"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="alert, rowStat : ${teacher.alerts}">
+                    <td th:text="${alert.date}"></td>
+                    <td th:text="${alert.time}"></td>
+                    <td th:text="${alert.message}"></td>
+
+                    <td style="border: none;">
+                        <!-- Remove Button -->
+                        <form th:action="@{/teacher/alert/delete/{alertsId}(alertsId=${alert.id})}" method="post">
+                            <input type="hidden" name="alertsId" th:value="${alert.id}" />
+                            <button th:id="'removeButton-' + ${rowStat.index}" class="icon-button remove-button"
+                                type="submit">
+                                <i class="fas fa-trash-alt remove-icon"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 
     <div th:replace="fragments/message :: div"></div>
     <div th:replace="fragments/footer :: footer"></div>
 
+    <script th:src="@{/js/work-panel.js}"></script>
+    <script th:src="@{/js/table-buttons.js}"></script>
 </body>
 
 </html>

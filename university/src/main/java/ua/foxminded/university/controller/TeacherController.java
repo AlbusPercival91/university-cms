@@ -21,9 +21,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import ua.foxminded.university.dao.entities.Alert;
 import ua.foxminded.university.dao.entities.Course;
 import ua.foxminded.university.dao.entities.Department;
 import ua.foxminded.university.dao.entities.Teacher;
+import ua.foxminded.university.dao.service.AlertService;
 import ua.foxminded.university.dao.service.CourseService;
 import ua.foxminded.university.dao.service.DepartmentService;
 import ua.foxminded.university.dao.service.TeacherService;
@@ -41,6 +44,9 @@ public class TeacherController {
 
     @Autowired
     private CourseService courseService;
+
+    @Autowired
+    private AlertService alertService;
 
     @Autowired
     private ControllerBindingValidator bindingValidator;
@@ -98,6 +104,21 @@ public class TeacherController {
             redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
         }
         return "redirect:/teacher/main";
+    }
+
+    @RolesAllowed("TEACHER")
+    @GetMapping("/teacher/alert/{teacherId}")
+    public String getAllTeacherAlerts(@PathVariable int teacherId, Model model) {
+        Optional<Teacher> optionalTeacher = teacherService.findTeacherById(teacherId);
+
+        if (optionalTeacher.isPresent()) {
+            List<Alert> alerts = alertService.getAllTeacherAlerts(optionalTeacher.get());
+            model.addAttribute("teacher", optionalTeacher.get());
+            model.addAttribute("alerts", alerts);
+            return "teacher/alert";
+        } else {
+            return "redirect:/teacher/main";
+        }
     }
 
     @RolesAllowed("ADMIN")

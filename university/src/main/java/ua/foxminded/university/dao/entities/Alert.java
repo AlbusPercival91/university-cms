@@ -23,8 +23,8 @@ import lombok.ToString;
 @EqualsAndHashCode
 @NoArgsConstructor
 @Entity
-@Table(name = "teacher_alerts", schema = "university")
-public class TeacherAlerts {
+@Table(name = "alert", schema = "university")
+public class Alert {
 
     @ToString.Exclude
     @Id
@@ -44,13 +44,24 @@ public class TeacherAlerts {
     @JoinColumn(name = "teacher_id")
     private Teacher teacher;
 
+    @ManyToOne
+    @JoinColumn(name = "student_id")
+    private Student student;
+
     @Column(name = "message")
     private String message;
 
-    public TeacherAlerts(LocalDate date, LocalTime time, Teacher teacher, String message) {
+    public Alert(LocalDate date, LocalTime time, Teacher teacher, String message) {
         this.date = date;
         this.time = time;
         this.teacher = teacher;
+        this.message = message;
+    }
+
+    public Alert(LocalDate date, LocalTime time, Student student, String message) {
+        this.date = date;
+        this.time = time;
+        this.student = student;
         this.message = message;
     }
 }
