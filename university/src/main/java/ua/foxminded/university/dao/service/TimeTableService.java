@@ -161,7 +161,7 @@ public class TimeTableService {
             log.warn(Message.TIMETABLE_NOT_FOUND);
             return new NoSuchElementException(Message.TIMETABLE_NOT_FOUND);
         });
-        timeTableValidator.validate(targetTimeTable.getDate(), targetTimeTable.getTimeFrom(),
+        timeTableValidator.validate(existingTimeTable.getId(), targetTimeTable.getDate(), targetTimeTable.getTimeFrom(),
                 targetTimeTable.getTimeTo(), targetTimeTable.getTeacher(), targetTimeTable.getCourse(),
                 targetTimeTable.getClassRoom());
 
