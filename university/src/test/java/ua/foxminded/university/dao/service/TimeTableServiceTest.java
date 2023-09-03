@@ -71,7 +71,7 @@ class TimeTableServiceTest {
     @ParameterizedTest
     @CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 1, 1", "2023-09-01, 12:00, 13:30, 2, 2, 2, 2",
             "2023-09-02, 09:00, 10:30, 3, 3, 3, 3", "2023-09-02, 12:00, 13:30, 1, 1, 2, 3" })
-    void testCreateGroupTimeTable_WhenClassRoomIsBusy_ShouldThrowIllegalStateException(LocalDate date,
+    void testCreateGroupTimeTable_WhenClassRoomIsBusy_ShouldThrowTimeTableValidationException(LocalDate date,
             LocalTime timeFrom, LocalTime timeTo, int teacherId, int courseId, int groupId, int classRoomId) {
         teacherRepository.addTeacherToTheCourse(teacherId, "Mathematics");
         teacherRepository.addTeacherToTheCourse(teacherId, "Physics");
@@ -82,6 +82,21 @@ class TimeTableServiceTest {
                 .saveGroupTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId, classRoomId));
         Assertions.assertEquals("Validation failed while creating TimeTable",
                 timeTableValidationException.getMessage());
+    }
+
+    @ParameterizedTest
+    @CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 1, 1", "2023-09-01, 12:00, 13:30, 2, 2, 2, 2",
+            "2023-09-02, 09:00, 10:30, 3, 3, 3, 3", "2023-09-02, 12:00, 13:30, 1, 1, 2, 3" })
+    void testCreateGroupTimeTable_WhenTimeWrong_ShouldThrowTimeTableValidationException(LocalDate date,
+            LocalTime timeFrom, LocalTime timeTo, int teacherId, int courseId, int groupId, int classRoomId) {
+        teacherRepository.addTeacherToTheCourse(teacherId, "Mathematics");
+        teacherRepository.addTeacherToTheCourse(teacherId, "Physics");
+        teacherRepository.addTeacherToTheCourse(teacherId, "Chemistry");
+        timeTableBuilder.saveGroupTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId, classRoomId);
+
+        Exception timeTableValidationException = assertThrows(Exception.class, () -> timeTableBuilder
+                .saveGroupTimeTable(date, timeTo, timeFrom, teacherId, courseId, groupId, classRoomId));
+        Assertions.assertEquals("'Time From' can't be ahaed of 'Time To'", timeTableValidationException.getMessage());
     }
 
     @ParameterizedTest
@@ -107,8 +122,8 @@ class TimeTableServiceTest {
     @ParameterizedTest
     @CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 1", "2023-09-01, 12:00, 13:30, 2, 2, 2",
             "2023-09-02, 09:00, 10:30, 3, 3, 3", "2023-09-02, 12:00, 13:30, 1, 1, 2" })
-    void testCreateTimeTableForStudentsAtCourse_WhenClassRoomIsBusy_ShouldThrowIllegalStateException(LocalDate date,
-            LocalTime timeFrom, LocalTime timeTo, int teacherId, int courseId, int classRoomId) {
+    void testCreateTimeTableForStudentsAtCourse_WhenClassRoomIsBusy_ShouldThrowTimeTableValidationException(
+            LocalDate date, LocalTime timeFrom, LocalTime timeTo, int teacherId, int courseId, int classRoomId) {
         studentRepository.addStudentToTheCourse(1, "Mathematics");
         studentRepository.addStudentToTheCourse(2, "Mathematics");
         studentRepository.addStudentToTheCourse(3, "Physics");
@@ -120,9 +135,29 @@ class TimeTableServiceTest {
 
         timeTableBuilder.saveTimeTableForStudentsAtCourse(date, timeFrom, timeTo, teacherId, courseId, classRoomId);
 
-        Exception illegalStateException = assertThrows(Exception.class, () -> timeTableBuilder
+        Exception timeTableValidationException = assertThrows(Exception.class, () -> timeTableBuilder
                 .saveTimeTableForStudentsAtCourse(date, timeFrom, timeTo, teacherId, courseId, classRoomId));
-        Assertions.assertEquals("Validation failed while creating TimeTable", illegalStateException.getMessage());
+        Assertions.assertEquals("Validation failed while creating TimeTable",
+                timeTableValidationException.getMessage());
+    }
+
+    @ParameterizedTest
+    @CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 1", "2023-09-01, 12:00, 13:30, 2, 2, 2",
+            "2023-09-02, 09:00, 10:30, 3, 3, 3", "2023-09-02, 12:00, 13:30, 1, 1, 2" })
+    void testCreateTimeTableForStudentsAtCourse_WhenTimeWrong_ShouldThrowTimeTableValidationException(LocalDate date,
+            LocalTime timeFrom, LocalTime timeTo, int teacherId, int courseId, int classRoomId) {
+        studentRepository.addStudentToTheCourse(1, "Mathematics");
+        studentRepository.addStudentToTheCourse(2, "Mathematics");
+        studentRepository.addStudentToTheCourse(3, "Physics");
+        studentRepository.addStudentToTheCourse(1, "Chemistry");
+
+        teacherRepository.addTeacherToTheCourse(teacherId, "Mathematics");
+        teacherRepository.addTeacherToTheCourse(teacherId, "Physics");
+        teacherRepository.addTeacherToTheCourse(teacherId, "Chemistry");
+
+        Exception timeTableValidationException = assertThrows(Exception.class, () -> timeTableBuilder
+                .saveTimeTableForStudentsAtCourse(date, timeTo, timeFrom, teacherId, courseId, classRoomId));
+        Assertions.assertEquals("'Time From' can't be ahaed of 'Time To'", timeTableValidationException.getMessage());
     }
 
     @ParameterizedTest
@@ -450,9 +485,8 @@ class TimeTableServiceTest {
 
     @ParameterizedTest
     @CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 1, 1" })
-    void testUpdateTimeTableById_WhenValidationFailed_ShouldThrowTimeTableValidationException_IsNotTeacherCourse(
-            LocalDate date, LocalTime timeFrom, LocalTime timeTo, int teacherId, int courseId, int groupId,
-            int classRoomId) {
+    void testUpdateTimeTableById_WhenIsNotTeacherCourse_ShouldThrowTimeTableValidationException(LocalDate date,
+            LocalTime timeFrom, LocalTime timeTo, int teacherId, int courseId, int groupId, int classRoomId) {
         teacherRepository.addTeacherToTheCourse(teacherId, "Mathematics");
 
         TimeTable timeTable = timeTableBuilder.saveGroupTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId,
@@ -471,7 +505,7 @@ class TimeTableServiceTest {
 
     @ParameterizedTest
     @CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 1, 1" })
-    void testUpdateTimeTableById_WhenValidationFailed_ShouldThrowTimeTableValidationException_TimeWrong(LocalDate date,
+    void testUpdateTimeTableById_WhenTimeWrong_ShouldThrowTimeTableValidationException(LocalDate date,
             LocalTime timeFrom, LocalTime timeTo, int teacherId, int courseId, int groupId, int classRoomId) {
         teacherRepository.addTeacherToTheCourse(teacherId, "Mathematics");
 
