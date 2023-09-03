@@ -33,6 +33,7 @@ public class TimeTableService {
     private final StudentRepository studentRepository;
     private final TeacherRepository teacherRepository;
     private final GroupRepository groupRepository;
+    private final TeacherAlertsService alertService;
     private final TimeTableValidator timeTableValidator;
 
     public TimeTable createGroupTimeTable(LocalDate date, LocalTime timeFrom, LocalTime timeTo, Teacher teacher,
@@ -42,6 +43,7 @@ public class TimeTableService {
 
             TimeTable timeTable = new TimeTable(date, timeFrom, timeTo, teacher, course, group, classRoom);
             log.info(Message.TIMETABLE_SCHEDULED, timeTable.getDate(), timeTable.getTimeFrom(), timeTable.getTimeTo());
+            alertService.createTeacherAlert(date, timeFrom, teacher, "Test ALERT");
             return timeTableRepository.save(timeTable);
         } catch (TimeTableValidationException ex) {
             throw new TimeTableValidationException(ex.getMessage());
