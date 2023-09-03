@@ -26,6 +26,7 @@ import ua.foxminded.university.dao.entities.TimeTable;
 import ua.foxminded.university.dao.interfaces.StudentRepository;
 import ua.foxminded.university.dao.interfaces.TeacherRepository;
 import ua.foxminded.university.dao.interfaces.TimeTableRepository;
+import ua.foxminded.university.validation.Message;
 import ua.foxminded.university.validation.TimeTableValidator;
 import ua.foxminded.university.validation.UniqueEmailValidator;
 
@@ -80,8 +81,7 @@ class TimeTableServiceTest {
 
         Exception timeTableValidationException = assertThrows(Exception.class, () -> timeTableBuilder
                 .saveGroupTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId, classRoomId));
-        Assertions.assertEquals("Validation failed while creating TimeTable",
-                timeTableValidationException.getMessage());
+        Assertions.assertEquals(Message.VALIDATION_FAILED, timeTableValidationException.getMessage());
     }
 
     @ParameterizedTest
@@ -96,7 +96,7 @@ class TimeTableServiceTest {
 
         Exception timeTableValidationException = assertThrows(Exception.class, () -> timeTableBuilder
                 .saveGroupTimeTable(date, timeTo, timeFrom, teacherId, courseId, groupId, classRoomId));
-        Assertions.assertEquals("'Time From' can't be ahaed of 'Time To'", timeTableValidationException.getMessage());
+        Assertions.assertEquals(Message.TIMING_WRONG, timeTableValidationException.getMessage());
     }
 
     @ParameterizedTest
@@ -137,8 +137,7 @@ class TimeTableServiceTest {
 
         Exception timeTableValidationException = assertThrows(Exception.class, () -> timeTableBuilder
                 .saveTimeTableForStudentsAtCourse(date, timeFrom, timeTo, teacherId, courseId, classRoomId));
-        Assertions.assertEquals("Validation failed while creating TimeTable",
-                timeTableValidationException.getMessage());
+        Assertions.assertEquals(Message.VALIDATION_FAILED, timeTableValidationException.getMessage());
     }
 
     @ParameterizedTest
@@ -157,7 +156,7 @@ class TimeTableServiceTest {
 
         Exception timeTableValidationException = assertThrows(Exception.class, () -> timeTableBuilder
                 .saveTimeTableForStudentsAtCourse(date, timeTo, timeFrom, teacherId, courseId, classRoomId));
-        Assertions.assertEquals("'Time From' can't be ahaed of 'Time To'", timeTableValidationException.getMessage());
+        Assertions.assertEquals(Message.TIMING_WRONG, timeTableValidationException.getMessage());
     }
 
     @ParameterizedTest
@@ -168,7 +167,7 @@ class TimeTableServiceTest {
 
         Exception noSuchElementException = assertThrows(Exception.class, () -> timeTableBuilder
                 .saveTimeTableForStudentsAtCourse(date, timeFrom, timeTo, teacherId, courseId, classRoomId));
-        Assertions.assertEquals("Teacher is not assigned with such Course", noSuchElementException.getMessage());
+        Assertions.assertEquals(Message.IS_NOT_TEACHER_COURSE, noSuchElementException.getMessage());
     }
 
     @ParameterizedTest
@@ -271,7 +270,7 @@ class TimeTableServiceTest {
 
         Exception noSuchElementException = assertThrows(Exception.class,
                 () -> timeTableService.getTeacherTimeTable(fakeTeacher));
-        Assertions.assertEquals("Teacher not found", noSuchElementException.getMessage());
+        Assertions.assertEquals(Message.TEACHER_NOT_FOUND, noSuchElementException.getMessage());
     }
 
     @ParameterizedTest
@@ -306,7 +305,7 @@ class TimeTableServiceTest {
 
         Exception noSuchElementException = assertThrows(Exception.class,
                 () -> timeTableService.getStudentsGroupTimeTable(fakeStudent));
-        Assertions.assertEquals("Student not found", noSuchElementException.getMessage());
+        Assertions.assertEquals(Message.STUDENT_NOT_FOUND, noSuchElementException.getMessage());
     }
 
     @ParameterizedTest
@@ -319,7 +318,7 @@ class TimeTableServiceTest {
 
         Exception noSuchElementException = assertThrows(Exception.class,
                 () -> timeTableService.getGroupTimeTable(fakeGroup));
-        Assertions.assertEquals("Group not found", noSuchElementException.getMessage());
+        Assertions.assertEquals(Message.GROUP_NOT_FOUND, noSuchElementException.getMessage());
     }
 
     @ParameterizedTest
@@ -356,7 +355,7 @@ class TimeTableServiceTest {
 
         Exception noSuchElementException = assertThrows(Exception.class,
                 () -> timeTableService.getTeacherTimeTableByDate(date, date, fakeTeacher));
-        Assertions.assertEquals("Teacher not found", noSuchElementException.getMessage());
+        Assertions.assertEquals(Message.TEACHER_NOT_FOUND, noSuchElementException.getMessage());
     }
 
     @ParameterizedTest
@@ -391,7 +390,7 @@ class TimeTableServiceTest {
 
         Exception noSuchElementException = assertThrows(Exception.class,
                 () -> timeTableService.getStudentsGroupTimeTableByDate(date, date, fakeStudent));
-        Assertions.assertEquals("Student not found", noSuchElementException.getMessage());
+        Assertions.assertEquals(Message.STUDENT_NOT_FOUND, noSuchElementException.getMessage());
     }
 
     @ParameterizedTest
@@ -405,7 +404,7 @@ class TimeTableServiceTest {
 
         Exception noSuchElementException = assertThrows(Exception.class,
                 () -> timeTableService.getGroupTimeTableByDate(date, date, fakeGroup));
-        Assertions.assertEquals("Group not found", noSuchElementException.getMessage());
+        Assertions.assertEquals(Message.GROUP_NOT_FOUND, noSuchElementException.getMessage());
     }
 
     @ParameterizedTest
@@ -480,7 +479,7 @@ class TimeTableServiceTest {
 
         Exception noSuchElementException = assertThrows(Exception.class,
                 () -> timeTableService.updateTimeTableById(2, expectedTimeTable));
-        Assertions.assertEquals("Time Table not found", noSuchElementException.getMessage());
+        Assertions.assertEquals(Message.TIMETABLE_NOT_FOUND, noSuchElementException.getMessage());
     }
 
     @ParameterizedTest
@@ -500,7 +499,7 @@ class TimeTableServiceTest {
 
         Exception timeTableValidationException = assertThrows(Exception.class,
                 () -> timeTableService.updateTimeTableById(1, expectedTimeTable));
-        Assertions.assertEquals("Teacher is not assigned with such Course", timeTableValidationException.getMessage());
+        Assertions.assertEquals(Message.IS_NOT_TEACHER_COURSE, timeTableValidationException.getMessage());
     }
 
     @ParameterizedTest
@@ -518,7 +517,7 @@ class TimeTableServiceTest {
 
         Exception timeTableValidationException = assertThrows(Exception.class,
                 () -> timeTableService.updateTimeTableById(1, expectedTimeTable));
-        Assertions.assertEquals("'Time From' can't be ahaed of 'Time To'", timeTableValidationException.getMessage());
+        Assertions.assertEquals(Message.TIMING_WRONG, timeTableValidationException.getMessage());
     }
 
     @ParameterizedTest
@@ -549,7 +548,7 @@ class TimeTableServiceTest {
         timeTableBuilder.saveGroupTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId, classRoomId);
 
         Exception noSuchElementException = assertThrows(Exception.class, () -> timeTableService.deleteTimeTableById(2));
-        Assertions.assertEquals("Time Table not found", noSuchElementException.getMessage());
+        Assertions.assertEquals(Message.TIMETABLE_NOT_FOUND, noSuchElementException.getMessage());
     }
 
 }
