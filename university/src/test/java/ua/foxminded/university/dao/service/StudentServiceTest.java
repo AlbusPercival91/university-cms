@@ -20,6 +20,7 @@ import ua.foxminded.university.dao.entities.Student;
 import ua.foxminded.university.dao.interfaces.CourseRepository;
 import ua.foxminded.university.dao.interfaces.StudentRepository;
 import ua.foxminded.university.security.UserRole;
+import ua.foxminded.university.validation.Message;
 import ua.foxminded.university.validation.UniqueEmailValidator;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = { StudentService.class,
@@ -50,7 +51,7 @@ class StudentServiceTest {
     @Test
     void testDeleteStudentById_WhenIdNotFound_ShouldThrowNoSuchElementException() {
         Exception noSuchElementException = assertThrows(Exception.class, () -> studentService.deleteStudentById(4));
-        Assertions.assertEquals("Student not found", noSuchElementException.getMessage());
+        Assertions.assertEquals(Message.STUDENT_NOT_FOUND, noSuchElementException.getMessage());
     }
 
     @ParameterizedTest
@@ -70,7 +71,7 @@ class StudentServiceTest {
 
         Exception noSuchElementException = assertThrows(Exception.class,
                 () -> studentService.updateStudentById(4, expectedStudent));
-        Assertions.assertEquals("Student not found", noSuchElementException.getMessage());
+        Assertions.assertEquals(Message.STUDENT_NOT_FOUND, noSuchElementException.getMessage());
     }
 
     @ParameterizedTest
@@ -91,7 +92,7 @@ class StudentServiceTest {
 
         Exception illegalStateException = assertThrows(Exception.class,
                 () -> studentService.removeStudentFromCourse(1, course.get().getCourseName()));
-        Assertions.assertEquals("User is not related with this Course!", illegalStateException.getMessage());
+        Assertions.assertEquals(Message.USER_NOT_RELATED_WITH_COURSE, illegalStateException.getMessage());
     }
 
 }

@@ -16,6 +16,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import ua.foxminded.university.dao.entities.ClassRoom;
 import ua.foxminded.university.dao.interfaces.ClassRoomRepository;
+import ua.foxminded.university.validation.Message;
 import ua.foxminded.university.validation.UniqueEmailValidator;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
@@ -43,7 +44,7 @@ class ClassRoomServiceTest {
     @Test
     void testDeleteClassRoomById_WhenIdNotFound_ShouldThrowNoSuchElementException() {
         Exception noSuchElementException = assertThrows(Exception.class, () -> classRoomService.deleteClassRoomById(4));
-        Assertions.assertEquals("Class Room not found", noSuchElementException.getMessage());
+        Assertions.assertEquals(Message.ROOM_NOT_FOUND, noSuchElementException.getMessage());
     }
 
     @ParameterizedTest
@@ -63,6 +64,6 @@ class ClassRoomServiceTest {
 
         Exception noSuchElementException = assertThrows(Exception.class,
                 () -> classRoomService.updateClassRoomById(4, expectedClassRoom));
-        Assertions.assertEquals("Class Room not found", noSuchElementException.getMessage());
+        Assertions.assertEquals(Message.ROOM_NOT_FOUND, noSuchElementException.getMessage());
     }
 }
