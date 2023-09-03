@@ -450,20 +450,41 @@ class TimeTableServiceTest {
 
     @ParameterizedTest
     @CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 1, 1" })
-    void testUpdateTimeTableById_WhenValidationFailed_ShouldThrowTimeTableValidationException(LocalDate date,
-            LocalTime timeFrom, LocalTime timeTo, int teacherId, int courseId, int groupId, int classRoomId) {
+    void testUpdateTimeTableById_WhenValidationFailed_ShouldThrowTimeTableValidationException_IsNotTeacherCourse(
+            LocalDate date, LocalTime timeFrom, LocalTime timeTo, int teacherId, int courseId, int groupId,
+            int classRoomId) {
         teacherRepository.addTeacherToTheCourse(teacherId, "Mathematics");
 
         TimeTable timeTable = timeTableBuilder.saveGroupTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId,
                 classRoomId);
+
+        teacherRepository.removeTeacherFromCourse(teacherId, "Mathematics");
+
         TimeTable expectedTimeTable = new TimeTable(date.plusMonths(1), timeFrom.plusHours(1), timeTo.plusHours(1),
                 timeTable.getTeacher(), timeTable.getCourse(), timeTable.getGroup(), timeTable.getClassRoom());
         expectedTimeTable.setId(1);
 
         Exception timeTableValidationException = assertThrows(Exception.class,
                 () -> timeTableService.updateTimeTableById(1, expectedTimeTable));
-        Assertions.assertEquals("Validation failed while creating TimeTable",
-                timeTableValidationException.getMessage());
+        Assertions.assertEquals("Teacher is not assigned with such Course", timeTableValidationException.getMessage());
+    }
+
+    @ParameterizedTest
+    @CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 1, 1" })
+    void testUpdateTimeTableById_WhenValidationFailed_ShouldThrowTimeTableValidationException_TimeWrong(LocalDate date,
+            LocalTime timeFrom, LocalTime timeTo, int teacherId, int courseId, int groupId, int classRoomId) {
+        teacherRepository.addTeacherToTheCourse(teacherId, "Mathematics");
+
+        TimeTable timeTable = timeTableBuilder.saveGroupTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId,
+                classRoomId);
+
+        TimeTable expectedTimeTable = new TimeTable(date, timeTo.plusHours(1), timeFrom.plusHours(1),
+                timeTable.getTeacher(), timeTable.getCourse(), timeTable.getGroup(), timeTable.getClassRoom());
+        expectedTimeTable.setId(1);
+
+        Exception timeTableValidationException = assertThrows(Exception.class,
+                () -> timeTableService.updateTimeTableById(1, expectedTimeTable));
+        Assertions.assertEquals("'Time From' can't be ahaed of 'Time To'", timeTableValidationException.getMessage());
     }
 
     @ParameterizedTest
