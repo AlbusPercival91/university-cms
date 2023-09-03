@@ -26,39 +26,39 @@ import lombok.ToString;
 @Table(name = "teacher", schema = "university")
 public class Teacher extends User {
 
-	@ManyToOne
-	@JoinColumn(name = "department_id")
-	private Department department;
+    @ManyToOne
+    @JoinColumn(name = "department_id")
+    private Department department;
 
-	@ToString.Exclude
-	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.LAZY)
-	@JoinTable(schema = "university", name = "teachers_courses", joinColumns = @JoinColumn(name = "teacher_id"), inverseJoinColumns = @JoinColumn(name = "course_id"))
-	private Set<Course> assignedCourses = new HashSet<>();
+    @ToString.Exclude
+    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.LAZY)
+    @JoinTable(schema = "university", name = "teachers_courses", joinColumns = @JoinColumn(name = "teacher_id"), inverseJoinColumns = @JoinColumn(name = "course_id"))
+    private Set<Course> assignedCourses = new HashSet<>();
 
-	@ToString.Exclude
-	@OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private List<TimeTable> timeTables;
+    @ToString.Exclude
+    @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<TimeTable> timeTables;
 
-	public Teacher(String firstName, String lastName, boolean isActive, String email, String password,
-			Department department) {
-		super(firstName, lastName, isActive, email, password);
-		this.department = department;
-	}
+    public Teacher(String firstName, String lastName, boolean isActive, String email, String password,
+            Department department) {
+        super(firstName, lastName, isActive, email, password);
+        this.department = department;
+    }
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (!(o instanceof Teacher))
-			return false;
-		if (!super.equals(o))
-			return false;
-		Teacher teacher = (Teacher) o;
-		return getId() == teacher.getId();
-	}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (!(o instanceof Teacher))
+            return false;
+        if (!super.equals(o))
+            return false;
+        Teacher teacher = (Teacher) o;
+        return getId() == teacher.getId();
+    }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(super.hashCode(), getId());
-	}
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), getId());
+    }
 }

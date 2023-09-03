@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Alerts</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" />
+</head>
+
+<div th:replace="fragments/header :: header"></div>
+
+<div th:replace="fragments/nav-panel :: div"></div>
+
+<body>
+
+    <div class="container">
+        <h2>Alerts</h2>
+        <div th:if="${alerts}">
+            <ul>
+                <li th:each="alert : ${alerts}">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span th:text="${alert.message}"></span>
+                </li>
+            </ul>
+        </div>
+        <div th:if="${not alerts}">
+            <p>There are no alerts.</p>
+        </div>
+    </div>
+
+    <div th:replace="fragments/message :: div"></div>
+    <div th:replace="fragments/footer :: footer"></div>
+
+</body>
+
+</html>
