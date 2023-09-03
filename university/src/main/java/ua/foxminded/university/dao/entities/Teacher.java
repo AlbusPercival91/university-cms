@@ -39,6 +39,10 @@ public class Teacher extends User {
     @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<TimeTable> timeTables;
 
+    @ToString.Exclude
+    @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<TeacherAlerts> alerts;
+
     public Teacher(String firstName, String lastName, boolean isActive, String email, String password,
             Department department) {
         super(firstName, lastName, isActive, email, password);
