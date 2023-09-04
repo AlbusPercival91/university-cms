@@ -101,7 +101,7 @@ public class AdminController {
         return "admin/alert";
     }
 
-    @RolesAllowed("ADMIN")
+    @RolesAllowed({ "ADMIN", "STAFF" })
     @GetMapping("/admin/admin-list")
     public String getAllAdminList(Model model) {
         List<Admin> admins = adminService.getAllAdmins();
@@ -128,7 +128,7 @@ public class AdminController {
         return "redirect:" + referrer;
     }
 
-    @RolesAllowed("ADMIN")
+    @RolesAllowed({ "ADMIN", "STAFF" })
     @GetMapping("/admin/admin-card/{adminId}")
     public String openAdminCard(@PathVariable int adminId, Model model) {
         Optional<Admin> optionalAdmin = adminService.findAdminById(adminId);
