@@ -43,6 +43,14 @@ public class Alert {
     @JoinColumn(name = "student_id")
     private Student student;
 
+    @ManyToOne
+    @JoinColumn(name = "staff_id")
+    private Staff staff;
+
+    @ManyToOne
+    @JoinColumn(name = "admin_id")
+    private Admin admin;
+
     @Column(name = "message")
     private String message;
 
@@ -55,6 +63,18 @@ public class Alert {
     public Alert(LocalDateTime timestamp, Student student, String message) {
         this.timestamp = timestamp;
         this.student = student;
+        this.message = message;
+    }
+
+    public Alert(LocalDateTime timestamp, Staff staff, String message) {
+        this.timestamp = timestamp;
+        this.staff = staff;
+        this.message = message;
+    }
+
+    public Alert(LocalDateTime timestamp, Admin admin, String message) {
+        this.timestamp = timestamp;
+        this.admin = admin;
         this.message = message;
     }
 }

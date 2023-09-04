@@ -1,6 +1,10 @@
 package ua.foxminded.university.dao.entities;
 
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -17,7 +21,11 @@ import lombok.ToString;
 @Table(name = "admin", schema = "university")
 public class Admin extends User {
 
-	public Admin(String firstName, String lastName, boolean isActive, String email, String password) {
-		super(firstName, lastName, isActive, email, password);
-	}
+    @ToString.Exclude
+    @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Alert> alerts;
+
+    public Admin(String firstName, String lastName, boolean isActive, String email, String password) {
+        super(firstName, lastName, isActive, email, password);
+    }
 }
