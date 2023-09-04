@@ -11,12 +11,14 @@ import ua.foxminded.university.dao.entities.Teacher;
 import ua.foxminded.university.dao.entities.Admin;
 import ua.foxminded.university.dao.entities.Alert;
 import ua.foxminded.university.dao.entities.Course;
+import ua.foxminded.university.dao.entities.Faculty;
 import ua.foxminded.university.dao.entities.Group;
 import ua.foxminded.university.dao.entities.Staff;
 import ua.foxminded.university.dao.entities.Student;
 import ua.foxminded.university.dao.interfaces.AdminRepository;
 import ua.foxminded.university.dao.interfaces.AlertRepository;
 import ua.foxminded.university.dao.interfaces.CourseRepository;
+import ua.foxminded.university.dao.interfaces.FacultyRepository;
 import ua.foxminded.university.dao.interfaces.GroupRepository;
 import ua.foxminded.university.dao.interfaces.StaffRepository;
 import ua.foxminded.university.dao.interfaces.StudentRepository;
@@ -34,6 +36,7 @@ public class AlertService {
     private final TeacherRepository teacherRepository;
     private final StaffRepository staffRepository;
     private final AdminRepository adminRepository;
+    private final FacultyRepository facultyRepository;
 
     public void createTeacherAlert(LocalDateTime timestamp, int teacherId, String message) {
         Optional<Teacher> optionalTeacher = teacherRepository.findById(teacherId);
@@ -95,6 +98,21 @@ public class AlertService {
         students.forEach(student -> createStudentAlert(timestamp, student.getId(), message));
 
         List<Teacher> teachers = teacherRepository.findTeachersRelatedToCourse(optionalCourse.get().getCourseName());
+        teachers.forEach(teacher -> createTeacherAlert(timestamp, teacher.getId(), message));
+    }
+
+    public void createFacultyAlert(LocalDateTime timestamp, int facultyId, String message) {
+        Optional<Faculty> optionalFaculty = facultyRepository.findById(facultyId);
+
+        if (optionalFaculty.isEmpty()) {
+            throw new NoSuchElementException(Message.FACULTY_NOT_FOUND);
+        }
+        List<Student> students = studentRepository
+                .findAllByGroupFacultyFacultyName(optionalFaculty.get().getFacultyName());
+        students.forEach(student -> createStudentAlert(timestamp, student.getId(), message));
+
+        List<Teacher> teachers = teacherRepository
+                .findAllByDepartmentFacultyFacultyName(optionalFaculty.get().getFacultyName());
         teachers.forEach(teacher -> createTeacherAlert(timestamp, teacher.getId(), message));
     }
 

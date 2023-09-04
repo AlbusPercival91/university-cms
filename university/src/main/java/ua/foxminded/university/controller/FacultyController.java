@@ -1,5 +1,6 @@
 package ua.foxminded.university.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -14,8 +15,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ua.foxminded.university.dao.entities.Faculty;
+import ua.foxminded.university.dao.service.AlertService;
 import ua.foxminded.university.dao.service.FacultyService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
 import ua.foxminded.university.validation.Message;
@@ -27,7 +30,26 @@ public class FacultyController {
     private FacultyService facultyService;
 
     @Autowired
+    private AlertService alertService;
+
+    @Autowired
     private ControllerBindingValidator bindingValidator;
+
+    @PostMapping("/faculty/send-alert/{facultyId}")
+    public String sendFacultyAlert(@PathVariable int facultyId, @RequestParam String alertMessage,
+            RedirectAttributes redirectAttributes) {
+        try {
+            alertService.createFacultyAlert(LocalDateTime.now(), facultyId, alertMessage);
+
+            if (alertMessage != null) {
+                redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.ALERT_SUCCESS);
+            }
+        } catch (NoSuchElementException ex) {
+            redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
+        }
+
+        return "redirect:/faculty/faculty-card/" + facultyId;
+    }
 
     @GetMapping("/faculty/faculty-list")
     public String getAllFacultyList(Model model) {
@@ -81,7 +103,7 @@ public class FacultyController {
         return "redirect:/faculty/create-faculty";
     }
 
-    @RolesAllowed("ADMIN")
+    @RolesAllowed({ "ADMIN", "STAFF" })
     @GetMapping("/faculty/faculty-card/{facultyId}")
     public String openFacultyCard(@PathVariable int facultyId, Model model) {
         Optional<Faculty> optionalFaculty = facultyService.findFacultyById(facultyId);
