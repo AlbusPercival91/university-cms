@@ -16,6 +16,7 @@ import ua.foxminded.university.dao.entities.Student;
 import ua.foxminded.university.dao.interfaces.AlertRepository;
 import ua.foxminded.university.dao.interfaces.GroupRepository;
 import ua.foxminded.university.dao.interfaces.StudentRepository;
+import ua.foxminded.university.dao.interfaces.TeacherRepository;
 import ua.foxminded.university.validation.Message;
 
 @RequiredArgsConstructor
@@ -25,14 +26,25 @@ public class AlertService {
     private final AlertRepository alertRepository;
     private final GroupRepository groupRepository;
     private final StudentRepository studentRepository;
+    private final TeacherRepository teacherRepository;
 
-    public void createTeacherAlert(LocalDateTime timestamp, Teacher teacher, String message) {
-        Alert alert = new Alert(timestamp, teacher, message);
+    public void createTeacherAlert(LocalDateTime timestamp, int teacherId, String message) {
+        Optional<Teacher> optionalTeacher = teacherRepository.findById(teacherId);
+
+        if (optionalTeacher.isEmpty()) {
+            throw new NoSuchElementException(Message.TEACHER_NOT_FOUND);
+        }
+        Alert alert = new Alert(timestamp, optionalTeacher.get(), message);
         alertRepository.save(alert);
     }
 
-    public void createStudentAlert(LocalDateTime timestamp, Student student, String message) {
-        Alert alert = new Alert(timestamp, student, message);
+    public void createStudentAlert(LocalDateTime timestamp, int studentId, String message) {
+        Optional<Student> optionalStudent = studentRepository.findById(studentId);
+
+        if (optionalStudent.isEmpty()) {
+            throw new NoSuchElementException(Message.STUDENT_NOT_FOUND);
+        }
+        Alert alert = new Alert(timestamp, optionalStudent.get(), message);
         alertRepository.save(alert);
     }
 
@@ -43,7 +55,7 @@ public class AlertService {
             throw new NoSuchElementException(Message.GROUP_NOT_FOUND);
         }
         List<Student> students = studentRepository.findAllByGroupGroupName(optionalGroup.get().getGroupName());
-        students.forEach(student -> createStudentAlert(timestamp, student, message));
+        students.forEach(student -> createStudentAlert(timestamp, student.getId(), message));
     }
 
     public List<Alert> getAllTeacherAlerts(Teacher teacher) {

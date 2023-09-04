@@ -1,5 +1,6 @@
 package ua.foxminded.university.controller;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -118,6 +119,21 @@ public class TeacherController {
             model.addAttribute("alerts", alerts);
         }
         return "teacher/alert";
+    }
+
+    @PostMapping("/teacher/send-alert/{teacherId}")
+    public String sendTeacherAlert(@PathVariable int teacherId, @RequestParam String alertMessage,
+            RedirectAttributes redirectAttributes) {
+        try {
+            alertService.createTeacherAlert(LocalDateTime.now(), teacherId, alertMessage);
+
+            if (alertMessage != null) {
+                redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.ALERT_SUCCESS);
+            }
+        } catch (NoSuchElementException ex) {
+            redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
+        }
+        return "redirect:/teacher/teacher-card/" + teacherId;
     }
 
     @RolesAllowed("ADMIN")

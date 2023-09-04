@@ -49,7 +49,7 @@ public class GroupController {
             alertService.createGroupAlert(LocalDateTime.now(), groupId, alertMessage);
 
             if (alertMessage != null) {
-                redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.GROUP_ALERT_SUCCESS);
+                redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.ALERT_SUCCESS);
             }
         } catch (NoSuchElementException ex) {
             redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
