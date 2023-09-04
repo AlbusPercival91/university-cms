@@ -137,6 +137,20 @@
             </div>
         </div>
 
+        <!-- Add textarea for alert message -->
+        <div class="entity-details">
+            <h2>Send Alert Message</h2>
+            <form th:action="@{/teacher/send-alert/{teacherId}(teacherId=${teacher.id})}" method="post">
+                <div class="form-group">
+                    <textarea id="alertMessage" name="alertMessage" style="height: 100px; flex-grow: 1;"
+                        required></textarea>
+                </div>
+                <div class="button-container">
+                    <button id="sendAlertButton" type="submit" class="button-common-style">Send Alert</button>
+                </div>
+            </form>
+        </div>
+
     </div>
 
     <div th:replace="fragments/message :: div"></div>

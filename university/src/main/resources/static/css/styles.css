@@ -373,6 +373,7 @@ button[type="submit"] {
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding: 10px;
 }
 
 .entity-details .form-group {
