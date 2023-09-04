@@ -5,7 +5,15 @@
 
                 <li class="menu-item" sec:authorize="hasRole('ROLE_TEACHER')">
                     <div class="menu-item-box">
-                        <a th:href="@{/teacher/alert/{teacherId}(teacherId=${teacher.id})}">
+                        <a th:href="@{/teacher/alert}">
+                            <i class="fas fa-bell"></i>
+                        </a>
+                    </div>
+                </li>
+
+                <li class="menu-item" sec:authorize="hasRole('ROLE_STUDENT')">
+                    <div class="menu-item-box">
+                        <a th:href="@{/student/alert}">
                             <i class="fas fa-bell"></i>
                         </a>
                     </div>

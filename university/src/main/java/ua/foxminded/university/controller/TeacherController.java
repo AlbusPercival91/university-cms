@@ -106,19 +106,18 @@ public class TeacherController {
         return "redirect:/teacher/main";
     }
 
-    @RolesAllowed("TEACHER")
-    @PostMapping("/teacher/alert/{teacherId}")
-    public String openTeacherAlerts(@PathVariable int teacherId, Model model) {
-        Optional<Teacher> optionalTeacher = teacherService.findTeacherById(teacherId);
+    @GetMapping("/teacher/alert")
+    public String openTeacherAlerts(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        Optional<Teacher> teacher = teacherService.findTeacherByEmail(email);
 
-        if (optionalTeacher.isPresent()) {
-            List<Alert> alerts = alertService.getAllTeacherAlerts(optionalTeacher.get());
-            model.addAttribute("teacher", optionalTeacher.get());
+        if (teacher.isPresent()) {
+            List<Alert> alerts = alertService.getAllTeacherAlerts(teacher.get());
+            model.addAttribute("teacher", teacher.get());
             model.addAttribute("alerts", alerts);
-            return "teacher/alert";
-        } else {
-            return "redirect:/teacher/main";
         }
+        return "teacher/alert";
     }
 
     @RolesAllowed("ADMIN")
