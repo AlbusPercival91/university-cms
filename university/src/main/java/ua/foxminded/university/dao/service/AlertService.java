@@ -13,8 +13,10 @@ import ua.foxminded.university.dao.entities.Alert;
 import ua.foxminded.university.dao.entities.Group;
 import ua.foxminded.university.dao.entities.Staff;
 import ua.foxminded.university.dao.entities.Student;
+import ua.foxminded.university.dao.interfaces.AdminRepository;
 import ua.foxminded.university.dao.interfaces.AlertRepository;
 import ua.foxminded.university.dao.interfaces.GroupRepository;
+import ua.foxminded.university.dao.interfaces.StaffRepository;
 import ua.foxminded.university.dao.interfaces.StudentRepository;
 import ua.foxminded.university.dao.interfaces.TeacherRepository;
 import ua.foxminded.university.validation.Message;
@@ -27,6 +29,8 @@ public class AlertService {
     private final GroupRepository groupRepository;
     private final StudentRepository studentRepository;
     private final TeacherRepository teacherRepository;
+    private final StaffRepository staffRepository;
+    private final AdminRepository adminRepository;
 
     public void createTeacherAlert(LocalDateTime timestamp, int teacherId, String message) {
         Optional<Teacher> optionalTeacher = teacherRepository.findById(teacherId);
@@ -45,6 +49,26 @@ public class AlertService {
             throw new NoSuchElementException(Message.STUDENT_NOT_FOUND);
         }
         Alert alert = new Alert(timestamp, optionalStudent.get(), message);
+        alertRepository.save(alert);
+    }
+
+    public void createStaffAlert(LocalDateTime timestamp, int staffId, String message) {
+        Optional<Staff> optionalStaff = staffRepository.findById(staffId);
+
+        if (optionalStaff.isEmpty()) {
+            throw new NoSuchElementException(Message.STAFF_NOT_FOUND);
+        }
+        Alert alert = new Alert(timestamp, optionalStaff.get(), message);
+        alertRepository.save(alert);
+    }
+
+    public void createAdminAlert(LocalDateTime timestamp, int adminId, String message) {
+        Optional<Admin> optionalAdmin = adminRepository.findById(adminId);
+
+        if (optionalAdmin.isEmpty()) {
+            throw new NoSuchElementException(Message.ADMIN_NOT_FOUND);
+        }
+        Alert alert = new Alert(timestamp, optionalAdmin.get(), message);
         alertRepository.save(alert);
     }
 
