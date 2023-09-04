@@ -101,7 +101,7 @@ public class StaffController {
             model.addAttribute("staff", staff.get());
             model.addAttribute("alerts", alerts);
         }
-        return "staff/alert";
+        return "alert";
     }
 
     @PostMapping("/staff/send-alert/{staffId}")

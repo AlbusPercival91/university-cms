@@ -117,7 +117,7 @@ public class StudentController {
             model.addAttribute("student", student.get());
             model.addAttribute("alerts", alerts);
         }
-        return "student/alert";
+        return "alert";
     }
 
     @PostMapping("/student/send-alert/{studentId}")

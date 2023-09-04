@@ -99,7 +99,7 @@ public class AdminController {
             model.addAttribute("admin", admin.get());
             model.addAttribute("alerts", alerts);
         }
-        return "admin/alert";
+        return "alert";
     }
 
     @PostMapping("/admin/send-alert/{adminId}")

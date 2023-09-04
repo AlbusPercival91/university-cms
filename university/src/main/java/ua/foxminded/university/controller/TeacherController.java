@@ -118,7 +118,7 @@ public class TeacherController {
             model.addAttribute("teacher", teacher.get());
             model.addAttribute("alerts", alerts);
         }
-        return "teacher/alert";
+        return "alert";
     }
 
     @PostMapping("/teacher/send-alert/{teacherId}")

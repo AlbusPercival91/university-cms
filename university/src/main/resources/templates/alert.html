@@ -21,25 +21,30 @@
                 <tr>
                     <th>Date/Time</th>
                     <th>Message</th>
-                    <th style="border: none; width: 3vh;"></th>
                 </tr>
             </thead>
             <tbody>
-                <tr th:each="alert, rowStat : ${student.alerts}">
+
+                <tr th:each="alert, rowStat : ${admin.alerts}" sec:authorize="hasRole('ROLE_ADMIN')">
                     <td th:text="${#temporals.format(alert.timestamp, 'dd-MMM-yy HH:mm')}"></td>
                     <td th:text="${alert.message}"></td>
-
-                    <td style="border: none;">
-                        <!-- Remove Button -->
-                        <form th:action="@{/student/alert/delete/{alertId}(alertId=${alert.id})}" method="post">
-                            <input type="hidden" name="alertsId" th:value="${alert.id}" />
-                            <button th:id="'removeButton-' + ${rowStat.index}" class="icon-button remove-button"
-                                type="submit">
-                                <i class="fas fa-trash-alt remove-icon"></i>
-                            </button>
-                        </form>
-                    </td>
                 </tr>
+
+                <tr th:each="alert, rowStat : ${teacher.alerts}" sec:authorize="hasRole('ROLE_TEACHER')">
+                    <td th:text="${#temporals.format(alert.timestamp, 'dd-MMM-yy HH:mm')}"></td>
+                    <td th:text="${alert.message}"></td>
+                </tr>
+
+                <tr th:each="alert, rowStat : ${student.alerts}" sec:authorize="hasRole('ROLE_STUDENT')">
+                    <td th:text="${#temporals.format(alert.timestamp, 'dd-MMM-yy HH:mm')}"></td>
+                    <td th:text="${alert.message}"></td>
+                </tr>
+
+                <tr th:each="alert, rowStat : ${staff.alerts}" sec:authorize="hasRole('ROLE_STAFF')">
+                    <td th:text="${#temporals.format(alert.timestamp, 'dd-MMM-yy HH:mm')}"></td>
+                    <td th:text="${alert.message}"></td>
+                </tr>
+
             </tbody>
         </table>
     </div>
