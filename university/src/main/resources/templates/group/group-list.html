@@ -65,7 +65,7 @@
             <caption hidden>All Groups Table</caption>
             <thead>
                 <tr>
-                    <th style="border: none; width: 3vh;" sec:authorize="hasRole('ROLE_ADMIN')"></th>
+                    <th style="border: none; width: 3vh;"></th>
                     <th>ID</th>
                     <th>Group Name</th>
                     <th>Faculty Name</th>
@@ -75,7 +75,7 @@
             </thead>
             <tbody>
                 <tr th:each="group, rowStat : ${groups}">
-                    <td style="border: none;" sec:authorize="hasRole('ROLE_ADMIN')">
+                    <td style="border: none;">
                         <!-- Edit Button -->
                         <a th:href="@{/group/group-card/{groupId}(groupId=${group.id})}">
                             <button th:id="'editButton-' + ${rowStat.index}" class="icon-button">

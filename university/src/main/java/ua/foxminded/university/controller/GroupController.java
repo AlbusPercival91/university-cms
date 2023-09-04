@@ -42,7 +42,6 @@ public class GroupController {
     @Autowired
     private ControllerBindingValidator bindingValidator;
 
-    @RolesAllowed({ "ADMIN", "STAFF", "TEACHER" })
     @PostMapping("/group/send-alert/{groupId}")
     public String sendGroupAlert(@PathVariable int groupId, @RequestParam String alertMessage,
             RedirectAttributes redirectAttributes) {
@@ -132,7 +131,6 @@ public class GroupController {
         return "group/group-list";
     }
 
-    @RolesAllowed("ADMIN")
     @GetMapping("/group/group-card/{groupId}")
     public String openGroupCard(@PathVariable int groupId, Model model) {
         Optional<Group> optionalGroup = groupService.findGroupById(groupId);
