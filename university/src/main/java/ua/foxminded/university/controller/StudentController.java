@@ -21,9 +21,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.UriComponentsBuilder;
+import ua.foxminded.university.dao.entities.Alert;
 import ua.foxminded.university.dao.entities.Course;
 import ua.foxminded.university.dao.entities.Group;
 import ua.foxminded.university.dao.entities.Student;
+import ua.foxminded.university.dao.service.AlertService;
 import ua.foxminded.university.dao.service.CourseService;
 import ua.foxminded.university.dao.service.GroupService;
 import ua.foxminded.university.dao.service.StudentService;
@@ -41,6 +43,9 @@ public class StudentController {
 
     @Autowired
     private GroupService groupService;
+
+    @Autowired
+    private AlertService alertService;
 
     @Autowired
     private ControllerBindingValidator bindingValidator;
@@ -98,6 +103,20 @@ public class StudentController {
             redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
         }
         return "redirect:/student/main";
+    }
+
+    @GetMapping("/student/alert")
+    public String openStudentAlerts(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        Optional<Student> student = studentService.findStudentByEmail(email);
+
+        if (student.isPresent()) {
+            List<Alert> alerts = alertService.getAllStudentAlerts(student.get());
+            model.addAttribute("student", student.get());
+            model.addAttribute("alerts", alerts);
+        }
+        return "student/alert";
     }
 
     @GetMapping("/student/student-list")
