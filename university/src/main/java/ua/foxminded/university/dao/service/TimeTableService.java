@@ -33,7 +33,6 @@ public class TimeTableService {
     private final StudentRepository studentRepository;
     private final TeacherRepository teacherRepository;
     private final GroupRepository groupRepository;
-    private final AlertService alertService;
     private final TimeTableValidator timeTableValidator;
 
     public TimeTable createGroupTimeTable(LocalDate date, LocalTime timeFrom, LocalTime timeTo, Teacher teacher,
@@ -43,11 +42,6 @@ public class TimeTableService {
 
             TimeTable timeTable = new TimeTable(date, timeFrom, timeTo, teacher, course, group, classRoom);
             log.info(Message.TIMETABLE_SCHEDULED, timeTable.getDate(), timeTable.getTimeFrom(), timeTable.getTimeTo());
-            alertService.createTeacherAlert(date, LocalTime.now(), teacher, Message.TEACHER_ALERT_TIMETABLE);
-
-            for (Student student : group.getStudents()) {
-                alertService.createStudentAlert(date, LocalTime.now(), student, Message.GROUP_ALERT_TIMETABLE);
-            }
             return timeTableRepository.save(timeTable);
         } catch (TimeTableValidationException ex) {
             throw new TimeTableValidationException(ex.getMessage());
@@ -62,16 +56,14 @@ public class TimeTableService {
             List<Student> studentsRelatedToCourse = studentRepository
                     .findStudentsRelatedToCourse(course.getCourseName());
 
-            if (!studentsRelatedToCourse.isEmpty()) {
-                TimeTable timeTable = new TimeTable(date, timeFrom, timeTo, teacher, course, classRoom,
-                        studentsRelatedToCourse);
-                log.info(Message.TIMETABLE_SCHEDULED, timeTable.getDate(), timeTable.getTimeFrom(),
-                        timeTable.getTimeTo());
-                return timeTableRepository.save(timeTable);
-            } else {
+            if (studentsRelatedToCourse.isEmpty()) {
                 log.warn(Message.STUDENT_NOT_FOUND, course.getCourseName());
                 throw new NoSuchElementException(Message.STUDENT_NOT_FOUND);
             }
+            TimeTable timeTable = new TimeTable(date, timeFrom, timeTo, teacher, course, classRoom,
+                    studentsRelatedToCourse);
+            log.info(Message.TIMETABLE_SCHEDULED, timeTable.getDate(), timeTable.getTimeFrom(), timeTable.getTimeTo());
+            return timeTableRepository.save(timeTable);
         } catch (TimeTableValidationException ex) {
             throw new TimeTableValidationException(ex.getMessage());
         }
