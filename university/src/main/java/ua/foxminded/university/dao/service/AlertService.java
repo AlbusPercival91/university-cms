@@ -10,11 +10,13 @@ import lombok.RequiredArgsConstructor;
 import ua.foxminded.university.dao.entities.Teacher;
 import ua.foxminded.university.dao.entities.Admin;
 import ua.foxminded.university.dao.entities.Alert;
+import ua.foxminded.university.dao.entities.Course;
 import ua.foxminded.university.dao.entities.Group;
 import ua.foxminded.university.dao.entities.Staff;
 import ua.foxminded.university.dao.entities.Student;
 import ua.foxminded.university.dao.interfaces.AdminRepository;
 import ua.foxminded.university.dao.interfaces.AlertRepository;
+import ua.foxminded.university.dao.interfaces.CourseRepository;
 import ua.foxminded.university.dao.interfaces.GroupRepository;
 import ua.foxminded.university.dao.interfaces.StaffRepository;
 import ua.foxminded.university.dao.interfaces.StudentRepository;
@@ -27,6 +29,7 @@ import ua.foxminded.university.validation.Message;
 public class AlertService {
     private final AlertRepository alertRepository;
     private final GroupRepository groupRepository;
+    private final CourseRepository courseRepository;
     private final StudentRepository studentRepository;
     private final TeacherRepository teacherRepository;
     private final StaffRepository staffRepository;
@@ -80,6 +83,19 @@ public class AlertService {
         }
         List<Student> students = studentRepository.findAllByGroupGroupName(optionalGroup.get().getGroupName());
         students.forEach(student -> createStudentAlert(timestamp, student.getId(), message));
+    }
+
+    public void createCourseAlert(LocalDateTime timestamp, int courseId, String message) {
+        Optional<Course> optionalCourse = courseRepository.findById(courseId);
+
+        if (optionalCourse.isEmpty()) {
+            throw new NoSuchElementException(Message.COURSE_NOT_FOUND);
+        }
+        List<Student> students = studentRepository.findStudentsRelatedToCourse(optionalCourse.get().getCourseName());
+        students.forEach(student -> createStudentAlert(timestamp, student.getId(), message));
+
+        List<Teacher> teachers = teacherRepository.findTeachersRelatedToCourse(optionalCourse.get().getCourseName());
+        teachers.forEach(teacher -> createTeacherAlert(timestamp, teacher.getId(), message));
     }
 
     public List<Alert> getAllTeacherAlerts(Teacher teacher) {

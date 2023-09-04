@@ -1,5 +1,6 @@
 package ua.foxminded.university.controller;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ua.foxminded.university.dao.entities.Course;
+import ua.foxminded.university.dao.service.AlertService;
 import ua.foxminded.university.dao.service.CourseService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
 import ua.foxminded.university.validation.Message;
@@ -30,7 +32,26 @@ public class CourseController {
     private CourseService courseService;
 
     @Autowired
+    private AlertService alertService;
+
+    @Autowired
     private ControllerBindingValidator bindingValidator;
+
+    @PostMapping("/course/send-alert/{courseId}")
+    public String sendCourseAlert(@PathVariable int courseId, @RequestParam String alertMessage,
+            RedirectAttributes redirectAttributes) {
+        try {
+            alertService.createCourseAlert(LocalDateTime.now(), courseId, alertMessage);
+
+            if (alertMessage != null) {
+                redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.ALERT_SUCCESS);
+            }
+        } catch (NoSuchElementException ex) {
+            redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
+        }
+
+        return "redirect:/course/course-card/" + courseId;
+    }
 
     @GetMapping("/course/course-list")
     public String getAllCourseList(Model model) {
@@ -106,7 +127,7 @@ public class CourseController {
         return "course/course-list";
     }
 
-    @RolesAllowed("ADMIN")
+    @RolesAllowed({ "ADMIN", "TEACHER", "STAFF" })
     @GetMapping("/course/course-card/{courseId}")
     public String openCourseCard(@PathVariable int courseId, Model model) {
         Optional<Course> optionalCourse = courseService.findCourseById(courseId);
