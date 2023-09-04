@@ -19,7 +19,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ua.foxminded.university.dao.entities.Admin;
+import ua.foxminded.university.dao.entities.Alert;
 import ua.foxminded.university.dao.service.AdminService;
+import ua.foxminded.university.dao.service.AlertService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
 import ua.foxminded.university.validation.Message;
 
@@ -28,6 +30,9 @@ public class AdminController {
 
     @Autowired
     private AdminService adminService;
+
+    @Autowired
+    private AlertService alertService;
 
     @Autowired
     private ControllerBindingValidator bindingValidator;
@@ -80,6 +85,20 @@ public class AdminController {
             redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
         }
         return "redirect:/admin/main";
+    }
+
+    @GetMapping("/admin/alert")
+    public String openAdminAlerts(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        Optional<Admin> admin = adminService.findAdminByEmail(email);
+
+        if (admin.isPresent()) {
+            List<Alert> alerts = alertService.getAllAdminAlerts(admin.get());
+            model.addAttribute("admin", admin.get());
+            model.addAttribute("alerts", alerts);
+        }
+        return "admin/alert";
     }
 
     @RolesAllowed("ADMIN")

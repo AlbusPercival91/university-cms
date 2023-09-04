@@ -8,8 +8,10 @@ import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import ua.foxminded.university.dao.entities.Teacher;
+import ua.foxminded.university.dao.entities.Admin;
 import ua.foxminded.university.dao.entities.Alert;
 import ua.foxminded.university.dao.entities.Group;
+import ua.foxminded.university.dao.entities.Staff;
 import ua.foxminded.university.dao.entities.Student;
 import ua.foxminded.university.dao.interfaces.AlertRepository;
 import ua.foxminded.university.dao.interfaces.GroupRepository;
@@ -50,5 +52,13 @@ public class AlertService {
 
     public List<Alert> getAllStudentAlerts(Student student) {
         return alertRepository.findByStudent(student);
+    }
+
+    public List<Alert> getAllAdminAlerts(Admin admin) {
+        return alertRepository.findByAdmin(admin);
+    }
+
+    public List<Alert> getAllStaffAlerts(Staff staff) {
+        return alertRepository.findByStaff(staff);
     }
 }
