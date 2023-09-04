@@ -11,6 +11,7 @@ import ua.foxminded.university.dao.entities.Teacher;
 import ua.foxminded.university.dao.entities.Admin;
 import ua.foxminded.university.dao.entities.Alert;
 import ua.foxminded.university.dao.entities.Course;
+import ua.foxminded.university.dao.entities.Department;
 import ua.foxminded.university.dao.entities.Faculty;
 import ua.foxminded.university.dao.entities.Group;
 import ua.foxminded.university.dao.entities.Staff;
@@ -18,6 +19,7 @@ import ua.foxminded.university.dao.entities.Student;
 import ua.foxminded.university.dao.interfaces.AdminRepository;
 import ua.foxminded.university.dao.interfaces.AlertRepository;
 import ua.foxminded.university.dao.interfaces.CourseRepository;
+import ua.foxminded.university.dao.interfaces.DepartmentRepository;
 import ua.foxminded.university.dao.interfaces.FacultyRepository;
 import ua.foxminded.university.dao.interfaces.GroupRepository;
 import ua.foxminded.university.dao.interfaces.StaffRepository;
@@ -37,6 +39,7 @@ public class AlertService {
     private final StaffRepository staffRepository;
     private final AdminRepository adminRepository;
     private final FacultyRepository facultyRepository;
+    private final DepartmentRepository departmentRepository;
 
     public void createTeacherAlert(LocalDateTime timestamp, int teacherId, String message) {
         Optional<Teacher> optionalTeacher = teacherRepository.findById(teacherId);
@@ -113,6 +116,17 @@ public class AlertService {
 
         List<Teacher> teachers = teacherRepository
                 .findAllByDepartmentFacultyFacultyName(optionalFaculty.get().getFacultyName());
+        teachers.forEach(teacher -> createTeacherAlert(timestamp, teacher.getId(), message));
+    }
+
+    public void createDepartmentAlert(LocalDateTime timestamp, int departmentId, String message) {
+        Optional<Department> optionalDepartment = departmentRepository.findById(departmentId);
+
+        if (optionalDepartment.isEmpty()) {
+            throw new NoSuchElementException(Message.DEPARTMENT_NOT_FOUND);
+        }
+        List<Teacher> teachers = teacherRepository.findAllByDepartmentIdAndDepartmentFacultyId(
+                optionalDepartment.get().getId(), optionalDepartment.get().getFaculty().getId());
         teachers.forEach(teacher -> createTeacherAlert(timestamp, teacher.getId(), message));
     }
 

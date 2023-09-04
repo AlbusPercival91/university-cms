@@ -47,7 +47,6 @@ public class FacultyController {
         } catch (NoSuchElementException ex) {
             redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
         }
-
         return "redirect:/faculty/faculty-card/" + facultyId;
     }
 
