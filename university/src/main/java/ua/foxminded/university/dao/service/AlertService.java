@@ -2,23 +2,20 @@ package ua.foxminded.university.dao.service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import ua.foxminded.university.dao.entities.Teacher;
 import ua.foxminded.university.dao.entities.Alert;
-import ua.foxminded.university.dao.entities.Department;
-import ua.foxminded.university.dao.entities.Faculty;
 import ua.foxminded.university.dao.entities.Group;
 import ua.foxminded.university.dao.entities.Student;
 import ua.foxminded.university.dao.interfaces.AlertRepository;
-import ua.foxminded.university.dao.interfaces.DepartmentRepository;
 import ua.foxminded.university.dao.interfaces.GroupRepository;
 import ua.foxminded.university.dao.interfaces.StudentRepository;
-import ua.foxminded.university.dao.interfaces.TeacherRepository;
+import ua.foxminded.university.validation.Message;
 
 @RequiredArgsConstructor
 @Service
@@ -26,30 +23,26 @@ import ua.foxminded.university.dao.interfaces.TeacherRepository;
 public class AlertService {
     private final AlertRepository alertRepository;
     private final GroupRepository groupRepository;
-    private final DepartmentRepository departmentRepository;
     private final StudentRepository studentRepository;
-    private final TeacherRepository teacherRepository;
 
-    public int createTeacherAlert(LocalDate date, LocalTime time, Teacher teacher, String message) {
+    public void createTeacherAlert(LocalDate date, LocalTime time, Teacher teacher, String message) {
         Alert alert = new Alert(date, time, teacher, message);
         alertRepository.save(alert);
-        return alert.getId();
     }
 
-    public int createStudentAlert(LocalDate date, LocalTime time, Student student, String message) {
+    public void createStudentAlert(LocalDate date, LocalTime time, Student student, String message) {
         Alert alert = new Alert(date, time, student, message);
         alertRepository.save(alert);
-        return alert.getId();
     }
 
-    public int createGroupAlert(LocalDate date, LocalTime time, Group group, String message) {
-        int alertId = 0;
-//        List<Student> students = studentRepository.findAllByGroupFacultyFacultyName(faculty.getFacultyName());
-//
-//        for (Student student : students) {
-//            alertId = createStudentAlert(date, time, student, message);
-//        }
-        return alertId;
+    public void createGroupAlert(LocalDate date, LocalTime time, int groupId, String message) {
+        Optional<Group> optionalGroup = groupRepository.findById(groupId);
+
+        if (optionalGroup.isEmpty()) {
+            throw new NoSuchElementException(Message.GROUP_NOT_FOUND);
+        }
+        List<Student> students = studentRepository.findAllByGroupGroupName(optionalGroup.get().getGroupName());
+        students.forEach(student -> createStudentAlert(date, time, student, message));
     }
 
     public List<Alert> getAllTeacherAlerts(Teacher teacher) {

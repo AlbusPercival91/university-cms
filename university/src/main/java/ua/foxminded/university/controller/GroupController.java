@@ -44,11 +44,20 @@ public class GroupController {
     private ControllerBindingValidator bindingValidator;
 
     @RolesAllowed({ "ADMIN", "STAFF", "TEACHER" })
-    @PostMapping("/group/send-alert")
-    public String sendGroupAlert(@ModelAttribute("group") @Validated Group fgroup, @RequestParam String alertMessage,
+    @PostMapping("/group/send-alert/{groupId}")
+    public String sendGroupAlert(@PathVariable int groupId, @RequestParam String alertMessage,
             RedirectAttributes redirectAttributes) {
-        alertService.createGroupAlert(LocalDate.now(), LocalTime.now(), fgroup, alertMessage);
-        return "redirect:/group/group-card/" + fgroup.getId();
+        try {
+            alertService.createGroupAlert(LocalDate.now(), LocalTime.now(), groupId, alertMessage);
+
+            if (alertMessage != null) {
+                redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.GROUP_ALERT_SUCCESS);
+            }
+        } catch (NoSuchElementException ex) {
+            redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
+        }
+
+        return "redirect:/group/group-card/" + groupId;
     }
 
     @GetMapping("/group/group-list")
