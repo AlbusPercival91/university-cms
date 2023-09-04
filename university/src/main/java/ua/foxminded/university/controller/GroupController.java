@@ -1,5 +1,7 @@
 package ua.foxminded.university.controller;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ua.foxminded.university.dao.entities.Faculty;
 import ua.foxminded.university.dao.entities.Group;
+import ua.foxminded.university.dao.service.AlertService;
 import ua.foxminded.university.dao.service.FacultyService;
 import ua.foxminded.university.dao.service.GroupService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
@@ -35,7 +38,18 @@ public class GroupController {
     private FacultyService facultyService;
 
     @Autowired
+    private AlertService alertService;
+
+    @Autowired
     private ControllerBindingValidator bindingValidator;
+
+    @RolesAllowed({ "ADMIN", "STAFF", "TEACHER" })
+    @PostMapping("/group/send-alert")
+    public String sendGroupAlert(@ModelAttribute("group") @Validated Group fgroup, @RequestParam String alertMessage,
+            RedirectAttributes redirectAttributes) {
+        alertService.createGroupAlert(LocalDate.now(), LocalTime.now(), fgroup, alertMessage);
+        return "redirect:/group/group-card/" + fgroup.getId();
+    }
 
     @GetMapping("/group/group-list")
     public String getAllGroupList(Model model) {

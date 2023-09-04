@@ -2,6 +2,7 @@ package ua.foxminded.university.dao.service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
@@ -9,36 +10,46 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import ua.foxminded.university.dao.entities.Teacher;
 import ua.foxminded.university.dao.entities.Alert;
+import ua.foxminded.university.dao.entities.Department;
 import ua.foxminded.university.dao.entities.Faculty;
+import ua.foxminded.university.dao.entities.Group;
 import ua.foxminded.university.dao.entities.Student;
 import ua.foxminded.university.dao.interfaces.AlertRepository;
+import ua.foxminded.university.dao.interfaces.DepartmentRepository;
+import ua.foxminded.university.dao.interfaces.GroupRepository;
+import ua.foxminded.university.dao.interfaces.StudentRepository;
+import ua.foxminded.university.dao.interfaces.TeacherRepository;
 
 @RequiredArgsConstructor
 @Service
 @Transactional
 public class AlertService {
     private final AlertRepository alertRepository;
+    private final GroupRepository groupRepository;
+    private final DepartmentRepository departmentRepository;
+    private final StudentRepository studentRepository;
+    private final TeacherRepository teacherRepository;
 
-    public void createTeacherAlert(LocalDate date, LocalTime time, Teacher teacher, String message) {
+    public int createTeacherAlert(LocalDate date, LocalTime time, Teacher teacher, String message) {
         Alert alert = new Alert(date, time, teacher, message);
         alertRepository.save(alert);
+        return alert.getId();
     }
 
-    public void createStudentAlert(LocalDate date, LocalTime time, Student student, String message) {
+    public int createStudentAlert(LocalDate date, LocalTime time, Student student, String message) {
         Alert alert = new Alert(date, time, student, message);
         alertRepository.save(alert);
+        return alert.getId();
     }
 
-    public void createFacultyAlert(LocalDate date, LocalTime time, Faculty faculty, String message) {
-        List<Alert> alerts = faculty.getGroups().stream()
-                .flatMap(group -> group.getStudents().stream().map(student -> new Alert(date, time, student, message)))
-                .collect(Collectors.toList());
-
-        alerts.addAll(faculty.getDepartments().stream().flatMap(
-                department -> department.getTeachers().stream().map(teacher -> new Alert(date, time, teacher, message)))
-                .toList());
-
-        alertRepository.saveAll(alerts);
+    public int createGroupAlert(LocalDate date, LocalTime time, Group group, String message) {
+        int alertId = 0;
+//        List<Student> students = studentRepository.findAllByGroupFacultyFacultyName(faculty.getFacultyName());
+//
+//        for (Student student : students) {
+//            alertId = createStudentAlert(date, time, student, message);
+//        }
+        return alertId;
     }
 
     public List<Alert> getAllTeacherAlerts(Teacher teacher) {
