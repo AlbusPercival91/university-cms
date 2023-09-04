@@ -1,7 +1,6 @@
 package ua.foxminded.university.controller;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -48,7 +47,7 @@ public class GroupController {
     public String sendGroupAlert(@PathVariable int groupId, @RequestParam String alertMessage,
             RedirectAttributes redirectAttributes) {
         try {
-            alertService.createGroupAlert(LocalDate.now(), LocalTime.now(), groupId, alertMessage);
+            alertService.createGroupAlert(LocalDateTime.now(), groupId, alertMessage);
 
             if (alertMessage != null) {
                 redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.GROUP_ALERT_SUCCESS);

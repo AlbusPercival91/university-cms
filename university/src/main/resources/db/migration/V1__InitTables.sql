@@ -111,8 +111,7 @@ CREATE TABLE IF NOT EXISTS university.timetable (
 
 CREATE TABLE alert (
     alert_id SERIAL PRIMARY KEY,
-    date DATE NOT NULL,
-    time TIME NOT NULL,
+    alert_timestamp TIMESTAMP(0) NOT NULL,
     teacher_id INT,
     student_id INT,
     message TEXT,

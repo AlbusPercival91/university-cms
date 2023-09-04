@@ -1,7 +1,6 @@
 package ua.foxminded.university.dao.entities;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -32,13 +31,9 @@ public class Alert {
     @Column(name = "alert_id")
     private int id;
 
-    @Column(name = "date")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate date;
-
-    @Column(name = "time")
-    @DateTimeFormat(pattern = "HH:mm")
-    private LocalTime time;
+    @Column(name = "alert_timestamp")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    private LocalDateTime timestamp;
 
     @ManyToOne
     @JoinColumn(name = "teacher_id")
@@ -51,16 +46,14 @@ public class Alert {
     @Column(name = "message")
     private String message;
 
-    public Alert(LocalDate date, LocalTime time, Teacher teacher, String message) {
-        this.date = date;
-        this.time = time;
+    public Alert(LocalDateTime timestamp, Teacher teacher, String message) {
+        this.timestamp = timestamp;
         this.teacher = teacher;
         this.message = message;
     }
 
-    public Alert(LocalDate date, LocalTime time, Student student, String message) {
-        this.date = date;
-        this.time = time;
+    public Alert(LocalDateTime timestamp, Student student, String message) {
+        this.timestamp = timestamp;
         this.student = student;
         this.message = message;
     }
