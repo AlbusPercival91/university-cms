@@ -6,47 +6,37 @@
     <title>Alerts</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" />
-</head>
 
 <body>
     <div th:replace="fragments/header :: header"></div>
-
     <div th:replace="fragments/nav-panel :: div"></div>
 
-    <div class="container">
-        <h2>Alert List</h2>
-        <table class="table table-bordered">
-            <caption hidden>Alert Table</caption>
-            <thead>
-                <tr>
-                    <th>Date/Time</th>
-                    <th>Message</th>
-                </tr>
-            </thead>
-            <tbody>
+    <div class="alert-container">
 
-                <tr th:each="alert, rowStat : ${admin.alerts}" sec:authorize="hasRole('ROLE_ADMIN')">
-                    <td th:text="${#temporals.format(alert.timestamp, 'dd-MMM-yy HH:mm')}"></td>
-                    <td th:text="${alert.message}"></td>
-                </tr>
+        <!-- Admin Alerts -->
+        <div th:each="alert, rowStat : ${admin.alerts}" sec:authorize="hasRole('ROLE_ADMIN')" class="alert-box">
+            <div class="alert-timestamp" th:text="${#temporals.format(alert.timestamp, 'dd-MMM-yy HH:mm')}"></div>
+            <div class="alert-message" th:text="${alert.message}"></div>
+        </div>
 
-                <tr th:each="alert, rowStat : ${teacher.alerts}" sec:authorize="hasRole('ROLE_TEACHER')">
-                    <td th:text="${#temporals.format(alert.timestamp, 'dd-MMM-yy HH:mm')}"></td>
-                    <td th:text="${alert.message}"></td>
-                </tr>
+        <!-- Teacher Alerts -->
+        <div th:each="alert, rowStat : ${teacher.alerts}" sec:authorize="hasRole('ROLE_TEACHER')" class="alert-box">
+            <div class="alert-timestamp" th:text="${#temporals.format(alert.timestamp, 'dd-MMM-yy HH:mm')}"></div>
+            <div class="alert-message" th:text="${alert.message}"></div>
+        </div>
 
-                <tr th:each="alert, rowStat : ${student.alerts}" sec:authorize="hasRole('ROLE_STUDENT')">
-                    <td th:text="${#temporals.format(alert.timestamp, 'dd-MMM-yy HH:mm')}"></td>
-                    <td th:text="${alert.message}"></td>
-                </tr>
+        <!-- Student Alerts -->
+        <div th:each="alert, rowStat : ${student.alerts}" sec:authorize="hasRole('ROLE_STUDENT')" class="alert-box">
+            <div class="alert-timestamp" th:text="${#temporals.format(alert.timestamp, 'dd-MMM-yy HH:mm')}"></div>
+            <div class="alert-message-line" th:text="${alert.message}"></div>
+        </div>
 
-                <tr th:each="alert, rowStat : ${staff.alerts}" sec:authorize="hasRole('ROLE_STAFF')">
-                    <td th:text="${#temporals.format(alert.timestamp, 'dd-MMM-yy HH:mm')}"></td>
-                    <td th:text="${alert.message}"></td>
-                </tr>
+        <!-- Staff Alerts -->
+        <div th:each="alert, rowStat : ${staff.alerts}" sec:authorize="hasRole('ROLE_STAFF')" class="alert-box">
+            <div class="alert-timestamp" th:text="${#temporals.format(alert.timestamp, 'dd-MMM-yy HH:mm')}"></div>
+            <div class="alert-message-line" th:text="${alert.message}"></div>
+        </div>
 
-            </tbody>
-        </table>
     </div>
 
     <div th:replace="fragments/message :: div"></div>
