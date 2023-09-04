@@ -1,5 +1,6 @@
 package ua.foxminded.university.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -99,6 +100,21 @@ public class AdminController {
             model.addAttribute("alerts", alerts);
         }
         return "admin/alert";
+    }
+
+    @PostMapping("/admin/send-alert/{adminId}")
+    public String sendAdminAlert(@PathVariable int adminId, @RequestParam String alertMessage,
+            RedirectAttributes redirectAttributes) {
+        try {
+            alertService.createAdminAlert(LocalDateTime.now(), adminId, alertMessage);
+
+            if (alertMessage != null) {
+                redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.ALERT_SUCCESS);
+            }
+        } catch (NoSuchElementException ex) {
+            redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
+        }
+        return "redirect:/admin/admin-card/" + adminId;
     }
 
     @RolesAllowed({ "ADMIN", "STAFF" })
