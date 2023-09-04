@@ -33,7 +33,7 @@
 
                     <td style="border: none;">
                         <!-- Remove Button -->
-                        <form th:action="@{/teacher/alert/delete/{alertsId}(alertsId=${alert.id})}" method="post">
+                        <form th:action="@{/teacher/alert/delete/{alertId}(alertId=${alert.id})}" method="post">
                             <input type="hidden" name="alertsId" th:value="${alert.id}" />
                             <button th:id="'removeButton-' + ${rowStat.index}" class="icon-button remove-button"
                                 type="submit">

@@ -107,8 +107,8 @@ public class TeacherController {
     }
 
     @RolesAllowed("TEACHER")
-    @GetMapping("/teacher/alert/{teacherId}")
-    public String getAllTeacherAlerts(@PathVariable int teacherId, Model model) {
+    @PostMapping("/teacher/alert/{teacherId}")
+    public String openTeacherAlerts(@PathVariable int teacherId, Model model) {
         Optional<Teacher> optionalTeacher = teacherService.findTeacherById(teacherId);
 
         if (optionalTeacher.isPresent()) {

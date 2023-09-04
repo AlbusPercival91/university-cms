@@ -11,14 +11,6 @@
                     </div>
                 </li>
 
-                <li class="menu-item" sec:authorize="hasRole('ROLE_STUDENT')">
-                    <div class="menu-item-box">
-                        <a th:href="@{/student/alert/{studentId}(studentId=${student.id})}">
-                            <i class="fas fa-bell"></i>
-                        </a>
-                    </div>
-                </li>
-
                 <li class="menu-item separate" sec:authorize="hasRole('ROLE_ADMIN')">
                     <div class="menu-item-box">
                         <a th:href="@{/admin/main}">My Space</a>
