@@ -3,19 +3,25 @@
         <nav>
             <ul class="menu">
 
-                <li class="menu-item" sec:authorize="hasRole('ROLE_TEACHER')">
+                <li class="menu-item">
                     <div class="menu-item-box">
-                        <a th:href="@{/teacher/alert}">
-                            <i class="fas fa-bell"></i>
-                        </a>
-                    </div>
-                </li>
 
-                <li class="menu-item" sec:authorize="hasRole('ROLE_STUDENT')">
-                    <div class="menu-item-box">
-                        <a th:href="@{/student/alert}">
+                        <a th:href="@{/teacher/alert}" sec:authorize="hasRole('ROLE_TEACHER')">
                             <i class="fas fa-bell"></i>
                         </a>
+
+                        <a th:href="@{/student/alert}" sec:authorize="hasRole('ROLE_STUDENT')">
+                            <i class="fas fa-bell"></i>
+                        </a>
+
+                        <a th:href="@{/staff/alert}" sec:authorize="hasRole('ROLE_STAFF')">
+                            <i class="fas fa-bell"></i>
+                        </a>
+
+                        <a th:href="@{/admin/alert}" sec:authorize="hasRole('ROLE_ADMIN')">
+                            <i class="fas fa-bell"></i>
+                        </a>
+
                     </div>
                 </li>
 
