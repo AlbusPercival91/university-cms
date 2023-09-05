@@ -1,5 +1,6 @@
 package ua.foxminded.university.controller;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -21,9 +22,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.UriComponentsBuilder;
+import ua.foxminded.university.dao.entities.Alert;
 import ua.foxminded.university.dao.entities.Course;
 import ua.foxminded.university.dao.entities.Group;
 import ua.foxminded.university.dao.entities.Student;
+import ua.foxminded.university.dao.service.AlertService;
 import ua.foxminded.university.dao.service.CourseService;
 import ua.foxminded.university.dao.service.GroupService;
 import ua.foxminded.university.dao.service.StudentService;
@@ -41,6 +44,9 @@ public class StudentController {
 
     @Autowired
     private GroupService groupService;
+
+    @Autowired
+    private AlertService alertService;
 
     @Autowired
     private ControllerBindingValidator bindingValidator;
@@ -98,6 +104,35 @@ public class StudentController {
             redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
         }
         return "redirect:/student/main";
+    }
+
+    @GetMapping("/student/alert")
+    public String openStudentAlerts(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        Optional<Student> student = studentService.findStudentByEmail(email);
+
+        if (student.isPresent()) {
+            List<Alert> alerts = alertService.getAllStudentAlerts(student.get());
+            model.addAttribute("student", student.get());
+            model.addAttribute("alerts", alerts);
+        }
+        return "alert";
+    }
+
+    @PostMapping("/student/send-alert/{studentId}")
+    public String sendStudentAlert(@PathVariable int studentId, @RequestParam String alertMessage,
+            RedirectAttributes redirectAttributes) {
+        try {
+            alertService.createStudentAlert(LocalDateTime.now(), studentId, alertMessage);
+
+            if (alertMessage != null) {
+                redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.ALERT_SUCCESS);
+            }
+        } catch (NoSuchElementException ex) {
+            redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
+        }
+        return "redirect:/student/student-card/" + studentId;
     }
 
     @GetMapping("/student/student-list")

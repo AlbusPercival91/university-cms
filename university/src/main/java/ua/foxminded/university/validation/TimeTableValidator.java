@@ -35,4 +35,20 @@ public class TimeTableValidator {
             throw new TimeTableValidationException(Message.TEACHER_BUSY);
         }
     }
+
+    public void validate(int timeTableIdExclude, LocalDate date, LocalTime timeFrom, LocalTime timeTo, Teacher teacher,
+            Course course, ClassRoom classRoom) {
+        if (timeTableRepository.timeTableValidationFailedOnUpdate(timeTableIdExclude, date, timeFrom, timeTo,
+                classRoom)) {
+            throw new TimeTableValidationException(Message.VALIDATION_FAILED);
+        }
+
+        if (timeFrom.isAfter(timeTo)) {
+            throw new TimeTableValidationException(Message.TIMING_WRONG);
+        }
+
+        if (!teacherRepository.findTeachersRelatedToCourse(course.getCourseName()).contains(teacher)) {
+            throw new TimeTableValidationException(Message.IS_NOT_TEACHER_COURSE);
+        }
+    }
 }

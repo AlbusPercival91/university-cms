@@ -3,6 +3,28 @@
         <nav>
             <ul class="menu">
 
+                <li class="menu-item">
+                    <div class="menu-item-box">
+
+                        <a th:href="@{/teacher/alert}" sec:authorize="hasRole('ROLE_TEACHER')">
+                            <i class="fas fa-bell"></i>
+                        </a>
+
+                        <a th:href="@{/student/alert}" sec:authorize="hasRole('ROLE_STUDENT')">
+                            <i class="fas fa-bell"></i>
+                        </a>
+
+                        <a th:href="@{/staff/alert}" sec:authorize="hasRole('ROLE_STAFF')">
+                            <i class="fas fa-bell"></i>
+                        </a>
+
+                        <a th:href="@{/admin/alert}" sec:authorize="hasRole('ROLE_ADMIN')">
+                            <i class="fas fa-bell"></i>
+                        </a>
+
+                    </div>
+                </li>
+
                 <li class="menu-item separate" sec:authorize="hasRole('ROLE_ADMIN')">
                     <div class="menu-item-box">
                         <a th:href="@{/admin/main}">My Space</a>
@@ -131,12 +153,14 @@
                     </div>
                 </li>
 
-                <li class="menu-item" sec:authorize="hasRole('ROLE_ADMIN')">
-                    <div class="menu-item-box">
+                <li class="menu-item">
+                    <div class="menu-item-box" sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_STAFF')">
                         <span class="menu-item-title">Admin</span>
                         <ul class="submenu">
-                            <li><a th:href="@{/admin/create-admin}">Create New Admin</a></li>
-                            <li><a th:href="@{/admin/admin-list}">View All Admins</a></li>
+                            <li><a th:href="@{/admin/create-admin}" sec:authorize="hasRole('ROLE_ADMIN')">Create New
+                                    Admin</a></li>
+                            <li><a th:href="@{/admin/admin-list}">View All Admins</a>
+                            </li>
                         </ul>
                     </div>
                 </li>

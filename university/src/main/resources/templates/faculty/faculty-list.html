@@ -20,7 +20,8 @@
             <caption hidden>All Faculties Table</caption>
             <thead>
                 <tr>
-                    <th style="border: none; width: 3vh;" sec:authorize="hasRole('ROLE_ADMIN')"></th>
+                    <th style="border: none; width: 3vh;"
+                        sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_STAFF')"></th>
                     <th>ID</th>
                     <th>Faculty Name</th>
                     <th>Groups</th>
@@ -30,7 +31,7 @@
             </thead>
             <tbody>
                 <tr th:each="faculty, rowStat : ${faculties}">
-                    <td style="border: none;" sec:authorize="hasRole('ROLE_ADMIN')">
+                    <td style="border: none;" sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_STAFF')">
                         <!-- Edit Button -->
                         <a th:href="@{/faculty/faculty-card/{facultyId}(facultyId=${faculty.id})}">
                             <button th:id="'editButton-' + ${rowStat.index}" class="icon-button">

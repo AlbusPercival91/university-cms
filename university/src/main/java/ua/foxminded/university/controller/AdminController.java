@@ -1,5 +1,6 @@
 package ua.foxminded.university.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -19,7 +20,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ua.foxminded.university.dao.entities.Admin;
+import ua.foxminded.university.dao.entities.Alert;
 import ua.foxminded.university.dao.service.AdminService;
+import ua.foxminded.university.dao.service.AlertService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
 import ua.foxminded.university.validation.Message;
 
@@ -28,6 +31,9 @@ public class AdminController {
 
     @Autowired
     private AdminService adminService;
+
+    @Autowired
+    private AlertService alertService;
 
     @Autowired
     private ControllerBindingValidator bindingValidator;
@@ -82,7 +88,36 @@ public class AdminController {
         return "redirect:/admin/main";
     }
 
-    @RolesAllowed("ADMIN")
+    @GetMapping("/admin/alert")
+    public String openAdminAlerts(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        Optional<Admin> admin = adminService.findAdminByEmail(email);
+
+        if (admin.isPresent()) {
+            List<Alert> alerts = alertService.getAllAdminAlerts(admin.get());
+            model.addAttribute("admin", admin.get());
+            model.addAttribute("alerts", alerts);
+        }
+        return "alert";
+    }
+
+    @PostMapping("/admin/send-alert/{adminId}")
+    public String sendAdminAlert(@PathVariable int adminId, @RequestParam String alertMessage,
+            RedirectAttributes redirectAttributes) {
+        try {
+            alertService.createAdminAlert(LocalDateTime.now(), adminId, alertMessage);
+
+            if (alertMessage != null) {
+                redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.ALERT_SUCCESS);
+            }
+        } catch (NoSuchElementException ex) {
+            redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
+        }
+        return "redirect:/admin/admin-card/" + adminId;
+    }
+
+    @RolesAllowed({ "ADMIN", "STAFF" })
     @GetMapping("/admin/admin-list")
     public String getAllAdminList(Model model) {
         List<Admin> admins = adminService.getAllAdmins();
@@ -109,7 +144,7 @@ public class AdminController {
         return "redirect:" + referrer;
     }
 
-    @RolesAllowed("ADMIN")
+    @RolesAllowed({ "ADMIN", "STAFF" })
     @GetMapping("/admin/admin-card/{adminId}")
     public String openAdminCard(@PathVariable int adminId, Model model) {
         Optional<Admin> optionalAdmin = adminService.findAdminById(adminId);

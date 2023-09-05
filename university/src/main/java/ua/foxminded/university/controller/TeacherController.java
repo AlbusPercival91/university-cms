@@ -1,5 +1,6 @@
 package ua.foxminded.university.controller;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -21,9 +22,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import ua.foxminded.university.dao.entities.Alert;
 import ua.foxminded.university.dao.entities.Course;
 import ua.foxminded.university.dao.entities.Department;
 import ua.foxminded.university.dao.entities.Teacher;
+import ua.foxminded.university.dao.service.AlertService;
 import ua.foxminded.university.dao.service.CourseService;
 import ua.foxminded.university.dao.service.DepartmentService;
 import ua.foxminded.university.dao.service.TeacherService;
@@ -41,6 +45,9 @@ public class TeacherController {
 
     @Autowired
     private CourseService courseService;
+
+    @Autowired
+    private AlertService alertService;
 
     @Autowired
     private ControllerBindingValidator bindingValidator;
@@ -98,6 +105,35 @@ public class TeacherController {
             redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
         }
         return "redirect:/teacher/main";
+    }
+
+    @GetMapping("/teacher/alert")
+    public String openTeacherAlerts(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        Optional<Teacher> teacher = teacherService.findTeacherByEmail(email);
+
+        if (teacher.isPresent()) {
+            List<Alert> alerts = alertService.getAllTeacherAlerts(teacher.get());
+            model.addAttribute("teacher", teacher.get());
+            model.addAttribute("alerts", alerts);
+        }
+        return "alert";
+    }
+
+    @PostMapping("/teacher/send-alert/{teacherId}")
+    public String sendTeacherAlert(@PathVariable int teacherId, @RequestParam String alertMessage,
+            RedirectAttributes redirectAttributes) {
+        try {
+            alertService.createTeacherAlert(LocalDateTime.now(), teacherId, alertMessage);
+
+            if (alertMessage != null) {
+                redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.ALERT_SUCCESS);
+            }
+        } catch (NoSuchElementException ex) {
+            redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
+        }
+        return "redirect:/teacher/teacher-card/" + teacherId;
     }
 
     @RolesAllowed("ADMIN")

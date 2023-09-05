@@ -373,6 +373,7 @@ button[type="submit"] {
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding: 10px;
 }
 
 .entity-details .form-group {
@@ -422,7 +423,32 @@ button[type="submit"] {
     width: auto;
 }
 
-/* Styles for Open Change Password moadal */
+/* Styles for Change Password moadal */
 #passwordModal {
     display: none;
+}
+
+/* Styles for Alerts Line Panel */
+.alert-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-gap: 9px;
+}
+
+.alert-box {
+    background-color: #f1f1f1;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s;
+    padding: 12px;
+    border-radius: 5px;
+}
+
+.alert-box:hover {
+    transform: scale(1.05);
+}
+
+.alert-timestamp {
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
 }

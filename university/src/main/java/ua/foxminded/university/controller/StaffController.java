@@ -1,5 +1,6 @@
 package ua.foxminded.university.controller;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -20,7 +21,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import ua.foxminded.university.dao.entities.Alert;
 import ua.foxminded.university.dao.entities.Staff;
+import ua.foxminded.university.dao.service.AlertService;
 import ua.foxminded.university.dao.service.StaffService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
 import ua.foxminded.university.validation.Message;
@@ -30,6 +33,9 @@ public class StaffController {
 
     @Autowired
     private StaffService staffService;
+
+    @Autowired
+    private AlertService alertService;
 
     @Autowired
     private ControllerBindingValidator bindingValidator;
@@ -82,6 +88,35 @@ public class StaffController {
             redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
         }
         return "redirect:/staff/main";
+    }
+
+    @GetMapping("/staff/alert")
+    public String openStaffAlerts(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        Optional<Staff> staff = staffService.findStaffByEmail(email);
+
+        if (staff.isPresent()) {
+            List<Alert> alerts = alertService.getAllStaffAlerts(staff.get());
+            model.addAttribute("staff", staff.get());
+            model.addAttribute("alerts", alerts);
+        }
+        return "alert";
+    }
+
+    @PostMapping("/staff/send-alert/{staffId}")
+    public String sendStaffAlert(@PathVariable int staffId, @RequestParam String alertMessage,
+            RedirectAttributes redirectAttributes) {
+        try {
+            alertService.createStaffAlert(LocalDateTime.now(), staffId, alertMessage);
+
+            if (alertMessage != null) {
+                redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.ALERT_SUCCESS);
+            }
+        } catch (NoSuchElementException ex) {
+            redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
+        }
+        return "redirect:/staff/staff-card/" + staffId;
     }
 
     @RolesAllowed("ADMIN")

@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <title>Staff Card</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" />
 </head>
 
 <body>
@@ -49,6 +50,20 @@
                 <div class="button-container" sec:authorize="hasRole('ROLE_ADMIN')">
                     <button id="saveButton" type="submit" class="button-common-style">Save</button>
                     <button id="editButton" type="button" class="button-common-style">Edit</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Add textarea for alert message -->
+        <div class="entity-details">
+            <h2>Send Alert to Staff</h2>
+            <form th:action="@{/staff/send-alert/{staffId}(staffId=${staff.id})}" method="post">
+                <div class="form-group">
+                    <textarea id="alertMessage" name="alertMessage" style="height: 100px; flex-grow: 1;"
+                        required></textarea>
+                </div>
+                <div class="button-container">
+                    <button id="sendAlertButton" type="submit" class="button-common-style">Send Alert</button>
                 </div>
             </form>
         </div>

@@ -78,7 +78,8 @@
             <caption hidden>All Courses Table</caption>
             <thead>
                 <tr>
-                    <th style="border: none; width: 3vh;" sec:authorize="hasRole('ROLE_ADMIN')"></th>
+                    <th style="border: none; width: 3vh;"
+                        sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_STAFF') or hasRole('ROLE_TEACHER')"></th>
                     <th>ID</th>
                     <th>Course Name</th>
                     <th>Course Description</th>
@@ -89,7 +90,8 @@
             </thead>
             <tbody>
                 <tr th:each="course, rowStat : ${courses}">
-                    <td style="border: none;" sec:authorize="hasRole('ROLE_ADMIN')">
+                    <td style="border: none;"
+                        sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_STAFF') or hasRole('ROLE_TEACHER')">
                         <!-- Edit Button -->
                         <a th:href="@{/course/course-card/{courseId}(courseId=${course.id})}">
                             <button th:id="'editButton-' + ${rowStat.index}" class="icon-button">

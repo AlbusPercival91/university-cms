@@ -56,16 +56,14 @@ public class TimeTableService {
             List<Student> studentsRelatedToCourse = studentRepository
                     .findStudentsRelatedToCourse(course.getCourseName());
 
-            if (!studentsRelatedToCourse.isEmpty()) {
-                TimeTable timeTable = new TimeTable(date, timeFrom, timeTo, teacher, course, classRoom,
-                        studentsRelatedToCourse);
-                log.info(Message.TIMETABLE_SCHEDULED, timeTable.getDate(), timeTable.getTimeFrom(),
-                        timeTable.getTimeTo());
-                return timeTableRepository.save(timeTable);
-            } else {
+            if (studentsRelatedToCourse.isEmpty()) {
                 log.warn(Message.STUDENT_NOT_FOUND, course.getCourseName());
                 throw new NoSuchElementException(Message.STUDENT_NOT_FOUND);
             }
+            TimeTable timeTable = new TimeTable(date, timeFrom, timeTo, teacher, course, classRoom,
+                    studentsRelatedToCourse);
+            log.info(Message.TIMETABLE_SCHEDULED, timeTable.getDate(), timeTable.getTimeFrom(), timeTable.getTimeTo());
+            return timeTableRepository.save(timeTable);
         } catch (TimeTableValidationException ex) {
             throw new TimeTableValidationException(ex.getMessage());
         }
@@ -161,11 +159,11 @@ public class TimeTableService {
             log.warn(Message.TIMETABLE_NOT_FOUND);
             return new NoSuchElementException(Message.TIMETABLE_NOT_FOUND);
         });
-        timeTableValidator.validate(existingTimeTable.getDate(), existingTimeTable.getTimeFrom(),
-                existingTimeTable.getTimeTo(), targetTimeTable.getTeacher(), targetTimeTable.getCourse(),
+        timeTableValidator.validate(existingTimeTable.getId(), targetTimeTable.getDate(), targetTimeTable.getTimeFrom(),
+                targetTimeTable.getTimeTo(), targetTimeTable.getTeacher(), targetTimeTable.getCourse(),
                 targetTimeTable.getClassRoom());
 
-        BeanUtils.copyProperties(targetTimeTable, existingTimeTable, "id", "date", "timeFrom", "timeTo");
+        BeanUtils.copyProperties(targetTimeTable, existingTimeTable, "id");
         return timeTableRepository.save(existingTimeTable);
     }
 

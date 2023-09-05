@@ -16,53 +16,53 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import ua.foxminded.university.dao.entities.Faculty;
 import ua.foxminded.university.dao.interfaces.FacultyRepository;
+import ua.foxminded.university.validation.Message;
 import ua.foxminded.university.validation.UniqueEmailValidator;
 
-@DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
-		FacultyService.class,
-		UniqueEmailValidator.class}))
+@DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = { FacultyService.class,
+        UniqueEmailValidator.class }))
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ActiveProfiles("test-container")
 @Sql(scripts = { "/drop_data.sql", "/init_tables.sql",
-		"/insert_test_data.sql", }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+        "/insert_test_data.sql", }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class FacultyServiceTest {
 
-	@Autowired
-	private FacultyRepository facultyRepository;
+    @Autowired
+    private FacultyRepository facultyRepository;
 
-	@Autowired
-	private FacultyService facultyService;
+    @Autowired
+    private FacultyService facultyService;
 
-	@ParameterizedTest
-	@CsvSource({ "1", "2", "3" })
-	void testDeleteFacultyById_ShouldReturnFacultytId(int facultyId) {
-		Assertions.assertEquals(facultyId, facultyRepository.findById(facultyId).get().getId());
-		Assertions.assertEquals(facultyId, facultyService.deleteFacultyById(facultyId));
-	}
+    @ParameterizedTest
+    @CsvSource({ "1", "2", "3" })
+    void testDeleteFacultyById_ShouldReturnFacultytId(int facultyId) {
+        Assertions.assertEquals(facultyId, facultyRepository.findById(facultyId).get().getId());
+        Assertions.assertEquals(facultyId, facultyService.deleteFacultyById(facultyId));
+    }
 
-	@Test
-	void testDeleteFacultyById_WhenIdNotFound_ShouldThrowNoSuchElementException() {
-		Exception noSuchElementException = assertThrows(Exception.class, () -> facultyService.deleteFacultyById(4));
-		Assertions.assertEquals("Faculty not found", noSuchElementException.getMessage());
-	}
+    @Test
+    void testDeleteFacultyById_WhenIdNotFound_ShouldThrowNoSuchElementException() {
+        Exception noSuchElementException = assertThrows(Exception.class, () -> facultyService.deleteFacultyById(4));
+        Assertions.assertEquals(Message.FACULTY_NOT_FOUND, noSuchElementException.getMessage());
+    }
 
-	@ParameterizedTest
-	@CsvSource({ "1", "2", "3" })
-	void testUpdateFacultyById_ShouldReturnUpdatedFaculty(int facultyId) {
-		Faculty expectedFaculty = new Faculty("Griffindor");
-		expectedFaculty.setId(facultyId);
+    @ParameterizedTest
+    @CsvSource({ "1", "2", "3" })
+    void testUpdateFacultyById_ShouldReturnUpdatedFaculty(int facultyId) {
+        Faculty expectedFaculty = new Faculty("Griffindor");
+        expectedFaculty.setId(facultyId);
 
-		Assertions.assertEquals(expectedFaculty, facultyService.updateFacultyById(facultyId, expectedFaculty));
-	}
+        Assertions.assertEquals(expectedFaculty, facultyService.updateFacultyById(facultyId, expectedFaculty));
+    }
 
-	@Test
-	void testUpdateFacultyById_WhenIdNotFound_ShouldThrowNoSuchElementException() {
-		Faculty expectedFaculty = new Faculty("Griffindor");
-		expectedFaculty.setId(1);
+    @Test
+    void testUpdateFacultyById_WhenIdNotFound_ShouldThrowNoSuchElementException() {
+        Faculty expectedFaculty = new Faculty("Griffindor");
+        expectedFaculty.setId(1);
 
-		Exception noSuchElementException = assertThrows(Exception.class,
-				() -> facultyService.updateFacultyById(4, expectedFaculty));
-		Assertions.assertEquals("Faculty not found", noSuchElementException.getMessage());
-	}
+        Exception noSuchElementException = assertThrows(Exception.class,
+                () -> facultyService.updateFacultyById(4, expectedFaculty));
+        Assertions.assertEquals(Message.FACULTY_NOT_FOUND, noSuchElementException.getMessage());
+    }
 }

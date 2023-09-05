@@ -71,18 +71,34 @@ public interface TimeTableRepository extends JpaRepository<TimeTable, Integer> {
     List<TimeTable> findByDateAndStudentOrderByDateAscTimeFromAsc(@Param("dateFrom") LocalDate dateFrom,
             @Param("dateTo") LocalDate dateTo, @Param("studentId") int studentId);
 
-    @Query("SELECT CASE WHEN COUNT(t) > 0 THEN true ELSE false END " + "FROM TimeTable t "
-            + "WHERE t.classRoom = :classRoom " + "AND t.date = :date "
-            + "AND ((t.timeFrom <= :timeFrom AND t.timeTo > :timeFrom) "
-            + "OR (t.timeFrom < :timeTo AND t.timeTo >= :timeTo) "
-            + "OR (t.timeFrom >= :timeFrom AND t.timeTo <= :timeTo))")
+    @Query("""
+             SELECT CASE WHEN COUNT(t) > 0 THEN true ELSE false END FROM TimeTable t
+             WHERE t.classRoom = :classRoom AND t.date = :date
+             AND ((t.timeFrom <= :timeFrom AND t.timeTo > :timeFrom)
+             OR (t.timeFrom < :timeTo AND t.timeTo >= :timeTo)
+             OR (t.timeFrom >= :timeFrom AND t.timeTo <= :timeTo))
+            """)
     boolean timeTableValidationFailed(LocalDate date, LocalTime timeFrom, LocalTime timeTo, ClassRoom classRoom);
 
-    @Query("SELECT CASE WHEN COUNT(t) > 0 THEN true ELSE false END " + "FROM TimeTable t "
-            + "WHERE t.teacher = :teacher " + "AND t.date = :date "
-            + "AND ((t.timeFrom <= :timeFrom AND t.timeTo > :timeFrom) "
-            + "OR (t.timeFrom < :timeTo AND t.timeTo >= :timeTo) "
-            + "OR (t.timeFrom >= :timeFrom AND t.timeTo <= :timeTo))")
+    @Query("""
+             SELECT CASE WHEN COUNT(t) > 0 THEN true ELSE false END FROM TimeTable t
+             WHERE t.classRoom = :classRoom AND t.date = :date
+             AND ((t.timeFrom <= :timeFrom AND t.timeTo > :timeFrom)
+             OR (t.timeFrom < :timeTo AND t.timeTo >= :timeTo)
+             OR (t.timeFrom >= :timeFrom AND t.timeTo <= :timeTo))
+             AND t.id != :timeTableIdExclude
+            """)
+    boolean timeTableValidationFailedOnUpdate(
+            int timeTableIdExclude, LocalDate date, LocalTime timeFrom,
+            LocalTime timeTo, ClassRoom classRoom);
+
+    @Query("""
+             SELECT CASE WHEN COUNT(t) > 0 THEN true ELSE false END FROM TimeTable t
+             WHERE t.teacher = :teacher AND t.date = :date
+             AND ((t.timeFrom <= :timeFrom AND t.timeTo > :timeFrom)
+             OR (t.timeFrom < :timeTo AND t.timeTo >= :timeTo)
+             OR (t.timeFrom >= :timeFrom AND t.timeTo <= :timeTo))
+            """)
     boolean teacherIsBusy(LocalDate date, LocalTime timeFrom, LocalTime timeTo, Teacher teacher);
 
 }

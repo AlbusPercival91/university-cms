@@ -1,5 +1,6 @@
 package ua.foxminded.university.controller;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ua.foxminded.university.dao.entities.Department;
 import ua.foxminded.university.dao.entities.Faculty;
+import ua.foxminded.university.dao.service.AlertService;
 import ua.foxminded.university.dao.service.DepartmentService;
 import ua.foxminded.university.dao.service.FacultyService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
@@ -35,7 +37,25 @@ public class DepartmentController {
     private FacultyService facultyService;
 
     @Autowired
+    private AlertService alertService;
+
+    @Autowired
     private ControllerBindingValidator bindingValidator;
+
+    @PostMapping("/department/send-alert/{departmentId}")
+    public String sendDepartmentAlert(@PathVariable int departmentId, @RequestParam String alertMessage,
+            RedirectAttributes redirectAttributes) {
+        try {
+            alertService.createDepartmentAlert(LocalDateTime.now(), departmentId, alertMessage);
+
+            if (alertMessage != null) {
+                redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.ALERT_SUCCESS);
+            }
+        } catch (NoSuchElementException ex) {
+            redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
+        }
+        return "redirect:/department/department-card/" + departmentId;
+    }
 
     @GetMapping("/department/department-list")
     public String getAllDepartmentList(Model model) {
@@ -110,7 +130,7 @@ public class DepartmentController {
         return "department/department-list";
     }
 
-    @RolesAllowed("ADMIN")
+    @RolesAllowed({ "ADMIN", "STAFF" })
     @GetMapping("/department/department-card/{departmentId}")
     public String openDepartmentCard(@PathVariable int departmentId, Model model) {
         Optional<Department> optionalDepartment = departmentService.findDepartmentById(departmentId);

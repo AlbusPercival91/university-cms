@@ -26,6 +26,7 @@ import ua.foxminded.university.dao.entities.TimeTable;
 import ua.foxminded.university.dao.interfaces.StudentRepository;
 import ua.foxminded.university.dao.interfaces.TeacherRepository;
 import ua.foxminded.university.dao.interfaces.TimeTableRepository;
+import ua.foxminded.university.validation.Message;
 import ua.foxminded.university.validation.TimeTableValidator;
 import ua.foxminded.university.validation.UniqueEmailValidator;
 
@@ -71,7 +72,7 @@ class TimeTableServiceTest {
     @ParameterizedTest
     @CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 1, 1", "2023-09-01, 12:00, 13:30, 2, 2, 2, 2",
             "2023-09-02, 09:00, 10:30, 3, 3, 3, 3", "2023-09-02, 12:00, 13:30, 1, 1, 2, 3" })
-    void testCreateGroupTimeTable_WhenClassRoomIsBusy_ShouldThrowIllegalStateException(LocalDate date,
+    void testCreateGroupTimeTable_WhenClassRoomIsBusy_ShouldThrowTimeTableValidationException(LocalDate date,
             LocalTime timeFrom, LocalTime timeTo, int teacherId, int courseId, int groupId, int classRoomId) {
         teacherRepository.addTeacherToTheCourse(teacherId, "Mathematics");
         teacherRepository.addTeacherToTheCourse(teacherId, "Physics");
@@ -80,8 +81,22 @@ class TimeTableServiceTest {
 
         Exception timeTableValidationException = assertThrows(Exception.class, () -> timeTableBuilder
                 .saveGroupTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId, classRoomId));
-        Assertions.assertEquals("Validation failed while creating TimeTable",
-                timeTableValidationException.getMessage());
+        Assertions.assertEquals(Message.VALIDATION_FAILED, timeTableValidationException.getMessage());
+    }
+
+    @ParameterizedTest
+    @CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 1, 1", "2023-09-01, 12:00, 13:30, 2, 2, 2, 2",
+            "2023-09-02, 09:00, 10:30, 3, 3, 3, 3", "2023-09-02, 12:00, 13:30, 1, 1, 2, 3" })
+    void testCreateGroupTimeTable_WhenTimeWrong_ShouldThrowTimeTableValidationException(LocalDate date,
+            LocalTime timeFrom, LocalTime timeTo, int teacherId, int courseId, int groupId, int classRoomId) {
+        teacherRepository.addTeacherToTheCourse(teacherId, "Mathematics");
+        teacherRepository.addTeacherToTheCourse(teacherId, "Physics");
+        teacherRepository.addTeacherToTheCourse(teacherId, "Chemistry");
+        timeTableBuilder.saveGroupTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId, classRoomId);
+
+        Exception timeTableValidationException = assertThrows(Exception.class, () -> timeTableBuilder
+                .saveGroupTimeTable(date, timeTo, timeFrom, teacherId, courseId, groupId, classRoomId));
+        Assertions.assertEquals(Message.TIMING_WRONG, timeTableValidationException.getMessage());
     }
 
     @ParameterizedTest
@@ -107,8 +122,8 @@ class TimeTableServiceTest {
     @ParameterizedTest
     @CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 1", "2023-09-01, 12:00, 13:30, 2, 2, 2",
             "2023-09-02, 09:00, 10:30, 3, 3, 3", "2023-09-02, 12:00, 13:30, 1, 1, 2" })
-    void testCreateTimeTableForStudentsAtCourse_WhenClassRoomIsBusy_ShouldThrowIllegalStateException(LocalDate date,
-            LocalTime timeFrom, LocalTime timeTo, int teacherId, int courseId, int classRoomId) {
+    void testCreateTimeTableForStudentsAtCourse_WhenClassRoomIsBusy_ShouldThrowTimeTableValidationException(
+            LocalDate date, LocalTime timeFrom, LocalTime timeTo, int teacherId, int courseId, int classRoomId) {
         studentRepository.addStudentToTheCourse(1, "Mathematics");
         studentRepository.addStudentToTheCourse(2, "Mathematics");
         studentRepository.addStudentToTheCourse(3, "Physics");
@@ -120,9 +135,28 @@ class TimeTableServiceTest {
 
         timeTableBuilder.saveTimeTableForStudentsAtCourse(date, timeFrom, timeTo, teacherId, courseId, classRoomId);
 
-        Exception illegalStateException = assertThrows(Exception.class, () -> timeTableBuilder
+        Exception timeTableValidationException = assertThrows(Exception.class, () -> timeTableBuilder
                 .saveTimeTableForStudentsAtCourse(date, timeFrom, timeTo, teacherId, courseId, classRoomId));
-        Assertions.assertEquals("Validation failed while creating TimeTable", illegalStateException.getMessage());
+        Assertions.assertEquals(Message.VALIDATION_FAILED, timeTableValidationException.getMessage());
+    }
+
+    @ParameterizedTest
+    @CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 1", "2023-09-01, 12:00, 13:30, 2, 2, 2",
+            "2023-09-02, 09:00, 10:30, 3, 3, 3", "2023-09-02, 12:00, 13:30, 1, 1, 2" })
+    void testCreateTimeTableForStudentsAtCourse_WhenTimeWrong_ShouldThrowTimeTableValidationException(LocalDate date,
+            LocalTime timeFrom, LocalTime timeTo, int teacherId, int courseId, int classRoomId) {
+        studentRepository.addStudentToTheCourse(1, "Mathematics");
+        studentRepository.addStudentToTheCourse(2, "Mathematics");
+        studentRepository.addStudentToTheCourse(3, "Physics");
+        studentRepository.addStudentToTheCourse(1, "Chemistry");
+
+        teacherRepository.addTeacherToTheCourse(teacherId, "Mathematics");
+        teacherRepository.addTeacherToTheCourse(teacherId, "Physics");
+        teacherRepository.addTeacherToTheCourse(teacherId, "Chemistry");
+
+        Exception timeTableValidationException = assertThrows(Exception.class, () -> timeTableBuilder
+                .saveTimeTableForStudentsAtCourse(date, timeTo, timeFrom, teacherId, courseId, classRoomId));
+        Assertions.assertEquals(Message.TIMING_WRONG, timeTableValidationException.getMessage());
     }
 
     @ParameterizedTest
@@ -133,7 +167,7 @@ class TimeTableServiceTest {
 
         Exception noSuchElementException = assertThrows(Exception.class, () -> timeTableBuilder
                 .saveTimeTableForStudentsAtCourse(date, timeFrom, timeTo, teacherId, courseId, classRoomId));
-        Assertions.assertEquals("Teacher is not assigned with such Course", noSuchElementException.getMessage());
+        Assertions.assertEquals(Message.IS_NOT_TEACHER_COURSE, noSuchElementException.getMessage());
     }
 
     @ParameterizedTest
@@ -236,7 +270,7 @@ class TimeTableServiceTest {
 
         Exception noSuchElementException = assertThrows(Exception.class,
                 () -> timeTableService.getTeacherTimeTable(fakeTeacher));
-        Assertions.assertEquals("Teacher not found", noSuchElementException.getMessage());
+        Assertions.assertEquals(Message.TEACHER_NOT_FOUND, noSuchElementException.getMessage());
     }
 
     @ParameterizedTest
@@ -271,7 +305,7 @@ class TimeTableServiceTest {
 
         Exception noSuchElementException = assertThrows(Exception.class,
                 () -> timeTableService.getStudentsGroupTimeTable(fakeStudent));
-        Assertions.assertEquals("Student not found", noSuchElementException.getMessage());
+        Assertions.assertEquals(Message.STUDENT_NOT_FOUND, noSuchElementException.getMessage());
     }
 
     @ParameterizedTest
@@ -284,7 +318,7 @@ class TimeTableServiceTest {
 
         Exception noSuchElementException = assertThrows(Exception.class,
                 () -> timeTableService.getGroupTimeTable(fakeGroup));
-        Assertions.assertEquals("Group not found", noSuchElementException.getMessage());
+        Assertions.assertEquals(Message.GROUP_NOT_FOUND, noSuchElementException.getMessage());
     }
 
     @ParameterizedTest
@@ -321,7 +355,7 @@ class TimeTableServiceTest {
 
         Exception noSuchElementException = assertThrows(Exception.class,
                 () -> timeTableService.getTeacherTimeTableByDate(date, date, fakeTeacher));
-        Assertions.assertEquals("Teacher not found", noSuchElementException.getMessage());
+        Assertions.assertEquals(Message.TEACHER_NOT_FOUND, noSuchElementException.getMessage());
     }
 
     @ParameterizedTest
@@ -356,7 +390,7 @@ class TimeTableServiceTest {
 
         Exception noSuchElementException = assertThrows(Exception.class,
                 () -> timeTableService.getStudentsGroupTimeTableByDate(date, date, fakeStudent));
-        Assertions.assertEquals("Student not found", noSuchElementException.getMessage());
+        Assertions.assertEquals(Message.STUDENT_NOT_FOUND, noSuchElementException.getMessage());
     }
 
     @ParameterizedTest
@@ -370,7 +404,7 @@ class TimeTableServiceTest {
 
         Exception noSuchElementException = assertThrows(Exception.class,
                 () -> timeTableService.getGroupTimeTableByDate(date, date, fakeGroup));
-        Assertions.assertEquals("Group not found", noSuchElementException.getMessage());
+        Assertions.assertEquals(Message.GROUP_NOT_FOUND, noSuchElementException.getMessage());
     }
 
     @ParameterizedTest
@@ -445,24 +479,45 @@ class TimeTableServiceTest {
 
         Exception noSuchElementException = assertThrows(Exception.class,
                 () -> timeTableService.updateTimeTableById(2, expectedTimeTable));
-        Assertions.assertEquals("Time Table not found", noSuchElementException.getMessage());
+        Assertions.assertEquals(Message.TIMETABLE_NOT_FOUND, noSuchElementException.getMessage());
     }
 
     @ParameterizedTest
     @CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 1, 1" })
-    void testUpdateTimeTableById_WhenValidationFailed_ShouldThrowTimeTableValidationException(LocalDate date,
+    void testUpdateTimeTableById_WhenIsNotTeacherCourse_ShouldThrowTimeTableValidationException(LocalDate date,
             LocalTime timeFrom, LocalTime timeTo, int teacherId, int courseId, int groupId, int classRoomId) {
         teacherRepository.addTeacherToTheCourse(teacherId, "Mathematics");
 
         TimeTable timeTable = timeTableBuilder.saveGroupTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId,
                 classRoomId);
+
+        teacherRepository.removeTeacherFromCourse(teacherId, "Mathematics");
+
         TimeTable expectedTimeTable = new TimeTable(date.plusMonths(1), timeFrom.plusHours(1), timeTo.plusHours(1),
                 timeTable.getTeacher(), timeTable.getCourse(), timeTable.getGroup(), timeTable.getClassRoom());
         expectedTimeTable.setId(1);
 
-        Exception noSuchElementException = assertThrows(Exception.class,
+        Exception timeTableValidationException = assertThrows(Exception.class,
                 () -> timeTableService.updateTimeTableById(1, expectedTimeTable));
-        Assertions.assertEquals("Validation failed while creating TimeTable", noSuchElementException.getMessage());
+        Assertions.assertEquals(Message.IS_NOT_TEACHER_COURSE, timeTableValidationException.getMessage());
+    }
+
+    @ParameterizedTest
+    @CsvSource({ "2023-09-01, 09:00, 10:30, 1, 1, 1, 1" })
+    void testUpdateTimeTableById_WhenTimeWrong_ShouldThrowTimeTableValidationException(LocalDate date,
+            LocalTime timeFrom, LocalTime timeTo, int teacherId, int courseId, int groupId, int classRoomId) {
+        teacherRepository.addTeacherToTheCourse(teacherId, "Mathematics");
+
+        TimeTable timeTable = timeTableBuilder.saveGroupTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId,
+                classRoomId);
+
+        TimeTable expectedTimeTable = new TimeTable(date, timeTo.plusHours(1), timeFrom.plusHours(1),
+                timeTable.getTeacher(), timeTable.getCourse(), timeTable.getGroup(), timeTable.getClassRoom());
+        expectedTimeTable.setId(1);
+
+        Exception timeTableValidationException = assertThrows(Exception.class,
+                () -> timeTableService.updateTimeTableById(1, expectedTimeTable));
+        Assertions.assertEquals(Message.TIMING_WRONG, timeTableValidationException.getMessage());
     }
 
     @ParameterizedTest
@@ -493,7 +548,7 @@ class TimeTableServiceTest {
         timeTableBuilder.saveGroupTimeTable(date, timeFrom, timeTo, teacherId, courseId, groupId, classRoomId);
 
         Exception noSuchElementException = assertThrows(Exception.class, () -> timeTableService.deleteTimeTableById(2));
-        Assertions.assertEquals("Time Table not found", noSuchElementException.getMessage());
+        Assertions.assertEquals(Message.TIMETABLE_NOT_FOUND, noSuchElementException.getMessage());
     }
 
 }

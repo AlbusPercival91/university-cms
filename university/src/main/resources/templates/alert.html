@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Alerts</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" />
+
+<body>
+    <div th:replace="fragments/header :: header"></div>
+    <div th:replace="fragments/nav-panel :: div"></div>
+
+    <div class="alert-container">
+
+        <!-- Admin Alerts -->
+        <div th:each="alert, rowStat : ${admin.alerts}" sec:authorize="hasRole('ROLE_ADMIN')" class="alert-box">
+            <div class="alert-timestamp" th:text="${#temporals.format(alert.timestamp, 'dd-MMM-yy HH:mm')}"></div>
+            <div class="alert-message" th:text="${alert.message}"></div>
+        </div>
+
+        <!-- Teacher Alerts -->
+        <div th:each="alert, rowStat : ${teacher.alerts}" sec:authorize="hasRole('ROLE_TEACHER')" class="alert-box">
+            <div class="alert-timestamp" th:text="${#temporals.format(alert.timestamp, 'dd-MMM-yy HH:mm')}"></div>
+            <div class="alert-message" th:text="${alert.message}"></div>
+        </div>
+
+        <!-- Student Alerts -->
+        <div th:each="alert, rowStat : ${student.alerts}" sec:authorize="hasRole('ROLE_STUDENT')" class="alert-box">
+            <div class="alert-timestamp" th:text="${#temporals.format(alert.timestamp, 'dd-MMM-yy HH:mm')}"></div>
+            <div class="alert-message-line" th:text="${alert.message}"></div>
+        </div>
+
+        <!-- Staff Alerts -->
+        <div th:each="alert, rowStat : ${staff.alerts}" sec:authorize="hasRole('ROLE_STAFF')" class="alert-box">
+            <div class="alert-timestamp" th:text="${#temporals.format(alert.timestamp, 'dd-MMM-yy HH:mm')}"></div>
+            <div class="alert-message-line" th:text="${alert.message}"></div>
+        </div>
+
+    </div>
+
+    <div th:replace="fragments/message :: div"></div>
+    <div th:replace="fragments/footer :: footer"></div>
+
+    <script th:src="@{/js/work-panel.js}"></script>
+</body>
+
+</html>

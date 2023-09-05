@@ -24,6 +24,7 @@ import ua.foxminded.university.dao.interfaces.CourseRepository;
 import ua.foxminded.university.dao.interfaces.DepartmentRepository;
 import ua.foxminded.university.dao.interfaces.TeacherRepository;
 import ua.foxminded.university.security.UserRole;
+import ua.foxminded.university.validation.Message;
 import ua.foxminded.university.validation.UniqueEmailValidator;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = { TeacherService.class,
@@ -57,7 +58,7 @@ class TeacherServiceTest {
     @Test
     void testDeleteTeacherById_WhenIdNotFound_ShouldThrowNoSuchElementException() {
         Exception noSuchElementException = assertThrows(Exception.class, () -> teacherService.deleteTeacherById(4));
-        Assertions.assertEquals("Teacher not found", noSuchElementException.getMessage());
+        Assertions.assertEquals(Message.TEACHER_NOT_FOUND, noSuchElementException.getMessage());
     }
 
     @ParameterizedTest
@@ -77,7 +78,7 @@ class TeacherServiceTest {
 
         Exception noSuchElementException = assertThrows(Exception.class,
                 () -> teacherService.updateTeacherById(4, expectedTeacher));
-        Assertions.assertEquals("Teacher not found", noSuchElementException.getMessage());
+        Assertions.assertEquals(Message.TEACHER_NOT_FOUND, noSuchElementException.getMessage());
     }
 
     @ParameterizedTest
@@ -118,7 +119,7 @@ class TeacherServiceTest {
 
         Exception illegalStateException = assertThrows(Exception.class,
                 () -> teacherService.removeTeacherFromCourse(teacher.getId(), additionalCourse.get().getCourseName()));
-        Assertions.assertEquals("User is not related with this Course!", illegalStateException.getMessage());
+        Assertions.assertEquals(Message.USER_NOT_RELATED_WITH_COURSE, illegalStateException.getMessage());
     }
 
 }

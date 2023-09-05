@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS university.admin (
     active BOOLEAN NOT NULL,
     email VARCHAR(100) NOT NULL,
     password VARCHAR(60) NOT NULL,
-    role VARCHAR(8)
+    role VARCHAR(8) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS university.classroom (
@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS university.staff (
     password VARCHAR(60) NOT NULL,
     position VARCHAR(150) NOT NULL,
     function TEXT,
-    role VARCHAR(8)
+    role VARCHAR(8) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS university.student (
@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS university.student (
     email VARCHAR(100) NOT NULL,
     password VARCHAR(60) NOT NULL,
     group_id INT,
-    role VARCHAR(8),
+    role VARCHAR(8) NOT NULL,
     FOREIGN KEY (group_id) REFERENCES university.groups (group_id)
 );
 
@@ -74,7 +74,7 @@ CREATE TABLE IF NOT EXISTS university.teacher (
     email VARCHAR(100) NOT NULL,
     password VARCHAR(60) NOT NULL,
     department_id INT,
-    role VARCHAR(8),
+    role VARCHAR(8) NOT NULL,
     FOREIGN KEY (department_id) REFERENCES university.departments (department_id)
 );
 
@@ -107,5 +107,19 @@ CREATE TABLE IF NOT EXISTS university.timetable (
     FOREIGN KEY (course_id) REFERENCES university.courses (course_id),
     FOREIGN KEY (group_id) REFERENCES university.groups (group_id),
     FOREIGN KEY (classroom_id) REFERENCES university.classroom (classroom_id)
+);
+
+CREATE TABLE alert (
+    alert_id SERIAL PRIMARY KEY,
+    alert_timestamp TIMESTAMP(0) NOT NULL,
+    teacher_id INT,
+    student_id INT,
+    staff_id INT,
+    admin_id INT,
+    message TEXT NOT NULL,
+    FOREIGN KEY (teacher_id) REFERENCES university.teacher (id),
+    FOREIGN KEY (student_id) REFERENCES university.student (id),
+    FOREIGN KEY (staff_id) REFERENCES university.staff (id),
+    FOREIGN KEY (admin_id) REFERENCES university.admin (id)
 );
 
