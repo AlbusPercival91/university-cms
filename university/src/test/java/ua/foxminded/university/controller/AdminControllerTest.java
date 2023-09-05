@@ -19,10 +19,10 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import ua.foxminded.university.dao.entities.Admin;
 import ua.foxminded.university.dao.service.AdminService;
+import ua.foxminded.university.dao.service.AlertService;
 import ua.foxminded.university.security.UserRole;
 import ua.foxminded.university.validation.ControllerBindingValidator;
 import ua.foxminded.university.validation.Message;
-
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -39,6 +39,9 @@ class AdminControllerTest {
 
     @MockBean
     private AdminService adminService;
+
+    @MockBean
+    private AlertService alertService;
 
     @Test
     void testAdminDashboard_WhenUserAuthenticated() throws Exception {
@@ -157,6 +160,36 @@ class AdminControllerTest {
                 .flashAttr("admin", updatedAdmin).with(csrf().asHeader()))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.flash().attributeExists(Message.ERROR))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/admin/admin-card/" + adminId));
+    }
+
+    @Test
+    void testOpenAdminAlerts() throws Exception {
+        Admin admin = new Admin();
+        admin.setEmail("admin@example.ua");
+
+        when(adminService.findAdminByEmail(admin.getEmail())).thenReturn(Optional.of(admin));
+
+        Authentication auth = new UsernamePasswordAuthenticationToken(admin.getEmail(), null,
+                AuthorityUtils.createAuthorityList("ROLE_" + UserRole.ADMIN));
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/admin/alert")).andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("alert"))
+                .andExpect(MockMvcResultMatchers.model().attributeExists("admin"))
+                .andExpect(MockMvcResultMatchers.model().attributeExists("alerts"))
+                .andExpect(MockMvcResultMatchers.model().attribute("admin", admin));
+    }
+
+    @Test
+    void testSendAdminAlert() throws Exception {
+        int adminId = 1;
+        String alertMessage = "Test Alert Message";
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/admin/send-alert/{adminId}", adminId)
+                .param("alertMessage", alertMessage).with(csrf().asHeader()))
+                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.flash().attributeExists(Message.SUCCESS))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/admin/admin-card/" + adminId));
     }
 
