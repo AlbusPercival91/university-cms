@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import ua.foxminded.university.dao.entities.Course;
+import ua.foxminded.university.dao.service.AlertService;
 import ua.foxminded.university.dao.service.CourseService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
 import ua.foxminded.university.validation.Message;
@@ -32,6 +33,22 @@ class CourseControllerTest {
 
     @MockBean
     private CourseService courseService;
+
+    @MockBean
+    private AlertService alertService;
+
+    @Test
+    @WithMockUser(roles = { "ADMIN", "TEACHER", "STAFF" })
+    void testSendCourseAlert() throws Exception {
+        int courseId = 1;
+        String alertMessage = "Test Alert Message";
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/course/send-alert/{courseId}", courseId)
+                .param("alertMessage", alertMessage).with(csrf().asHeader()))
+                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.flash().attributeExists(Message.SUCCESS))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/course/course-card/" + courseId));
+    }
 
     @Test
     @WithMockUser(roles = { "ADMIN", "STUDENT", "TEACHER", "STAFF" })
