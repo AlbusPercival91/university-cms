@@ -32,6 +32,7 @@ import ua.foxminded.university.dao.entities.Course;
 import ua.foxminded.university.dao.entities.Faculty;
 import ua.foxminded.university.dao.entities.Group;
 import ua.foxminded.university.dao.entities.Student;
+import ua.foxminded.university.dao.service.AlertService;
 import ua.foxminded.university.dao.service.CourseService;
 import ua.foxminded.university.dao.service.GroupService;
 import ua.foxminded.university.dao.service.StudentService;
@@ -55,6 +56,9 @@ class StudentControllerTest {
 
     @MockBean
     private GroupService groupService;
+
+    @MockBean
+    private AlertService alertService;
 
     @Test
     void testStudentDashboard_WhenUserAuthenticated() throws Exception {
@@ -184,6 +188,38 @@ class StudentControllerTest {
                 .flashAttr("student", updatedStudent).with(csrf().asHeader()))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.flash().attributeExists(Message.ERROR))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/student/student-card/" + studentId));
+    }
+
+    @Test
+    @WithMockUser(roles = "STUDENT")
+    void testOpenStudentAlerts() throws Exception {
+        Student student = new Student();
+        student.setEmail("student@example.ua");
+
+        when(studentService.findStudentByEmail(student.getEmail())).thenReturn(Optional.of(student));
+
+        Authentication auth = new UsernamePasswordAuthenticationToken(student.getEmail(), null,
+                AuthorityUtils.createAuthorityList("ROLE_" + UserRole.STUDENT));
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/student/alert")).andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("alert"))
+                .andExpect(MockMvcResultMatchers.model().attributeExists("student"))
+                .andExpect(MockMvcResultMatchers.model().attributeExists("alerts"))
+                .andExpect(MockMvcResultMatchers.model().attribute("student", student));
+    }
+
+    @Test
+    @WithMockUser(roles = "STUDENT")
+    void testSendStudentAlert() throws Exception {
+        int studentId = 1;
+        String alertMessage = "Test Alert Message";
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/student/send-alert/{studentId}", studentId)
+                .param("alertMessage", alertMessage).with(csrf().asHeader()))
+                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.flash().attributeExists(Message.SUCCESS))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/student/student-card/" + studentId));
     }
 

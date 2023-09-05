@@ -25,6 +25,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import ua.foxminded.university.dao.entities.Staff;
+import ua.foxminded.university.dao.service.AlertService;
 import ua.foxminded.university.dao.service.StaffService;
 import ua.foxminded.university.security.UserRole;
 import ua.foxminded.university.validation.ControllerBindingValidator;
@@ -40,6 +41,9 @@ class StaffControllerTest {
 
     @MockBean
     private StaffService staffService;
+
+    @MockBean
+    private AlertService alertService;
 
     @Test
     void testStaffDashboard_WhenUserAuthenticated() throws Exception {
@@ -166,6 +170,38 @@ class StaffControllerTest {
                 .flashAttr("staff", updatedStaff).with(csrf().asHeader()))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.flash().attributeExists(Message.ERROR))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/staff/staff-card/" + staffId));
+    }
+
+    @Test
+    @WithMockUser(roles = "STAFF")
+    void testOpenStaffAlerts() throws Exception {
+        Staff staff = new Staff();
+        staff.setEmail("staff@example.ua");
+
+        when(staffService.findStaffByEmail(staff.getEmail())).thenReturn(Optional.of(staff));
+
+        Authentication auth = new UsernamePasswordAuthenticationToken(staff.getEmail(), null,
+                AuthorityUtils.createAuthorityList("ROLE_" + UserRole.STAFF));
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/staff/alert")).andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("alert"))
+                .andExpect(MockMvcResultMatchers.model().attributeExists("staff"))
+                .andExpect(MockMvcResultMatchers.model().attributeExists("alerts"))
+                .andExpect(MockMvcResultMatchers.model().attribute("staff", staff));
+    }
+
+    @Test
+    @WithMockUser(roles = "STAFF")
+    void testSendStaffAlert() throws Exception {
+        int staffId = 1;
+        String alertMessage = "Test Alert Message";
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/staff/send-alert/{staffId}", staffId)
+                .param("alertMessage", alertMessage).with(csrf().asHeader()))
+                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.flash().attributeExists(Message.SUCCESS))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/staff/staff-card/" + staffId));
     }
 
