@@ -119,6 +119,18 @@ public class StaffController {
         return "redirect:/staff/staff-card/" + staffId;
     }
 
+    @PostMapping("/staff/remove-alert/{alertId}")
+    public String deleteStaffAlert(@PathVariable int alertId, RedirectAttributes redirectAttributes,
+            HttpServletRequest request) {
+        try {
+            alertService.deleteAlertById(alertId);
+            redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.DELETE_SUCCESS);
+        } catch (NoSuchElementException ex) {
+            redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
+        }
+        return "redirect:/staff/alert";
+    }
+
     @RolesAllowed("ADMIN")
     @GetMapping("/staff/create-staff")
     public String showCreateStaffForm() {

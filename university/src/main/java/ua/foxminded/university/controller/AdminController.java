@@ -118,7 +118,7 @@ public class AdminController {
     }
 
     @PostMapping("/admin/remove-alert/{alertId}")
-    public String deleteAlert(@PathVariable int alertId, RedirectAttributes redirectAttributes,
+    public String deleteAdminAlert(@PathVariable int alertId, RedirectAttributes redirectAttributes,
             HttpServletRequest request) {
         try {
             alertService.deleteAlertById(alertId);
