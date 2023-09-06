@@ -135,18 +135,31 @@ public class AlertService {
         teachers.forEach(teacher -> createTeacherAlert(timestamp, teacher.getId(), message));
     }
 
+    private void createAlertsForStudents(LocalDateTime timestamp, String message) {
+        List<Student> students = studentRepository.findAll();
+        students.forEach(student -> createStudentAlert(timestamp, student.getId(), message));
+    }
+
+    private void createAlertsForTeachers(LocalDateTime timestamp, String message) {
+        List<Teacher> teachers = teacherRepository.findAll();
+        teachers.forEach(teacher -> createTeacherAlert(timestamp, teacher.getId(), message));
+    }
+
+    private void createAlertsForStaff(LocalDateTime timestamp, String message) {
+        List<Staff> staffMembers = staffRepository.findAll();
+        staffMembers.forEach(staff -> createStaffAlert(timestamp, staff.getId(), message));
+    }
+
+    private void createAlertsForAdmins(LocalDateTime timestamp, String message) {
+        List<Admin> admins = adminRepository.findAll();
+        admins.forEach(admin -> createAdminAlert(timestamp, admin.getId(), message));
+    }
+
     public void createBroadcastAlert(LocalDateTime timestamp, String message) {
-        List<Student> studentList = studentRepository.findAll();
-        studentList.forEach(student -> createStudentAlert(timestamp, student.getId(), message));
-
-        List<Teacher> teacherList = teacherRepository.findAll();
-        teacherList.forEach(teacher -> createTeacherAlert(timestamp, teacher.getId(), message));
-
-        List<Staff> staffList = staffRepository.findAll();
-        staffList.forEach(staff -> createStaffAlert(timestamp, staff.getId(), message));
-
-        List<Admin> adminList = adminRepository.findAll();
-        adminList.forEach(admin -> createAdminAlert(timestamp, admin.getId(), message));
+        createAlertsForStudents(timestamp, message);
+        createAlertsForTeachers(timestamp, message);
+        createAlertsForStaff(timestamp, message);
+        createAlertsForAdmins(timestamp, message);
     }
 
     public int deleteAlertById(int alertId) {
