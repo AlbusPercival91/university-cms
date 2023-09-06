@@ -430,7 +430,7 @@ button[type="submit"] {
 
 /* Styles for Alerts Panel */
 /* Style for the main container */
-.main-container {
+.main-alert-container {
     display: flex;
     justify-content: space-between;
     padding: 12px;
@@ -445,7 +445,7 @@ button[type="submit"] {
 
 /* Styles for Alerts Container */
 .alert-container {
-    padding-left: 10%;
+    padding-left: 5%;
     padding-right: 5%;
 }
 
@@ -465,7 +465,7 @@ button[type="submit"] {
 
 /* Styles for Feature Container */
 .feature-container {
-    width: 15%;
+    width: 25%;
 }
 
 .alert-textarea {
@@ -479,7 +479,7 @@ button[type="submit"] {
 }
 
 .send-button {
-    background-color: rgb(32, 240, 42);
+    background-color: rgb(58, 193, 56);
     color: #fff;
     border: none;
     padding: 8px 12px;
@@ -490,5 +490,5 @@ button[type="submit"] {
 }
 
 .send-button:hover {
-    background-color: rgb(76, 175, 80);
+    background-color: rgb(32, 240, 42);
 }
