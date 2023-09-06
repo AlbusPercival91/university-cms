@@ -108,7 +108,7 @@
 
         <!-- Block for student-timetable -->
         <div class="entity-timetable">
-            <h2>Student Time-Table</h2>
+            <h2>Student Timetable</h2>
 
             <form th:action="@{/timetable/selected-timetable/{studentId}(studentId=${student.id})}" method="get">
                 <div class="form-group">
@@ -127,12 +127,12 @@
                     <!-- First button for the first action -->
                     <button id="getSelectedTimetableButton" type="submit" name="action" value="selected-timetable"
                         class="button-common-style">
-                        Get Selected Date Time-Table
+                        Get Selected Date Timetable
                     </button>
                     <!-- Second button for the second action -->
                     <button id="getSelectedGroupTimetableButton" type="submit" class="button-common-style" name="action"
                         value="selected-group-timetable">
-                        Get Selected Date Group Time-Table
+                        Get Selected Date Group Timetable
                     </button>
                 </div>
             </form>
@@ -142,7 +142,7 @@
                 <form th:action="@{/timetable/student-timetable/{studentId}(studentId=${student.id})}" method="get">
                     <button id="getFullStudentTimetableButton" type="submit" class="button-common-style">Get Full
                         Student
-                        Time-Table</button>
+                        Timetable</button>
                 </form>
             </div>
 
@@ -150,7 +150,7 @@
             <div class="button-container">
                 <form th:action="@{/timetable/timetable-group/{studentId}(studentId=${student.id})}" method="get">
                     <button id="getFullGroupTimetableButton" type="submit" class="button-common-style">Get Full Group
-                        Time-Table</button>
+                        Timetable</button>
                 </form>
             </div>
         </div>

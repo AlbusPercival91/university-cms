@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Create Class-Room</title>
+    <title>Create Classroom</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}" />
 </head>
 
@@ -12,7 +12,7 @@
 
 <body>
     <div class="container">
-        <h2>Create New Class-Room</h2>
+        <h2>Create New Classroom</h2>
         <form th:action="@{/classroom/create-classroom}" method="post">
             <div class="form-group">
                 <label for="street">Street Name:</label>
@@ -27,7 +27,7 @@
                 <input type="number" id="roomNumber" name="roomNumber">
             </div>
 
-            <button type="submit">Create Class Room</button>
+            <button type="submit">Create Classroom</button>
         </form>
 
     </div>

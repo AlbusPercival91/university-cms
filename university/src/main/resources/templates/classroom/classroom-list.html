@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Class-Room List</title>
+    <title>Classroom List</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" />
 </head>
@@ -21,10 +21,10 @@
             <!-- Search Class Room by ID -->
             <div class="search-section">
                 <div class="search-square">
-                    <h3>Find Class Room by ID</h3>
+                    <h3>Find Classroom by ID</h3>
                     <form th:action="@{/classroom/search-result}" method="get">
                         <input type="hidden" name="searchType" value="classroom" />
-                        <label for="classroomId">Class Room ID:</label>
+                        <label for="classroomId">Classroom ID:</label>
                         <input type="text" id="classroomId" name="classroomId" required />
                         <button type="submit">Search</button>
                     </form>
@@ -34,7 +34,7 @@
             <!-- Search by Street -->
             <div class="search-section">
                 <div class="search-square">
-                    <h3>Find Class Room by Street</h3>
+                    <h3>Find Classroom by Street</h3>
                     <form th:action="@{/classroom/search-result}" method="get">
                         <input type="hidden" name="searchType" value="street" />
                         <label for="street">Street Name:</label>
@@ -47,7 +47,7 @@
             <!-- Search by Street and Building Number-->
             <div class="search-section">
                 <div class="search-square">
-                    <h3>Find Class Room by Street and Building</h3>
+                    <h3>Find Classroom by Street and Building</h3>
                     <form th:action="@{/classroom/search-result}" method="get">
                         <input type="hidden" name="searchType" value="streetAndBuildingNumber" />
                         <label for="street">Street Name:</label>
@@ -64,9 +64,9 @@
 
 
     <div class="container">
-        <h2>Class-Room List</h2>
+        <h2>Classroom List</h2>
         <table class="table table-bordered">
-            <caption hidden>All Class-Room Table</caption>
+            <caption hidden>All Classroom Table</caption>
             <thead>
                 <tr>
                     <th style="border: none; width: 3vh;" sec:authorize="hasRole('ROLE_ADMIN')"></th>

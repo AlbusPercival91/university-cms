@@ -107,7 +107,7 @@
 
         <!-- Block for teacher-timetable -->
         <div class="entity-timetable">
-            <h2>Teacher Time-Table</h2>
+            <h2>Teacher Timetable</h2>
 
             <form th:action="@{/timetable/teacher-selected-timetable/{teacherId}(teacherId=${teacher.id})}"
                 method="get">
@@ -123,7 +123,7 @@
                 <!-- Container for Get Selected Date Time-Table button -->
                 <div class="button-container">
                     <button id="getSelectedTimetableButton" type="submit" class="button-common-style">Get Selected Date
-                        Time-Table</button>
+                        Timetable</button>
                 </div>
             </form>
             <br><br>
@@ -131,7 +131,7 @@
             <!-- Container for Get All Time-Tables button -->
             <div class="button-container">
                 <form th:action="@{/timetable/teacher-timetable/{teacherId}(teacherId=${teacher.id})}" method="get">
-                    <button id="getFullTimeTable" type="submit" class="button-common-style">Get Full Time-Table
+                    <button id="getFullTimeTable" type="submit" class="button-common-style">Get Full Timetable
                         List</button>
                 </form>
             </div>

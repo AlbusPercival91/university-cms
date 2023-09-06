@@ -128,27 +128,27 @@
 
                 <li class="menu-item">
                     <div class="menu-item-box">
-                        <span class="menu-item-title">ClassRoom</span>
+                        <span class="menu-item-title">Classroom</span>
                         <ul class="submenu">
                             <li><a th:href="@{/classroom/create-classroom}" sec:authorize="hasRole('ROLE_ADMIN')">Create
-                                    New Class-Room</a></li>
-                            <li><a th:href="@{/classroom/classroom-list}">View All Class-Rooms</a></li>
+                                    New Classroom</a></li>
+                            <li><a th:href="@{/classroom/classroom-list}">View All Classrooms</a></li>
                         </ul>
                     </div>
                 </li>
 
                 <li class="menu-item">
                     <div class="menu-item-box">
-                        <span class="menu-item-title">TimeTable</span>
+                        <span class="menu-item-title">Timetable</span>
                         <ul class="submenu">
                             <li><a th:href="@{/timetable/group-timetable-form}"
                                     sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_STAFF')">Create Group
-                                    Time-Table</a></li>
+                                    Timetable</a></li>
                             <li><a th:href="@{/timetable/course-timetable-form}"
                                     sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_STAFF')">Create Course
-                                    Time-Table</a>
+                                    Timetable</a>
                             </li>
-                            <li><a th:href="@{/timetable/timetable-list}">View All TimeTables</a></li>
+                            <li><a th:href="@{/timetable/timetable-list}">View All Timetable</a></li>
                         </ul>
                     </div>
                 </li>
