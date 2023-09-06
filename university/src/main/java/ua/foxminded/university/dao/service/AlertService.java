@@ -160,4 +160,8 @@ public class AlertService {
     public List<Alert> getAllStaffAlerts(Staff staff) {
         return alertRepository.findByStaff(staff);
     }
+
+    public Optional<Alert> findAlertById(int alertId) {
+        return alertRepository.findById(alertId);
+    }
 }
