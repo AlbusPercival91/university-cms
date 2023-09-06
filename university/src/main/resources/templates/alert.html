@@ -14,9 +14,19 @@
     <div class="main-alert-container">
 
         <div class="feature-container">
-            <h3>Broadcast Message</h3>
-            <form th:action="@{/send-broadcast}" method="post">
-                <textarea class="alert-textarea" placeholder="Type your message here"></textarea>
+            <h3 sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_STAFF')">Broadcast Message</h3>
+
+            <form th:action="@{/admin/send-broadcast}" method="post" sec:authorize="hasRole('ROLE_ADMIN')">
+                <textarea class="alert-textarea" id="alertMessage" name="alertMessage"
+                    placeholder="Type your message here"></textarea>
+                <button class="icon-button send-button">
+                    <i class="fas fa-comment"></i>
+                </button>
+            </form>
+
+            <form th:action="@{/staff/send-broadcast}" method="post" sec:authorize="hasRole('ROLE_STAFF')">
+                <textarea class="alert-textarea" id="alertMessage" name="alertMessage"
+                    placeholder="Type your message here"></textarea>
                 <button class="icon-button send-button">
                     <i class="fas fa-comment"></i>
                 </button>
