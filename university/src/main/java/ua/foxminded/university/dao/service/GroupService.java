@@ -5,6 +5,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import javax.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -64,7 +65,7 @@ public class GroupService {
     }
 
     public List<Group> getAllGroups() {
-        return groupRepository.findAll();
+        return groupRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
 
     public Optional<Group> findGroupById(int groupId) {
@@ -72,10 +73,10 @@ public class GroupService {
     }
 
     public List<Group> findGroupByGroupName(String groupName) {
-        return groupRepository.findGroupByGroupName(groupName);
+        return groupRepository.findGroupByGroupNameOrderByIdAsc(groupName);
     }
 
     public List<Group> findAllByFacultyName(String facultyName) {
-        return groupRepository.findAllByFacultyFacultyName(facultyName);
+        return groupRepository.findAllByFacultyFacultyNameOrderByIdAsc(facultyName);
     }
 }

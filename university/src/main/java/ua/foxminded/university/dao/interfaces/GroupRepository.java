@@ -8,7 +8,7 @@ import ua.foxminded.university.dao.entities.Group;
 @Repository
 public interface GroupRepository extends JpaRepository<Group, Integer> {
 
-	List<Group> findAllByFacultyFacultyName(String facultyName);
+    List<Group> findAllByFacultyFacultyNameOrderByIdAsc(String facultyName);
 
-	List<Group> findGroupByGroupName(String groupName);
+    List<Group> findGroupByGroupNameOrderByIdAsc(String groupName);
 }

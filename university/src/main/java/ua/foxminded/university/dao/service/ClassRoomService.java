@@ -5,6 +5,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import javax.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -57,7 +58,7 @@ public class ClassRoomService {
     }
 
     public List<ClassRoom> getAllClassRooms() {
-        return classRoomRepository.findAll();
+        return classRoomRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
 
     public Optional<ClassRoom> findClassRoomById(int classRoomId) {
@@ -65,10 +66,10 @@ public class ClassRoomService {
     }
 
     public List<ClassRoom> findClassRoomsByStreet(String street) {
-        return classRoomRepository.findAllByStreet(street);
+        return classRoomRepository.findAllByStreetOrderByIdAsc(street);
     }
 
     public List<ClassRoom> findClassRoomsByStreetAndBuildingNumber(String street, int buildingNumber) {
-        return classRoomRepository.findAllByStreetAndBuildingNumber(street, buildingNumber);
+        return classRoomRepository.findAllByStreetAndBuildingNumberOrderByIdAsc(street, buildingNumber);
     }
 }

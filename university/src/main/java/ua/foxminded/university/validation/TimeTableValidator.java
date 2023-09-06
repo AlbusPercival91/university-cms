@@ -27,7 +27,7 @@ public class TimeTableValidator {
             throw new TimeTableValidationException(Message.TIMING_WRONG);
         }
 
-        if (!teacherRepository.findTeachersRelatedToCourse(course.getCourseName()).contains(teacher)) {
+        if (!teacherRepository.findTeachersRelatedToCourseOrderByIdAsc(course.getCourseName()).contains(teacher)) {
             throw new TimeTableValidationException(Message.IS_NOT_TEACHER_COURSE);
         }
 
@@ -47,7 +47,7 @@ public class TimeTableValidator {
             throw new TimeTableValidationException(Message.TIMING_WRONG);
         }
 
-        if (!teacherRepository.findTeachersRelatedToCourse(course.getCourseName()).contains(teacher)) {
+        if (!teacherRepository.findTeachersRelatedToCourseOrderByIdAsc(course.getCourseName()).contains(teacher)) {
             throw new TimeTableValidationException(Message.IS_NOT_TEACHER_COURSE);
         }
     }

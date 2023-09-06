@@ -5,6 +5,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import javax.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -76,7 +77,7 @@ public class StaffService {
     }
 
     public List<Staff> getAllStaff() {
-        return staffRepository.findAll();
+        return staffRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
 
     public Optional<Staff> findStaffById(int staffId) {
@@ -84,11 +85,11 @@ public class StaffService {
     }
 
     public List<Staff> findStaffByName(String firstName, String lastName) {
-        return staffRepository.findStaffByFirstNameAndLastName(firstName, lastName);
+        return staffRepository.findStaffByFirstNameAndLastNameOrderByIdAsc(firstName, lastName);
     }
 
     public List<Staff> findStaffByPosition(String position) {
-        return staffRepository.findStaffByPosition(position);
+        return staffRepository.findStaffByPositionOrderByIdAsc(position);
     }
 
     public Optional<Staff> findStaffByEmail(String email) {

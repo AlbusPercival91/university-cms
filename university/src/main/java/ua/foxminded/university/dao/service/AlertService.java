@@ -89,7 +89,7 @@ public class AlertService {
         if (optionalGroup.isEmpty()) {
             throw new NoSuchElementException(Message.GROUP_NOT_FOUND);
         }
-        List<Student> students = studentRepository.findAllByGroupGroupName(optionalGroup.get().getGroupName());
+        List<Student> students = studentRepository.findAllByGroupGroupNameOrderByIdAsc(optionalGroup.get().getGroupName());
         students.forEach(student -> createStudentAlert(timestamp, student.getId(), message));
     }
 
@@ -99,10 +99,10 @@ public class AlertService {
         if (optionalCourse.isEmpty()) {
             throw new NoSuchElementException(Message.COURSE_NOT_FOUND);
         }
-        List<Student> students = studentRepository.findStudentsRelatedToCourse(optionalCourse.get().getCourseName());
+        List<Student> students = studentRepository.findStudentsRelatedToCourseOrderByIdAsc(optionalCourse.get().getCourseName());
         students.forEach(student -> createStudentAlert(timestamp, student.getId(), message));
 
-        List<Teacher> teachers = teacherRepository.findTeachersRelatedToCourse(optionalCourse.get().getCourseName());
+        List<Teacher> teachers = teacherRepository.findTeachersRelatedToCourseOrderByIdAsc(optionalCourse.get().getCourseName());
         teachers.forEach(teacher -> createTeacherAlert(timestamp, teacher.getId(), message));
     }
 
@@ -113,11 +113,11 @@ public class AlertService {
             throw new NoSuchElementException(Message.FACULTY_NOT_FOUND);
         }
         List<Student> students = studentRepository
-                .findAllByGroupFacultyFacultyName(optionalFaculty.get().getFacultyName());
+                .findAllByGroupFacultyFacultyNameOrderByIdAsc(optionalFaculty.get().getFacultyName());
         students.forEach(student -> createStudentAlert(timestamp, student.getId(), message));
 
         List<Teacher> teachers = teacherRepository
-                .findAllByDepartmentFacultyFacultyName(optionalFaculty.get().getFacultyName());
+                .findAllByDepartmentFacultyFacultyNameOrderByIdAsc(optionalFaculty.get().getFacultyName());
         teachers.forEach(teacher -> createTeacherAlert(timestamp, teacher.getId(), message));
     }
 
@@ -127,7 +127,7 @@ public class AlertService {
         if (optionalDepartment.isEmpty()) {
             throw new NoSuchElementException(Message.DEPARTMENT_NOT_FOUND);
         }
-        List<Teacher> teachers = teacherRepository.findAllByDepartmentIdAndDepartmentFacultyId(
+        List<Teacher> teachers = teacherRepository.findAllByDepartmentIdAndDepartmentFacultyIdOrderByIdAsc(
                 optionalDepartment.get().getId(), optionalDepartment.get().getFaculty().getId());
         teachers.forEach(teacher -> createTeacherAlert(timestamp, teacher.getId(), message));
     }

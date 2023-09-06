@@ -5,6 +5,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import javax.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -112,7 +113,7 @@ public class TeacherService {
     }
 
     public List<Teacher> getAllTeachers() {
-        return teacherRepository.findAll();
+        return teacherRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
 
     public Optional<Teacher> findTeacherById(int teacherId) {
@@ -120,19 +121,19 @@ public class TeacherService {
     }
 
     public List<Teacher> findTeacherByName(String firstName, String lastName) {
-        return teacherRepository.findTeacherByFirstNameAndLastName(firstName, lastName);
+        return teacherRepository.findTeacherByFirstNameAndLastNameOrderByIdAsc(firstName, lastName);
     }
 
     public List<Teacher> findTeachersRelatedToCourse(String courseName) {
-        return teacherRepository.findTeachersRelatedToCourse(courseName);
+        return teacherRepository.findTeachersRelatedToCourseOrderByIdAsc(courseName);
     }
 
     public List<Teacher> findAllByFacultyName(String facultyName) {
-        return teacherRepository.findAllByDepartmentFacultyFacultyName(facultyName);
+        return teacherRepository.findAllByDepartmentFacultyFacultyNameOrderByIdAsc(facultyName);
     }
 
     public List<Teacher> findAllByDepartmentIdAndDepartmentFacultyId(int departmentId, int facultyId) {
-        return teacherRepository.findAllByDepartmentIdAndDepartmentFacultyId(departmentId, facultyId);
+        return teacherRepository.findAllByDepartmentIdAndDepartmentFacultyIdOrderByIdAsc(departmentId, facultyId);
     }
 
     public Optional<Teacher> findTeacherByEmail(String email) {

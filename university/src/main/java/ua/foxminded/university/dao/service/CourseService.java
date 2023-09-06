@@ -5,6 +5,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import javax.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -58,7 +59,7 @@ public class CourseService {
     }
 
     public List<Course> getAllCourses() {
-        return courseRepository.findAll();
+        return courseRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
 
     public List<Course> findCoursesRelatedToTeacher(int teacherId) {
@@ -66,7 +67,7 @@ public class CourseService {
             log.warn(Message.TEACHER_NOT_FOUND);
             return new NoSuchElementException(Message.TEACHER_NOT_FOUND);
         });
-        return courseRepository.findCoursesRelatedToTeacher(existingTeacher.getId());
+        return courseRepository.findCoursesRelatedToTeacherOrderByIdAsc(existingTeacher.getId());
     }
 
     public List<Course> findCoursesRelatedToStudent(int studentId) {
@@ -74,7 +75,7 @@ public class CourseService {
             log.warn(Message.STUDENT_NOT_FOUND);
             return new NoSuchElementException(Message.STUDENT_NOT_FOUND);
         });
-        return courseRepository.findCoursesRelatedToStudent(existingStudent.getId());
+        return courseRepository.findCoursesRelatedToStudentOrderByIdAsc(existingStudent.getId());
     }
 
     public Optional<Course> findCourseById(int courseId) {

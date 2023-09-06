@@ -5,6 +5,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import javax.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -84,7 +85,7 @@ public class StudentService {
     }
 
     public List<Student> getAllStudents() {
-        return studentRepository.findAll();
+        return studentRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
 
     public int addStudentToTheCourse(int studentId, String courseName) {
@@ -124,19 +125,19 @@ public class StudentService {
     }
 
     public List<Student> findStudentsRelatedToCourse(String courseName) {
-        return studentRepository.findStudentsRelatedToCourse(courseName);
+        return studentRepository.findStudentsRelatedToCourseOrderByIdAsc(courseName);
     }
 
     public List<Student> findAllByGroupName(String groupName) {
-        return studentRepository.findAllByGroupGroupName(groupName);
+        return studentRepository.findAllByGroupGroupNameOrderByIdAsc(groupName);
     }
 
     public List<Student> findAllByGroupFacultyFacultyName(String facultyName) {
-        return studentRepository.findAllByGroupFacultyFacultyName(facultyName);
+        return studentRepository.findAllByGroupFacultyFacultyNameOrderByIdAsc(facultyName);
     }
 
     public List<Student> findStudentByName(String firstName, String lastName) {
-        return studentRepository.findStudentByFirstNameAndLastName(firstName, lastName);
+        return studentRepository.findStudentByFirstNameAndLastNameOrderByIdAsc(firstName, lastName);
     }
 
     public Optional<Student> findStudentByEmail(String email) {
