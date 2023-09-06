@@ -11,20 +11,20 @@ import ua.foxminded.university.dao.entities.Course;
 @Repository
 public interface CourseRepository extends JpaRepository<Course, Integer> {
 
-	Optional<Course> findByCourseName(String courseName);
+    Optional<Course> findByCourseName(String courseName);
 
-	@Query("""
-			SELECT c FROM Course c
-			     JOIN c.teachers t
-			     WHERE t.id = :teacherId
-			""")
-	List<Course> findCoursesRelatedToTeacher(@Param("teacherId") int teacherId);
+    @Query("""
+            SELECT c FROM Course c
+                 JOIN c.teachers t
+                 WHERE t.id = :teacherId
+            """)
+    List<Course> findCoursesRelatedToTeacherOrderByIdAsc(@Param("teacherId") int teacherId);
 
-	@Query("""
-			SELECT c FROM Course c
-			     JOIN c.students s
-			     WHERE s.id = :studentId
-			""")
-	List<Course> findCoursesRelatedToStudent(@Param("studentId") int studentId);
+    @Query("""
+            SELECT c FROM Course c
+                 JOIN c.students s
+                 WHERE s.id = :studentId
+            """)
+    List<Course> findCoursesRelatedToStudentOrderByIdAsc(@Param("studentId") int studentId);
 
 }

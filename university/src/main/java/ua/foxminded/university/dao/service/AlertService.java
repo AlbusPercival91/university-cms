@@ -7,6 +7,7 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import ua.foxminded.university.dao.entities.Teacher;
 import ua.foxminded.university.dao.entities.Admin;
 import ua.foxminded.university.dao.entities.Alert;
@@ -27,6 +28,7 @@ import ua.foxminded.university.dao.interfaces.StudentRepository;
 import ua.foxminded.university.dao.interfaces.TeacherRepository;
 import ua.foxminded.university.validation.Message;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 @Transactional
@@ -87,7 +89,7 @@ public class AlertService {
         if (optionalGroup.isEmpty()) {
             throw new NoSuchElementException(Message.GROUP_NOT_FOUND);
         }
-        List<Student> students = studentRepository.findAllByGroupGroupName(optionalGroup.get().getGroupName());
+        List<Student> students = studentRepository.findAllByGroupGroupNameOrderByIdAsc(optionalGroup.get().getGroupName());
         students.forEach(student -> createStudentAlert(timestamp, student.getId(), message));
     }
 
@@ -97,10 +99,10 @@ public class AlertService {
         if (optionalCourse.isEmpty()) {
             throw new NoSuchElementException(Message.COURSE_NOT_FOUND);
         }
-        List<Student> students = studentRepository.findStudentsRelatedToCourse(optionalCourse.get().getCourseName());
+        List<Student> students = studentRepository.findStudentsRelatedToCourseOrderByIdAsc(optionalCourse.get().getCourseName());
         students.forEach(student -> createStudentAlert(timestamp, student.getId(), message));
 
-        List<Teacher> teachers = teacherRepository.findTeachersRelatedToCourse(optionalCourse.get().getCourseName());
+        List<Teacher> teachers = teacherRepository.findTeachersRelatedToCourseOrderByIdAsc(optionalCourse.get().getCourseName());
         teachers.forEach(teacher -> createTeacherAlert(timestamp, teacher.getId(), message));
     }
 
@@ -111,11 +113,11 @@ public class AlertService {
             throw new NoSuchElementException(Message.FACULTY_NOT_FOUND);
         }
         List<Student> students = studentRepository
-                .findAllByGroupFacultyFacultyName(optionalFaculty.get().getFacultyName());
+                .findAllByGroupFacultyFacultyNameOrderByIdAsc(optionalFaculty.get().getFacultyName());
         students.forEach(student -> createStudentAlert(timestamp, student.getId(), message));
 
         List<Teacher> teachers = teacherRepository
-                .findAllByDepartmentFacultyFacultyName(optionalFaculty.get().getFacultyName());
+                .findAllByDepartmentFacultyFacultyNameOrderByIdAsc(optionalFaculty.get().getFacultyName());
         teachers.forEach(teacher -> createTeacherAlert(timestamp, teacher.getId(), message));
     }
 
@@ -125,9 +127,22 @@ public class AlertService {
         if (optionalDepartment.isEmpty()) {
             throw new NoSuchElementException(Message.DEPARTMENT_NOT_FOUND);
         }
-        List<Teacher> teachers = teacherRepository.findAllByDepartmentIdAndDepartmentFacultyId(
+        List<Teacher> teachers = teacherRepository.findAllByDepartmentIdAndDepartmentFacultyIdOrderByIdAsc(
                 optionalDepartment.get().getId(), optionalDepartment.get().getFaculty().getId());
         teachers.forEach(teacher -> createTeacherAlert(timestamp, teacher.getId(), message));
+    }
+
+    public int deleteAlertById(int alertId) {
+        Optional<Alert> optionalAlert = alertRepository.findById(alertId);
+
+        if (optionalAlert.isPresent()) {
+            alertRepository.deleteById(alertId);
+            log.info(Message.DELETE_SUCCESS);
+            return alertId;
+        } else {
+            log.warn(Message.ALERT_NOT_FOUND);
+            throw new NoSuchElementException(Message.ALERT_NOT_FOUND);
+        }
     }
 
     public List<Alert> getAllTeacherAlerts(Teacher teacher) {
@@ -144,5 +159,9 @@ public class AlertService {
 
     public List<Alert> getAllStaffAlerts(Staff staff) {
         return alertRepository.findByStaff(staff);
+    }
+
+    public Optional<Alert> findAlertById(int alertId) {
+        return alertRepository.findById(alertId);
     }
 }

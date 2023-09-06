@@ -54,7 +54,7 @@ public class TimeTableService {
             timeTableValidator.validate(date, timeFrom, timeTo, teacher, course, classRoom);
 
             List<Student> studentsRelatedToCourse = studentRepository
-                    .findStudentsRelatedToCourse(course.getCourseName());
+                    .findStudentsRelatedToCourseOrderByIdAsc(course.getCourseName());
 
             if (studentsRelatedToCourse.isEmpty()) {
                 log.warn(Message.STUDENT_NOT_FOUND, course.getCourseName());

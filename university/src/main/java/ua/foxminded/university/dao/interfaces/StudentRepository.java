@@ -36,13 +36,13 @@ public interface StudentRepository extends JpaRepository<Student, Integer> {
                  JOIN StudentsCourses sc ON s.id = sc.studentId
                  JOIN Course c ON c.id = sc.courseId WHERE c.courseName = :courseName
             """)
-    List<Student> findStudentsRelatedToCourse(@Param("courseName") String courseName);
+    List<Student> findStudentsRelatedToCourseOrderByIdAsc(@Param("courseName") String courseName);
 
-    List<Student> findAllByGroupGroupName(String groupName);
+    List<Student> findAllByGroupGroupNameOrderByIdAsc(String groupName);
 
-    List<Student> findAllByGroupFacultyFacultyName(String facultyName);
+    List<Student> findAllByGroupFacultyFacultyNameOrderByIdAsc(String facultyName);
 
-    List<Student> findStudentByFirstNameAndLastName(String firstName, String lastName);
+    List<Student> findStudentByFirstNameAndLastNameOrderByIdAsc(String firstName, String lastName);
 
     Optional<Student> findByEmail(String email);
 }

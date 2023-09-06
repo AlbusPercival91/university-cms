@@ -5,6 +5,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import javax.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -65,7 +66,7 @@ public class DepartmentService {
     }
 
     public List<Department> getAllDepartments() {
-        return departmentRepository.findAll();
+        return departmentRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
 
     public Optional<Department> findDepartmentById(int departmentId) {
@@ -73,10 +74,10 @@ public class DepartmentService {
     }
 
     public List<Department> findAllByFacultyName(String facultyName) {
-        return departmentRepository.findAllByFacultyFacultyName(facultyName);
+        return departmentRepository.findAllByFacultyFacultyNameOrderByIdAsc(facultyName);
     }
 
     public List<Department> findDepartmentByName(String departmentName) {
-        return departmentRepository.findDepartmentByName(departmentName);
+        return departmentRepository.findDepartmentByNameOrderByIdAsc(departmentName);
     }
 }

@@ -10,9 +10,9 @@ import ua.foxminded.university.dao.entities.ClassRoom;
 @Repository
 public interface ClassRoomRepository extends JpaRepository<ClassRoom, Integer> {
 
-	boolean existsByStreetAndBuildingNumberAndRoomNumber(String street, int buildingNumber, int roomNumber);
+    boolean existsByStreetAndBuildingNumberAndRoomNumber(String street, int buildingNumber, int roomNumber);
 
-	List<ClassRoom> findAllByStreet(String street);
+    List<ClassRoom> findAllByStreetOrderByIdAsc(String street);
 
-	List<ClassRoom> findAllByStreetAndBuildingNumber(String street, int buildingNumber);
+    List<ClassRoom> findAllByStreetAndBuildingNumberOrderByIdAsc(String street, int buildingNumber);
 }

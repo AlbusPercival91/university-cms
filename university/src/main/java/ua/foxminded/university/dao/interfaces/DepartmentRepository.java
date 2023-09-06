@@ -8,7 +8,7 @@ import ua.foxminded.university.dao.entities.Department;
 @Repository
 public interface DepartmentRepository extends JpaRepository<Department, Integer> {
 
-	List<Department> findAllByFacultyFacultyName(String facultyName);
+    List<Department> findAllByFacultyFacultyNameOrderByIdAsc(String facultyName);
 
-	List<Department> findDepartmentByName(String name);
+    List<Department> findDepartmentByNameOrderByIdAsc(String name);
 }

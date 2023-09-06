@@ -206,6 +206,16 @@ class StaffControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "STAFF")
+    void testDeleteStaffAlert() throws Exception {
+        int alertId = 1;
+        mockMvc.perform(MockMvcRequestBuilders.post("/staff/remove-alert/{alertId}", alertId).with(csrf().asHeader()))
+                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.flash().attributeExists(Message.SUCCESS))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/staff/alert"));
+    }
+
+    @Test
     @WithMockUser(roles = { "ADMIN", "STUDENT", "TEACHER", "STAFF" })
     void testGetAllStaffList() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/staff/staff-list"))

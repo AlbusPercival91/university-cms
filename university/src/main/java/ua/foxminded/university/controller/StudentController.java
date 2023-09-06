@@ -135,6 +135,18 @@ public class StudentController {
         return "redirect:/student/student-card/" + studentId;
     }
 
+    @PostMapping("/student/remove-alert/{alertId}")
+    public String deleteStudentAlert(@PathVariable int alertId, RedirectAttributes redirectAttributes,
+            HttpServletRequest request) {
+        try {
+            alertService.deleteAlertById(alertId);
+            redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.DELETE_SUCCESS);
+        } catch (NoSuchElementException ex) {
+            redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
+        }
+        return "redirect:/student/alert";
+    }
+
     @GetMapping("/student/student-list")
     public String getAllStudentsList(Model model) {
         List<Student> students = studentService.getAllStudents();

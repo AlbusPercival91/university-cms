@@ -177,7 +177,7 @@ class StudentControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void testUpdateStaff_Failure() throws Exception {
+    void testUpdateStudent_Failure() throws Exception {
         int studentId = 1;
         Student updatedStudent = new Student();
         updatedStudent.setId(studentId);
@@ -221,6 +221,16 @@ class StudentControllerTest {
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.flash().attributeExists(Message.SUCCESS))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/student/student-card/" + studentId));
+    }
+
+    @Test
+    @WithMockUser(roles = "STUDENT")
+    void testDeleteStudentAlert() throws Exception {
+        int alertId = 1;
+        mockMvc.perform(MockMvcRequestBuilders.post("/student/remove-alert/{alertId}", alertId).with(csrf().asHeader()))
+                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.flash().attributeExists(Message.SUCCESS))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/student/alert"));
     }
 
     @Test

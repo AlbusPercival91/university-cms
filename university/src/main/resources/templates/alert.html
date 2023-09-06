@@ -17,24 +17,49 @@
         <div th:each="alert, rowStat : ${admin.alerts}" sec:authorize="hasRole('ROLE_ADMIN')" class="alert-box">
             <div class="alert-timestamp" th:text="${#temporals.format(alert.timestamp, 'dd-MMM-yy HH:mm')}"></div>
             <div class="alert-message" th:text="${alert.message}"></div>
+
+            <!-- Add a remove button -->
+            <form th:action="@{/admin/remove-alert/{alertId}(alertId=${alert.id})}" method="post">
+                <button type="submit" class="icon-button remove-button">
+                    <i class="fas fa-trash-alt"></i> </button>
+            </form>
         </div>
+
 
         <!-- Teacher Alerts -->
         <div th:each="alert, rowStat : ${teacher.alerts}" sec:authorize="hasRole('ROLE_TEACHER')" class="alert-box">
             <div class="alert-timestamp" th:text="${#temporals.format(alert.timestamp, 'dd-MMM-yy HH:mm')}"></div>
             <div class="alert-message" th:text="${alert.message}"></div>
+
+            <!-- Add a remove button -->
+            <form th:action="@{/teacher/remove-alert/{alertId}(alertId=${alert.id})}" method="post">
+                <button type="submit" class="icon-button remove-button">
+                    <i class="fas fa-trash-alt"></i> </button>
+            </form>
         </div>
 
         <!-- Student Alerts -->
         <div th:each="alert, rowStat : ${student.alerts}" sec:authorize="hasRole('ROLE_STUDENT')" class="alert-box">
             <div class="alert-timestamp" th:text="${#temporals.format(alert.timestamp, 'dd-MMM-yy HH:mm')}"></div>
             <div class="alert-message-line" th:text="${alert.message}"></div>
+
+            <!-- Add a remove button -->
+            <form th:action="@{/student/remove-alert/{alertId}(alertId=${alert.id})}" method="post">
+                <button type="submit" class="icon-button remove-button">
+                    <i class="fas fa-trash-alt"></i> </button>
+            </form>
         </div>
 
         <!-- Staff Alerts -->
         <div th:each="alert, rowStat : ${staff.alerts}" sec:authorize="hasRole('ROLE_STAFF')" class="alert-box">
             <div class="alert-timestamp" th:text="${#temporals.format(alert.timestamp, 'dd-MMM-yy HH:mm')}"></div>
             <div class="alert-message-line" th:text="${alert.message}"></div>
+
+            <!-- Add a remove button -->
+            <form th:action="@{/staff/remove-alert/{alertId}(alertId=${alert.id})}" method="post">
+                <button type="submit" class="icon-button remove-button">
+                    <i class="fas fa-trash-alt"></i> </button>
+            </form>
         </div>
 
     </div>

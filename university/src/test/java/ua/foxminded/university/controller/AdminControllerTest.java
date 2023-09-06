@@ -194,6 +194,15 @@ class AdminControllerTest {
     }
 
     @Test
+    void testDeleteAdminAlert() throws Exception {
+        int alertId = 1;
+        mockMvc.perform(MockMvcRequestBuilders.post("/admin/remove-alert/{alertId}", alertId).with(csrf().asHeader()))
+                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.flash().attributeExists(Message.SUCCESS))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/admin/alert"));
+    }
+
+    @Test
     void testGetAllAdmin() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/admin/admin-list"))
                 .andExpect(MockMvcResultMatchers.status().isOk())

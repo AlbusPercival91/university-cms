@@ -117,6 +117,18 @@ public class AdminController {
         return "redirect:/admin/admin-card/" + adminId;
     }
 
+    @PostMapping("/admin/remove-alert/{alertId}")
+    public String deleteAdminAlert(@PathVariable int alertId, RedirectAttributes redirectAttributes,
+            HttpServletRequest request) {
+        try {
+            alertService.deleteAlertById(alertId);
+            redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.DELETE_SUCCESS);
+        } catch (NoSuchElementException ex) {
+            redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
+        }
+        return "redirect:/admin/alert";
+    }
+
     @RolesAllowed({ "ADMIN", "STAFF" })
     @GetMapping("/admin/admin-list")
     public String getAllAdminList(Model model) {

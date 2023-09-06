@@ -12,40 +12,40 @@ import ua.foxminded.university.dao.entities.Teacher;
 @Repository
 public interface TeacherRepository extends JpaRepository<Teacher, Integer> {
 
-	@Modifying
-	@Query("""
-			 INSERT INTO TeachersCourses (teacherId, courseId)
-			     SELECT t.id, c.id FROM Teacher t, Course c
-			     WHERE t.id = :teacherId AND c.courseName = :courseName
-			""")
-	int addTeacherToTheCourse(@Param("teacherId") int teacherId, @Param("courseName") String courseName);
+    @Modifying
+    @Query("""
+             INSERT INTO TeachersCourses (teacherId, courseId)
+                 SELECT t.id, c.id FROM Teacher t, Course c
+                 WHERE t.id = :teacherId AND c.courseName = :courseName
+            """)
+    int addTeacherToTheCourse(@Param("teacherId") int teacherId, @Param("courseName") String courseName);
 
-	@Modifying
-	@Query("""
-			 DELETE FROM TeachersCourses tc
-			     WHERE tc.teacherId = :teacherId
-			     AND tc.courseId IN (SELECT c.id FROM Course c WHERE c.courseName = :courseName)
-			""")
-	int removeTeacherFromCourse(@Param("teacherId") int teacherId, @Param("courseName") String courseName);
+    @Modifying
+    @Query("""
+             DELETE FROM TeachersCourses tc
+                 WHERE tc.teacherId = :teacherId
+                 AND tc.courseId IN (SELECT c.id FROM Course c WHERE c.courseName = :courseName)
+            """)
+    int removeTeacherFromCourse(@Param("teacherId") int teacherId, @Param("courseName") String courseName);
 
-	List<Teacher> findTeacherByFirstNameAndLastName(String firstName, String lastName);
+    List<Teacher> findTeacherByFirstNameAndLastNameOrderByIdAsc(String firstName, String lastName);
 
-	@Query("""
-			SELECT t FROM Teacher t
-			     JOIN TeachersCourses tc ON t.id = tc.teacherId
-			     JOIN Course c ON c.id = tc.courseId WHERE c.courseName = :courseName
-			""")
-	List<Teacher> findTeachersRelatedToCourse(@Param("courseName") String courseName);
+    @Query("""
+            SELECT t FROM Teacher t
+                 JOIN TeachersCourses tc ON t.id = tc.teacherId
+                 JOIN Course c ON c.id = tc.courseId WHERE c.courseName = :courseName
+            """)
+    List<Teacher> findTeachersRelatedToCourseOrderByIdAsc(@Param("courseName") String courseName);
 
-	/*
-	 * return all Teachers in Faculty
-	 */
-	List<Teacher> findAllByDepartmentFacultyFacultyName(String facultyName);
+    /*
+     * return all Teachers in Faculty
+     */
+    List<Teacher> findAllByDepartmentFacultyFacultyNameOrderByIdAsc(String facultyName);
 
-	/*
-	 * return all Teachers in defined Department of special Faculty
-	 */
-	List<Teacher> findAllByDepartmentIdAndDepartmentFacultyId(int departmentId, int facultyId);
+    /*
+     * return all Teachers in defined Department of special Faculty
+     */
+    List<Teacher> findAllByDepartmentIdAndDepartmentFacultyIdOrderByIdAsc(int departmentId, int facultyId);
 
-	Optional<Teacher> findByEmail(String email);
+    Optional<Teacher> findByEmail(String email);
 }
