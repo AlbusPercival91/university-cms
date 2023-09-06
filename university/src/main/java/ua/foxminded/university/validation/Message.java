@@ -39,7 +39,7 @@ public final class Message {
     public static final String GROUP_EXISTS = "Faculty already contains this Group";
     public static final String ADDRESS_BUSY = "Class Room with such address already exists";
     public static final String TIMETABLE_SCHEDULED = "Timetable [date:{}, time from:{}, time to:{}] is scheduled successfully";
-    public static final String ALERT_SUCCESS = "Alert sent successfully";
+    public static final String ALERT_SUCCESS = "Message sent successfully";
 
     /*
      * TimeTable validation Message Constants
