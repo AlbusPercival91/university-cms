@@ -224,6 +224,16 @@ class TeacherControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "TEACHER")
+    void testDeleteTeacherAlert() throws Exception {
+        int alertId = 1;
+        mockMvc.perform(MockMvcRequestBuilders.post("/teacher/remove-alert/{alertId}", alertId).with(csrf().asHeader()))
+                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.flash().attributeExists(Message.SUCCESS))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/teacher/alert"));
+    }
+
+    @Test
     @WithMockUser(roles = "ADMIN")
     void testShowCreateTeacherForm() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/teacher/create-teacher"))
