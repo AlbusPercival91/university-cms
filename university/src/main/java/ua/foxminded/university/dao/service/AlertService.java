@@ -7,6 +7,7 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import ua.foxminded.university.dao.entities.Teacher;
 import ua.foxminded.university.dao.entities.Admin;
 import ua.foxminded.university.dao.entities.Alert;
@@ -27,6 +28,7 @@ import ua.foxminded.university.dao.interfaces.StudentRepository;
 import ua.foxminded.university.dao.interfaces.TeacherRepository;
 import ua.foxminded.university.validation.Message;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 @Transactional
@@ -128,6 +130,19 @@ public class AlertService {
         List<Teacher> teachers = teacherRepository.findAllByDepartmentIdAndDepartmentFacultyId(
                 optionalDepartment.get().getId(), optionalDepartment.get().getFaculty().getId());
         teachers.forEach(teacher -> createTeacherAlert(timestamp, teacher.getId(), message));
+    }
+
+    public int deleteAlertById(int alertId) {
+        Optional<Alert> optionalAlert = alertRepository.findById(alertId);
+
+        if (optionalAlert.isPresent()) {
+            alertRepository.deleteById(alertId);
+            log.info(Message.DELETE_SUCCESS);
+            return alertId;
+        } else {
+            log.warn(Message.ALERT_NOT_FOUND);
+            throw new NoSuchElementException(Message.ALERT_NOT_FOUND);
+        }
     }
 
     public List<Alert> getAllTeacherAlerts(Teacher teacher) {

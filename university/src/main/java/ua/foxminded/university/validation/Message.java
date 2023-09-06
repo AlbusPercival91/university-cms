@@ -26,6 +26,7 @@ public final class Message {
     public static final String STUDENT_NOT_FOUND = "Student not found";
     public static final String TEACHER_NOT_FOUND = "Teacher not found";
     public static final String TIMETABLE_NOT_FOUND = "Time Table not found";
+    public static final String ALERT_NOT_FOUND = "Message not found";
     public static final String ASSIGNED = "User assigned to the Course";
     public static final String REASSIGNED = "User reassigned from Course";
     public static final String USER_ALREADY_ASSIGNED = "User already assigned with this Course!";
