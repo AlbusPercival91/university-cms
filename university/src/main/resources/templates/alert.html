@@ -15,12 +15,12 @@
 
         <div class="feature-container">
             <h3>Broadcast Message</h3>
-            <div class="create-alert">
+            <form th:action="@{/send-broadcast}" method="post">
                 <textarea class="alert-textarea" placeholder="Type your message here"></textarea>
                 <button class="icon-button send-button">
                     <i class="fas fa-comment"></i>
                 </button>
-            </div>
+            </form>
 
             <!-- Add a date search feature -->
             <!-- Your date search feature code here -->
