@@ -463,9 +463,29 @@ button[type="submit"] {
     color: #333;
 }
 
-/* Styles for Unread Alerts */
+.alert-operations-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .alert-box.unread {
     background-color: #ffcccb;
+}
+
+.icon-button.mark-as-read-button {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 4px 10px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.icon-button.mark-as-read-button:hover {
+    background-color: #45a049;
 }
 
 /* Styles for Feature Container */

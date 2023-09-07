@@ -45,16 +45,21 @@
                     </div>
                     <div class="alert-message" th:text="${alert.message}"></div>
 
-                    <!-- remove button -->
-                    <form th:action="@{/admin/remove-alert/{alertId}(alertId=${alert.id})}" method="post">
-                        <button type="submit" class="icon-button remove-button">
-                            <i class="fas fa-trash-alt"></i> </button>
-                    </form>
+                    <div class="alert-operations-container">
+                        <!-- mark as read -->
+                        <form th:action="@{/mark-alert-as-read/{alertId}(alertId=${alert.id})}" method="post">
+                            <button type="submit" class="icon-button mark-as-read-button" name="markAsRead">
+                                <i class="fas fa-check"></i>
+                            </button>
+                        </form>
 
-                    <!-- mark as read -->
-                    <form th:action="@{/mark-alert-as-read/{alertId}(alertId=${alert.id})}" method="post">
-                        <button type="submit" class="mark-as-read-button" name="markAsRead">Done</button>
-                    </form>
+                        <!-- remove button -->
+                        <form th:action="@{/admin/remove-alert/{alertId}(alertId=${alert.id})}" method="post">
+                            <button type="submit" class="icon-button remove-button">
+                                <i class="fas fa-trash-alt"></i> </button>
+                        </form>
+                    </div>
+
                 </div>
 
 
