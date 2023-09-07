@@ -143,6 +143,17 @@ public class AdminController {
         return "redirect:/admin/alert";
     }
 
+    @PostMapping("/mark-alert-as-read/{alertId}")
+    public String toogleAlert(@PathVariable int alertId, RedirectAttributes redirectAttributes) {
+        try {
+            alertService.toggleRead(alertId);
+
+        } catch (NoSuchElementException ex) {
+            redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
+        }
+        return "redirect:/admin/alert";
+    }
+
     @RolesAllowed({ "ADMIN", "STAFF" })
     @GetMapping("/admin/admin-list")
     public String getAllAdminList(Model model) {

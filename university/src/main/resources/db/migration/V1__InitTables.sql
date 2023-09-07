@@ -117,6 +117,7 @@ CREATE TABLE alert (
     staff_id INT,
     admin_id INT,
     message TEXT NOT NULL,
+    is_read BOOLEAN NOT NULL,
     FOREIGN KEY (teacher_id) REFERENCES university.teacher (id),
     FOREIGN KEY (student_id) REFERENCES university.student (id),
     FOREIGN KEY (staff_id) REFERENCES university.staff (id),

@@ -463,6 +463,11 @@ button[type="submit"] {
     color: #333;
 }
 
+/* Styles for Unread Alerts */
+.alert-box.unread {
+    background-color: #ffcccb;
+}
+
 /* Styles for Feature Container */
 .feature-container {
     width: 25%;

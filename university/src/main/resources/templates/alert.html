@@ -32,23 +32,28 @@
                 </button>
             </form>
 
-            <!-- Add a date search feature -->
-            <!-- Your date search feature code here -->
+            <!-- date search feature -->
         </div>
 
         <div class="alerts-scroll-container">
             <div class="alert-container">
 
                 <!-- Admin Alerts -->
-                <div th:each="alert, rowStat : ${admin.alerts}" sec:authorize="hasRole('ROLE_ADMIN')" class="alert-box">
+                <div th:each="alert, rowStat : ${admin.alerts}" sec:authorize="hasRole('ROLE_ADMIN')" class="alert-box"
+                    th:class="${alert.read ? 'alert-box' : 'alert-box unread'}">
                     <div class="alert-timestamp" th:text="${#temporals.format(alert.timestamp, 'dd-MMM-yy HH:mm')}">
                     </div>
                     <div class="alert-message" th:text="${alert.message}"></div>
 
-                    <!-- Add a remove button -->
+                    <!-- remove button -->
                     <form th:action="@{/admin/remove-alert/{alertId}(alertId=${alert.id})}" method="post">
                         <button type="submit" class="icon-button remove-button">
                             <i class="fas fa-trash-alt"></i> </button>
+                    </form>
+
+                    <!-- mark as read -->
+                    <form th:action="@{/mark-alert-as-read/{alertId}(alertId=${alert.id})}" method="post">
+                        <button type="submit" class="mark-as-read-button" name="markAsRead">Done</button>
                     </form>
                 </div>
 
