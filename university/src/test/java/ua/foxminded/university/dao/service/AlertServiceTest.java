@@ -16,7 +16,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
-
 import ua.foxminded.university.dao.entities.Admin;
 import ua.foxminded.university.dao.entities.Alert;
 import ua.foxminded.university.dao.entities.Course;
@@ -217,6 +216,27 @@ class AlertServiceTest {
     void testDeleteAlertById_WhenIdNotFound_ShouldThrowNoSuchElementException() {
         Exception noSuchElementException = assertThrows(Exception.class, () -> alertService.deleteAlertById(4));
         Assertions.assertEquals(Message.ALERT_NOT_FOUND, noSuchElementException.getMessage());
+    }
+
+    @ParameterizedTest
+    @CsvSource({ "1, 1, 1, 1, Test Alert" })
+    void testCeateBroadcastAlert_ShouldSendlertsToAllUsers(int adminId, int studentId, int teacherId, int staffId,
+            String message) {
+        Optional<Admin> optionalAdmin = adminService.findAdminById(adminId);
+        Optional<Student> optionalStudent = studentService.findStudentById(studentId);
+        Optional<Teacher> optionalTeacher = teacherService.findTeacherById(teacherId);
+        Optional<Staff> optionalStaff = staffService.findStaffById(staffId);
+
+        alertService.createBroadcastAlert(LocalDateTime.now(), message);
+
+        Assertions
+                .assertTrue(alertService.getAllAdminAlerts(optionalAdmin.get()).get(0).getMessage().contains(message));
+        Assertions.assertTrue(
+                alertService.getAllStudentAlerts(optionalStudent.get()).get(0).getMessage().contains(message));
+        Assertions.assertTrue(
+                alertService.getAllTeacherAlerts(optionalTeacher.get()).get(0).getMessage().contains(message));
+        Assertions
+                .assertTrue(alertService.getAllStaffAlerts(optionalStaff.get()).get(0).getMessage().contains(message));
     }
 
 }
