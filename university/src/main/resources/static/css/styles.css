@@ -474,18 +474,17 @@ button[type="submit"] {
 }
 
 .icon-button.mark-as-read-button {
-    background-color: #4caf50;
     color: white;
     border: none;
     border-radius: 5px;
-    padding: 4px 4px;
+    padding: 4px 6px;
     font-size: 12px;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
 
 .icon-button.mark-as-read-button:hover {
-    background-color: #45a049;
+    background-color: rgb(58, 193, 56);
 }
 
 /* Styles for Feature Container */
@@ -504,7 +503,7 @@ button[type="submit"] {
 }
 
 .send-button {
-    background-color: rgb(58, 193, 56);
+    background-color: #333;
     color: #fff;
     border: none;
     padding: 8px 12px;
@@ -515,5 +514,5 @@ button[type="submit"] {
 }
 
 .send-button:hover {
-    background-color: rgb(32, 240, 42);
+    background-color: rgb(58, 193, 56);
 }
