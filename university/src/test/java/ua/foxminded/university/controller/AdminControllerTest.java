@@ -213,6 +213,15 @@ class AdminControllerTest {
     }
 
     @Test
+    void testToggleAdminAlert() throws Exception {
+        int alertId = 1;
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/admin/mark-alert-as-read/{alertId}", alertId).with(csrf().asHeader()))
+                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/admin/alert"));
+    }
+
+    @Test
     void testGetAllAdmin() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/admin/admin-list"))
                 .andExpect(MockMvcResultMatchers.status().isOk())

@@ -165,14 +165,13 @@ public class AlertService {
     public int deleteAlertById(int alertId) {
         Optional<Alert> optionalAlert = alertRepository.findById(alertId);
 
-        if (optionalAlert.isPresent()) {
-            alertRepository.deleteById(alertId);
-            log.info(Message.DELETE_SUCCESS);
-            return alertId;
-        } else {
+        if (!optionalAlert.isPresent()) {
             log.warn(Message.ALERT_NOT_FOUND);
             throw new NoSuchElementException(Message.ALERT_NOT_FOUND);
         }
+        alertRepository.deleteById(alertId);
+        log.info(Message.DELETE_SUCCESS);
+        return alertId;
     }
 
     public List<Alert> getAllTeacherAlerts(Teacher teacher) {

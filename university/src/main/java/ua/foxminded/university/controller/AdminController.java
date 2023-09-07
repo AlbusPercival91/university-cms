@@ -143,11 +143,10 @@ public class AdminController {
         return "redirect:/admin/alert";
     }
 
-    @PostMapping("/mark-alert-as-read/{alertId}")
-    public String toogleAlert(@PathVariable int alertId, RedirectAttributes redirectAttributes) {
+    @PostMapping("/admin/mark-alert-as-read/{alertId}")
+    public String toggleAdminAlert(@PathVariable int alertId, RedirectAttributes redirectAttributes) {
         try {
             alertService.toggleRead(alertId);
-
         } catch (NoSuchElementException ex) {
             redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
         }

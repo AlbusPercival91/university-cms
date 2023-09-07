@@ -237,4 +237,15 @@ class AlertServiceTest {
                 .assertTrue(alertService.getAllStaffAlerts(optionalStaff.get()).get(0).getMessage().contains(message));
     }
 
+    @ParameterizedTest
+    @CsvSource({ "1, 1, Test Alert" })
+    void testToggleRead_ShouldToogleAlertReadStatus(int alertId, int adminId, String message) {
+        Optional<Admin> optionalAdmin = adminService.findAdminById(adminId);
+
+        alertService.createAdminAlert(LocalDateTime.now(), optionalAdmin.get().getId(), message);
+        Assertions.assertFalse(alertService.getAllAdminAlerts(optionalAdmin.get()).get(0).isRead());
+        alertService.toggleRead(alertId);
+        Assertions.assertTrue(alertService.getAllAdminAlerts(optionalAdmin.get()).get(0).isRead());
+
+    }
 }

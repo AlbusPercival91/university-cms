@@ -148,6 +148,16 @@ public class TeacherController {
         return "redirect:/teacher/alert";
     }
 
+    @PostMapping("/teacher/mark-alert-as-read/{alertId}")
+    public String toggleTeacherAlert(@PathVariable int alertId, RedirectAttributes redirectAttributes) {
+        try {
+            alertService.toggleRead(alertId);
+        } catch (NoSuchElementException ex) {
+            redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
+        }
+        return "redirect:/teacher/alert";
+    }
+
     @RolesAllowed("ADMIN")
     @GetMapping("/teacher/create-teacher")
     public String showCreateTeacherForm(Model model) {

@@ -234,6 +234,16 @@ class TeacherControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "TEACHER")
+    void testToggleTeacherAlert() throws Exception {
+        int alertId = 1;
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/teacher/mark-alert-as-read/{alertId}", alertId).with(csrf().asHeader()))
+                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/teacher/alert"));
+    }
+
+    @Test
     @WithMockUser(roles = "ADMIN")
     void testShowCreateTeacherForm() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/teacher/create-teacher"))

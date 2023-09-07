@@ -47,7 +47,7 @@
 
                     <div class="alert-operations-container">
                         <!-- mark as read -->
-                        <form th:action="@{/mark-alert-as-read/{alertId}(alertId=${alert.id})}" method="post">
+                        <form th:action="@{/admin/mark-alert-as-read/{alertId}(alertId=${alert.id})}" method="post">
                             <button type="submit" class="icon-button mark-as-read-button" name="markAsRead">
                                 <i class="fas fa-thumbs-up"></i>
                             </button>
@@ -59,49 +59,75 @@
                                 <i class="fas fa-trash-alt"></i> </button>
                         </form>
                     </div>
-
                 </div>
-
 
                 <!-- Teacher Alerts -->
                 <div th:each="alert, rowStat : ${teacher.alerts}" sec:authorize="hasRole('ROLE_TEACHER')"
-                    class="alert-box">
+                    class="alert-box" th:class="${alert.read ? 'alert-box' : 'alert-box unread'}">
                     <div class="alert-timestamp" th:text="${#temporals.format(alert.timestamp, 'dd-MMM-yy HH:mm')}">
                     </div>
                     <div class="alert-message" th:text="${alert.message}"></div>
 
-                    <!-- Add a remove button -->
-                    <form th:action="@{/teacher/remove-alert/{alertId}(alertId=${alert.id})}" method="post">
-                        <button type="submit" class="icon-button remove-button">
-                            <i class="fas fa-trash-alt"></i> </button>
-                    </form>
+                    <div class="alert-operations-container">
+                        <!-- mark as read -->
+                        <form th:action="@{/teacher/mark-alert-as-read/{alertId}(alertId=${alert.id})}" method="post">
+                            <button type="submit" class="icon-button mark-as-read-button" name="markAsRead">
+                                <i class="fas fa-thumbs-up"></i>
+                            </button>
+                        </form>
+
+                        <!-- remove button -->
+                        <form th:action="@{/teacher/remove-alert/{alertId}(alertId=${alert.id})}" method="post">
+                            <button type="submit" class="icon-button remove-button">
+                                <i class="fas fa-trash-alt"></i> </button>
+                        </form>
+                    </div>
                 </div>
 
                 <!-- Student Alerts -->
                 <div th:each="alert, rowStat : ${student.alerts}" sec:authorize="hasRole('ROLE_STUDENT')"
-                    class="alert-box">
+                    class="alert-box" th:class="${alert.read ? 'alert-box' : 'alert-box unread'}">
                     <div class="alert-timestamp" th:text="${#temporals.format(alert.timestamp, 'dd-MMM-yy HH:mm')}">
                     </div>
-                    <div class="alert-message-line" th:text="${alert.message}"></div>
+                    <div class="alert-message" th:text="${alert.message}"></div>
 
-                    <!-- Add a remove button -->
-                    <form th:action="@{/student/remove-alert/{alertId}(alertId=${alert.id})}" method="post">
-                        <button type="submit" class="icon-button remove-button">
-                            <i class="fas fa-trash-alt"></i> </button>
-                    </form>
+                    <div class="alert-operations-container">
+                        <!-- mark as read -->
+                        <form th:action="@{/student/mark-alert-as-read/{alertId}(alertId=${alert.id})}" method="post">
+                            <button type="submit" class="icon-button mark-as-read-button" name="markAsRead">
+                                <i class="fas fa-thumbs-up"></i>
+                            </button>
+                        </form>
+
+                        <!-- remove button -->
+                        <form th:action="@{/student/remove-alert/{alertId}(alertId=${alert.id})}" method="post">
+                            <button type="submit" class="icon-button remove-button">
+                                <i class="fas fa-trash-alt"></i> </button>
+                        </form>
+                    </div>
                 </div>
 
                 <!-- Staff Alerts -->
-                <div th:each="alert, rowStat : ${staff.alerts}" sec:authorize="hasRole('ROLE_STAFF')" class="alert-box">
+                <div th:each="alert, rowStat : ${staff.alerts}" sec:authorize="hasRole('ROLE_STAFF')" class="alert-box"
+                    th:class="${alert.read ? 'alert-box' : 'alert-box unread'}">
                     <div class="alert-timestamp" th:text="${#temporals.format(alert.timestamp, 'dd-MMM-yy HH:mm')}">
                     </div>
-                    <div class="alert-message-line" th:text="${alert.message}"></div>
+                    <div class="alert-message" th:text="${alert.message}"></div>
 
-                    <!-- Add a remove button -->
-                    <form th:action="@{/staff/remove-alert/{alertId}(alertId=${alert.id})}" method="post">
-                        <button type="submit" class="icon-button remove-button">
-                            <i class="fas fa-trash-alt"></i> </button>
-                    </form>
+                    <div class="alert-operations-container">
+                        <!-- mark as read -->
+                        <form th:action="@{/staff/mark-alert-as-read/{alertId}(alertId=${alert.id})}" method="post">
+                            <button type="submit" class="icon-button mark-as-read-button" name="markAsRead">
+                                <i class="fas fa-thumbs-up"></i>
+                            </button>
+                        </form>
+
+                        <!-- remove button -->
+                        <form th:action="@{/staff/remove-alert/{alertId}(alertId=${alert.id})}" method="post">
+                            <button type="submit" class="icon-button remove-button">
+                                <i class="fas fa-trash-alt"></i> </button>
+                        </form>
+                    </div>
                 </div>
 
             </div>

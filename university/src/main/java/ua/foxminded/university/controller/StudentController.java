@@ -147,6 +147,16 @@ public class StudentController {
         return "redirect:/student/alert";
     }
 
+    @PostMapping("/student/mark-alert-as-read/{alertId}")
+    public String toggleStudentAlert(@PathVariable int alertId, RedirectAttributes redirectAttributes) {
+        try {
+            alertService.toggleRead(alertId);
+        } catch (NoSuchElementException ex) {
+            redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
+        }
+        return "redirect:/student/alert";
+    }
+
     @GetMapping("/student/student-list")
     public String getAllStudentsList(Model model) {
         List<Student> students = studentService.getAllStudents();

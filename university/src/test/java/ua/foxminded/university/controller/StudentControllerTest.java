@@ -234,6 +234,16 @@ class StudentControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "STUDENT")
+    void testToggleStudentAlert() throws Exception {
+        int alertId = 1;
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/student/mark-alert-as-read/{alertId}", alertId).with(csrf().asHeader()))
+                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/student/alert"));
+    }
+
+    @Test
     @WithMockUser(roles = { "ADMIN", "STUDENT", "TEACHER", "STAFF" })
     void testGetAllStudentsList() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/student/student-list"))

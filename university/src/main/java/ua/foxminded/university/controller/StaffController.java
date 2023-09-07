@@ -145,6 +145,16 @@ public class StaffController {
         return "redirect:/staff/alert";
     }
 
+    @PostMapping("/staff/mark-alert-as-read/{alertId}")
+    public String toggleStaffAlert(@PathVariable int alertId, RedirectAttributes redirectAttributes) {
+        try {
+            alertService.toggleRead(alertId);
+        } catch (NoSuchElementException ex) {
+            redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
+        }
+        return "redirect:/staff/alert";
+    }
+
     @RolesAllowed("ADMIN")
     @GetMapping("/staff/create-staff")
     public String showCreateStaffForm() {
