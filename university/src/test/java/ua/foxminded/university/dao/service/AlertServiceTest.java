@@ -17,7 +17,6 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import ua.foxminded.university.dao.entities.Admin;
-import ua.foxminded.university.dao.entities.Alert;
 import ua.foxminded.university.dao.entities.Course;
 import ua.foxminded.university.dao.entities.Department;
 import ua.foxminded.university.dao.entities.Faculty;
@@ -204,11 +203,10 @@ class AlertServiceTest {
         Optional<Admin> optionalAdmin = adminService.findAdminById(adminId);
 
         alertService.createAdminAlert(LocalDateTime.now(), optionalAdmin.get().getId(), message);
-        Optional<Alert> optionalAlert = alertService.findAlertById(alertId);
 
         Assertions
                 .assertTrue(alertService.getAllAdminAlerts(optionalAdmin.get()).get(0).getMessage().contains(message));
-        Assertions.assertEquals(alertId, alertService.deleteAlertById(optionalAlert.get().getId()));
+        Assertions.assertEquals(alertId, alertService.deleteAlertById(alertId));
         Assertions.assertTrue(alertService.getAllAdminAlerts(optionalAdmin.get()).isEmpty());
     }
 

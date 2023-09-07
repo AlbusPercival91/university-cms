@@ -191,10 +191,6 @@ public class AlertService {
         return alertRepository.findByStaff(staff);
     }
 
-    public Optional<Alert> findAlertById(int alertId) {
-        return alertRepository.findById(alertId);
-    }
-
     public void toggleRead(int alertId) {
         Optional<Alert> optionalAlert = alertRepository.findById(alertId);
 
