@@ -7,6 +7,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import javax.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -147,7 +148,7 @@ public class TimeTableService {
     }
 
     public List<TimeTable> getAllTimeTables() {
-        return timeTableRepository.findAll();
+        return timeTableRepository.findAll(Sort.by(Sort.Direction.ASC, "date", "timeFrom"));
     }
 
     public List<TimeTable> getAllTimeTablesByDate(LocalDate dateFrom, LocalDate dateTo) {
