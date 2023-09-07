@@ -450,11 +450,15 @@ button[type="submit"] {
 }
 
 .alert-box {
-    background-color: #f1f1f1;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
     padding: 12px;
     border-radius: 5px;
     margin: 10px;
+}
+
+.alert-box.unread {
+    background-color: #f1f1f1;
+    box-shadow: 0 2px 5px rgb(246, 97, 81);
 }
 
 .alert-timestamp {
@@ -467,10 +471,6 @@ button[type="submit"] {
     display: flex;
     justify-content: space-between;
     align-items: center;
-}
-
-.alert-box.unread {
-    background-color: #ffcccb;
 }
 
 .icon-button.mark-as-read-button {
