@@ -194,6 +194,16 @@ class AdminControllerTest {
     }
 
     @Test
+    void testSendBroadcastAlert() throws Exception {
+        String alertMessage = "Test Alert Message";
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/admin/send-broadcast").param("alertMessage", alertMessage)
+                .with(csrf().asHeader())).andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.flash().attributeExists(Message.SUCCESS))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/admin/alert"));
+    }
+
+    @Test
     void testDeleteAdminAlert() throws Exception {
         int alertId = 1;
         mockMvc.perform(MockMvcRequestBuilders.post("/admin/remove-alert/{alertId}", alertId).with(csrf().asHeader()))
