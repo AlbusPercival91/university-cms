@@ -33,14 +33,16 @@
 
         <!-- Add textarea for alert message -->
         <div class="entity-details">
-            <h2>Send Faculty Alert</h2>
+            <h3>Send Faculty Message</h3>
             <form th:action="@{/faculty/send-alert/{facultyId}(facultyId=${faculty.id})}" method="post">
                 <div class="form-group">
-                    <textarea id="alertMessage" name="alertMessage" style="height: 100px; flex-grow: 1;"
-                        required></textarea>
+                    <textarea class="alert-textarea" id="alertMessage" name="alertMessage"
+                        placeholder="Type your message here" style="height: 100px; flex-grow: 1;" required></textarea>
                 </div>
                 <div class="button-container">
-                    <button id="sendAlertButton" type="submit" class="button-common-style">Send Alert</button>
+                    <button class="icon-button send-button">
+                        <i class="fas fa-comment"></i>
+                    </button>
                 </div>
             </form>
         </div>

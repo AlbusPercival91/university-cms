@@ -207,11 +207,32 @@ class StaffControllerTest {
 
     @Test
     @WithMockUser(roles = "STAFF")
+    void testSendBroadcastAlert() throws Exception {
+        String alertMessage = "Test Alert Message";
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/staff/send-broadcast").param("alertMessage", alertMessage)
+                .with(csrf().asHeader())).andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.flash().attributeExists(Message.SUCCESS))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/staff/alert"));
+    }
+
+    @Test
+    @WithMockUser(roles = "STAFF")
     void testDeleteStaffAlert() throws Exception {
         int alertId = 1;
         mockMvc.perform(MockMvcRequestBuilders.post("/staff/remove-alert/{alertId}", alertId).with(csrf().asHeader()))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.flash().attributeExists(Message.SUCCESS))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/staff/alert"));
+    }
+
+    @Test
+    @WithMockUser(roles = "STAFF")
+    void testToggleStaffAlert() throws Exception {
+        int alertId = 1;
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/staff/mark-alert-as-read/{alertId}", alertId).with(csrf().asHeader()))
+                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/staff/alert"));
     }
 

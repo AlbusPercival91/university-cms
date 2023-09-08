@@ -131,6 +131,30 @@ public class StaffController {
         return "redirect:/staff/alert";
     }
 
+    @PostMapping("/staff/send-broadcast")
+    public String sendBroadcastAlert(@RequestParam String alertMessage, RedirectAttributes redirectAttributes) {
+        try {
+            alertService.createBroadcastAlert(LocalDateTime.now(), alertMessage);
+
+            if (alertMessage != null) {
+                redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.ALERT_SUCCESS);
+            }
+        } catch (NoSuchElementException ex) {
+            redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
+        }
+        return "redirect:/staff/alert";
+    }
+
+    @PostMapping("/staff/mark-alert-as-read/{alertId}")
+    public String toggleStaffAlert(@PathVariable int alertId, RedirectAttributes redirectAttributes) {
+        try {
+            alertService.toggleRead(alertId);
+        } catch (NoSuchElementException ex) {
+            redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
+        }
+        return "redirect:/staff/alert";
+    }
+
     @RolesAllowed("ADMIN")
     @GetMapping("/staff/create-staff")
     public String showCreateStaffForm() {

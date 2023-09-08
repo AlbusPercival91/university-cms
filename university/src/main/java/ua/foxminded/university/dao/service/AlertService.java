@@ -89,7 +89,8 @@ public class AlertService {
         if (optionalGroup.isEmpty()) {
             throw new NoSuchElementException(Message.GROUP_NOT_FOUND);
         }
-        List<Student> students = studentRepository.findAllByGroupGroupNameOrderByIdAsc(optionalGroup.get().getGroupName());
+        List<Student> students = studentRepository
+                .findAllByGroupGroupNameOrderByIdAsc(optionalGroup.get().getGroupName());
         students.forEach(student -> createStudentAlert(timestamp, student.getId(), message));
     }
 
@@ -99,10 +100,12 @@ public class AlertService {
         if (optionalCourse.isEmpty()) {
             throw new NoSuchElementException(Message.COURSE_NOT_FOUND);
         }
-        List<Student> students = studentRepository.findStudentsRelatedToCourseOrderByIdAsc(optionalCourse.get().getCourseName());
+        List<Student> students = studentRepository
+                .findStudentsRelatedToCourseOrderByIdAsc(optionalCourse.get().getCourseName());
         students.forEach(student -> createStudentAlert(timestamp, student.getId(), message));
 
-        List<Teacher> teachers = teacherRepository.findTeachersRelatedToCourseOrderByIdAsc(optionalCourse.get().getCourseName());
+        List<Teacher> teachers = teacherRepository
+                .findTeachersRelatedToCourseOrderByIdAsc(optionalCourse.get().getCourseName());
         teachers.forEach(teacher -> createTeacherAlert(timestamp, teacher.getId(), message));
     }
 
@@ -132,17 +135,43 @@ public class AlertService {
         teachers.forEach(teacher -> createTeacherAlert(timestamp, teacher.getId(), message));
     }
 
+    private void createAlertsForStudents(LocalDateTime timestamp, String message) {
+        List<Student> students = studentRepository.findAll();
+        students.forEach(student -> createStudentAlert(timestamp, student.getId(), message));
+    }
+
+    private void createAlertsForTeachers(LocalDateTime timestamp, String message) {
+        List<Teacher> teachers = teacherRepository.findAll();
+        teachers.forEach(teacher -> createTeacherAlert(timestamp, teacher.getId(), message));
+    }
+
+    private void createAlertsForStaff(LocalDateTime timestamp, String message) {
+        List<Staff> staffMembers = staffRepository.findAll();
+        staffMembers.forEach(staff -> createStaffAlert(timestamp, staff.getId(), message));
+    }
+
+    private void createAlertsForAdmins(LocalDateTime timestamp, String message) {
+        List<Admin> admins = adminRepository.findAll();
+        admins.forEach(admin -> createAdminAlert(timestamp, admin.getId(), message));
+    }
+
+    public void createBroadcastAlert(LocalDateTime timestamp, String message) {
+        createAlertsForStudents(timestamp, message);
+        createAlertsForTeachers(timestamp, message);
+        createAlertsForStaff(timestamp, message);
+        createAlertsForAdmins(timestamp, message);
+    }
+
     public int deleteAlertById(int alertId) {
         Optional<Alert> optionalAlert = alertRepository.findById(alertId);
 
-        if (optionalAlert.isPresent()) {
-            alertRepository.deleteById(alertId);
-            log.info(Message.DELETE_SUCCESS);
-            return alertId;
-        } else {
+        if (!optionalAlert.isPresent()) {
             log.warn(Message.ALERT_NOT_FOUND);
             throw new NoSuchElementException(Message.ALERT_NOT_FOUND);
         }
+        alertRepository.deleteById(alertId);
+        log.info(Message.DELETE_SUCCESS);
+        return alertId;
     }
 
     public List<Alert> getAllTeacherAlerts(Teacher teacher) {
@@ -161,7 +190,13 @@ public class AlertService {
         return alertRepository.findByStaff(staff);
     }
 
-    public Optional<Alert> findAlertById(int alertId) {
-        return alertRepository.findById(alertId);
+    public void toggleRead(int alertId) {
+        Optional<Alert> optionalAlert = alertRepository.findById(alertId);
+
+        if (optionalAlert.isPresent()) {
+            Alert alert = optionalAlert.get();
+            alert.setRead(!alert.isRead());
+            alertRepository.save(alert);
+        }
     }
 }

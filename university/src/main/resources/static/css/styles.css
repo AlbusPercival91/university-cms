@@ -428,27 +428,91 @@ button[type="submit"] {
     display: none;
 }
 
-/* Styles for Alerts Line Panel */
-.alert-container {
-    display: block;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    grid-gap: 9px;
+/* Styles for Alerts Panel */
+/* Style for the main container */
+.main-alert-container {
+    display: flex;
+    justify-content: space-between;
     padding: 12px;
-    padding-left: 25%;
+}
+
+/* Styles for Alerts Scroll Container */
+.alerts-scroll-container {
+    flex: 1;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+/* Styles for Alerts Container */
+.alert-container {
+    padding-left: 5%;
     padding-right: 5%;
 }
 
 .alert-box {
-    background-color: #f1f1f1;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-    transition: transform 0.3s;
     padding: 12px;
     border-radius: 5px;
     margin: 10px;
+}
+
+.alert-box.unread {
+    background-color: #f1f1f1;
+    box-shadow: 0 2px 5px rgb(246, 97, 81);
 }
 
 .alert-timestamp {
     font-size: 14px;
     font-weight: bold;
     color: #333;
+}
+
+.alert-operations-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.icon-button.mark-as-read-button {
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 4px 6px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.icon-button.mark-as-read-button:hover {
+    background-color: rgb(58, 193, 56);
+}
+
+/* Styles for Feature Container */
+.feature-container {
+    width: 25%;
+}
+
+.alert-textarea {
+    width: 100%;
+    resize: none;
+    padding: 8px;
+    margin-bottom: 7px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.send-button {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 14px;
+}
+
+.send-button:hover {
+    background-color: rgb(58, 193, 56);
 }

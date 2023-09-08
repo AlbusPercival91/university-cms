@@ -3,8 +3,9 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Create Student</title>
+    <title>Create Timetable</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}" />
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" />
 </head>
 
 <div th:replace="fragments/header :: header"></div>
@@ -12,7 +13,7 @@
 
 <body>
     <div class="container">
-        <h2>Create Course Time Table</h2>
+        <h2>Create Course Timetable</h2>
         <form th:action="@{/timetable/course-timetable-form}" method="post">
             <div class="form-group">
                 <label for="date">Date:</label>
@@ -56,7 +57,7 @@
                 </select>
             </div>
 
-            <button type="submit">Create Time Table</button>
+            <button type="submit">Create Timetable</button>
         </form>
 
     </div>

@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Teacher Card</title>
+    <title>Student Card</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" />
 </head>
@@ -108,7 +108,7 @@
 
         <!-- Block for student-timetable -->
         <div class="entity-timetable">
-            <h2>Student Time-Table</h2>
+            <h2>Student Timetable</h2>
 
             <form th:action="@{/timetable/selected-timetable/{studentId}(studentId=${student.id})}" method="get">
                 <div class="form-group">
@@ -127,12 +127,12 @@
                     <!-- First button for the first action -->
                     <button id="getSelectedTimetableButton" type="submit" name="action" value="selected-timetable"
                         class="button-common-style">
-                        Get Selected Date Time-Table
+                        Get Selected Date Timetable
                     </button>
                     <!-- Second button for the second action -->
                     <button id="getSelectedGroupTimetableButton" type="submit" class="button-common-style" name="action"
                         value="selected-group-timetable">
-                        Get Selected Date Group Time-Table
+                        Get Selected Date Group Timetable
                     </button>
                 </div>
             </form>
@@ -142,7 +142,7 @@
                 <form th:action="@{/timetable/student-timetable/{studentId}(studentId=${student.id})}" method="get">
                     <button id="getFullStudentTimetableButton" type="submit" class="button-common-style">Get Full
                         Student
-                        Time-Table</button>
+                        Timetable</button>
                 </form>
             </div>
 
@@ -150,21 +150,23 @@
             <div class="button-container">
                 <form th:action="@{/timetable/timetable-group/{studentId}(studentId=${student.id})}" method="get">
                     <button id="getFullGroupTimetableButton" type="submit" class="button-common-style">Get Full Group
-                        Time-Table</button>
+                        Timetable</button>
                 </form>
             </div>
         </div>
 
         <!-- Add textarea for alert message -->
         <div class="entity-details">
-            <h2>Send Alert to Student</h2>
+            <h3>Send Message to Student</h3>
             <form th:action="@{/student/send-alert/{studentId}(studentId=${student.id})}" method="post">
                 <div class="form-group">
-                    <textarea id="alertMessage" name="alertMessage" style="height: 100px; flex-grow: 1;"
-                        required></textarea>
+                    <textarea class="alert-textarea" id="alertMessage" name="alertMessage"
+                        placeholder="Type your message here" style="height: 100px; flex-grow: 1;" required></textarea>
                 </div>
                 <div class="button-container">
-                    <button id="sendAlertButton" type="submit" class="button-common-style">Send Alert</button>
+                    <button class="icon-button send-button">
+                        <i class="fas fa-comment"></i>
+                    </button>
                 </div>
             </form>
         </div>

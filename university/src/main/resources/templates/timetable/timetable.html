@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Time Table</title>
+    <title>Timetable</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" />
 </head>
@@ -23,7 +23,7 @@
                 <!-- Search by Id -->
                 <div class="search-section">
                     <div class="search-square">
-                        <h3>Find Time Table by ID</h3>
+                        <h3>Find Timetable by ID</h3>
                         <form th:action="@{/timetable/search-result}" method="get">
                             <input type="hidden" name="searchType" value="timetable" />
                             <label for="timetableId">Time-Table ID:</label>
@@ -36,7 +36,7 @@
                 <!-- Search by Course Name -->
                 <div class="search-section">
                     <div class="search-square">
-                        <h3>Find Time Table by Course</h3>
+                        <h3>Find Timetable by Course</h3>
                         <form th:action="@{/timetable/search-result}" method="get">
                             <input type="hidden" name="searchType" value="course" />
                             <label for="courseName">Course Name:</label>
@@ -49,7 +49,7 @@
                 <!-- Search by Group Name -->
                 <div class="search-section">
                     <div class="search-square">
-                        <h3>Find Time Table by Group</h3>
+                        <h3>Find Timetable by Group</h3>
                         <form th:action="@{/timetable/search-result}" method="get">
                             <input type="hidden" name="searchType" value="group" />
                             <label for="groupName">Group Name:</label>
@@ -62,7 +62,7 @@
                 <!-- Search by Date -->
                 <div class="search-section">
                     <div class="search-square">
-                        <h3>Find Time Table by Date</h3>
+                        <h3>Find Timetable by Date</h3>
                         <form th:action="@{/timetable/search-result}" method="get">
                             <input type="hidden" name="searchType" value="date" />
                             <label for="date">Date:</label>
@@ -77,9 +77,9 @@
     </div>
 
     <div class="container">
-        <h2>Time Table Schedule</h2>
+        <h2>Schedule</h2>
         <table class="table table-bordered">
-            <caption hidden>Scheduled Time Table</caption>
+            <caption hidden>Scheduled Timetable</caption>
             <thead>
                 <tr>
                     <th style="border: none; width: 3vh;"

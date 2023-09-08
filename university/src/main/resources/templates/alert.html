@@ -11,57 +11,127 @@
     <div th:replace="fragments/header :: header"></div>
     <div th:replace="fragments/nav-panel :: div"></div>
 
-    <div class="alert-container">
+    <div class="main-alert-container">
 
-        <!-- Admin Alerts -->
-        <div th:each="alert, rowStat : ${admin.alerts}" sec:authorize="hasRole('ROLE_ADMIN')" class="alert-box">
-            <div class="alert-timestamp" th:text="${#temporals.format(alert.timestamp, 'dd-MMM-yy HH:mm')}"></div>
-            <div class="alert-message" th:text="${alert.message}"></div>
+        <div class="feature-container">
+            <h3 sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_STAFF')">Broadcast Message</h3>
 
-            <!-- Add a remove button -->
-            <form th:action="@{/admin/remove-alert/{alertId}(alertId=${alert.id})}" method="post">
-                <button type="submit" class="icon-button remove-button">
-                    <i class="fas fa-trash-alt"></i> </button>
+            <form th:action="@{/admin/send-broadcast}" method="post" sec:authorize="hasRole('ROLE_ADMIN')">
+                <textarea class="alert-textarea" id="alertMessage" name="alertMessage"
+                    placeholder="Type your message here" required></textarea>
+                <button class="icon-button send-button">
+                    <i class="fas fa-comment"></i>
+                </button>
             </form>
+
+            <form th:action="@{/staff/send-broadcast}" method="post" sec:authorize="hasRole('ROLE_STAFF')">
+                <textarea class="alert-textarea" id="alertMessage" name="alertMessage"
+                    placeholder="Type your message here" required></textarea>
+                <button class="icon-button send-button">
+                    <i class="fas fa-comment"></i>
+                </button>
+            </form>
+
+            <!-- date search feature -->
         </div>
 
+        <div class="alerts-scroll-container">
+            <div class="alert-container">
 
-        <!-- Teacher Alerts -->
-        <div th:each="alert, rowStat : ${teacher.alerts}" sec:authorize="hasRole('ROLE_TEACHER')" class="alert-box">
-            <div class="alert-timestamp" th:text="${#temporals.format(alert.timestamp, 'dd-MMM-yy HH:mm')}"></div>
-            <div class="alert-message" th:text="${alert.message}"></div>
+                <!-- Admin Alerts -->
+                <div th:each="alert, rowStat : ${admin.alerts}" sec:authorize="hasRole('ROLE_ADMIN')" class="alert-box"
+                    th:class="${alert.read ? 'alert-box' : 'alert-box unread'}">
+                    <div class="alert-timestamp" th:text="${#temporals.format(alert.timestamp, 'dd-MMM-yy HH:mm')}">
+                    </div>
+                    <div class="alert-message" th:text="${alert.message}"></div>
 
-            <!-- Add a remove button -->
-            <form th:action="@{/teacher/remove-alert/{alertId}(alertId=${alert.id})}" method="post">
-                <button type="submit" class="icon-button remove-button">
-                    <i class="fas fa-trash-alt"></i> </button>
-            </form>
+                    <div class="alert-operations-container">
+                        <!-- mark as read -->
+                        <form th:action="@{/admin/mark-alert-as-read/{alertId}(alertId=${alert.id})}" method="post">
+                            <button type="submit" class="icon-button mark-as-read-button" name="markAsRead">
+                                <i class="fas fa-thumbs-up"></i>
+                            </button>
+                        </form>
+
+                        <!-- remove button -->
+                        <form th:action="@{/admin/remove-alert/{alertId}(alertId=${alert.id})}" method="post">
+                            <button type="submit" class="icon-button remove-button">
+                                <i class="fas fa-trash-alt"></i> </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Teacher Alerts -->
+                <div th:each="alert, rowStat : ${teacher.alerts}" sec:authorize="hasRole('ROLE_TEACHER')"
+                    class="alert-box" th:class="${alert.read ? 'alert-box' : 'alert-box unread'}">
+                    <div class="alert-timestamp" th:text="${#temporals.format(alert.timestamp, 'dd-MMM-yy HH:mm')}">
+                    </div>
+                    <div class="alert-message" th:text="${alert.message}"></div>
+
+                    <div class="alert-operations-container">
+                        <!-- mark as read -->
+                        <form th:action="@{/teacher/mark-alert-as-read/{alertId}(alertId=${alert.id})}" method="post">
+                            <button type="submit" class="icon-button mark-as-read-button" name="markAsRead">
+                                <i class="fas fa-thumbs-up"></i>
+                            </button>
+                        </form>
+
+                        <!-- remove button -->
+                        <form th:action="@{/teacher/remove-alert/{alertId}(alertId=${alert.id})}" method="post">
+                            <button type="submit" class="icon-button remove-button">
+                                <i class="fas fa-trash-alt"></i> </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Student Alerts -->
+                <div th:each="alert, rowStat : ${student.alerts}" sec:authorize="hasRole('ROLE_STUDENT')"
+                    class="alert-box" th:class="${alert.read ? 'alert-box' : 'alert-box unread'}">
+                    <div class="alert-timestamp" th:text="${#temporals.format(alert.timestamp, 'dd-MMM-yy HH:mm')}">
+                    </div>
+                    <div class="alert-message" th:text="${alert.message}"></div>
+
+                    <div class="alert-operations-container">
+                        <!-- mark as read -->
+                        <form th:action="@{/student/mark-alert-as-read/{alertId}(alertId=${alert.id})}" method="post">
+                            <button type="submit" class="icon-button mark-as-read-button" name="markAsRead">
+                                <i class="fas fa-thumbs-up"></i>
+                            </button>
+                        </form>
+
+                        <!-- remove button -->
+                        <form th:action="@{/student/remove-alert/{alertId}(alertId=${alert.id})}" method="post">
+                            <button type="submit" class="icon-button remove-button">
+                                <i class="fas fa-trash-alt"></i> </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Staff Alerts -->
+                <div th:each="alert, rowStat : ${staff.alerts}" sec:authorize="hasRole('ROLE_STAFF')" class="alert-box"
+                    th:class="${alert.read ? 'alert-box' : 'alert-box unread'}">
+                    <div class="alert-timestamp" th:text="${#temporals.format(alert.timestamp, 'dd-MMM-yy HH:mm')}">
+                    </div>
+                    <div class="alert-message" th:text="${alert.message}"></div>
+
+                    <div class="alert-operations-container">
+                        <!-- mark as read -->
+                        <form th:action="@{/staff/mark-alert-as-read/{alertId}(alertId=${alert.id})}" method="post">
+                            <button type="submit" class="icon-button mark-as-read-button" name="markAsRead">
+                                <i class="fas fa-thumbs-up"></i>
+                            </button>
+                        </form>
+
+                        <!-- remove button -->
+                        <form th:action="@{/staff/remove-alert/{alertId}(alertId=${alert.id})}" method="post">
+                            <button type="submit" class="icon-button remove-button">
+                                <i class="fas fa-trash-alt"></i> </button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
         </div>
-
-        <!-- Student Alerts -->
-        <div th:each="alert, rowStat : ${student.alerts}" sec:authorize="hasRole('ROLE_STUDENT')" class="alert-box">
-            <div class="alert-timestamp" th:text="${#temporals.format(alert.timestamp, 'dd-MMM-yy HH:mm')}"></div>
-            <div class="alert-message-line" th:text="${alert.message}"></div>
-
-            <!-- Add a remove button -->
-            <form th:action="@{/student/remove-alert/{alertId}(alertId=${alert.id})}" method="post">
-                <button type="submit" class="icon-button remove-button">
-                    <i class="fas fa-trash-alt"></i> </button>
-            </form>
-        </div>
-
-        <!-- Staff Alerts -->
-        <div th:each="alert, rowStat : ${staff.alerts}" sec:authorize="hasRole('ROLE_STAFF')" class="alert-box">
-            <div class="alert-timestamp" th:text="${#temporals.format(alert.timestamp, 'dd-MMM-yy HH:mm')}"></div>
-            <div class="alert-message-line" th:text="${alert.message}"></div>
-
-            <!-- Add a remove button -->
-            <form th:action="@{/staff/remove-alert/{alertId}(alertId=${alert.id})}" method="post">
-                <button type="submit" class="icon-button remove-button">
-                    <i class="fas fa-trash-alt"></i> </button>
-            </form>
-        </div>
-
     </div>
 
     <div th:replace="fragments/message :: div"></div>

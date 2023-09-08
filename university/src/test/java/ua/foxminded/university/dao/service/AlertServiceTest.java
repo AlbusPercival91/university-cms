@@ -16,9 +16,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
-
 import ua.foxminded.university.dao.entities.Admin;
-import ua.foxminded.university.dao.entities.Alert;
 import ua.foxminded.university.dao.entities.Course;
 import ua.foxminded.university.dao.entities.Department;
 import ua.foxminded.university.dao.entities.Faculty;
@@ -205,11 +203,10 @@ class AlertServiceTest {
         Optional<Admin> optionalAdmin = adminService.findAdminById(adminId);
 
         alertService.createAdminAlert(LocalDateTime.now(), optionalAdmin.get().getId(), message);
-        Optional<Alert> optionalAlert = alertService.findAlertById(alertId);
 
         Assertions
                 .assertTrue(alertService.getAllAdminAlerts(optionalAdmin.get()).get(0).getMessage().contains(message));
-        Assertions.assertEquals(alertId, alertService.deleteAlertById(optionalAlert.get().getId()));
+        Assertions.assertEquals(alertId, alertService.deleteAlertById(alertId));
         Assertions.assertTrue(alertService.getAllAdminAlerts(optionalAdmin.get()).isEmpty());
     }
 
@@ -219,4 +216,36 @@ class AlertServiceTest {
         Assertions.assertEquals(Message.ALERT_NOT_FOUND, noSuchElementException.getMessage());
     }
 
+    @ParameterizedTest
+    @CsvSource({ "1, 1, 1, 1, Test Alert" })
+    void testCeateBroadcastAlert_ShouldSendlertsToAllUsers(int adminId, int studentId, int teacherId, int staffId,
+            String message) {
+        Optional<Admin> optionalAdmin = adminService.findAdminById(adminId);
+        Optional<Student> optionalStudent = studentService.findStudentById(studentId);
+        Optional<Teacher> optionalTeacher = teacherService.findTeacherById(teacherId);
+        Optional<Staff> optionalStaff = staffService.findStaffById(staffId);
+
+        alertService.createBroadcastAlert(LocalDateTime.now(), message);
+
+        Assertions
+                .assertTrue(alertService.getAllAdminAlerts(optionalAdmin.get()).get(0).getMessage().contains(message));
+        Assertions.assertTrue(
+                alertService.getAllStudentAlerts(optionalStudent.get()).get(0).getMessage().contains(message));
+        Assertions.assertTrue(
+                alertService.getAllTeacherAlerts(optionalTeacher.get()).get(0).getMessage().contains(message));
+        Assertions
+                .assertTrue(alertService.getAllStaffAlerts(optionalStaff.get()).get(0).getMessage().contains(message));
+    }
+
+    @ParameterizedTest
+    @CsvSource({ "1, 1, Test Alert" })
+    void testToggleRead_ShouldToogleAlertReadStatus(int alertId, int adminId, String message) {
+        Optional<Admin> optionalAdmin = adminService.findAdminById(adminId);
+
+        alertService.createAdminAlert(LocalDateTime.now(), optionalAdmin.get().getId(), message);
+        Assertions.assertFalse(alertService.getAllAdminAlerts(optionalAdmin.get()).get(0).isRead());
+        alertService.toggleRead(alertId);
+        Assertions.assertTrue(alertService.getAllAdminAlerts(optionalAdmin.get()).get(0).isRead());
+
+    }
 }

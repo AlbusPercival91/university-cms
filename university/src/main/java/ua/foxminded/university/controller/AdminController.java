@@ -129,6 +129,30 @@ public class AdminController {
         return "redirect:/admin/alert";
     }
 
+    @PostMapping("/admin/send-broadcast")
+    public String sendBroadcastAlert(@RequestParam String alertMessage, RedirectAttributes redirectAttributes) {
+        try {
+            alertService.createBroadcastAlert(LocalDateTime.now(), alertMessage);
+
+            if (alertMessage != null) {
+                redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.ALERT_SUCCESS);
+            }
+        } catch (NoSuchElementException ex) {
+            redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
+        }
+        return "redirect:/admin/alert";
+    }
+
+    @PostMapping("/admin/mark-alert-as-read/{alertId}")
+    public String toggleAdminAlert(@PathVariable int alertId, RedirectAttributes redirectAttributes) {
+        try {
+            alertService.toggleRead(alertId);
+        } catch (NoSuchElementException ex) {
+            redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
+        }
+        return "redirect:/admin/alert";
+    }
+
     @RolesAllowed({ "ADMIN", "STAFF" })
     @GetMapping("/admin/admin-list")
     public String getAllAdminList(Model model) {

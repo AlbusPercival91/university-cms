@@ -54,6 +54,9 @@ public class Alert {
     @Column(name = "message")
     private String message;
 
+    @Column(name = "is_read")
+    private boolean isRead;
+
     public Alert(LocalDateTime timestamp, Teacher teacher, String message) {
         this.timestamp = timestamp;
         this.teacher = teacher;
