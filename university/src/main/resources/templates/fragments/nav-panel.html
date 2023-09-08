@@ -3,6 +3,15 @@
         <nav>
             <ul class="menu">
 
+                <li class="menu-item separate">
+                    <div class="menu-item-box">
+                        <a th:href="@{/admin/main}" sec:authorize="hasRole('ROLE_ADMIN')">My Space</a>
+                        <a th:href="@{/teacher/main}" sec:authorize="hasRole('ROLE_TEACHER')"> My Space </a>
+                        <a th:href="@{/student/main}" sec:authorize="hasRole('ROLE_STUDENT')"> My Space </a>
+                        <a th:href="@{/staff/main}" sec:authorize="hasRole('ROLE_STAFF')"> My Space </a>
+                    </div>
+                </li>
+
                 <li class="menu-item">
                     <div class="menu-item-box">
 
@@ -22,30 +31,6 @@
                             <i class="fas fa-bell"></i>
                         </a>
 
-                    </div>
-                </li>
-
-                <li class="menu-item separate" sec:authorize="hasRole('ROLE_ADMIN')">
-                    <div class="menu-item-box">
-                        <a th:href="@{/admin/main}">My Space</a>
-                    </div>
-                </li>
-
-                <li class="menu-item separate" sec:authorize="hasRole('ROLE_TEACHER')">
-                    <div class="menu-item-box">
-                        <a th:href="@{/teacher/main}"> My Space </a>
-                    </div>
-                </li>
-
-                <li class="menu-item separate" sec:authorize="hasRole('ROLE_STUDENT')">
-                    <div class="menu-item-box">
-                        <a th:href="@{/student/main}"> My Space </a>
-                    </div>
-                </li>
-
-                <li class="menu-item separate" sec:authorize="hasRole('ROLE_STAFF')">
-                    <div class="menu-item-box">
-                        <a th:href="@{/staff/main}"> My Space </a>
                     </div>
                 </li>
 
