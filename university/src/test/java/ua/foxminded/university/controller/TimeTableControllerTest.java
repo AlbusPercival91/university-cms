@@ -402,10 +402,11 @@ class TimeTableControllerTest {
         TimeTable timetable = new TimeTable(date, timeFrom, timeTo, new Teacher(), new Course(), new Group(),
                 new ClassRoom());
 
-        when(timeTableService.findTimeTablesByDate(date)).thenReturn(Collections.singletonList(timetable));
+        when(timeTableService.findTimeTablesByDate(date, date)).thenReturn(Collections.singletonList(timetable));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/timetable/search-result").param("searchType", "date").param("date",
-                String.valueOf(date))).andExpect(MockMvcResultMatchers.status().isOk())
+        mockMvc.perform(MockMvcRequestBuilders.get("/timetable/search-result").param("searchType", "date")
+                .param("dateFrom", String.valueOf(date)).param("dateTo", String.valueOf(date)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("timetable/timetable"))
                 .andExpect(MockMvcResultMatchers.model().attributeExists("timetables"))
                 .andExpect(MockMvcResultMatchers.model().attribute("timetables", Matchers.hasSize(1)))

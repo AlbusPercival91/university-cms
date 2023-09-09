@@ -287,7 +287,8 @@ public class TimeTableController {
     public String searchTimeTables(@RequestParam("searchType") String searchType,
             @RequestParam(required = false) Integer timetableId, @RequestParam(required = false) String courseName,
             @RequestParam(required = false) String groupName,
-            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date, Model model) {
+            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateFrom,
+            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateTo, Model model) {
         List<TimeTable> timetables = new ArrayList<>();
 
         if ("timetable".equals(searchType)) {
@@ -298,7 +299,7 @@ public class TimeTableController {
         } else if ("course".equals(searchType)) {
             timetables = timeTableService.findTimeTableByCourseName(courseName);
         } else if ("date".equals(searchType)) {
-            timetables = timeTableService.findTimeTablesByDate(date);
+            timetables = timeTableService.findTimeTablesByDate(dateFrom, dateTo);
         }
 
         for (TimeTable timetable : timetables) {

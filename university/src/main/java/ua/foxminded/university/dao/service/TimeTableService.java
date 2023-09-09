@@ -193,7 +193,7 @@ public class TimeTableService {
         return timeTableRepository.findByCourseCourseNameOrderByDateAscTimeFromAsc(groupName);
     }
 
-    public List<TimeTable> findTimeTablesByDate(LocalDate date) {
-        return timeTableRepository.findByDateOrderByDateAscTimeFromAsc(date);
+    public List<TimeTable> findTimeTablesByDate(LocalDate dateFrom, LocalDate dateTo) {
+        return timeTableRepository.findByDateBetweenOrderByDateAscTimeFromAsc(dateFrom, dateTo);
     }
 }

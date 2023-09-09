@@ -65,8 +65,10 @@
                         <h3>Find Timetable by Date</h3>
                         <form th:action="@{/timetable/search-result}" method="get">
                             <input type="hidden" name="searchType" value="date" />
-                            <label for="date">Date:</label>
-                            <input type="date" id="date" name="date" required class="date-input" />
+                            <label for="dateFrom">From:</label>
+                            <input type="date" id="dateFrom" name="dateFrom" required class="date-input" />
+                            <label for="dateTo">To:</label>
+                            <input type="date" id="dateTo" name="dateTo" required class="date-input" />
                             <button type="submit">Search</button>
                         </form>
                     </div>
