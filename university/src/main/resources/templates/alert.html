@@ -33,6 +33,21 @@
             </form>
 
             <!-- date search feature -->
+            <form th:action="@{/admin/selected-alert/{adminId}(adminId=${admin.id})}" method="get">
+                <div class="form-group">
+                    <label for="dateFrom">From:</label>
+                    <input type="date" id="dateFrom" name="dateFrom" required class="date-input" />
+                </div>
+                <div class="form-group">
+                    <label for="dateTo">To:</label>
+                    <input type="date" id="dateTo" name="dateTo" required class="date-input" />
+                </div>
+
+                <!-- Container for Get Selected Date Message -->
+                <div class="button-container">
+                    <button id="getSelectedAlertButton" type="submit" class="button-common-style">Find</button>
+                </div>
+            </form>
         </div>
 
         <div class="alerts-scroll-container">

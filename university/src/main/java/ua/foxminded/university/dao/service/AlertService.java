@@ -201,19 +201,19 @@ public class AlertService {
         return alertRepository.findByStaff(staff);
     }
 
-    public List<Alert> findByTeacherAndDateBetween(Teacher teacher, LocalDate dateFrom, LocalDate dateTo) {
-        return alertRepository.findByTeacherAndTimestampBetween(teacher, dateFrom, dateTo);
+    public List<Alert> findByTeacherAndDateBetween(int teacherId, LocalDate dateFrom, LocalDate dateTo) {
+        return alertRepository.findByTeacherIdAndTimestampBetween(teacherId, dateFrom, dateTo);
     }
 
-    public List<Alert> findByStudentAndDateBetween(Student student, LocalDate dateFrom, LocalDate dateTo) {
-        return alertRepository.findByStudentAndTimestampBetween(student, dateFrom, dateTo);
+    public List<Alert> findByStudentAndDateBetween(int studentId, LocalDate dateFrom, LocalDate dateTo) {
+        return alertRepository.findByStudentIdAndTimestampBetween(studentId, dateFrom, dateTo);
     }
 
-    public List<Alert> findByAdminAndDateBetween(Admin admin, LocalDate dateFrom, LocalDate dateTo) {
-        return alertRepository.findByAdminAndTimestampBetween(admin, dateFrom, dateTo);
+    public List<Alert> findByAdminAndDateBetween(int adminId, LocalDate dateFrom, LocalDate dateTo) {
+        return alertRepository.findByAdminIdAndTimestampBetween(adminId, dateFrom, dateTo);
     }
 
-    public List<Alert> findByStaffAndDateBetween(Staff staff, LocalDate dateFrom, LocalDate dateTo) {
-        return alertRepository.findByStaffAndTimestampBetween(staff, dateFrom, dateTo);
+    public List<Alert> findByStaffAndDateBetween(int staffId, LocalDate dateFrom, LocalDate dateTo) {
+        return alertRepository.findByStaffIdAndTimestampBetween(staffId, dateFrom, dateTo);
     }
 }
