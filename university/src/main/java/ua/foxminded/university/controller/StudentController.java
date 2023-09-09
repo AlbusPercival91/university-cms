@@ -1,6 +1,8 @@
 package ua.foxminded.university.controller;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -9,6 +11,7 @@ import java.util.Optional;
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -155,6 +158,24 @@ public class StudentController {
             redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
         }
         return "redirect:/student/alert";
+    }
+
+    @GetMapping("/student/selected-alert/{studentId}")
+    public String getSelectedDateStudentAlerts(@PathVariable("studentId") int studentId,
+            @RequestParam("dateFrom") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateFrom,
+            @RequestParam("dateTo") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateTo, Model model) {
+        Optional<Student> student = studentService.findStudentById(studentId);
+
+        LocalDateTime from = dateFrom.atStartOfDay();
+        LocalDateTime to = dateTo.atTime(LocalTime.MAX);
+
+        if (student.isPresent()) {
+            List<Alert> alerts = alertService.findByStudentAndDateBetween(studentId, from, to);
+            model.addAttribute("student", student.get());
+            model.addAttribute("alerts", alerts);
+            System.out.println(alerts);
+        }
+        return "alert";
     }
 
     @GetMapping("/student/student-list")

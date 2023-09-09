@@ -1,6 +1,8 @@
 package ua.foxminded.university.controller;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -9,6 +11,7 @@ import java.util.Optional;
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -22,7 +25,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.UriComponentsBuilder;
-
 import ua.foxminded.university.dao.entities.Alert;
 import ua.foxminded.university.dao.entities.Course;
 import ua.foxminded.university.dao.entities.Department;
@@ -156,6 +158,24 @@ public class TeacherController {
             redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
         }
         return "redirect:/teacher/alert";
+    }
+
+    @GetMapping("/teacher/selected-alert/{teacherId}")
+    public String getSelectedDateTeacherAlerts(@PathVariable("teacherId") int teacherId,
+            @RequestParam("dateFrom") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateFrom,
+            @RequestParam("dateTo") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateTo, Model model) {
+        Optional<Teacher> teacher = teacherService.findTeacherById(teacherId);
+
+        LocalDateTime from = dateFrom.atStartOfDay();
+        LocalDateTime to = dateTo.atTime(LocalTime.MAX);
+
+        if (teacher.isPresent()) {
+            List<Alert> alerts = alertService.findByTeacherAndDateBetween(teacherId, from, to);
+            model.addAttribute("teacher", teacher.get());
+            model.addAttribute("alerts", alerts);
+            System.out.println(alerts);
+        }
+        return "alert";
     }
 
     @RolesAllowed("ADMIN")

@@ -157,7 +157,7 @@ public class AdminController {
     }
 
     @GetMapping("/admin/selected-alert/{adminId}")
-    public String getSelectedDateAdminAlert(@PathVariable("adminId") int adminId,
+    public String getSelectedDateAdminAlerts(@PathVariable("adminId") int adminId,
             @RequestParam("dateFrom") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateFrom,
             @RequestParam("dateTo") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateTo, Model model) {
         Optional<Admin> admin = adminService.findAdminById(adminId);

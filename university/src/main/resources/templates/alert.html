@@ -32,8 +32,63 @@
                 </button>
             </form>
 
-            <!-- date search feature -->
-            <form th:action="@{/admin/selected-alert/{adminId}(adminId=${admin.id})}" method="get">
+            <!-- date search feature Admin-->
+            <form th:action="@{/admin/selected-alert/{adminId}(adminId=${admin.id})}" method="get"
+                sec:authorize="hasRole('ROLE_ADMIN')">
+                <div class="form-group">
+                    <label for="dateFrom">From:</label>
+                    <input type="date" id="dateFrom" name="dateFrom" required class="date-input" />
+                </div>
+                <div class="form-group">
+                    <label for="dateTo">To:</label>
+                    <input type="date" id="dateTo" name="dateTo" required class="date-input" />
+                </div>
+
+                <!-- Container for Get Selected Date Message -->
+                <div class="button-container">
+                    <button id="getSelectedAlertButton" type="submit" class="button-common-style">Find</button>
+                </div>
+            </form>
+
+            <!-- date search feature Staff-->
+            <form th:action="@{/staff/selected-alert/{staffId}(staffId=${staff.id})}" method="get"
+                sec:authorize="hasRole('ROLE_STAFF')">
+                <div class="form-group">
+                    <label for="dateFrom">From:</label>
+                    <input type="date" id="dateFrom" name="dateFrom" required class="date-input" />
+                </div>
+                <div class="form-group">
+                    <label for="dateTo">To:</label>
+                    <input type="date" id="dateTo" name="dateTo" required class="date-input" />
+                </div>
+
+                <!-- Container for Get Selected Date Message -->
+                <div class="button-container">
+                    <button id="getSelectedAlertButton" type="submit" class="button-common-style">Find</button>
+                </div>
+            </form>
+
+            <!-- date search feature Staff-->
+            <form th:action="@{/teacher/selected-alert/{teacherId}(teacherId=${teacher.id})}" method="get"
+                sec:authorize="hasRole('ROLE_TEACHER')">
+                <div class="form-group">
+                    <label for="dateFrom">From:</label>
+                    <input type="date" id="dateFrom" name="dateFrom" required class="date-input" />
+                </div>
+                <div class="form-group">
+                    <label for="dateTo">To:</label>
+                    <input type="date" id="dateTo" name="dateTo" required class="date-input" />
+                </div>
+
+                <!-- Container for Get Selected Date Message -->
+                <div class="button-container">
+                    <button id="getSelectedAlertButton" type="submit" class="button-common-style">Find</button>
+                </div>
+            </form>
+
+            <!-- date search feature Staff-->
+            <form th:action="@{/student/selected-alert/{studentId}(studentId=${student.id})}" method="get"
+                sec:authorize="hasRole('ROLE_STUDENT')">
                 <div class="form-group">
                     <label for="dateFrom">From:</label>
                     <input type="date" id="dateFrom" name="dateFrom" required class="date-input" />

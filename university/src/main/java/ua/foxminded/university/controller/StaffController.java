@@ -1,6 +1,8 @@
 package ua.foxminded.university.controller;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -9,6 +11,7 @@ import java.util.Optional;
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -153,6 +156,24 @@ public class StaffController {
             redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
         }
         return "redirect:/staff/alert";
+    }
+
+    @GetMapping("/staff/selected-alert/{staffId}")
+    public String getSelectedDateStaffAlerts(@PathVariable("staffId") int staffId,
+            @RequestParam("dateFrom") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateFrom,
+            @RequestParam("dateTo") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateTo, Model model) {
+        Optional<Staff> staff = staffService.findStaffById(staffId);
+
+        LocalDateTime from = dateFrom.atStartOfDay();
+        LocalDateTime to = dateTo.atTime(LocalTime.MAX);
+
+        if (staff.isPresent()) {
+            List<Alert> alerts = alertService.findByStaffAndDateBetween(staffId, from, to);
+            model.addAttribute("staff", staff.get());
+            model.addAttribute("alerts", alerts);
+            System.out.println(alerts);
+        }
+        return "alert";
     }
 
     @RolesAllowed("ADMIN")
