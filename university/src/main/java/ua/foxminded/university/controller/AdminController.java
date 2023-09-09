@@ -129,11 +129,17 @@ public class AdminController {
         } catch (NoSuchElementException ex) {
             redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
         }
-        return "redirect:/admin/alert";
+        String referrer = request.getHeader("referer");
+
+        if (referrer == null || referrer.isEmpty()) {
+            return "redirect:/admin/alert";
+        }
+        return "redirect:" + referrer;
     }
 
     @PostMapping("/admin/send-broadcast")
-    public String sendBroadcastAlert(@RequestParam String alertMessage, RedirectAttributes redirectAttributes) {
+    public String sendBroadcastAlert(@RequestParam String alertMessage, RedirectAttributes redirectAttributes,
+            HttpServletRequest request) {
         try {
             alertService.createBroadcastAlert(LocalDateTime.now(), alertMessage);
 
@@ -143,17 +149,28 @@ public class AdminController {
         } catch (NoSuchElementException ex) {
             redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
         }
-        return "redirect:/admin/alert";
+        String referrer = request.getHeader("referer");
+
+        if (referrer == null || referrer.isEmpty()) {
+            return "redirect:/admin/alert";
+        }
+        return "redirect:" + referrer;
     }
 
     @PostMapping("/admin/mark-alert-as-read/{alertId}")
-    public String toggleAdminAlert(@PathVariable int alertId, RedirectAttributes redirectAttributes) {
+    public String toggleAdminAlert(@PathVariable int alertId, RedirectAttributes redirectAttributes,
+            HttpServletRequest request) {
         try {
             alertService.toggleRead(alertId);
         } catch (NoSuchElementException ex) {
             redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
         }
-        return "redirect:/admin/alert";
+        String referrer = request.getHeader("referer");
+
+        if (referrer == null || referrer.isEmpty()) {
+            return "redirect:/admin/alert";
+        }
+        return "redirect:" + referrer;
     }
 
     @GetMapping("/admin/selected-alert/{adminId}")

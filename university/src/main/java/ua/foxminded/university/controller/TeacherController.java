@@ -147,17 +147,28 @@ public class TeacherController {
         } catch (NoSuchElementException ex) {
             redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
         }
-        return "redirect:/teacher/alert";
+        String referrer = request.getHeader("referer");
+
+        if (referrer == null || referrer.isEmpty()) {
+            return "redirect:/teacher/alert";
+        }
+        return "redirect:" + referrer;
     }
 
     @PostMapping("/teacher/mark-alert-as-read/{alertId}")
-    public String toggleTeacherAlert(@PathVariable int alertId, RedirectAttributes redirectAttributes) {
+    public String toggleTeacherAlert(@PathVariable int alertId, RedirectAttributes redirectAttributes,
+            HttpServletRequest request) {
         try {
             alertService.toggleRead(alertId);
         } catch (NoSuchElementException ex) {
             redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
         }
-        return "redirect:/teacher/alert";
+        String referrer = request.getHeader("referer");
+
+        if (referrer == null || referrer.isEmpty()) {
+            return "redirect:/teacher/alert";
+        }
+        return "redirect:" + referrer;
     }
 
     @GetMapping("/teacher/selected-alert/{teacherId}")

@@ -131,11 +131,17 @@ public class StaffController {
         } catch (NoSuchElementException ex) {
             redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
         }
-        return "redirect:/staff/alert";
+        String referrer = request.getHeader("referer");
+
+        if (referrer == null || referrer.isEmpty()) {
+            return "redirect:/staff/alert";
+        }
+        return "redirect:" + referrer;
     }
 
     @PostMapping("/staff/send-broadcast")
-    public String sendBroadcastAlert(@RequestParam String alertMessage, RedirectAttributes redirectAttributes) {
+    public String sendBroadcastAlert(@RequestParam String alertMessage, RedirectAttributes redirectAttributes,
+            HttpServletRequest request) {
         try {
             alertService.createBroadcastAlert(LocalDateTime.now(), alertMessage);
 
@@ -145,17 +151,28 @@ public class StaffController {
         } catch (NoSuchElementException ex) {
             redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
         }
-        return "redirect:/staff/alert";
+        String referrer = request.getHeader("referer");
+
+        if (referrer == null || referrer.isEmpty()) {
+            return "redirect:/staff/alert";
+        }
+        return "redirect:" + referrer;
     }
 
     @PostMapping("/staff/mark-alert-as-read/{alertId}")
-    public String toggleStaffAlert(@PathVariable int alertId, RedirectAttributes redirectAttributes) {
+    public String toggleStaffAlert(@PathVariable int alertId, RedirectAttributes redirectAttributes,
+            HttpServletRequest request) {
         try {
             alertService.toggleRead(alertId);
         } catch (NoSuchElementException ex) {
             redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
         }
-        return "redirect:/staff/alert";
+        String referrer = request.getHeader("referer");
+
+        if (referrer == null || referrer.isEmpty()) {
+            return "redirect:/staff/alert";
+        }
+        return "redirect:" + referrer;
     }
 
     @GetMapping("/staff/selected-alert/{staffId}")
