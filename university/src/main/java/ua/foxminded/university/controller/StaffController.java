@@ -171,7 +171,6 @@ public class StaffController {
             List<Alert> alerts = alertService.findByStaffAndDateBetween(staffId, from, to);
             model.addAttribute("staff", staff.get());
             model.addAttribute("alerts", alerts);
-            System.out.println(alerts);
         }
         return "alert";
     }

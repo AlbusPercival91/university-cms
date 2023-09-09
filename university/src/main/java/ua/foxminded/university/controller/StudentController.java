@@ -173,7 +173,6 @@ public class StudentController {
             List<Alert> alerts = alertService.findByStudentAndDateBetween(studentId, from, to);
             model.addAttribute("student", student.get());
             model.addAttribute("alerts", alerts);
-            System.out.println(alerts);
         }
         return "alert";
     }

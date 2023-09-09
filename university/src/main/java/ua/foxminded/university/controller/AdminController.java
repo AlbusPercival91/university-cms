@@ -169,7 +169,6 @@ public class AdminController {
             List<Alert> alerts = alertService.findByAdminAndDateBetween(adminId, from, to);
             model.addAttribute("admin", admin.get());
             model.addAttribute("alerts", alerts);
-            System.out.println(alerts);
         }
         return "alert";
     }
