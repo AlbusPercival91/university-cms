@@ -185,34 +185,34 @@ public class AlertService {
     }
 
     public List<Alert> getAllTeacherAlerts(Teacher teacher) {
-        return alertRepository.findByTeacher(teacher);
+        return alertRepository.findByTeacherOrderByTimestampDesc(teacher);
     }
 
     public List<Alert> getAllStudentAlerts(Student student) {
-        return alertRepository.findByStudent(student);
+        return alertRepository.findByStudentOrderByTimestampDesc(student);
     }
 
     public List<Alert> getAllAdminAlerts(Admin admin) {
-        return alertRepository.findByAdmin(admin);
+        return alertRepository.findByAdminOrderByTimestampDesc(admin);
     }
 
     public List<Alert> getAllStaffAlerts(Staff staff) {
-        return alertRepository.findByStaff(staff);
+        return alertRepository.findByStaffOrderByTimestampDesc(staff);
     }
 
     public List<Alert> findByTeacherAndDateBetween(int teacherId, LocalDateTime from, LocalDateTime to) {
-        return alertRepository.findByTeacherIdAndTimestampBetween(teacherId, from, to);
+        return alertRepository.findByTeacherIdAndTimestampBetweenOrderByTimestampDesc(teacherId, from, to);
     }
 
     public List<Alert> findByStudentAndDateBetween(int studentId, LocalDateTime from, LocalDateTime to) {
-        return alertRepository.findByStudentIdAndTimestampBetween(studentId, from, to);
+        return alertRepository.findByStudentIdAndTimestampBetweenOrderByTimestampDesc(studentId, from, to);
     }
 
     public List<Alert> findByAdminAndDateBetween(int adminId, LocalDateTime from, LocalDateTime to) {
-        return alertRepository.findByAdminIdAndTimestampBetween(adminId, from, to);
+        return alertRepository.findByAdminIdAndTimestampBetweenOrderByTimestampDesc(adminId, from, to);
     }
 
     public List<Alert> findByStaffAndDateBetween(int staffId, LocalDateTime from, LocalDateTime to) {
-        return alertRepository.findByStaffIdAndTimestampBetween(staffId, from, to);
+        return alertRepository.findByStaffIdAndTimestampBetweenOrderByTimestampDesc(staffId, from, to);
     }
 }

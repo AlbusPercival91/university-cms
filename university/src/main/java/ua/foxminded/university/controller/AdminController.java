@@ -160,14 +160,18 @@ public class AdminController {
     public String getSelectedDateAdminAlert(@PathVariable("adminId") int adminId,
             @RequestParam("dateFrom") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateFrom,
             @RequestParam("dateTo") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateTo, Model model) {
+        Optional<Admin> admin = adminService.findAdminById(adminId);
 
         LocalDateTime from = dateFrom.atStartOfDay();
         LocalDateTime to = dateTo.atTime(LocalTime.MAX);
 
-        List<Alert> alerts = alertService.findByAdminAndDateBetween(adminId, from, to);
-        model.addAttribute("alerts", alerts);
-
-        return "redirect:/admin/alert";
+        if (admin.isPresent()) {
+            List<Alert> alerts = alertService.findByAdminAndDateBetween(adminId, from, to);
+            model.addAttribute("admin", admin.get());
+            model.addAttribute("alerts", alerts);
+            System.out.println(alerts);
+        }
+        return "alert";
     }
 
     @RolesAllowed({ "ADMIN", "STAFF" })

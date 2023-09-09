@@ -54,7 +54,7 @@
             <div class="alert-container">
 
                 <!-- Admin Alerts -->
-                <div th:each="alert, rowStat : ${admin.alerts}" sec:authorize="hasRole('ROLE_ADMIN')" class="alert-box"
+                <div th:each="alert, rowStat : ${alerts}" sec:authorize="hasRole('ROLE_ADMIN')" class="alert-box"
                     th:class="${alert.read ? 'alert-box' : 'alert-box unread'}">
                     <div class="alert-timestamp" th:text="${#temporals.format(alert.timestamp, 'dd-MMM-yy HH:mm')}">
                     </div>
@@ -77,8 +77,8 @@
                 </div>
 
                 <!-- Teacher Alerts -->
-                <div th:each="alert, rowStat : ${teacher.alerts}" sec:authorize="hasRole('ROLE_TEACHER')"
-                    class="alert-box" th:class="${alert.read ? 'alert-box' : 'alert-box unread'}">
+                <div th:each="alert, rowStat : ${alerts}" sec:authorize="hasRole('ROLE_TEACHER')" class="alert-box"
+                    th:class="${alert.read ? 'alert-box' : 'alert-box unread'}">
                     <div class="alert-timestamp" th:text="${#temporals.format(alert.timestamp, 'dd-MMM-yy HH:mm')}">
                     </div>
                     <div class="alert-message" th:text="${alert.message}"></div>
@@ -100,8 +100,8 @@
                 </div>
 
                 <!-- Student Alerts -->
-                <div th:each="alert, rowStat : ${student.alerts}" sec:authorize="hasRole('ROLE_STUDENT')"
-                    class="alert-box" th:class="${alert.read ? 'alert-box' : 'alert-box unread'}">
+                <div th:each="alert, rowStat : ${alerts}" sec:authorize="hasRole('ROLE_STUDENT')" class="alert-box"
+                    th:class="${alert.read ? 'alert-box' : 'alert-box unread'}">
                     <div class="alert-timestamp" th:text="${#temporals.format(alert.timestamp, 'dd-MMM-yy HH:mm')}">
                     </div>
                     <div class="alert-message" th:text="${alert.message}"></div>
@@ -123,7 +123,7 @@
                 </div>
 
                 <!-- Staff Alerts -->
-                <div th:each="alert, rowStat : ${staff.alerts}" sec:authorize="hasRole('ROLE_STAFF')" class="alert-box"
+                <div th:each="alert, rowStat : ${alerts}" sec:authorize="hasRole('ROLE_STAFF')" class="alert-box"
                     th:class="${alert.read ? 'alert-box' : 'alert-box unread'}">
                     <div class="alert-timestamp" th:text="${#temporals.format(alert.timestamp, 'dd-MMM-yy HH:mm')}">
                     </div>

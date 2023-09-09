@@ -11,20 +11,22 @@ import ua.foxminded.university.dao.entities.Student;
 
 public interface AlertRepository extends JpaRepository<Alert, Integer> {
 
-    List<Alert> findByTeacher(Teacher teacher);
+    List<Alert> findByTeacherOrderByTimestampDesc(Teacher teacher);
 
-    List<Alert> findByStudent(Student student);
+    List<Alert> findByStudentOrderByTimestampDesc(Student student);
 
-    List<Alert> findByAdmin(Admin admin);
+    List<Alert> findByAdminOrderByTimestampDesc(Admin admin);
 
-    List<Alert> findByStaff(Staff staff);
+    List<Alert> findByStaffOrderByTimestampDesc(Staff staff);
 
-    List<Alert> findByTeacherIdAndTimestampBetween(int teacherId, LocalDateTime from, LocalDateTime to);
+    List<Alert> findByTeacherIdAndTimestampBetweenOrderByTimestampDesc(int teacherId, LocalDateTime from,
+            LocalDateTime to);
 
-    List<Alert> findByStudentIdAndTimestampBetween(int studentId, LocalDateTime from, LocalDateTime to);
+    List<Alert> findByStudentIdAndTimestampBetweenOrderByTimestampDesc(int studentId, LocalDateTime from,
+            LocalDateTime to);
 
-    List<Alert> findByAdminIdAndTimestampBetween(int adminId, LocalDateTime from, LocalDateTime to);
+    List<Alert> findByAdminIdAndTimestampBetweenOrderByTimestampDesc(int adminId, LocalDateTime from, LocalDateTime to);
 
-    List<Alert> findByStaffIdAndTimestampBetween(int staffId, LocalDateTime from, LocalDateTime to);
+    List<Alert> findByStaffIdAndTimestampBetweenOrderByTimestampDesc(int staffId, LocalDateTime from, LocalDateTime to);
 
 }
