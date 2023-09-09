@@ -1,5 +1,6 @@
 package ua.foxminded.university.dao.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -198,5 +199,21 @@ public class AlertService {
 
     public List<Alert> getAllStaffAlerts(Staff staff) {
         return alertRepository.findByStaff(staff);
+    }
+
+    public List<Alert> findByTeacherAndDateBetween(Teacher teacher, LocalDate dateFrom, LocalDate dateTo) {
+        return alertRepository.findByTeacherAndTimestampBetween(teacher, dateFrom, dateTo);
+    }
+
+    public List<Alert> findByStudentAndDateBetween(Student student, LocalDate dateFrom, LocalDate dateTo) {
+        return alertRepository.findByStudentAndTimestampBetween(student, dateFrom, dateTo);
+    }
+
+    public List<Alert> findByAdminAndDateBetween(Admin admin, LocalDate dateFrom, LocalDate dateTo) {
+        return alertRepository.findByAdminAndTimestampBetween(admin, dateFrom, dateTo);
+    }
+
+    public List<Alert> findByStaffAndDateBetween(Staff staff, LocalDate dateFrom, LocalDate dateTo) {
+        return alertRepository.findByStaffAndTimestampBetween(staff, dateFrom, dateTo);
     }
 }

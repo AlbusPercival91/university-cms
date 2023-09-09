@@ -19,12 +19,12 @@ public interface AlertRepository extends JpaRepository<Alert, Integer> {
 
     List<Alert> findByStaff(Staff staff);
 
-    List<Alert> findByTeacherAndTimestampBetween(Teacher teacher, LocalDate startDate, LocalDate endDate);
+    List<Alert> findByTeacherAndTimestampBetween(Teacher teacher, LocalDate dateFrom, LocalDate dateTo);
 
-    List<Alert> findByStudentAndTimestampBetween(Student student, LocalDate startDate, LocalDate endDate);
+    List<Alert> findByStudentAndTimestampBetween(Student student, LocalDate dateFrom, LocalDate dateTo);
 
-    List<Alert> findByAdminAndTimestampBetween(Admin admin, LocalDate startDate, LocalDate endDate);
+    List<Alert> findByAdminAndTimestampBetween(Admin admin, LocalDate dateFrom, LocalDate dateTo);
 
-    List<Alert> findByStaffAndTimestampBetween(Staff staff, LocalDate startDate, LocalDate endDate);
+    List<Alert> findByStaffAndTimestampBetween(Staff staff, LocalDate dateFrom, LocalDate dateTo);
 
 }
