@@ -224,7 +224,7 @@ button.icon-button.remove-button[type="submit"] {
 .search-container {
     display: flex;
     justify-content: center;
-    margin-top: 20px;
+    font-size: 13px;
 }
 
 .search-section {
@@ -249,7 +249,7 @@ button.icon-button.remove-button[type="submit"] {
 }
 
 .search-square label {
-    display: block;
+    display: flex;
     margin-top: 10px;
 }
 
@@ -262,7 +262,7 @@ button.icon-button.remove-button[type="submit"] {
 }
 
 .search-square button {
-    width: 100%;
+    width: 90%;
     padding: 8px;
     margin-top: 10px;
     background-color: #333;
@@ -273,11 +273,6 @@ button.icon-button.remove-button[type="submit"] {
 
 .search-square button:hover {
     background-color: #555;
-}
-
-#searchResults {
-    margin-top: 20px;
-    text-align: center;
 }
 
 /* Styles in Create Entity page */
@@ -407,7 +402,7 @@ button[type="submit"] {
 }
 
 .courses select,
-.courses button{
+.courses button {
     margin-bottom: 10px;
 }
 

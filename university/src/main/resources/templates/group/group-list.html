@@ -18,43 +18,47 @@
         <h2>Search Panel</h2>
 
         <div class="search-block">
-            <!-- Search Group by ID -->
-            <div class="search-section">
-                <div class="search-square">
-                    <h3>Find Group by ID</h3>
-                    <form th:action="@{/group/search-result}" method="get">
-                        <input type="hidden" name="searchType" value="group" />
-                        <label for="groupId">Group ID:</label>
-                        <input type="text" id="grouptId" name="groupId" required />
-                        <button type="submit">Search</button>
-                    </form>
-                </div>
-            </div>
+            <div class="search-container">
 
-            <!-- Search by Group Name -->
-            <div class="search-section">
-                <div class="search-square">
-                    <h3>Find Group by Name</h3>
-                    <form th:action="@{/group/search-result}" method="get">
-                        <input type="hidden" name="searchType" value="groupName" />
-                        <label for="groupName">Group Name:</label>
-                        <input type="text" id="groupName" name="groupName" required />
-                        <button type="submit">Search</button>
-                    </form>
+                <!-- Search Group by ID -->
+                <div class="search-section">
+                    <div class="search-square">
+                        <h3>Find Group by ID</h3>
+                        <form th:action="@{/group/search-result}" method="get">
+                            <input type="hidden" name="searchType" value="group" />
+                            <label for="groupId">Group ID:</label>
+                            <input type="text" id="grouptId" name="groupId" required />
+                            <button type="submit">Search</button>
+                        </form>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Search by Faculty Name -->
-            <div class="search-section">
-                <div class="search-square">
-                    <h3>Find Group by Faculty</h3>
-                    <form th:action="@{/group/search-result}" method="get">
-                        <input type="hidden" name="searchType" value="faculty" />
-                        <label for="facultyName">Faculty Name:</label>
-                        <input type="text" id="facultyName" name="facultyName" required />
-                        <button type="submit">Search</button>
-                    </form>
+                <!-- Search by Group Name -->
+                <div class="search-section">
+                    <div class="search-square">
+                        <h3>Find Group by Name</h3>
+                        <form th:action="@{/group/search-result}" method="get">
+                            <input type="hidden" name="searchType" value="groupName" />
+                            <label for="groupName">Group Name:</label>
+                            <input type="text" id="groupName" name="groupName" required />
+                            <button type="submit">Search</button>
+                        </form>
+                    </div>
                 </div>
+
+                <!-- Search by Faculty Name -->
+                <div class="search-section">
+                    <div class="search-square">
+                        <h3>Find Group by Faculty</h3>
+                        <form th:action="@{/group/search-result}" method="get">
+                            <input type="hidden" name="searchType" value="faculty" />
+                            <label for="facultyName">Faculty Name:</label>
+                            <input type="text" id="facultyName" name="facultyName" required />
+                            <button type="submit">Search</button>
+                        </form>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>

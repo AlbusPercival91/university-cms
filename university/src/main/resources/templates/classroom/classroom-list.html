@@ -18,47 +18,50 @@
         <h2>Search Panel</h2>
 
         <div class="search-block">
-            <!-- Search Class Room by ID -->
-            <div class="search-section">
-                <div class="search-square">
-                    <h3>Find Classroom by ID</h3>
-                    <form th:action="@{/classroom/search-result}" method="get">
-                        <input type="hidden" name="searchType" value="classroom" />
-                        <label for="classroomId">Classroom ID:</label>
-                        <input type="text" id="classroomId" name="classroomId" required />
-                        <button type="submit">Search</button>
-                    </form>
-                </div>
-            </div>
+            <div class="search-container">
 
-            <!-- Search by Street -->
-            <div class="search-section">
-                <div class="search-square">
-                    <h3>Find Classroom by Street</h3>
-                    <form th:action="@{/classroom/search-result}" method="get">
-                        <input type="hidden" name="searchType" value="street" />
-                        <label for="street">Street Name:</label>
-                        <input type="text" id="street" name="street" required />
-                        <button type="submit">Search</button>
-                    </form>
+                <!-- Search Class Room by ID -->
+                <div class="search-section">
+                    <div class="search-square">
+                        <h3>Find Classroom by ID</h3>
+                        <form th:action="@{/classroom/search-result}" method="get">
+                            <input type="hidden" name="searchType" value="classroom" />
+                            <label for="classroomId">Classroom ID:</label>
+                            <input type="text" id="classroomId" name="classroomId" required />
+                            <button type="submit">Search</button>
+                        </form>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Search by Street and Building Number-->
-            <div class="search-section">
-                <div class="search-square">
-                    <h3>Find Classroom by Street and Building</h3>
-                    <form th:action="@{/classroom/search-result}" method="get">
-                        <input type="hidden" name="searchType" value="streetAndBuildingNumber" />
-                        <label for="street">Street Name:</label>
-                        <input type="text" id="street" name="street" required />
-                        <label for="buildingNumber">Building Number:</label>
-                        <input type="text" id="buildingNumber" name="buildingNumber" required />
-                        <button type="submit">Search</button>
-                    </form>
+                <!-- Search by Street -->
+                <div class="search-section">
+                    <div class="search-square">
+                        <h3>Find Classroom by Street</h3>
+                        <form th:action="@{/classroom/search-result}" method="get">
+                            <input type="hidden" name="searchType" value="street" />
+                            <label for="street">Street Name:</label>
+                            <input type="text" id="street" name="street" required />
+                            <button type="submit">Search</button>
+                        </form>
+                    </div>
                 </div>
-            </div>
 
+                <!-- Search by Street and Building Number-->
+                <div class="search-section">
+                    <div class="search-square">
+                        <h3>Find Classroom by Street and Building</h3>
+                        <form th:action="@{/classroom/search-result}" method="get">
+                            <input type="hidden" name="searchType" value="streetAndBuildingNumber" />
+                            <label for="street">Street Name:</label>
+                            <input type="text" id="street" name="street" required />
+                            <label for="buildingNumber">Building Number:</label>
+                            <input type="text" id="buildingNumber" name="buildingNumber" required />
+                            <button type="submit">Search</button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
 
