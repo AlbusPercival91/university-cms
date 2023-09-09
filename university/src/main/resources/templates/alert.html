@@ -32,6 +32,9 @@
                 </button>
             </form>
 
+            <!-- date search-->
+            <h3>Look for Messages</h3>
+
             <!-- date search feature Admin-->
             <form th:action="@{/admin/selected-alert/{adminId}(adminId=${admin.id})}" method="get"
                 sec:authorize="hasRole('ROLE_ADMIN')">
@@ -44,10 +47,9 @@
                     <input type="date" id="dateTo" name="dateTo" required class="date-input" />
                 </div>
 
-                <!-- Container for Get Selected Date Message -->
-                <div class="button-container">
-                    <button id="getSelectedAlertButton" type="submit" class="button-common-style">Find</button>
-                </div>
+                <button class="icon-button send-button">
+                    <i class="fas fa-search"></i>
+                </button>
             </form>
 
             <!-- date search feature Staff-->
@@ -62,10 +64,9 @@
                     <input type="date" id="dateTo" name="dateTo" required class="date-input" />
                 </div>
 
-                <!-- Container for Get Selected Date Message -->
-                <div class="button-container">
-                    <button id="getSelectedAlertButton" type="submit" class="button-common-style">Find</button>
-                </div>
+                <button class="icon-button send-button">
+                    <i class="fas fa-search"></i>
+                </button>
             </form>
 
             <!-- date search feature Staff-->
@@ -80,10 +81,9 @@
                     <input type="date" id="dateTo" name="dateTo" required class="date-input" />
                 </div>
 
-                <!-- Container for Get Selected Date Message -->
-                <div class="button-container">
-                    <button id="getSelectedAlertButton" type="submit" class="button-common-style">Find</button>
-                </div>
+                <button class="icon-button send-button">
+                    <i class="fas fa-search"></i>
+                </button>
             </form>
 
             <!-- date search feature Staff-->
@@ -98,10 +98,9 @@
                     <input type="date" id="dateTo" name="dateTo" required class="date-input" />
                 </div>
 
-                <!-- Container for Get Selected Date Message -->
-                <div class="button-container">
-                    <button id="getSelectedAlertButton" type="submit" class="button-common-style">Find</button>
-                </div>
+                <button class="icon-button send-button">
+                    <i class="fas fa-search"></i>
+                </button>
             </form>
         </div>
 
