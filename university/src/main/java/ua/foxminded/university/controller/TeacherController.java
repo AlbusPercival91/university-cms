@@ -176,7 +176,6 @@ public class TeacherController {
             @RequestParam("dateFrom") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateFrom,
             @RequestParam("dateTo") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateTo, Model model) {
         Optional<Teacher> teacher = teacherService.findTeacherById(teacherId);
-
         LocalDateTime from = dateFrom.atStartOfDay();
         LocalDateTime to = dateTo.atTime(LocalTime.MAX);
 
