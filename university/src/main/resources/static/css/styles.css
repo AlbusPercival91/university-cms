@@ -337,6 +337,10 @@ button[type="submit"] {
     margin: 5px;
 }
 
+.button-common-style:hover {
+    background-color: #555;
+}
+
 /* information message styles when success or error ops */
 #success-message-container {
     position: fixed;
@@ -403,8 +407,8 @@ button[type="submit"] {
 }
 
 .courses select,
-.courses button {
-    margin-bottom: 20px;
+.courses button{
+    margin-bottom: 10px;
 }
 
 .entity-timetable {

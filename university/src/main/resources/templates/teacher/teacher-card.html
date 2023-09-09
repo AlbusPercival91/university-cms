@@ -101,7 +101,8 @@
                     </option>
                 </select>
                 <br>
-                <button type="submit" sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_STAFF')">Assign</button>
+                <button type="submit" class="button-common-style"
+                    sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_STAFF')">Assign</button>
             </form>
         </div>
 
