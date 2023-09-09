@@ -2,6 +2,11 @@ package ua.foxminded.university.controller;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -18,6 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import ua.foxminded.university.dao.entities.Admin;
+import ua.foxminded.university.dao.entities.Alert;
 import ua.foxminded.university.dao.service.AdminService;
 import ua.foxminded.university.dao.service.AlertService;
 import ua.foxminded.university.security.UserRole;
@@ -219,6 +225,30 @@ class AdminControllerTest {
                 MockMvcRequestBuilders.post("/admin/mark-alert-as-read/{alertId}", alertId).with(csrf().asHeader()))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/admin/alert"));
+    }
+
+    @ParameterizedTest
+    @CsvSource({ "2023-09-01, 2023-10-01, Test Message" })
+    void testGetSelectedDateAdminAlerts(LocalDate dateFrom, LocalDate dateTo, String message) throws Exception {
+        Admin admin = new Admin();
+        admin.setId(1);
+
+        LocalDateTime from = dateFrom.atStartOfDay();
+        LocalDateTime to = dateTo.atTime(LocalTime.MAX);
+
+        Alert alert1 = new Alert(from, admin, message);
+        Alert alert2 = new Alert(to, admin, message);
+        List<Alert> alerts = Arrays.asList(alert1, alert2);
+
+        when(adminService.findAdminById(admin.getId())).thenReturn(Optional.of(admin));
+        when(alertService.findByAdminAndDateBetween(admin.getId(), from, to)).thenReturn(alerts);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/admin/selected-alert/{adminId}", admin.getId())
+                .param("dateFrom", String.valueOf(dateFrom)).param("dateTo", String.valueOf(dateTo)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.model().attributeExists("alerts"))
+                .andExpect(MockMvcResultMatchers.view().name("alert"))
+                .andExpect(MockMvcResultMatchers.model().attribute("alerts", Matchers.contains(alert1, alert2)));
     }
 
     @Test
