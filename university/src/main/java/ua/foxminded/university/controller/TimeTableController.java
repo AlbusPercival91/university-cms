@@ -34,6 +34,7 @@ import ua.foxminded.university.dao.service.GroupService;
 import ua.foxminded.university.dao.service.StudentService;
 import ua.foxminded.university.dao.service.TeacherService;
 import ua.foxminded.university.dao.service.TimeTableService;
+import ua.foxminded.university.validation.IdValidator;
 import ua.foxminded.university.validation.Message;
 
 @Controller
@@ -56,6 +57,9 @@ public class TimeTableController {
 
     @Autowired
     private StudentService studentService;
+
+    @Autowired
+    private IdValidator idValidator;
 
     @RolesAllowed({ "ADMIN", "STAFF" })
     @GetMapping("/timetable/course-timetable-form")
@@ -285,14 +289,15 @@ public class TimeTableController {
 
     @GetMapping("/timetable/search-result")
     public String searchTimeTables(@RequestParam("searchType") String searchType,
-            @RequestParam(required = false) Integer timetableId, @RequestParam(required = false) String courseName,
+            @RequestParam(required = false) String timetableId, @RequestParam(required = false) String courseName,
             @RequestParam(required = false) String groupName,
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateFrom,
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateTo, Model model) {
         List<TimeTable> timetables = new ArrayList<>();
 
         if ("timetable".equals(searchType)) {
-            Optional<TimeTable> optionalTimeTable = timeTableService.findTimeTableById(timetableId);
+            Optional<TimeTable> optionalTimeTable = timeTableService
+                    .findTimeTableById(idValidator.digitsCollector(timetableId));
             timetables = optionalTimeTable.map(Collections::singletonList).orElse(Collections.emptyList());
         } else if ("group".equals(searchType)) {
             timetables = timeTableService.findTimeTableByGroupName(groupName);

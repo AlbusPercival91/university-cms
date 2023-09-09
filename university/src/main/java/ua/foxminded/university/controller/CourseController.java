@@ -23,6 +23,7 @@ import ua.foxminded.university.dao.entities.Course;
 import ua.foxminded.university.dao.service.AlertService;
 import ua.foxminded.university.dao.service.CourseService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
+import ua.foxminded.university.validation.IdValidator;
 import ua.foxminded.university.validation.Message;
 
 @Controller
@@ -36,6 +37,9 @@ public class CourseController {
 
     @Autowired
     private ControllerBindingValidator bindingValidator;
+
+    @Autowired
+    private IdValidator idValidator;
 
     @PostMapping("/course/send-alert/{courseId}")
     public String sendCourseAlert(@PathVariable int courseId, @RequestParam String alertMessage,
@@ -107,21 +111,25 @@ public class CourseController {
 
     @GetMapping("/course/search-result")
     public String searchCourse(@RequestParam("searchType") String searchType,
-            @RequestParam(required = false) Integer courseId, @RequestParam(required = false) String courseName,
-            @RequestParam(required = false) Integer teacherId, @RequestParam(required = false) Integer studentId,
-            Model model) {
+            @RequestParam(required = false) String courseId, @RequestParam(required = false) String courseName,
+            @RequestParam(required = false) String teacherId, @RequestParam(required = false) String studentId,
+            Model model, RedirectAttributes redirectAttributes) {
         List<Course> courseList = new ArrayList<>();
 
-        if ("course".equals(searchType)) {
-            Optional<Course> optionalCourse = courseService.findCourseById(courseId);
-            courseList = optionalCourse.map(Collections::singletonList).orElse(Collections.emptyList());
-        } else if ("courseName".equals(searchType)) {
-            Optional<Course> optionalCourse = courseService.findByCourseName(courseName);
-            courseList = optionalCourse.map(Collections::singletonList).orElse(Collections.emptyList());
-        } else if ("teacher".equals(searchType)) {
-            courseList = courseService.findCoursesRelatedToTeacher(teacherId);
-        } else if ("student".equals(searchType)) {
-            courseList = courseService.findCoursesRelatedToStudent(studentId);
+        try {
+            if ("course".equals(searchType)) {
+                Optional<Course> optionalCourse = courseService.findCourseById(idValidator.digitsCollector(courseId));
+                courseList = optionalCourse.map(Collections::singletonList).orElse(Collections.emptyList());
+            } else if ("courseName".equals(searchType)) {
+                Optional<Course> optionalCourse = courseService.findByCourseName(courseName);
+                courseList = optionalCourse.map(Collections::singletonList).orElse(Collections.emptyList());
+            } else if ("teacher".equals(searchType)) {
+                courseList = courseService.findCoursesRelatedToTeacher(idValidator.digitsCollector(teacherId));
+            } else if ("student".equals(searchType)) {
+                courseList = courseService.findCoursesRelatedToStudent(idValidator.digitsCollector(studentId));
+            }
+        } catch (NoSuchElementException ex) {
+            redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
         }
         model.addAttribute("courses", courseList);
         return "course/course-list";

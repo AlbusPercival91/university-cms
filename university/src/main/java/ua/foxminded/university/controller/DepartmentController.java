@@ -25,6 +25,7 @@ import ua.foxminded.university.dao.service.AlertService;
 import ua.foxminded.university.dao.service.DepartmentService;
 import ua.foxminded.university.dao.service.FacultyService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
+import ua.foxminded.university.validation.IdValidator;
 import ua.foxminded.university.validation.Message;
 
 @Controller
@@ -41,6 +42,9 @@ public class DepartmentController {
 
     @Autowired
     private ControllerBindingValidator bindingValidator;
+
+    @Autowired
+    private IdValidator idValidator;
 
     @PostMapping("/department/send-alert/{departmentId}")
     public String sendDepartmentAlert(@PathVariable int departmentId, @RequestParam String alertMessage,
@@ -114,12 +118,13 @@ public class DepartmentController {
 
     @GetMapping("/department/search-result")
     public String searchDepartment(@RequestParam("searchType") String searchType,
-            @RequestParam(required = false) Integer departmentId, @RequestParam(required = false) String name,
+            @RequestParam(required = false) String departmentId, @RequestParam(required = false) String name,
             @RequestParam(required = false) String facultyName, Model model) {
         List<Department> departmentList = new ArrayList<>();
 
         if ("department".equals(searchType)) {
-            Optional<Department> optionalDepartment = departmentService.findDepartmentById(departmentId);
+            Optional<Department> optionalDepartment = departmentService
+                    .findDepartmentById(idValidator.digitsCollector(departmentId));
             departmentList = optionalDepartment.map(Collections::singletonList).orElse(Collections.emptyList());
         } else if ("name".equals(searchType)) {
             departmentList = departmentService.findDepartmentByName(name);

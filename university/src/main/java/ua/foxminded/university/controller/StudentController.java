@@ -34,6 +34,7 @@ import ua.foxminded.university.dao.service.CourseService;
 import ua.foxminded.university.dao.service.GroupService;
 import ua.foxminded.university.dao.service.StudentService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
+import ua.foxminded.university.validation.IdValidator;
 import ua.foxminded.university.validation.Message;
 
 @Controller
@@ -53,6 +54,9 @@ public class StudentController {
 
     @Autowired
     private ControllerBindingValidator bindingValidator;
+
+    @Autowired
+    private IdValidator idValidator;
 
     @GetMapping("/student/main")
     public String studentDashboard(Model model) {
@@ -265,9 +269,9 @@ public class StudentController {
     @GetMapping("/student/search-result")
     public String searchStudent(@RequestParam("searchType") String searchType,
             @RequestParam(required = false) String courseName, @RequestParam(required = false) String facultyName,
-            @RequestParam(required = false) String groupName, @RequestParam(required = false) Integer facultyId,
-            @RequestParam(required = false) Integer studentId, @RequestParam(required = false) String firstName,
-            @RequestParam(required = false) String lastName, Model model) {
+            @RequestParam(required = false) String groupName, @RequestParam(required = false) String studentId,
+            @RequestParam(required = false) String firstName, @RequestParam(required = false) String lastName,
+            Model model) {
         List<Student> students = new ArrayList<>();
 
         if ("course".equals(searchType)) {
@@ -277,7 +281,7 @@ public class StudentController {
         } else if ("group".equals(searchType)) {
             students = studentService.findAllByGroupName(groupName);
         } else if ("student".equals(searchType)) {
-            Optional<Student> optionalStudent = studentService.findStudentById(studentId);
+            Optional<Student> optionalStudent = studentService.findStudentById(idValidator.digitsCollector(studentId));
             students = optionalStudent.map(Collections::singletonList).orElse(Collections.emptyList());
         } else if ("firstNameAndLastName".equals(searchType)) {
             students = studentService.findStudentByName(firstName, lastName);

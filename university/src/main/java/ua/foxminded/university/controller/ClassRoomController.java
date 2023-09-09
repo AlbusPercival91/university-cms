@@ -21,6 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ua.foxminded.university.dao.entities.ClassRoom;
 import ua.foxminded.university.dao.service.ClassRoomService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
+import ua.foxminded.university.validation.IdValidator;
 import ua.foxminded.university.validation.Message;
 
 @Controller
@@ -31,6 +32,9 @@ public class ClassRoomController {
 
     @Autowired
     private ControllerBindingValidator bindingValidator;
+
+    @Autowired
+    private IdValidator idValidator;
 
     @GetMapping("/classroom/classroom-list")
     public String getAllClassRoomList(Model model) {
@@ -90,18 +94,20 @@ public class ClassRoomController {
 
     @GetMapping("/classroom/search-result")
     public String searchClassRoom(@RequestParam("searchType") String searchType,
-            @RequestParam(required = false) Integer classroomId, @RequestParam(required = false) String street,
-            @RequestParam(required = false) Integer buildingNumber, @RequestParam(required = false) Integer roomNumber,
+            @RequestParam(required = false) String classroomId, @RequestParam(required = false) String street,
+            @RequestParam(required = false) String buildingNumber, @RequestParam(required = false) Integer roomNumber,
             Model model) {
         List<ClassRoom> classRoomList = new ArrayList<>();
 
         if ("classroom".equals(searchType)) {
-            Optional<ClassRoom> optionalClassRoom = classRoomService.findClassRoomById(classroomId);
+            Optional<ClassRoom> optionalClassRoom = classRoomService
+                    .findClassRoomById(idValidator.digitsCollector(classroomId));
             classRoomList = optionalClassRoom.map(Collections::singletonList).orElse(Collections.emptyList());
         } else if ("street".equals(searchType)) {
             classRoomList = classRoomService.findClassRoomsByStreet(street);
         } else if ("streetAndBuildingNumber".equals(searchType)) {
-            classRoomList = classRoomService.findClassRoomsByStreetAndBuildingNumber(street, buildingNumber);
+            classRoomList = classRoomService.findClassRoomsByStreetAndBuildingNumber(street,
+                    idValidator.digitsCollector(buildingNumber));
         }
         model.addAttribute("classrooms", classRoomList);
         return "classroom/classroom-list";

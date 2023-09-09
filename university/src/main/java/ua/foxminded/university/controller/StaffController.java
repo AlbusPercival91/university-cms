@@ -29,6 +29,7 @@ import ua.foxminded.university.dao.entities.Staff;
 import ua.foxminded.university.dao.service.AlertService;
 import ua.foxminded.university.dao.service.StaffService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
+import ua.foxminded.university.validation.IdValidator;
 import ua.foxminded.university.validation.Message;
 
 @Controller
@@ -42,6 +43,9 @@ public class StaffController {
 
     @Autowired
     private ControllerBindingValidator bindingValidator;
+
+    @Autowired
+    private IdValidator idValidator;
 
     @GetMapping("/staff/main")
     public String staffDashboard(Model model) {
@@ -246,13 +250,13 @@ public class StaffController {
 
     @GetMapping("/staff/search-result")
     public String searchStaff(@RequestParam("searchType") String searchType,
-            @RequestParam(required = false) Integer staffId, @RequestParam(required = false) String firstName,
+            @RequestParam(required = false) String staffId, @RequestParam(required = false) String firstName,
             @RequestParam(required = false) String lastName, @RequestParam(required = false) String position,
             Model model) {
         List<Staff> staffList = new ArrayList<>();
 
         if ("staff".equals(searchType)) {
-            Optional<Staff> optionalStaff = staffService.findStaffById(staffId);
+            Optional<Staff> optionalStaff = staffService.findStaffById(idValidator.digitsCollector(staffId));
             staffList = optionalStaff.map(Collections::singletonList).orElse(Collections.emptyList());
         } else if ("firstNameAndLastName".equals(searchType)) {
             staffList = staffService.findStaffByName(firstName, lastName);

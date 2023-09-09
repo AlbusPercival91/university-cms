@@ -34,6 +34,7 @@ import ua.foxminded.university.dao.service.CourseService;
 import ua.foxminded.university.dao.service.DepartmentService;
 import ua.foxminded.university.dao.service.TeacherService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
+import ua.foxminded.university.validation.IdValidator;
 import ua.foxminded.university.validation.Message;
 
 @Controller
@@ -53,6 +54,9 @@ public class TeacherController {
 
     @Autowired
     private ControllerBindingValidator bindingValidator;
+
+    @Autowired
+    private IdValidator idValidator;
 
     @GetMapping("/teacher/main")
     public String teacherDashboard(Model model) {
@@ -249,8 +253,8 @@ public class TeacherController {
     @GetMapping("/teacher/search-result")
     public String searchTeachers(@RequestParam("searchType") String searchType,
             @RequestParam(required = false) String courseName, @RequestParam(required = false) String facultyName,
-            @RequestParam(required = false) Integer departmentId, @RequestParam(required = false) Integer facultyId,
-            @RequestParam(required = false) Integer teacherId, @RequestParam(required = false) String firstName,
+            @RequestParam(required = false) String departmentId, @RequestParam(required = false) String facultyId,
+            @RequestParam(required = false) String teacherId, @RequestParam(required = false) String firstName,
             @RequestParam(required = false) String lastName, Model model) {
         List<Teacher> teachers = new ArrayList<>();
 
@@ -259,9 +263,10 @@ public class TeacherController {
         } else if ("faculty".equals(searchType)) {
             teachers = teacherService.findAllByFacultyName(facultyName);
         } else if ("department".equals(searchType)) {
-            teachers = teacherService.findAllByDepartmentIdAndDepartmentFacultyId(departmentId, facultyId);
+            teachers = teacherService.findAllByDepartmentIdAndDepartmentFacultyId(
+                    idValidator.digitsCollector(departmentId), idValidator.digitsCollector(facultyId));
         } else if ("teacher".equals(searchType)) {
-            Optional<Teacher> optionalTeacher = teacherService.findTeacherById(teacherId);
+            Optional<Teacher> optionalTeacher = teacherService.findTeacherById(idValidator.digitsCollector(teacherId));
             teachers = optionalTeacher.map(Collections::singletonList).orElse(Collections.emptyList());
         } else if ("firstNameAndLastName".equals(searchType)) {
             teachers = teacherService.findTeacherByName(firstName, lastName);
