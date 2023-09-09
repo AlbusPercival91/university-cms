@@ -1,6 +1,5 @@
 package ua.foxminded.university.dao.service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -201,19 +200,19 @@ public class AlertService {
         return alertRepository.findByStaff(staff);
     }
 
-    public List<Alert> findByTeacherAndDateBetween(int teacherId, LocalDate dateFrom, LocalDate dateTo) {
-        return alertRepository.findByTeacherIdAndTimestampBetween(teacherId, dateFrom, dateTo);
+    public List<Alert> findByTeacherAndDateBetween(int teacherId, LocalDateTime from, LocalDateTime to) {
+        return alertRepository.findByTeacherIdAndTimestampBetween(teacherId, from, to);
     }
 
-    public List<Alert> findByStudentAndDateBetween(int studentId, LocalDate dateFrom, LocalDate dateTo) {
-        return alertRepository.findByStudentIdAndTimestampBetween(studentId, dateFrom, dateTo);
+    public List<Alert> findByStudentAndDateBetween(int studentId, LocalDateTime from, LocalDateTime to) {
+        return alertRepository.findByStudentIdAndTimestampBetween(studentId, from, to);
     }
 
-    public List<Alert> findByAdminAndDateBetween(int adminId, LocalDate dateFrom, LocalDate dateTo) {
-        return alertRepository.findByAdminIdAndTimestampBetween(adminId, dateFrom, dateTo);
+    public List<Alert> findByAdminAndDateBetween(int adminId, LocalDateTime from, LocalDateTime to) {
+        return alertRepository.findByAdminIdAndTimestampBetween(adminId, from, to);
     }
 
-    public List<Alert> findByStaffAndDateBetween(int staffId, LocalDate dateFrom, LocalDate dateTo) {
-        return alertRepository.findByStaffIdAndTimestampBetween(staffId, dateFrom, dateTo);
+    public List<Alert> findByStaffAndDateBetween(int staffId, LocalDateTime from, LocalDateTime to) {
+        return alertRepository.findByStaffIdAndTimestampBetween(staffId, from, to);
     }
 }

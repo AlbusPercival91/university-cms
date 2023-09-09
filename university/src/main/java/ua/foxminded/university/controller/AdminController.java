@@ -2,6 +2,7 @@ package ua.foxminded.university.controller;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -159,8 +160,13 @@ public class AdminController {
     public String getSelectedDateAdminAlert(@PathVariable("adminId") int adminId,
             @RequestParam("dateFrom") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateFrom,
             @RequestParam("dateTo") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateTo, Model model) {
-        List<Alert> alerts = alertService.findByAdminAndDateBetween(adminId, dateFrom, dateTo);
+
+        LocalDateTime from = dateFrom.atStartOfDay();
+        LocalDateTime to = dateTo.atTime(LocalTime.MAX);
+
+        List<Alert> alerts = alertService.findByAdminAndDateBetween(adminId, from, to);
         model.addAttribute("alerts", alerts);
+
         return "redirect:/admin/alert";
     }
 
