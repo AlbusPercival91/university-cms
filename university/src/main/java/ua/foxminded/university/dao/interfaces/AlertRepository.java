@@ -1,5 +1,6 @@
 package ua.foxminded.university.dao.interfaces;
 
+import java.time.LocalDate;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import ua.foxminded.university.dao.entities.Teacher;
@@ -17,4 +18,13 @@ public interface AlertRepository extends JpaRepository<Alert, Integer> {
     List<Alert> findByAdmin(Admin admin);
 
     List<Alert> findByStaff(Staff staff);
+
+    List<Alert> findByTeacherAndTimestampBetween(Teacher teacher, LocalDate startDate, LocalDate endDate);
+
+    List<Alert> findByStudentAndTimestampBetween(Student student, LocalDate startDate, LocalDate endDate);
+
+    List<Alert> findByAdminAndTimestampBetween(Admin admin, LocalDate startDate, LocalDate endDate);
+
+    List<Alert> findByStaffAndTimestampBetween(Staff staff, LocalDate startDate, LocalDate endDate);
+
 }

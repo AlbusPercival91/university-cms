@@ -174,6 +174,16 @@ public class AlertService {
         return alertId;
     }
 
+    public void toggleRead(int alertId) {
+        Optional<Alert> optionalAlert = alertRepository.findById(alertId);
+
+        if (optionalAlert.isPresent()) {
+            Alert alert = optionalAlert.get();
+            alert.setRead(!alert.isRead());
+            alertRepository.save(alert);
+        }
+    }
+
     public List<Alert> getAllTeacherAlerts(Teacher teacher) {
         return alertRepository.findByTeacher(teacher);
     }
@@ -188,15 +198,5 @@ public class AlertService {
 
     public List<Alert> getAllStaffAlerts(Staff staff) {
         return alertRepository.findByStaff(staff);
-    }
-
-    public void toggleRead(int alertId) {
-        Optional<Alert> optionalAlert = alertRepository.findById(alertId);
-
-        if (optionalAlert.isPresent()) {
-            Alert alert = optionalAlert.get();
-            alert.setRead(!alert.isRead());
-            alertRepository.save(alert);
-        }
     }
 }
