@@ -27,13 +27,12 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-
 import ua.foxminded.university.dao.entities.Admin;
 import ua.foxminded.university.dao.entities.Alert;
 import ua.foxminded.university.dao.entities.Staff;
 import ua.foxminded.university.dao.service.AlertService;
 import ua.foxminded.university.dao.service.StaffService;
-import ua.foxminded.university.security.UserDetailsServiceImpl;
+import ua.foxminded.university.dao.service.UserService;
 import ua.foxminded.university.security.UserRole;
 import ua.foxminded.university.validation.ControllerBindingValidator;
 import ua.foxminded.university.validation.IdCollector;
@@ -54,7 +53,7 @@ class StaffControllerTest {
     private AlertService alertService;
 
     @MockBean
-    private UserDetailsServiceImpl userDetailsService;
+    private UserService userService;
 
     @Test
     void testStaffDashboard_WhenUserAuthenticated() throws Exception {
@@ -216,7 +215,7 @@ class StaffControllerTest {
                 AuthorityUtils.createAuthorityList("ROLE_" + UserRole.ADMIN));
         SecurityContextHolder.getContext().setAuthentication(auth);
 
-        when(userDetailsService.getUserByUsername(admin.getEmail())).thenReturn(admin);
+        when(userService.getUserByUsername(admin.getEmail())).thenReturn(admin);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/staff/send-alert/{staffId}", staffId)
                 .param("alertMessage", alertMessage).with(csrf().asHeader()))
@@ -238,7 +237,7 @@ class StaffControllerTest {
                 AuthorityUtils.createAuthorityList("ROLE_" + UserRole.ADMIN));
         SecurityContextHolder.getContext().setAuthentication(auth);
 
-        when(userDetailsService.getUserByUsername(admin.getEmail())).thenReturn(admin);
+        when(userService.getUserByUsername(admin.getEmail())).thenReturn(admin);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/staff/send-broadcast").param("alertMessage", alertMessage)
                 .with(csrf().asHeader())).andExpect(MockMvcResultMatchers.status().is3xxRedirection())

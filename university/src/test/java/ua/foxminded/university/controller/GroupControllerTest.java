@@ -22,14 +22,13 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-
 import ua.foxminded.university.dao.entities.Admin;
 import ua.foxminded.university.dao.entities.Faculty;
 import ua.foxminded.university.dao.entities.Group;
 import ua.foxminded.university.dao.service.AlertService;
 import ua.foxminded.university.dao.service.FacultyService;
 import ua.foxminded.university.dao.service.GroupService;
-import ua.foxminded.university.security.UserDetailsServiceImpl;
+import ua.foxminded.university.dao.service.UserService;
 import ua.foxminded.university.security.UserRole;
 import ua.foxminded.university.validation.ControllerBindingValidator;
 import ua.foxminded.university.validation.IdCollector;
@@ -53,7 +52,7 @@ class GroupControllerTest {
     private AlertService alertService;
 
     @MockBean
-    private UserDetailsServiceImpl userDetailsService;
+    private UserService userService;
 
     @Test
     @WithMockUser(roles = { "ADMIN", "STUDENT" })
@@ -68,7 +67,7 @@ class GroupControllerTest {
                 AuthorityUtils.createAuthorityList("ROLE_" + UserRole.ADMIN));
         SecurityContextHolder.getContext().setAuthentication(auth);
 
-        when(userDetailsService.getUserByUsername(admin.getEmail())).thenReturn(admin);
+        when(userService.getUserByUsername(admin.getEmail())).thenReturn(admin);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/group/send-alert/{groupId}", groupId)
                 .param("alertMessage", alertMessage).with(csrf().asHeader()))

@@ -26,7 +26,7 @@ import ua.foxminded.university.dao.entities.Admin;
 import ua.foxminded.university.dao.entities.Alert;
 import ua.foxminded.university.dao.service.AdminService;
 import ua.foxminded.university.dao.service.AlertService;
-import ua.foxminded.university.security.UserDetailsServiceImpl;
+import ua.foxminded.university.dao.service.UserService;
 import ua.foxminded.university.security.UserRole;
 import ua.foxminded.university.validation.ControllerBindingValidator;
 import ua.foxminded.university.validation.Message;
@@ -51,7 +51,7 @@ class AdminControllerTest {
     private AlertService alertService;
 
     @MockBean
-    private UserDetailsServiceImpl userDetailsService;
+    private UserService userService;
 
     @Test
     void testAdminDashboard_WhenUserAuthenticated() throws Exception {
@@ -203,7 +203,7 @@ class AdminControllerTest {
                 AuthorityUtils.createAuthorityList("ROLE_" + UserRole.ADMIN));
         SecurityContextHolder.getContext().setAuthentication(auth);
 
-        when(userDetailsService.getUserByUsername(admin.getEmail())).thenReturn(admin);
+        when(userService.getUserByUsername(admin.getEmail())).thenReturn(admin);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/admin/send-alert/{adminId}", admin.getId())
                 .param("alertMessage", alertMessage).with(csrf().asHeader()))
@@ -224,7 +224,7 @@ class AdminControllerTest {
                 AuthorityUtils.createAuthorityList("ROLE_" + UserRole.ADMIN));
         SecurityContextHolder.getContext().setAuthentication(auth);
 
-        when(userDetailsService.getUserByUsername(admin.getEmail())).thenReturn(admin);
+        when(userService.getUserByUsername(admin.getEmail())).thenReturn(admin);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/admin/send-broadcast").param("alertMessage", alertMessage)
                 .with(csrf().asHeader())).andExpect(MockMvcResultMatchers.status().is3xxRedirection())

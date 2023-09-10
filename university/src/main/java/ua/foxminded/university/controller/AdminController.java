@@ -27,7 +27,7 @@ import ua.foxminded.university.dao.entities.Alert;
 import ua.foxminded.university.dao.entities.User;
 import ua.foxminded.university.dao.service.AdminService;
 import ua.foxminded.university.dao.service.AlertService;
-import ua.foxminded.university.security.UserDetailsServiceImpl;
+import ua.foxminded.university.dao.service.UserService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
 import ua.foxminded.university.validation.Message;
 
@@ -41,7 +41,7 @@ public class AdminController {
     private AlertService alertService;
 
     @Autowired
-    private UserDetailsServiceImpl userDetailsService;
+    private UserService userService;
 
     @Autowired
     private ControllerBindingValidator bindingValidator;
@@ -115,7 +115,7 @@ public class AdminController {
             RedirectAttributes redirectAttributes) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
-        User user = userDetailsService.getUserByUsername(email);
+        User user = userService.getUserByUsername(email);
         String sender = user.getFirstName() + " " + user.getLastName();
 
         try {
@@ -152,7 +152,7 @@ public class AdminController {
             HttpServletRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
-        User user = userDetailsService.getUserByUsername(email);
+        User user = userService.getUserByUsername(email);
         String sender = user.getFirstName() + " " + user.getLastName();
 
         try {

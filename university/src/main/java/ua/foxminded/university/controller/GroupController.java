@@ -27,7 +27,7 @@ import ua.foxminded.university.dao.entities.User;
 import ua.foxminded.university.dao.service.AlertService;
 import ua.foxminded.university.dao.service.FacultyService;
 import ua.foxminded.university.dao.service.GroupService;
-import ua.foxminded.university.security.UserDetailsServiceImpl;
+import ua.foxminded.university.dao.service.UserService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
 import ua.foxminded.university.validation.IdCollector;
 import ua.foxminded.university.validation.Message;
@@ -45,7 +45,7 @@ public class GroupController {
     private AlertService alertService;
 
     @Autowired
-    private UserDetailsServiceImpl userDetailsService;
+    private UserService userService;
 
     @Autowired
     private ControllerBindingValidator bindingValidator;
@@ -58,7 +58,7 @@ public class GroupController {
             RedirectAttributes redirectAttributes) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
-        User user = userDetailsService.getUserByUsername(email);
+        User user = userService.getUserByUsername(email);
         String sender = user.getFirstName() + " " + user.getLastName();
 
         try {

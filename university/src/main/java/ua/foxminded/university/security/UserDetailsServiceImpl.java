@@ -41,22 +41,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         throw new UsernameNotFoundException("User not found");
     }
 
-    public User getUserByUsername(String email) {
-        List<String> entityNames = Arrays.asList("Student", "Teacher", "Staff", "Admin");
-
-        for (String entityName : entityNames) {
-            String nativeQuery = String.format("SELECT u FROM %s u WHERE u.email = :email", entityName);
-
-            try {
-                return entityManager.createQuery(nativeQuery, User.class).setParameter("email", email)
-                        .getSingleResult();
-            } catch (NoResultException ignored) {
-                // Entity not found for this email, continue to the next entity
-            }
-        }
-        throw new UsernameNotFoundException("User not found");
-    }
-
     private UserDetails buildUserDetails(User user, String role) {
         return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getHashedPassword(),
                 Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role)));
