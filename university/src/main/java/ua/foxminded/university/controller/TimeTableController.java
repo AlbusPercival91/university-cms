@@ -34,7 +34,7 @@ import ua.foxminded.university.dao.service.GroupService;
 import ua.foxminded.university.dao.service.StudentService;
 import ua.foxminded.university.dao.service.TeacherService;
 import ua.foxminded.university.dao.service.TimeTableService;
-import ua.foxminded.university.validation.IdValidator;
+import ua.foxminded.university.validation.IdCollector;
 import ua.foxminded.university.validation.Message;
 
 @Controller
@@ -59,7 +59,7 @@ public class TimeTableController {
     private StudentService studentService;
 
     @Autowired
-    private IdValidator idValidator;
+    private IdCollector idCollector;
 
     @RolesAllowed({ "ADMIN", "STAFF" })
     @GetMapping("/timetable/course-timetable-form")
@@ -297,7 +297,7 @@ public class TimeTableController {
 
         if ("timetable".equals(searchType)) {
             Optional<TimeTable> optionalTimeTable = timeTableService
-                    .findTimeTableById(idValidator.digitsCollector(timetableId));
+                    .findTimeTableById(idCollector.collect(timetableId));
             timetables = optionalTimeTable.map(Collections::singletonList).orElse(Collections.emptyList());
         } else if ("group".equals(searchType)) {
             timetables = timeTableService.findTimeTableByGroupName(groupName);

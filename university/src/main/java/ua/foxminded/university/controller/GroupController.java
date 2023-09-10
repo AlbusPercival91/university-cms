@@ -25,7 +25,7 @@ import ua.foxminded.university.dao.service.AlertService;
 import ua.foxminded.university.dao.service.FacultyService;
 import ua.foxminded.university.dao.service.GroupService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
-import ua.foxminded.university.validation.IdValidator;
+import ua.foxminded.university.validation.IdCollector;
 import ua.foxminded.university.validation.Message;
 
 @Controller
@@ -44,7 +44,7 @@ public class GroupController {
     private ControllerBindingValidator bindingValidator;
 
     @Autowired
-    private IdValidator idValidator;
+    private IdCollector idCollector;
 
     @PostMapping("/group/send-alert/{groupId}")
     public String sendGroupAlert(@PathVariable int groupId, @RequestParam String alertMessage,
@@ -124,7 +124,7 @@ public class GroupController {
         List<Group> groupList = new ArrayList<>();
 
         if ("group".equals(searchType)) {
-            Optional<Group> optionalGroup = groupService.findGroupById(idValidator.digitsCollector(groupId));
+            Optional<Group> optionalGroup = groupService.findGroupById(idCollector.collect(groupId));
             groupList = optionalGroup.map(Collections::singletonList).orElse(Collections.emptyList());
         } else if ("groupName".equals(searchType)) {
             groupList = groupService.findGroupByGroupName(groupName);

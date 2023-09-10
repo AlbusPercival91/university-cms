@@ -21,7 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ua.foxminded.university.dao.entities.ClassRoom;
 import ua.foxminded.university.dao.service.ClassRoomService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
-import ua.foxminded.university.validation.IdValidator;
+import ua.foxminded.university.validation.IdCollector;
 import ua.foxminded.university.validation.Message;
 
 @Controller
@@ -34,7 +34,7 @@ public class ClassRoomController {
     private ControllerBindingValidator bindingValidator;
 
     @Autowired
-    private IdValidator idValidator;
+    private IdCollector idCollector;
 
     @GetMapping("/classroom/classroom-list")
     public String getAllClassRoomList(Model model) {
@@ -101,13 +101,13 @@ public class ClassRoomController {
 
         if ("classroom".equals(searchType)) {
             Optional<ClassRoom> optionalClassRoom = classRoomService
-                    .findClassRoomById(idValidator.digitsCollector(classroomId));
+                    .findClassRoomById(idCollector.collect(classroomId));
             classRoomList = optionalClassRoom.map(Collections::singletonList).orElse(Collections.emptyList());
         } else if ("street".equals(searchType)) {
             classRoomList = classRoomService.findClassRoomsByStreet(street);
         } else if ("streetAndBuildingNumber".equals(searchType)) {
             classRoomList = classRoomService.findClassRoomsByStreetAndBuildingNumber(street,
-                    idValidator.digitsCollector(buildingNumber));
+                    idCollector.collect(buildingNumber));
         }
         model.addAttribute("classrooms", classRoomList);
         return "classroom/classroom-list";

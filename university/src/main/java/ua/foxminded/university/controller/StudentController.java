@@ -34,7 +34,7 @@ import ua.foxminded.university.dao.service.CourseService;
 import ua.foxminded.university.dao.service.GroupService;
 import ua.foxminded.university.dao.service.StudentService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
-import ua.foxminded.university.validation.IdValidator;
+import ua.foxminded.university.validation.IdCollector;
 import ua.foxminded.university.validation.Message;
 
 @Controller
@@ -56,7 +56,7 @@ public class StudentController {
     private ControllerBindingValidator bindingValidator;
 
     @Autowired
-    private IdValidator idValidator;
+    private IdCollector idCollector;
 
     @GetMapping("/student/main")
     public String studentDashboard(Model model) {
@@ -281,7 +281,7 @@ public class StudentController {
         } else if ("group".equals(searchType)) {
             students = studentService.findAllByGroupName(groupName);
         } else if ("student".equals(searchType)) {
-            Optional<Student> optionalStudent = studentService.findStudentById(idValidator.digitsCollector(studentId));
+            Optional<Student> optionalStudent = studentService.findStudentById(idCollector.collect(studentId));
             students = optionalStudent.map(Collections::singletonList).orElse(Collections.emptyList());
         } else if ("firstNameAndLastName".equals(searchType)) {
             students = studentService.findStudentByName(firstName, lastName);

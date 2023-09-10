@@ -25,7 +25,7 @@ import ua.foxminded.university.dao.service.AlertService;
 import ua.foxminded.university.dao.service.DepartmentService;
 import ua.foxminded.university.dao.service.FacultyService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
-import ua.foxminded.university.validation.IdValidator;
+import ua.foxminded.university.validation.IdCollector;
 import ua.foxminded.university.validation.Message;
 
 @Controller
@@ -44,7 +44,7 @@ public class DepartmentController {
     private ControllerBindingValidator bindingValidator;
 
     @Autowired
-    private IdValidator idValidator;
+    private IdCollector idCollector;
 
     @PostMapping("/department/send-alert/{departmentId}")
     public String sendDepartmentAlert(@PathVariable int departmentId, @RequestParam String alertMessage,
@@ -124,7 +124,7 @@ public class DepartmentController {
 
         if ("department".equals(searchType)) {
             Optional<Department> optionalDepartment = departmentService
-                    .findDepartmentById(idValidator.digitsCollector(departmentId));
+                    .findDepartmentById(idCollector.collect(departmentId));
             departmentList = optionalDepartment.map(Collections::singletonList).orElse(Collections.emptyList());
         } else if ("name".equals(searchType)) {
             departmentList = departmentService.findDepartmentByName(name);

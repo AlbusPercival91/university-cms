@@ -29,7 +29,7 @@ import ua.foxminded.university.dao.entities.Staff;
 import ua.foxminded.university.dao.service.AlertService;
 import ua.foxminded.university.dao.service.StaffService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
-import ua.foxminded.university.validation.IdValidator;
+import ua.foxminded.university.validation.IdCollector;
 import ua.foxminded.university.validation.Message;
 
 @Controller
@@ -45,7 +45,7 @@ public class StaffController {
     private ControllerBindingValidator bindingValidator;
 
     @Autowired
-    private IdValidator idValidator;
+    private IdCollector idCollector;
 
     @GetMapping("/staff/main")
     public String staffDashboard(Model model) {
@@ -256,7 +256,7 @@ public class StaffController {
         List<Staff> staffList = new ArrayList<>();
 
         if ("staff".equals(searchType)) {
-            Optional<Staff> optionalStaff = staffService.findStaffById(idValidator.digitsCollector(staffId));
+            Optional<Staff> optionalStaff = staffService.findStaffById(idCollector.collect(staffId));
             staffList = optionalStaff.map(Collections::singletonList).orElse(Collections.emptyList());
         } else if ("firstNameAndLastName".equals(searchType)) {
             staffList = staffService.findStaffByName(firstName, lastName);

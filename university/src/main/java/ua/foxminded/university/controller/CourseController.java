@@ -23,7 +23,7 @@ import ua.foxminded.university.dao.entities.Course;
 import ua.foxminded.university.dao.service.AlertService;
 import ua.foxminded.university.dao.service.CourseService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
-import ua.foxminded.university.validation.IdValidator;
+import ua.foxminded.university.validation.IdCollector;
 import ua.foxminded.university.validation.Message;
 
 @Controller
@@ -39,7 +39,7 @@ public class CourseController {
     private ControllerBindingValidator bindingValidator;
 
     @Autowired
-    private IdValidator idValidator;
+    private IdCollector idCollector;
 
     @PostMapping("/course/send-alert/{courseId}")
     public String sendCourseAlert(@PathVariable int courseId, @RequestParam String alertMessage,
@@ -118,15 +118,15 @@ public class CourseController {
 
         try {
             if ("course".equals(searchType)) {
-                Optional<Course> optionalCourse = courseService.findCourseById(idValidator.digitsCollector(courseId));
+                Optional<Course> optionalCourse = courseService.findCourseById(idCollector.collect(courseId));
                 courseList = optionalCourse.map(Collections::singletonList).orElse(Collections.emptyList());
             } else if ("courseName".equals(searchType)) {
                 Optional<Course> optionalCourse = courseService.findByCourseName(courseName);
                 courseList = optionalCourse.map(Collections::singletonList).orElse(Collections.emptyList());
             } else if ("teacher".equals(searchType)) {
-                courseList = courseService.findCoursesRelatedToTeacher(idValidator.digitsCollector(teacherId));
+                courseList = courseService.findCoursesRelatedToTeacher(idCollector.collect(teacherId));
             } else if ("student".equals(searchType)) {
-                courseList = courseService.findCoursesRelatedToStudent(idValidator.digitsCollector(studentId));
+                courseList = courseService.findCoursesRelatedToStudent(idCollector.collect(studentId));
             }
         } catch (NoSuchElementException ex) {
             redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());

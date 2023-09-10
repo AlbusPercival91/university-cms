@@ -34,7 +34,7 @@ import ua.foxminded.university.dao.service.CourseService;
 import ua.foxminded.university.dao.service.DepartmentService;
 import ua.foxminded.university.dao.service.TeacherService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
-import ua.foxminded.university.validation.IdValidator;
+import ua.foxminded.university.validation.IdCollector;
 import ua.foxminded.university.validation.Message;
 
 @Controller
@@ -56,7 +56,7 @@ public class TeacherController {
     private ControllerBindingValidator bindingValidator;
 
     @Autowired
-    private IdValidator idValidator;
+    private IdCollector idCollector;
 
     @GetMapping("/teacher/main")
     public String teacherDashboard(Model model) {
@@ -264,9 +264,9 @@ public class TeacherController {
             teachers = teacherService.findAllByFacultyName(facultyName);
         } else if ("department".equals(searchType)) {
             teachers = teacherService.findAllByDepartmentIdAndDepartmentFacultyId(
-                    idValidator.digitsCollector(departmentId), idValidator.digitsCollector(facultyId));
+                    idCollector.collect(departmentId), idCollector.collect(facultyId));
         } else if ("teacher".equals(searchType)) {
-            Optional<Teacher> optionalTeacher = teacherService.findTeacherById(idValidator.digitsCollector(teacherId));
+            Optional<Teacher> optionalTeacher = teacherService.findTeacherById(idCollector.collect(teacherId));
             teachers = optionalTeacher.map(Collections::singletonList).orElse(Collections.emptyList());
         } else if ("firstNameAndLastName".equals(searchType)) {
             teachers = teacherService.findTeacherByName(firstName, lastName);
