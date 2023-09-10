@@ -26,6 +26,7 @@ import ua.foxminded.university.dao.entities.Admin;
 import ua.foxminded.university.dao.entities.Alert;
 import ua.foxminded.university.dao.service.AdminService;
 import ua.foxminded.university.dao.service.AlertService;
+import ua.foxminded.university.security.UserDetailsServiceImpl;
 import ua.foxminded.university.security.UserRole;
 import ua.foxminded.university.validation.ControllerBindingValidator;
 import ua.foxminded.university.validation.Message;
@@ -48,6 +49,9 @@ class AdminControllerTest {
 
     @MockBean
     private AlertService alertService;
+
+    @MockBean
+    private UserDetailsServiceImpl userDetailsService;
 
     @Test
     void testAdminDashboard_WhenUserAuthenticated() throws Exception {
@@ -189,19 +193,38 @@ class AdminControllerTest {
 
     @Test
     void testSendAdminAlert() throws Exception {
-        int adminId = 1;
         String alertMessage = "Test Alert Message";
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/admin/send-alert/{adminId}", adminId)
+        Admin admin = new Admin();
+        admin.setId(1);
+        admin.setEmail("admin@example.ua");
+
+        Authentication auth = new UsernamePasswordAuthenticationToken(admin.getEmail(), null,
+                AuthorityUtils.createAuthorityList("ROLE_" + UserRole.ADMIN));
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
+        when(userDetailsService.getUserByUsername(admin.getEmail())).thenReturn(admin);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/admin/send-alert/{adminId}", admin.getId())
                 .param("alertMessage", alertMessage).with(csrf().asHeader()))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.flash().attributeExists(Message.SUCCESS))
-                .andExpect(MockMvcResultMatchers.redirectedUrl("/admin/admin-card/" + adminId));
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/admin/admin-card/" + admin.getId()));
     }
 
     @Test
     void testSendBroadcastAlert() throws Exception {
         String alertMessage = "Test Alert Message";
+
+        Admin admin = new Admin();
+        admin.setId(1);
+        admin.setEmail("admin@example.ua");
+
+        Authentication auth = new UsernamePasswordAuthenticationToken(admin.getEmail(), null,
+                AuthorityUtils.createAuthorityList("ROLE_" + UserRole.ADMIN));
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
+        when(userDetailsService.getUserByUsername(admin.getEmail())).thenReturn(admin);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/admin/send-broadcast").param("alertMessage", alertMessage)
                 .with(csrf().asHeader())).andExpect(MockMvcResultMatchers.status().is3xxRedirection())
@@ -228,16 +251,17 @@ class AdminControllerTest {
     }
 
     @ParameterizedTest
-    @CsvSource({ "2023-09-01, 2023-10-01, Test Message" })
-    void testGetSelectedDateAdminAlerts(LocalDate dateFrom, LocalDate dateTo, String message) throws Exception {
+    @CsvSource({ "2023-09-01, 2023-10-01, TestSender, Test Message" })
+    void testGetSelectedDateAdminAlerts(LocalDate dateFrom, LocalDate dateTo, String sender, String message)
+            throws Exception {
         Admin admin = new Admin();
         admin.setId(1);
 
         LocalDateTime from = dateFrom.atStartOfDay();
         LocalDateTime to = dateTo.atTime(LocalTime.MAX);
 
-        Alert alert1 = new Alert(from, admin, message);
-        Alert alert2 = new Alert(to, admin, message);
+        Alert alert1 = new Alert(from, sender, admin, message);
+        Alert alert2 = new Alert(to, sender, admin, message);
         List<Alert> alerts = Arrays.asList(alert1, alert2);
 
         when(adminService.findAdminById(admin.getId())).thenReturn(Optional.of(admin));

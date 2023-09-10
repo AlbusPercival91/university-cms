@@ -31,6 +31,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import ua.foxminded.university.dao.entities.Admin;
 import ua.foxminded.university.dao.entities.Alert;
 import ua.foxminded.university.dao.entities.Course;
 import ua.foxminded.university.dao.entities.Faculty;
@@ -40,6 +42,7 @@ import ua.foxminded.university.dao.service.AlertService;
 import ua.foxminded.university.dao.service.CourseService;
 import ua.foxminded.university.dao.service.GroupService;
 import ua.foxminded.university.dao.service.StudentService;
+import ua.foxminded.university.security.UserDetailsServiceImpl;
 import ua.foxminded.university.security.UserRole;
 import ua.foxminded.university.validation.ControllerBindingValidator;
 import ua.foxminded.university.validation.IdCollector;
@@ -64,6 +67,9 @@ class StudentControllerTest {
 
     @MockBean
     private AlertService alertService;
+
+    @MockBean
+    private UserDetailsServiceImpl userDetailsService;
 
     @Test
     void testStudentDashboard_WhenUserAuthenticated() throws Exception {
@@ -221,6 +227,15 @@ class StudentControllerTest {
         int studentId = 1;
         String alertMessage = "Test Alert Message";
 
+        Admin admin = new Admin();
+        admin.setEmail("admin@example.ua");
+
+        Authentication auth = new UsernamePasswordAuthenticationToken(admin.getEmail(), null,
+                AuthorityUtils.createAuthorityList("ROLE_" + UserRole.ADMIN));
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
+        when(userDetailsService.getUserByUsername(admin.getEmail())).thenReturn(admin);
+
         mockMvc.perform(MockMvcRequestBuilders.post("/student/send-alert/{studentId}", studentId)
                 .param("alertMessage", alertMessage).with(csrf().asHeader()))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
@@ -249,17 +264,18 @@ class StudentControllerTest {
     }
 
     @ParameterizedTest
-    @CsvSource({ "2023-09-01, 2023-10-01, Test Message" })
+    @CsvSource({ "2023-09-01, 2023-10-01, TestSender, Test Message" })
     @WithMockUser(roles = "STUDENT")
-    void testGetSelectedDateStudentAlerts(LocalDate dateFrom, LocalDate dateTo, String message) throws Exception {
+    void testGetSelectedDateStudentAlertsLocalDate(LocalDate dateFrom, LocalDate dateTo, String sender, String message)
+            throws Exception {
         Student student = new Student();
         student.setId(1);
 
         LocalDateTime from = dateFrom.atStartOfDay();
         LocalDateTime to = dateTo.atTime(LocalTime.MAX);
 
-        Alert alert1 = new Alert(from, student, message);
-        Alert alert2 = new Alert(to, student, message);
+        Alert alert1 = new Alert(from, sender, student, message);
+        Alert alert2 = new Alert(to, sender, student, message);
         List<Alert> alerts = Arrays.asList(alert1, alert2);
 
         when(studentService.findStudentById(student.getId())).thenReturn(Optional.of(student));

@@ -27,10 +27,13 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import ua.foxminded.university.dao.entities.Admin;
 import ua.foxminded.university.dao.entities.Alert;
 import ua.foxminded.university.dao.entities.Staff;
 import ua.foxminded.university.dao.service.AlertService;
 import ua.foxminded.university.dao.service.StaffService;
+import ua.foxminded.university.security.UserDetailsServiceImpl;
 import ua.foxminded.university.security.UserRole;
 import ua.foxminded.university.validation.ControllerBindingValidator;
 import ua.foxminded.university.validation.IdCollector;
@@ -49,6 +52,9 @@ class StaffControllerTest {
 
     @MockBean
     private AlertService alertService;
+
+    @MockBean
+    private UserDetailsServiceImpl userDetailsService;
 
     @Test
     void testStaffDashboard_WhenUserAuthenticated() throws Exception {
@@ -203,6 +209,15 @@ class StaffControllerTest {
         int staffId = 1;
         String alertMessage = "Test Alert Message";
 
+        Admin admin = new Admin();
+        admin.setEmail("admin@example.ua");
+
+        Authentication auth = new UsernamePasswordAuthenticationToken(admin.getEmail(), null,
+                AuthorityUtils.createAuthorityList("ROLE_" + UserRole.ADMIN));
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
+        when(userDetailsService.getUserByUsername(admin.getEmail())).thenReturn(admin);
+
         mockMvc.perform(MockMvcRequestBuilders.post("/staff/send-alert/{staffId}", staffId)
                 .param("alertMessage", alertMessage).with(csrf().asHeader()))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
@@ -214,6 +229,16 @@ class StaffControllerTest {
     @WithMockUser(roles = "STAFF")
     void testSendBroadcastAlert() throws Exception {
         String alertMessage = "Test Alert Message";
+
+        Admin admin = new Admin();
+        admin.setId(1);
+        admin.setEmail("admin@example.ua");
+
+        Authentication auth = new UsernamePasswordAuthenticationToken(admin.getEmail(), null,
+                AuthorityUtils.createAuthorityList("ROLE_" + UserRole.ADMIN));
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
+        when(userDetailsService.getUserByUsername(admin.getEmail())).thenReturn(admin);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/staff/send-broadcast").param("alertMessage", alertMessage)
                 .with(csrf().asHeader())).andExpect(MockMvcResultMatchers.status().is3xxRedirection())
@@ -242,17 +267,18 @@ class StaffControllerTest {
     }
 
     @ParameterizedTest
-    @CsvSource({ "2023-09-01, 2023-10-01, Test Message" })
+    @CsvSource({ "2023-09-01, 2023-10-01, TestSender, Test Message" })
     @WithMockUser(roles = "STAFF")
-    void testGetSelectedDateStaffAlerts(LocalDate dateFrom, LocalDate dateTo, String message) throws Exception {
+    void testGetSelectedDateStaffAlerts(LocalDate dateFrom, LocalDate dateTo, String sender, String message)
+            throws Exception {
         Staff staff = new Staff();
         staff.setId(1);
 
         LocalDateTime from = dateFrom.atStartOfDay();
         LocalDateTime to = dateTo.atTime(LocalTime.MAX);
 
-        Alert alert1 = new Alert(from, staff, message);
-        Alert alert2 = new Alert(to, staff, message);
+        Alert alert1 = new Alert(from, sender, staff, message);
+        Alert alert2 = new Alert(to, sender, staff, message);
         List<Alert> alerts = Arrays.asList(alert1, alert2);
 
         when(staffService.findStaffById(staff.getId())).thenReturn(Optional.of(staff));

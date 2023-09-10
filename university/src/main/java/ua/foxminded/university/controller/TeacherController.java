@@ -29,10 +29,12 @@ import ua.foxminded.university.dao.entities.Alert;
 import ua.foxminded.university.dao.entities.Course;
 import ua.foxminded.university.dao.entities.Department;
 import ua.foxminded.university.dao.entities.Teacher;
+import ua.foxminded.university.dao.entities.User;
 import ua.foxminded.university.dao.service.AlertService;
 import ua.foxminded.university.dao.service.CourseService;
 import ua.foxminded.university.dao.service.DepartmentService;
 import ua.foxminded.university.dao.service.TeacherService;
+import ua.foxminded.university.security.UserDetailsServiceImpl;
 import ua.foxminded.university.validation.ControllerBindingValidator;
 import ua.foxminded.university.validation.IdCollector;
 import ua.foxminded.university.validation.Message;
@@ -51,6 +53,9 @@ public class TeacherController {
 
     @Autowired
     private AlertService alertService;
+
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
 
     @Autowired
     private ControllerBindingValidator bindingValidator;
@@ -130,8 +135,13 @@ public class TeacherController {
     @PostMapping("/teacher/send-alert/{teacherId}")
     public String sendTeacherAlert(@PathVariable int teacherId, @RequestParam String alertMessage,
             RedirectAttributes redirectAttributes) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        User user = userDetailsService.getUserByUsername(email);
+        String sender = user.getFirstName() + " " + user.getLastName();
+
         try {
-            alertService.createTeacherAlert(LocalDateTime.now(), teacherId, alertMessage);
+            alertService.createTeacherAlert(LocalDateTime.now(), sender, teacherId, alertMessage);
 
             if (alertMessage != null) {
                 redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.ALERT_SUCCESS);
@@ -263,8 +273,8 @@ public class TeacherController {
         } else if ("faculty".equals(searchType)) {
             teachers = teacherService.findAllByFacultyName(facultyName);
         } else if ("department".equals(searchType)) {
-            teachers = teacherService.findAllByDepartmentIdAndDepartmentFacultyId(
-                    idCollector.collect(departmentId), idCollector.collect(facultyId));
+            teachers = teacherService.findAllByDepartmentIdAndDepartmentFacultyId(idCollector.collect(departmentId),
+                    idCollector.collect(facultyId));
         } else if ("teacher".equals(searchType)) {
             Optional<Teacher> optionalTeacher = teacherService.findTeacherById(idCollector.collect(teacherId));
             teachers = optionalTeacher.map(Collections::singletonList).orElse(Collections.emptyList());

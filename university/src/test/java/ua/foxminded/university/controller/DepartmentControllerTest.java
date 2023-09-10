@@ -13,16 +13,24 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import ua.foxminded.university.dao.entities.Admin;
 import ua.foxminded.university.dao.entities.Department;
 import ua.foxminded.university.dao.entities.Faculty;
 import ua.foxminded.university.dao.service.AlertService;
 import ua.foxminded.university.dao.service.DepartmentService;
 import ua.foxminded.university.dao.service.FacultyService;
+import ua.foxminded.university.security.UserDetailsServiceImpl;
+import ua.foxminded.university.security.UserRole;
 import ua.foxminded.university.validation.ControllerBindingValidator;
 import ua.foxminded.university.validation.IdCollector;
 import ua.foxminded.university.validation.Message;
@@ -44,11 +52,23 @@ class DepartmentControllerTest {
     @MockBean
     private AlertService alertService;
 
+    @MockBean
+    private UserDetailsServiceImpl userDetailsService;
+
     @Test
     @WithMockUser(roles = { "ADMIN", "TEACHER", "STAFF" })
     void testSendDepartmentAlert() throws Exception {
         int departmentId = 1;
         String alertMessage = "Test Alert Message";
+
+        Admin admin = new Admin();
+        admin.setEmail("admin@example.ua");
+
+        Authentication auth = new UsernamePasswordAuthenticationToken(admin.getEmail(), null,
+                AuthorityUtils.createAuthorityList("ROLE_" + UserRole.ADMIN));
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
+        when(userDetailsService.getUserByUsername(admin.getEmail())).thenReturn(admin);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/department/send-alert/{departmentId}", departmentId)
                 .param("alertMessage", alertMessage).with(csrf().asHeader()))

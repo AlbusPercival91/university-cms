@@ -35,6 +35,9 @@ public class Alert {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime timestamp;
 
+    @Column(name = "sender")
+    private String sender;
+
     @ManyToOne
     @JoinColumn(name = "teacher_id")
     private Teacher teacher;
@@ -57,26 +60,30 @@ public class Alert {
     @Column(name = "is_read")
     private boolean isRead;
 
-    public Alert(LocalDateTime timestamp, Teacher teacher, String message) {
+    public Alert(LocalDateTime timestamp, String sender, Teacher teacher, String message) {
         this.timestamp = timestamp;
+        this.sender = sender;
         this.teacher = teacher;
         this.message = message;
     }
 
-    public Alert(LocalDateTime timestamp, Student student, String message) {
+    public Alert(LocalDateTime timestamp, String sender, Student student, String message) {
         this.timestamp = timestamp;
+        this.sender = sender;
         this.student = student;
         this.message = message;
     }
 
-    public Alert(LocalDateTime timestamp, Staff staff, String message) {
+    public Alert(LocalDateTime timestamp, String sender, Staff staff, String message) {
         this.timestamp = timestamp;
+        this.sender = sender;
         this.staff = staff;
         this.message = message;
     }
 
-    public Alert(LocalDateTime timestamp, Admin admin, String message) {
+    public Alert(LocalDateTime timestamp, String sender, Admin admin, String message) {
         this.timestamp = timestamp;
+        this.sender = sender;
         this.admin = admin;
         this.message = message;
     }

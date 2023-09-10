@@ -24,8 +24,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ua.foxminded.university.dao.entities.Admin;
 import ua.foxminded.university.dao.entities.Alert;
+import ua.foxminded.university.dao.entities.User;
 import ua.foxminded.university.dao.service.AdminService;
 import ua.foxminded.university.dao.service.AlertService;
+import ua.foxminded.university.security.UserDetailsServiceImpl;
 import ua.foxminded.university.validation.ControllerBindingValidator;
 import ua.foxminded.university.validation.Message;
 
@@ -37,6 +39,9 @@ public class AdminController {
 
     @Autowired
     private AlertService alertService;
+
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
 
     @Autowired
     private ControllerBindingValidator bindingValidator;
@@ -108,8 +113,13 @@ public class AdminController {
     @PostMapping("/admin/send-alert/{adminId}")
     public String sendAdminAlert(@PathVariable int adminId, @RequestParam String alertMessage,
             RedirectAttributes redirectAttributes) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        User user = userDetailsService.getUserByUsername(email);
+        String sender = user.getFirstName() + " " + user.getLastName();
+
         try {
-            alertService.createAdminAlert(LocalDateTime.now(), adminId, alertMessage);
+            alertService.createAdminAlert(LocalDateTime.now(), sender, adminId, alertMessage);
 
             if (alertMessage != null) {
                 redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.ALERT_SUCCESS);
@@ -140,8 +150,13 @@ public class AdminController {
     @PostMapping("/admin/send-broadcast")
     public String sendBroadcastAlert(@RequestParam String alertMessage, RedirectAttributes redirectAttributes,
             HttpServletRequest request) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        User user = userDetailsService.getUserByUsername(email);
+        String sender = user.getFirstName() + " " + user.getLastName();
+
         try {
-            alertService.createBroadcastAlert(LocalDateTime.now(), alertMessage);
+            alertService.createBroadcastAlert(LocalDateTime.now(), sender, alertMessage);
 
             if (alertMessage != null) {
                 redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.ALERT_SUCCESS);
