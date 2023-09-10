@@ -122,7 +122,7 @@ public class StaffController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         User user = userService.getUserByUsername(email);
-        String sender = user.getFirstName() + " " + user.getLastName();
+        String sender = user.getFirstName() + " " + user.getLastName() + " (" + user.getRole() + ")";
 
         try {
             alertService.createStaffAlert(LocalDateTime.now(), sender, staffId, alertMessage);
@@ -159,7 +159,7 @@ public class StaffController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         User user = userService.getUserByUsername(email);
-        String sender = user.getFirstName() + " " + user.getLastName();
+        String sender = user.getFirstName() + " " + user.getLastName() + " (" + user.getRole() + ")";
 
         try {
             alertService.createBroadcastAlert(LocalDateTime.now(), sender, alertMessage);

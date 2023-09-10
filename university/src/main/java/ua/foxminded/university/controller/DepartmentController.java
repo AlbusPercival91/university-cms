@@ -59,7 +59,7 @@ public class DepartmentController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         User user = userService.getUserByUsername(email);
-        String sender = user.getFirstName() + " " + user.getLastName();
+        String sender = user.getFirstName() + " " + user.getLastName() + " (" + user.getRole() + ")";
 
         try {
             alertService.createDepartmentAlert(LocalDateTime.now(), sender, departmentId, alertMessage);

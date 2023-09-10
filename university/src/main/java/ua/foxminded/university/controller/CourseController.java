@@ -54,7 +54,7 @@ public class CourseController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         User user = userService.getUserByUsername(email);
-        String sender = user.getFirstName() + " " + user.getLastName();
+        String sender = user.getFirstName() + " " + user.getLastName() + " (" + user.getRole() + ")";
 
         try {
             alertService.createCourseAlert(LocalDateTime.now(), sender, courseId, alertMessage);

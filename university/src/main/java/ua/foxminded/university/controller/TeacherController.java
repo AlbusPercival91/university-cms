@@ -138,7 +138,7 @@ public class TeacherController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         User user = userService.getUserByUsername(email);
-        String sender = user.getFirstName() + " " + user.getLastName();
+        String sender = user.getFirstName() + " " + user.getLastName() + " (" + user.getRole() + ")";
 
         try {
             alertService.createTeacherAlert(LocalDateTime.now(), sender, teacherId, alertMessage);
