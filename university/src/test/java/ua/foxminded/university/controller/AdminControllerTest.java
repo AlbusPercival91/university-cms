@@ -26,14 +26,9 @@ import ua.foxminded.university.dao.entities.Admin;
 import ua.foxminded.university.dao.entities.Alert;
 import ua.foxminded.university.dao.service.AdminService;
 import ua.foxminded.university.dao.service.AlertService;
-import ua.foxminded.university.dao.service.UserService;
-import ua.foxminded.university.security.UserRole;
+import ua.foxminded.university.security.UserAuthenticationService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
 import ua.foxminded.university.validation.Message;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 @WebMvcTest({ AdminController.class, ControllerBindingValidator.class })
 @ActiveProfiles("test-container")
@@ -51,18 +46,14 @@ class AdminControllerTest {
     private AlertService alertService;
 
     @MockBean
-    private UserService userService;
+    private UserAuthenticationService authenticationService;
 
     @Test
     void testAdminDashboard_WhenUserAuthenticated() throws Exception {
         Admin admin = new Admin();
-        admin.setEmail("admin@example.ua");
 
-        when(adminService.findAdminByEmail(admin.getEmail())).thenReturn(Optional.of(admin));
-
-        Authentication auth = new UsernamePasswordAuthenticationToken(admin.getEmail(), null,
-                AuthorityUtils.createAuthorityList("ROLE_" + UserRole.ADMIN));
-        SecurityContextHolder.getContext().setAuthentication(auth);
+        when(adminService.findAdminByEmail(authenticationService.getAuthenticatedUsername()))
+                .thenReturn(Optional.of(admin));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/admin/main")).andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("admin/main"))
@@ -176,13 +167,9 @@ class AdminControllerTest {
     @Test
     void testOpenAdminAlerts() throws Exception {
         Admin admin = new Admin();
-        admin.setEmail("admin@example.ua");
 
-        when(adminService.findAdminByEmail(admin.getEmail())).thenReturn(Optional.of(admin));
-
-        Authentication auth = new UsernamePasswordAuthenticationToken(admin.getEmail(), null,
-                AuthorityUtils.createAuthorityList("ROLE_" + UserRole.ADMIN));
-        SecurityContextHolder.getContext().setAuthentication(auth);
+        when(adminService.findAdminByEmail(authenticationService.getAuthenticatedUsername()))
+                .thenReturn(Optional.of(admin));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/admin/alert")).andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("alert"))
@@ -193,38 +180,19 @@ class AdminControllerTest {
 
     @Test
     void testSendAdminAlert() throws Exception {
+        int adminId = 1;
         String alertMessage = "Test Alert Message";
 
-        Admin admin = new Admin();
-        admin.setId(1);
-        admin.setEmail("admin@example.ua");
-
-        Authentication auth = new UsernamePasswordAuthenticationToken(admin.getEmail(), null,
-                AuthorityUtils.createAuthorityList("ROLE_" + UserRole.ADMIN));
-        SecurityContextHolder.getContext().setAuthentication(auth);
-
-        when(userService.getUserByUsername(admin.getEmail())).thenReturn(admin);
-
-        mockMvc.perform(MockMvcRequestBuilders.post("/admin/send-alert/{adminId}", admin.getId())
+        mockMvc.perform(MockMvcRequestBuilders.post("/admin/send-alert/{adminId}", adminId)
                 .param("alertMessage", alertMessage).with(csrf().asHeader()))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.flash().attributeExists(Message.SUCCESS))
-                .andExpect(MockMvcResultMatchers.redirectedUrl("/admin/admin-card/" + admin.getId()));
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/admin/admin-card/" + adminId));
     }
 
     @Test
     void testSendBroadcastAlert() throws Exception {
         String alertMessage = "Test Alert Message";
-
-        Admin admin = new Admin();
-        admin.setId(1);
-        admin.setEmail("admin@example.ua");
-
-        Authentication auth = new UsernamePasswordAuthenticationToken(admin.getEmail(), null,
-                AuthorityUtils.createAuthorityList("ROLE_" + UserRole.ADMIN));
-        SecurityContextHolder.getContext().setAuthentication(auth);
-
-        when(userService.getUserByUsername(admin.getEmail())).thenReturn(admin);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/admin/send-broadcast").param("alertMessage", alertMessage)
                 .with(csrf().asHeader())).andExpect(MockMvcResultMatchers.status().is3xxRedirection())

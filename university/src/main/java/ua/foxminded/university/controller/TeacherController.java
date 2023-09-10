@@ -12,8 +12,6 @@ import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -29,12 +27,11 @@ import ua.foxminded.university.dao.entities.Alert;
 import ua.foxminded.university.dao.entities.Course;
 import ua.foxminded.university.dao.entities.Department;
 import ua.foxminded.university.dao.entities.Teacher;
-import ua.foxminded.university.dao.entities.User;
 import ua.foxminded.university.dao.service.AlertService;
 import ua.foxminded.university.dao.service.CourseService;
 import ua.foxminded.university.dao.service.DepartmentService;
 import ua.foxminded.university.dao.service.TeacherService;
-import ua.foxminded.university.dao.service.UserService;
+import ua.foxminded.university.security.UserAuthenticationService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
 import ua.foxminded.university.validation.IdCollector;
 import ua.foxminded.university.validation.Message;
@@ -55,7 +52,7 @@ public class TeacherController {
     private AlertService alertService;
 
     @Autowired
-    private UserService userService;
+    private UserAuthenticationService authenticationService;
 
     @Autowired
     private ControllerBindingValidator bindingValidator;
@@ -65,19 +62,15 @@ public class TeacherController {
 
     @GetMapping("/teacher/main")
     public String teacherDashboard(Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.isAuthenticated()) {
-            String email = authentication.getName();
-            Optional<Teacher> teacher = teacherService.findTeacherByEmail(email);
+        Optional<Teacher> teacher = teacherService.findTeacherByEmail(authenticationService.getAuthenticatedUsername());
 
-            if (teacher.isPresent()) {
-                List<Course> courses = courseService.getAllCourses();
-                List<Department> departments = departmentService.getAllDepartments();
-                model.addAttribute("teacher", teacher.get());
-                model.addAttribute("courses", courses);
-                model.addAttribute("departments", departments);
-                return "teacher/main";
-            }
+        if (teacher.isPresent()) {
+            List<Course> courses = courseService.getAllCourses();
+            List<Department> departments = departmentService.getAllDepartments();
+            model.addAttribute("teacher", teacher.get());
+            model.addAttribute("courses", courses);
+            model.addAttribute("departments", departments);
+            return "teacher/main";
         }
         return "redirect:/login";
     }
@@ -120,9 +113,7 @@ public class TeacherController {
 
     @GetMapping("/teacher/alert")
     public String openTeacherAlerts(Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
-        Optional<Teacher> teacher = teacherService.findTeacherByEmail(email);
+        Optional<Teacher> teacher = teacherService.findTeacherByEmail(authenticationService.getAuthenticatedUsername());
 
         if (teacher.isPresent()) {
             List<Alert> alerts = alertService.getAllTeacherAlerts(teacher.get());
@@ -135,10 +126,7 @@ public class TeacherController {
     @PostMapping("/teacher/send-alert/{teacherId}")
     public String sendTeacherAlert(@PathVariable int teacherId, @RequestParam String alertMessage,
             RedirectAttributes redirectAttributes) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
-        User user = userService.getUserByUsername(email);
-        String sender = user.getFirstName() + " " + user.getLastName() + " (" + user.getRole() + ")";
+        String sender = authenticationService.getAuthenticatedUserNameAndRole();
 
         try {
             alertService.createTeacherAlert(LocalDateTime.now(), sender, teacherId, alertMessage);

@@ -12,8 +12,6 @@ import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -26,10 +24,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ua.foxminded.university.dao.entities.Alert;
 import ua.foxminded.university.dao.entities.Staff;
-import ua.foxminded.university.dao.entities.User;
 import ua.foxminded.university.dao.service.AlertService;
 import ua.foxminded.university.dao.service.StaffService;
-import ua.foxminded.university.dao.service.UserService;
+import ua.foxminded.university.security.UserAuthenticationService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
 import ua.foxminded.university.validation.IdCollector;
 import ua.foxminded.university.validation.Message;
@@ -44,7 +41,7 @@ public class StaffController {
     private AlertService alertService;
 
     @Autowired
-    private UserService userService;
+    private UserAuthenticationService authenticationService;
 
     @Autowired
     private ControllerBindingValidator bindingValidator;
@@ -54,14 +51,10 @@ public class StaffController {
 
     @GetMapping("/staff/main")
     public String staffDashboard(Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.isAuthenticated()) {
-            String email = authentication.getName();
-            Optional<Staff> staff = staffService.findStaffByEmail(email);
-            if (staff.isPresent()) {
-                model.addAttribute("staff", staff.get());
-                return "staff/main";
-            }
+        Optional<Staff> staff = staffService.findStaffByEmail(authenticationService.getAuthenticatedUsername());
+        if (staff.isPresent()) {
+            model.addAttribute("staff", staff.get());
+            return "staff/main";
         }
         return "redirect:/login";
     }
@@ -104,9 +97,7 @@ public class StaffController {
 
     @GetMapping("/staff/alert")
     public String openStaffAlerts(Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
-        Optional<Staff> staff = staffService.findStaffByEmail(email);
+        Optional<Staff> staff = staffService.findStaffByEmail(authenticationService.getAuthenticatedUsername());
 
         if (staff.isPresent()) {
             List<Alert> alerts = alertService.getAllStaffAlerts(staff.get());
@@ -119,10 +110,7 @@ public class StaffController {
     @PostMapping("/staff/send-alert/{staffId}")
     public String sendStaffAlert(@PathVariable int staffId, @RequestParam String alertMessage,
             RedirectAttributes redirectAttributes) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
-        User user = userService.getUserByUsername(email);
-        String sender = user.getFirstName() + " " + user.getLastName() + " (" + user.getRole() + ")";
+        String sender = authenticationService.getAuthenticatedUserNameAndRole();
 
         try {
             alertService.createStaffAlert(LocalDateTime.now(), sender, staffId, alertMessage);
@@ -156,10 +144,7 @@ public class StaffController {
     @PostMapping("/staff/send-broadcast")
     public String sendBroadcastAlert(@RequestParam String alertMessage, RedirectAttributes redirectAttributes,
             HttpServletRequest request) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
-        User user = userService.getUserByUsername(email);
-        String sender = user.getFirstName() + " " + user.getLastName() + " (" + user.getRole() + ")";
+        String sender = authenticationService.getAuthenticatedUserNameAndRole();
 
         try {
             alertService.createBroadcastAlert(LocalDateTime.now(), sender, alertMessage);

@@ -9,8 +9,6 @@ import java.util.Optional;
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,11 +21,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ua.foxminded.university.dao.entities.Department;
 import ua.foxminded.university.dao.entities.Faculty;
-import ua.foxminded.university.dao.entities.User;
 import ua.foxminded.university.dao.service.AlertService;
 import ua.foxminded.university.dao.service.DepartmentService;
 import ua.foxminded.university.dao.service.FacultyService;
-import ua.foxminded.university.dao.service.UserService;
+import ua.foxminded.university.security.UserAuthenticationService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
 import ua.foxminded.university.validation.IdCollector;
 import ua.foxminded.university.validation.Message;
@@ -45,7 +42,7 @@ public class DepartmentController {
     private AlertService alertService;
 
     @Autowired
-    private UserService userService;
+    private UserAuthenticationService authenticationService;
 
     @Autowired
     private ControllerBindingValidator bindingValidator;
@@ -56,10 +53,7 @@ public class DepartmentController {
     @PostMapping("/department/send-alert/{departmentId}")
     public String sendDepartmentAlert(@PathVariable int departmentId, @RequestParam String alertMessage,
             RedirectAttributes redirectAttributes) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
-        User user = userService.getUserByUsername(email);
-        String sender = user.getFirstName() + " " + user.getLastName() + " (" + user.getRole() + ")";
+        String sender = authenticationService.getAuthenticatedUserNameAndRole();
 
         try {
             alertService.createDepartmentAlert(LocalDateTime.now(), sender, departmentId, alertMessage);

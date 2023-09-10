@@ -18,22 +18,16 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import ua.foxminded.university.dao.entities.Admin;
 import ua.foxminded.university.dao.entities.Alert;
 import ua.foxminded.university.dao.entities.Staff;
 import ua.foxminded.university.dao.service.AlertService;
 import ua.foxminded.university.dao.service.StaffService;
-import ua.foxminded.university.dao.service.UserService;
-import ua.foxminded.university.security.UserRole;
+import ua.foxminded.university.security.UserAuthenticationService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
 import ua.foxminded.university.validation.IdCollector;
 import ua.foxminded.university.validation.Message;
@@ -53,18 +47,15 @@ class StaffControllerTest {
     private AlertService alertService;
 
     @MockBean
-    private UserService userService;
+    private UserAuthenticationService authenticationService;
 
     @Test
+    @WithMockUser(roles = "STAFF")
     void testStaffDashboard_WhenUserAuthenticated() throws Exception {
         Staff staff = new Staff();
-        staff.setEmail("staff@example.ua");
 
-        when(staffService.findStaffByEmail(staff.getEmail())).thenReturn(Optional.of(staff));
-
-        Authentication auth = new UsernamePasswordAuthenticationToken(staff.getEmail(), null,
-                AuthorityUtils.createAuthorityList("ROLE_" + UserRole.STAFF));
-        SecurityContextHolder.getContext().setAuthentication(auth);
+        when(staffService.findStaffByEmail(authenticationService.getAuthenticatedUsername()))
+                .thenReturn(Optional.of(staff));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/staff/main")).andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("staff/main"))
@@ -187,13 +178,9 @@ class StaffControllerTest {
     @WithMockUser(roles = "STAFF")
     void testOpenStaffAlerts() throws Exception {
         Staff staff = new Staff();
-        staff.setEmail("staff@example.ua");
 
-        when(staffService.findStaffByEmail(staff.getEmail())).thenReturn(Optional.of(staff));
-
-        Authentication auth = new UsernamePasswordAuthenticationToken(staff.getEmail(), null,
-                AuthorityUtils.createAuthorityList("ROLE_" + UserRole.STAFF));
-        SecurityContextHolder.getContext().setAuthentication(auth);
+        when(staffService.findStaffByEmail(authenticationService.getAuthenticatedUsername()))
+                .thenReturn(Optional.of(staff));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/staff/alert")).andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("alert"))
@@ -208,15 +195,6 @@ class StaffControllerTest {
         int staffId = 1;
         String alertMessage = "Test Alert Message";
 
-        Admin admin = new Admin();
-        admin.setEmail("admin@example.ua");
-
-        Authentication auth = new UsernamePasswordAuthenticationToken(admin.getEmail(), null,
-                AuthorityUtils.createAuthorityList("ROLE_" + UserRole.ADMIN));
-        SecurityContextHolder.getContext().setAuthentication(auth);
-
-        when(userService.getUserByUsername(admin.getEmail())).thenReturn(admin);
-
         mockMvc.perform(MockMvcRequestBuilders.post("/staff/send-alert/{staffId}", staffId)
                 .param("alertMessage", alertMessage).with(csrf().asHeader()))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
@@ -228,16 +206,6 @@ class StaffControllerTest {
     @WithMockUser(roles = "STAFF")
     void testSendBroadcastAlert() throws Exception {
         String alertMessage = "Test Alert Message";
-
-        Admin admin = new Admin();
-        admin.setId(1);
-        admin.setEmail("admin@example.ua");
-
-        Authentication auth = new UsernamePasswordAuthenticationToken(admin.getEmail(), null,
-                AuthorityUtils.createAuthorityList("ROLE_" + UserRole.ADMIN));
-        SecurityContextHolder.getContext().setAuthentication(auth);
-
-        when(userService.getUserByUsername(admin.getEmail())).thenReturn(admin);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/staff/send-broadcast").param("alertMessage", alertMessage)
                 .with(csrf().asHeader())).andExpect(MockMvcResultMatchers.status().is3xxRedirection())

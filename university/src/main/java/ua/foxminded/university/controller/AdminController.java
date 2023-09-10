@@ -10,8 +10,6 @@ import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,10 +22,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ua.foxminded.university.dao.entities.Admin;
 import ua.foxminded.university.dao.entities.Alert;
-import ua.foxminded.university.dao.entities.User;
 import ua.foxminded.university.dao.service.AdminService;
 import ua.foxminded.university.dao.service.AlertService;
-import ua.foxminded.university.dao.service.UserService;
+import ua.foxminded.university.security.UserAuthenticationService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
 import ua.foxminded.university.validation.Message;
 
@@ -41,21 +38,18 @@ public class AdminController {
     private AlertService alertService;
 
     @Autowired
-    private UserService userService;
+    private UserAuthenticationService authenticationService;
 
     @Autowired
     private ControllerBindingValidator bindingValidator;
 
     @GetMapping("/admin/main")
     public String adminDashboard(Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.isAuthenticated()) {
-            String email = authentication.getName();
-            Optional<Admin> admin = adminService.findAdminByEmail(email);
-            if (admin.isPresent()) {
-                model.addAttribute("admin", admin.get());
-                return "admin/main";
-            }
+        Optional<Admin> admin = adminService.findAdminByEmail(authenticationService.getAuthenticatedUsername());
+
+        if (admin.isPresent()) {
+            model.addAttribute("admin", admin.get());
+            return "admin/main";
         }
         return "redirect:/login";
     }
@@ -98,9 +92,7 @@ public class AdminController {
 
     @GetMapping("/admin/alert")
     public String openAdminAlerts(Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
-        Optional<Admin> admin = adminService.findAdminByEmail(email);
+        Optional<Admin> admin = adminService.findAdminByEmail(authenticationService.getAuthenticatedUsername());
 
         if (admin.isPresent()) {
             List<Alert> alerts = alertService.getAllAdminAlerts(admin.get());
@@ -113,10 +105,7 @@ public class AdminController {
     @PostMapping("/admin/send-alert/{adminId}")
     public String sendAdminAlert(@PathVariable int adminId, @RequestParam String alertMessage,
             RedirectAttributes redirectAttributes) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
-        User user = userService.getUserByUsername(email);
-        String sender = user.getFirstName() + " " + user.getLastName() + " (" + user.getRole() + ")";
+        String sender = authenticationService.getAuthenticatedUserNameAndRole();
 
         try {
             alertService.createAdminAlert(LocalDateTime.now(), sender, adminId, alertMessage);
@@ -150,10 +139,7 @@ public class AdminController {
     @PostMapping("/admin/send-broadcast")
     public String sendBroadcastAlert(@RequestParam String alertMessage, RedirectAttributes redirectAttributes,
             HttpServletRequest request) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
-        User user = userService.getUserByUsername(email);
-        String sender = user.getFirstName() + " " + user.getLastName() + " (" + user.getRole() + ")";
+        String sender = authenticationService.getAuthenticatedUserNameAndRole();
 
         try {
             alertService.createBroadcastAlert(LocalDateTime.now(), sender, alertMessage);
