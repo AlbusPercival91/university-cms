@@ -35,9 +35,10 @@ import ua.foxminded.university.dao.service.GroupService;
 import ua.foxminded.university.dao.service.StudentService;
 import ua.foxminded.university.dao.service.TeacherService;
 import ua.foxminded.university.dao.service.TimeTableService;
+import ua.foxminded.university.validation.IdCollector;
 import ua.foxminded.university.validation.Message;
 
-@WebMvcTest(TimeTableController.class)
+@WebMvcTest({ TimeTableController.class, IdCollector.class })
 @ActiveProfiles("test-container")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class TimeTableControllerTest {

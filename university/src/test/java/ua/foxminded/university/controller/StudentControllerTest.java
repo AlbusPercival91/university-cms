@@ -42,9 +42,10 @@ import ua.foxminded.university.dao.service.GroupService;
 import ua.foxminded.university.dao.service.StudentService;
 import ua.foxminded.university.security.UserRole;
 import ua.foxminded.university.validation.ControllerBindingValidator;
+import ua.foxminded.university.validation.IdCollector;
 import ua.foxminded.university.validation.Message;
 
-@WebMvcTest({ StudentController.class, ControllerBindingValidator.class })
+@WebMvcTest({ StudentController.class, ControllerBindingValidator.class, IdCollector.class })
 @ActiveProfiles("test-container")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class StudentControllerTest {

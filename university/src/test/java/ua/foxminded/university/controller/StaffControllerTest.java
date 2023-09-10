@@ -33,9 +33,10 @@ import ua.foxminded.university.dao.service.AlertService;
 import ua.foxminded.university.dao.service.StaffService;
 import ua.foxminded.university.security.UserRole;
 import ua.foxminded.university.validation.ControllerBindingValidator;
+import ua.foxminded.university.validation.IdCollector;
 import ua.foxminded.university.validation.Message;
 
-@WebMvcTest({ StaffController.class, ControllerBindingValidator.class })
+@WebMvcTest({ StaffController.class, ControllerBindingValidator.class, IdCollector.class })
 @ActiveProfiles("test-container")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class StaffControllerTest {
