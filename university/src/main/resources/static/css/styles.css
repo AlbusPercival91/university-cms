@@ -252,7 +252,6 @@ button.icon-button.remove-button[type="submit"] {
 .search-square select {
     width: 100%;
     padding: 5px;
-    margin-top: 5px;
     box-sizing: border-box;
 }
 
@@ -316,7 +315,7 @@ button[type="submit"] {
     cursor: pointer;
 }
 
-/* Style for buttons */
+/* Style for common buttons */
 .button-common-style {
     padding: 8px 20px;
     background-color: #333;

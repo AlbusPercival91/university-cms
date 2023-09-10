@@ -44,7 +44,7 @@
                     <option value="">Select Department</option>
                     <!-- Generate options for departments using Thymeleaf -->
                     <option th:each="department : ${departments}" th:value="${department.id}"
-                        th:text="${department.name}"></option>
+                        th:text="${'ID: ' + department.id + ', ' + department.name}"></option>
                 </select>
             </div>
             <div class="form-group">
