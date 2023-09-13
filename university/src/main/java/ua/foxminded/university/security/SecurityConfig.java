@@ -13,7 +13,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableGlobalMethodSecurity(jsr250Enabled = true)
 public class SecurityConfig {
     private static final String[] staticResources = { "/css/**", "/js/**" };
-    private static final String[] allowedPages = { "/", "/about", "/contacts" };
+    private static final String[] allowedPages = { "/", "/about", "/contacts", "/courses" };
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
