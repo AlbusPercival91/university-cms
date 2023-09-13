@@ -33,19 +33,6 @@ nav ul li a {
     text-decoration: none;
 }
 
-/* Hero section styles */
-.hero {
-    background-image: url('path/to/hero-image.jpg');
-    background-size: cover;
-    background-position: center;
-    height: 250px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    color: #fff;
-}
-
 /* Features section styles */
 .features {
     display: flex;
@@ -536,10 +523,27 @@ button[type="submit"] {
 }
 
 .image-box img {
-    max-width: 100%;
+    max-width: 60vh;
 }
 
 .contact-image-container {
     position: relative;
-    max-width: 70%;
+    max-width: 60vh;
+}
+
+/* Styles for home page */
+.home-image-box {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vh;
+    height: 100vh;
+    z-index: -1;
+    align-items: center;
+}
+
+.home-image-container img {
+    width: 95vh;
+    height: 95vh;
+    object-fit: cover;
 }
