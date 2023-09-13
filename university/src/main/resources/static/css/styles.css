@@ -511,9 +511,32 @@ button[type="submit"] {
     background-color: rgb(58, 193, 56);
 }
 
+/* Styles for contacts page */
+.contacts-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+}
+
+.contact-info-box {
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    padding: 12px;
+    border-radius: 5px;
+}
+
+.contact-info {
+    box-shadow: 0 2px 5px rgb(98, 160, 234);
+    margin: 12px;
+    padding: 12px;
+    border-radius: 5px;
+}
+
+.image-box img {
+    max-width: 100%;
+}
+
 .contact-image-container {
-    z-index: -1;
-    position: absolute;
-    padding-left: 55%;
-    padding-top: 2%;
+    position: relative;
+    max-width: 70%;
 }

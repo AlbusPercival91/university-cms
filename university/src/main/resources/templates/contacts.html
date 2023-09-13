@@ -10,20 +10,28 @@
 
     <div th:replace="fragments/header :: header"></div>
 
-    <div class="contact-image-container">
-        <img th:src="@{/img/contact-image.png}" alt="Image" />
-    </div>
+    <div class="contacts-main">
 
-    <section>
-        <h2>Contact Information</h2>
-        <p>For any inquiries or assistance, please contact the following:</p>
-        <ul>
-            <li>General Enquiries: info@university.edu</li>
-            <li>Admissions Office: admissions@university.edu</li>
-            <li>Registrar's Office: registrar@university.edu</li>
-            <li>Student Services: studentservices@university.edu</li>
-        </ul>
-    </section>
+        <div class="contact-info-box">
+            <div class="container">
+                <h2>Contact Information</h2>
+                <p>For any inquiries or assistance, please contact the following:</p>
+            </div>
+
+
+            <div class="contact-info">General Enquiries: info@university.edu</div>
+            <div class="contact-info">Admissions Office: admissions@university.edu</div>
+            <div class="contact-info">Registrar's Office: registrar@university.edu</div>
+            <div class="contact-info">Student Services: studentservices@university.edu</div>
+        </div>
+
+        <div class="image-box">
+            <div class="contact-image-container">
+                <img th:src="@{/img/contact-image.png}" alt="Image" />
+            </div>
+        </div>
+
+    </div>
 
     <div th:replace="fragments/footer :: footer"></div>
 
