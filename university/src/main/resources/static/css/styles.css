@@ -519,10 +519,13 @@ button[type="submit"] {
     padding: 12px;
 }
 
-.contact-info-box {
+.info-box {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
     padding: 12px;
+    margin: 12px;
+    padding-left: 16px;
     border-radius: 5px;
+    max-width: 95%;
 }
 
 .contact-info {
