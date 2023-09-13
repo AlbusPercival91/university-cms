@@ -511,7 +511,7 @@ button[type="submit"] {
     background-color: rgb(58, 193, 56);
 }
 
-.image-contact-container {
+.contact-image-container {
     z-index: -1;
     position: absolute;
     padding-left: 55%;
