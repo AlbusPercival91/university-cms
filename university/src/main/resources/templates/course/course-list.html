@@ -10,11 +10,11 @@
 
 <div th:replace="fragments/header :: header"></div>
 
-<div th:replace="fragments/nav-panel :: div"></div>
+<div th:replace="fragments/nav-panel :: div" sec:authorize="isAuthenticated()"></div>
 
 <body>
 
-    <div class="container">
+    <div class="container" sec:authorize="isAuthenticated()">
         <h2>Search Panel</h2>
 
         <div class="search-container">
@@ -79,11 +79,11 @@
                     <th style="border: none; width: 3vh;"
                         sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_STAFF') or hasRole('ROLE_TEACHER')">
                     </th>
-                    <th>ID</th>
+                    <th sec:authorize="isAuthenticated()">ID</th>
                     <th>Course Name</th>
                     <th>Course Description</th>
-                    <th>Teachers Assigned</th>
-                    <th>Students Assigned</th>
+                    <th sec:authorize="isAuthenticated()">Teachers Assigned</th>
+                    <th sec:authorize="isAuthenticated()">Students Assigned</th>
                     <th style="border: none; width: 3vh;" sec:authorize="hasRole('ROLE_ADMIN')"></th>
                 </tr>
             </thead>
@@ -98,17 +98,17 @@
                             </button>
                         </a>
                     </td>
-                    <td th:text="${course.id}"></td>
+                    <td th:text="${course.id}" sec:authorize="isAuthenticated()"></td>
                     <td th:text="${course.courseName}"></td>
                     <td th:text="${course.courseDescription}"></td>
-                    <td>
+                    <td sec:authorize="isAuthenticated()">
                         <select>
                             <option th:each="teacher : ${course.teachers}"
                                 th:text="${'ID: ' + teacher.id + ', ' + teacher.firstName + ' ' + teacher.lastName}">
                             </option>
                         </select>
                     </td>
-                    <td>
+                    <td sec:authorize="isAuthenticated()">
                         <select>
                             <option th:each="student : ${course.students}"
                                 th:text="${'ID: ' + student.id + ', ' + student.firstName + ' ' + student.lastName}">
