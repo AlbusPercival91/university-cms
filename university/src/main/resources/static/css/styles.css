@@ -510,3 +510,10 @@ button[type="submit"] {
 .send-button:hover {
     background-color: rgb(58, 193, 56);
 }
+
+.image-contact-container {
+    z-index: -1;
+    position: absolute;
+    padding-left: 55%;
+    padding-top: 2%;
+}
