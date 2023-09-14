@@ -23,7 +23,7 @@ public interface TimeTableRepository extends JpaRepository<TimeTable, Integer> {
 
     List<TimeTable> findByCourseCourseNameOrderByDateAscTimeFromAsc(String courseName);
 
-    List<TimeTable> findByDateOrderByDateAscTimeFromAsc(LocalDate date);
+    List<TimeTable> findByDateBetweenOrderByDateAscTimeFromAsc(LocalDate dateFrom, LocalDate dateTo);
 
     @Query("""
                 SELECT t FROM TimeTable t
@@ -88,8 +88,7 @@ public interface TimeTableRepository extends JpaRepository<TimeTable, Integer> {
              OR (t.timeFrom >= :timeFrom AND t.timeTo <= :timeTo))
              AND t.id != :timeTableIdExclude
             """)
-    boolean timeTableValidationFailedOnUpdate(
-            int timeTableIdExclude, LocalDate date, LocalTime timeFrom,
+    boolean timeTableValidationFailedOnUpdate(int timeTableIdExclude, LocalDate date, LocalTime timeFrom,
             LocalTime timeTo, ClassRoom classRoom);
 
     @Query("""

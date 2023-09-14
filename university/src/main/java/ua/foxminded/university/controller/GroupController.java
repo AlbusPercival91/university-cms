@@ -24,7 +24,9 @@ import ua.foxminded.university.dao.entities.Group;
 import ua.foxminded.university.dao.service.AlertService;
 import ua.foxminded.university.dao.service.FacultyService;
 import ua.foxminded.university.dao.service.GroupService;
+import ua.foxminded.university.security.UserAuthenticationService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
+import ua.foxminded.university.validation.IdCollector;
 import ua.foxminded.university.validation.Message;
 
 @Controller
@@ -40,13 +42,21 @@ public class GroupController {
     private AlertService alertService;
 
     @Autowired
+    private UserAuthenticationService authenticationService;
+
+    @Autowired
     private ControllerBindingValidator bindingValidator;
+
+    @Autowired
+    private IdCollector idCollector;
 
     @PostMapping("/group/send-alert/{groupId}")
     public String sendGroupAlert(@PathVariable int groupId, @RequestParam String alertMessage,
             RedirectAttributes redirectAttributes) {
+        String sender = authenticationService.getAuthenticatedUserNameAndRole();
+
         try {
-            alertService.createGroupAlert(LocalDateTime.now(), groupId, alertMessage);
+            alertService.createGroupAlert(LocalDateTime.now(), sender, groupId, alertMessage);
 
             if (alertMessage != null) {
                 redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.ALERT_SUCCESS);
@@ -115,12 +125,12 @@ public class GroupController {
 
     @GetMapping("/group/search-result")
     public String searchGroup(@RequestParam("searchType") String searchType,
-            @RequestParam(required = false) Integer groupId, @RequestParam(required = false) String groupName,
+            @RequestParam(required = false) String groupId, @RequestParam(required = false) String groupName,
             @RequestParam(required = false) String facultyName, Model model) {
         List<Group> groupList = new ArrayList<>();
 
         if ("group".equals(searchType)) {
-            Optional<Group> optionalGroup = groupService.findGroupById(groupId);
+            Optional<Group> optionalGroup = groupService.findGroupById(idCollector.collect(groupId));
             groupList = optionalGroup.map(Collections::singletonList).orElse(Collections.emptyList());
         } else if ("groupName".equals(searchType)) {
             groupList = groupService.findGroupByGroupName(groupName);

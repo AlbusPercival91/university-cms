@@ -20,10 +20,12 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import ua.foxminded.university.dao.entities.Course;
 import ua.foxminded.university.dao.service.AlertService;
 import ua.foxminded.university.dao.service.CourseService;
+import ua.foxminded.university.security.UserAuthenticationService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
+import ua.foxminded.university.validation.IdCollector;
 import ua.foxminded.university.validation.Message;
 
-@WebMvcTest({ CourseController.class, ControllerBindingValidator.class })
+@WebMvcTest({ CourseController.class, ControllerBindingValidator.class, IdCollector.class })
 @ActiveProfiles("test-container")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class CourseControllerTest {
@@ -36,6 +38,9 @@ class CourseControllerTest {
 
     @MockBean
     private AlertService alertService;
+
+    @MockBean
+    private UserAuthenticationService authenticationService;
 
     @Test
     @WithMockUser(roles = { "ADMIN", "TEACHER", "STAFF" })

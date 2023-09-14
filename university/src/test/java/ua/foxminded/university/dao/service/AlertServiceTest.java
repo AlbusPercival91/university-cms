@@ -65,17 +65,19 @@ class AlertServiceTest {
     void testGetAllTeacherAlerts_ShouldReturnAllTeacherAlerts(int teacherId, String message) {
         Optional<Teacher> optionalTeacher = teacherService.findTeacherById(teacherId);
 
-        alertService.createTeacherAlert(LocalDateTime.now(), optionalTeacher.get().getId(), message);
+        alertService.createTeacherAlert(LocalDateTime.now(), optionalTeacher.get().getFirstName(),
+                optionalTeacher.get().getId(), message);
 
         Assertions.assertTrue(
                 alertService.getAllTeacherAlerts(optionalTeacher.get()).get(0).getMessage().contains(message));
     }
 
     @ParameterizedTest
-    @CsvSource({ "12, Test Alert" })
-    void testGetAllTeacherAlerts_WhenTeacherNotFound_ShouldThrowNoSuchElementException(int teacherId, String message) {
+    @CsvSource({ "12, TestSender, Test Alert" })
+    void testGetAllTeacherAlerts_WhenTeacherNotFound_ShouldThrowNoSuchElementException(int teacherId, String sender,
+            String message) {
         Exception noSuchElementException = assertThrows(Exception.class,
-                () -> alertService.createTeacherAlert(LocalDateTime.now(), 12, message));
+                () -> alertService.createTeacherAlert(LocalDateTime.now(), sender, 12, message));
         Assertions.assertEquals(Message.TEACHER_NOT_FOUND, noSuchElementException.getMessage());
     }
 
@@ -84,17 +86,19 @@ class AlertServiceTest {
     void testGetAllStudentAlerts_ShouldReturnAllStudentAlerts(int studentId, String message) {
         Optional<Student> optionalStudent = studentService.findStudentById(studentId);
 
-        alertService.createStudentAlert(LocalDateTime.now(), optionalStudent.get().getId(), message);
+        alertService.createStudentAlert(LocalDateTime.now(), optionalStudent.get().getFirstName(),
+                optionalStudent.get().getId(), message);
 
         Assertions.assertTrue(
                 alertService.getAllStudentAlerts(optionalStudent.get()).get(0).getMessage().contains(message));
     }
 
     @ParameterizedTest
-    @CsvSource({ "12, Test Alert" })
-    void testGetAllStudentAlerts_WhenStudentNotFound_ShouldThrowNoSuchElementException(int studentId, String message) {
+    @CsvSource({ "12, TestSender, Test Alert" })
+    void testGetAllStudentAlerts_WhenStudentNotFound_ShouldThrowNoSuchElementException(int studentId, String sender,
+            String message) {
         Exception noSuchElementException = assertThrows(Exception.class,
-                () -> alertService.createStudentAlert(LocalDateTime.now(), 12, message));
+                () -> alertService.createStudentAlert(LocalDateTime.now(), sender, 12, message));
         Assertions.assertEquals(Message.STUDENT_NOT_FOUND, noSuchElementException.getMessage());
     }
 
@@ -103,7 +107,8 @@ class AlertServiceTest {
     void testGetAllStudentAlerts_WhenCreateGroupAlert_ShouldReturnAllGroupAlerts(int studentId, String message) {
         Optional<Student> optionalStudent = studentService.findStudentById(studentId);
 
-        alertService.createGroupAlert(LocalDateTime.now(), optionalStudent.get().getGroup().getId(), message);
+        alertService.createGroupAlert(LocalDateTime.now(), optionalStudent.get().getFirstName(),
+                optionalStudent.get().getGroup().getId(), message);
 
         Assertions.assertTrue(
                 alertService.getAllStudentAlerts(optionalStudent.get()).get(0).getMessage().contains(message));
@@ -120,7 +125,8 @@ class AlertServiceTest {
         teacherService.addTeacherToTheCourse(teacherId, optionalCourse.get().getCourseName());
         studentService.addStudentToTheCourse(studentId, optionalCourse.get().getCourseName());
 
-        alertService.createCourseAlert(LocalDateTime.now(), optionalCourse.get().getId(), message);
+        alertService.createCourseAlert(LocalDateTime.now(), optionalTeacher.get().getFirstName(),
+                optionalCourse.get().getId(), message);
 
         Assertions.assertTrue(
                 alertService.getAllStudentAlerts(optionalStudent.get()).get(0).getMessage().contains(message));
@@ -137,7 +143,8 @@ class AlertServiceTest {
         Optional<Teacher> optionalTeacher = teacherService.findTeacherById(teacherId);
         Optional<Faculty> optionalFaculty = facultyService.findFacultyById(facultyId);
 
-        alertService.createFacultyAlert(LocalDateTime.now(), optionalFaculty.get().getId(), message);
+        alertService.createFacultyAlert(LocalDateTime.now(), optionalTeacher.get().getFirstName(),
+                optionalFaculty.get().getId(), message);
 
         Assertions.assertTrue(
                 alertService.getAllStudentAlerts(optionalStudent.get()).get(0).getMessage().contains(message));
@@ -153,7 +160,8 @@ class AlertServiceTest {
         Optional<Teacher> optionalTeacher = teacherService.findTeacherById(teacherId);
         Optional<Department> optionalDepartment = departmentService.findDepartmentById(departmentId);
 
-        alertService.createDepartmentAlert(LocalDateTime.now(), optionalDepartment.get().getId(), message);
+        alertService.createDepartmentAlert(LocalDateTime.now(), optionalTeacher.get().getFirstName(),
+                optionalDepartment.get().getId(), message);
 
         Assertions.assertTrue(
                 alertService.getAllTeacherAlerts(optionalTeacher.get()).get(0).getMessage().contains(message));
@@ -164,17 +172,19 @@ class AlertServiceTest {
     void testGetAllStaffAlerts_ShouldReturnAllStaffAlerts(int staffId, String message) {
         Optional<Staff> optionalStaff = staffService.findStaffById(staffId);
 
-        alertService.createStaffAlert(LocalDateTime.now(), optionalStaff.get().getId(), message);
+        alertService.createStaffAlert(LocalDateTime.now(), optionalStaff.get().getFirstName(),
+                optionalStaff.get().getId(), message);
 
         Assertions
                 .assertTrue(alertService.getAllStaffAlerts(optionalStaff.get()).get(0).getMessage().contains(message));
     }
 
     @ParameterizedTest
-    @CsvSource({ "12, Test Aler" })
-    void testGetAllStaffAlerts_WhenStaffNotFound_ShouldThrowNoSuchElementException(int staffId, String message) {
+    @CsvSource({ "12, TestSender, Test Aler" })
+    void testGetAllStaffAlerts_WhenStaffNotFound_ShouldThrowNoSuchElementException(int staffId, String sender,
+            String message) {
         Exception noSuchElementException = assertThrows(Exception.class,
-                () -> alertService.createStaffAlert(LocalDateTime.now(), 12, message));
+                () -> alertService.createStaffAlert(LocalDateTime.now(), sender, 12, message));
         Assertions.assertEquals(Message.STAFF_NOT_FOUND, noSuchElementException.getMessage());
     }
 
@@ -183,17 +193,19 @@ class AlertServiceTest {
     void testGetAllAdminAlerts_ShouldReturnAllAdminAlerts(int adminId, String message) {
         Optional<Admin> optionalAdmin = adminService.findAdminById(adminId);
 
-        alertService.createAdminAlert(LocalDateTime.now(), optionalAdmin.get().getId(), message);
+        alertService.createAdminAlert(LocalDateTime.now(), optionalAdmin.get().getFirstName(),
+                optionalAdmin.get().getId(), message);
 
         Assertions
                 .assertTrue(alertService.getAllAdminAlerts(optionalAdmin.get()).get(0).getMessage().contains(message));
     }
 
     @ParameterizedTest
-    @CsvSource({ "12, Test Alert" })
-    void testGetAllAdminAlerts_WhenAdminNotFound_ShouldThrowNoSuchElementException(int adminId, String message) {
+    @CsvSource({ "12, adminName, Test Alert" })
+    void testGetAllAdminAlerts_WhenAdminNotFound_ShouldThrowNoSuchElementException(int adminId, String adminName,
+            String message) {
         Exception noSuchElementException = assertThrows(Exception.class,
-                () -> alertService.createAdminAlert(LocalDateTime.now(), 12, message));
+                () -> alertService.createAdminAlert(LocalDateTime.now(), adminName, 12, message));
         Assertions.assertEquals(Message.ADMIN_NOT_FOUND, noSuchElementException.getMessage());
     }
 
@@ -202,7 +214,8 @@ class AlertServiceTest {
     void testDeleteAlertById_Success(int alertId, int adminId, String message) {
         Optional<Admin> optionalAdmin = adminService.findAdminById(adminId);
 
-        alertService.createAdminAlert(LocalDateTime.now(), optionalAdmin.get().getId(), message);
+        alertService.createAdminAlert(LocalDateTime.now(), optionalAdmin.get().getFirstName(),
+                optionalAdmin.get().getId(), message);
 
         Assertions
                 .assertTrue(alertService.getAllAdminAlerts(optionalAdmin.get()).get(0).getMessage().contains(message));
@@ -225,7 +238,7 @@ class AlertServiceTest {
         Optional<Teacher> optionalTeacher = teacherService.findTeacherById(teacherId);
         Optional<Staff> optionalStaff = staffService.findStaffById(staffId);
 
-        alertService.createBroadcastAlert(LocalDateTime.now(), message);
+        alertService.createBroadcastAlert(LocalDateTime.now(), optionalAdmin.get().getFirstName(), message);
 
         Assertions
                 .assertTrue(alertService.getAllAdminAlerts(optionalAdmin.get()).get(0).getMessage().contains(message));
@@ -242,7 +255,8 @@ class AlertServiceTest {
     void testToggleRead_ShouldToogleAlertReadStatus(int alertId, int adminId, String message) {
         Optional<Admin> optionalAdmin = adminService.findAdminById(adminId);
 
-        alertService.createAdminAlert(LocalDateTime.now(), optionalAdmin.get().getId(), message);
+        alertService.createAdminAlert(LocalDateTime.now(), optionalAdmin.get().getFirstName(),
+                optionalAdmin.get().getId(), message);
         Assertions.assertFalse(alertService.getAllAdminAlerts(optionalAdmin.get()).get(0).isRead());
         alertService.toggleRead(alertId);
         Assertions.assertTrue(alertService.getAllAdminAlerts(optionalAdmin.get()).get(0).isRead());

@@ -5,6 +5,9 @@ import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -19,15 +22,12 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import ua.foxminded.university.dao.entities.Alert;
 import ua.foxminded.university.dao.entities.Course;
 import ua.foxminded.university.dao.entities.Faculty;
 import ua.foxminded.university.dao.entities.Group;
@@ -36,11 +36,12 @@ import ua.foxminded.university.dao.service.AlertService;
 import ua.foxminded.university.dao.service.CourseService;
 import ua.foxminded.university.dao.service.GroupService;
 import ua.foxminded.university.dao.service.StudentService;
-import ua.foxminded.university.security.UserRole;
+import ua.foxminded.university.security.UserAuthenticationService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
+import ua.foxminded.university.validation.IdCollector;
 import ua.foxminded.university.validation.Message;
 
-@WebMvcTest({ StudentController.class, ControllerBindingValidator.class })
+@WebMvcTest({ StudentController.class, ControllerBindingValidator.class, IdCollector.class })
 @ActiveProfiles("test-container")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class StudentControllerTest {
@@ -60,17 +61,18 @@ class StudentControllerTest {
     @MockBean
     private AlertService alertService;
 
+    @MockBean
+    private UserAuthenticationService authenticationService;
+
     @Test
+    @WithMockUser(roles = "STUDENT")
     void testStudentDashboard_WhenUserAuthenticated() throws Exception {
         Faculty facultyGrifindor = new Faculty("Grifindor");
         Group group = new Group("Group A", facultyGrifindor);
         Student student = new Student("Harry", "Potter", true, "potter@mail.com", "1234", group);
 
-        when(studentService.findStudentByEmail(student.getEmail())).thenReturn(Optional.of(student));
-
-        Authentication auth = new UsernamePasswordAuthenticationToken(student.getEmail(), null,
-                AuthorityUtils.createAuthorityList("ROLE_" + UserRole.STUDENT));
-        SecurityContextHolder.getContext().setAuthentication(auth);
+        when(studentService.findStudentByEmail(authenticationService.getAuthenticatedUsername()))
+                .thenReturn(Optional.of(student));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/student/main")).andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("student/main"))
@@ -195,13 +197,9 @@ class StudentControllerTest {
     @WithMockUser(roles = "STUDENT")
     void testOpenStudentAlerts() throws Exception {
         Student student = new Student();
-        student.setEmail("student@example.ua");
 
-        when(studentService.findStudentByEmail(student.getEmail())).thenReturn(Optional.of(student));
-
-        Authentication auth = new UsernamePasswordAuthenticationToken(student.getEmail(), null,
-                AuthorityUtils.createAuthorityList("ROLE_" + UserRole.STUDENT));
-        SecurityContextHolder.getContext().setAuthentication(auth);
+        when(studentService.findStudentByEmail(authenticationService.getAuthenticatedUsername()))
+                .thenReturn(Optional.of(student));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/student/alert")).andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("alert"))
@@ -241,6 +239,32 @@ class StudentControllerTest {
                 MockMvcRequestBuilders.post("/student/mark-alert-as-read/{alertId}", alertId).with(csrf().asHeader()))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/student/alert"));
+    }
+
+    @ParameterizedTest
+    @CsvSource({ "2023-09-01, 2023-10-01, TestSender, Test Message" })
+    @WithMockUser(roles = "STUDENT")
+    void testGetSelectedDateStudentAlertsLocalDate(LocalDate dateFrom, LocalDate dateTo, String sender, String message)
+            throws Exception {
+        Student student = new Student();
+        student.setId(1);
+
+        LocalDateTime from = dateFrom.atStartOfDay();
+        LocalDateTime to = dateTo.atTime(LocalTime.MAX);
+
+        Alert alert1 = new Alert(from, sender, student, message);
+        Alert alert2 = new Alert(to, sender, student, message);
+        List<Alert> alerts = Arrays.asList(alert1, alert2);
+
+        when(studentService.findStudentById(student.getId())).thenReturn(Optional.of(student));
+        when(alertService.findByStudentAndDateBetween(student.getId(), from, to)).thenReturn(alerts);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/student/selected-alert/{studentId}", student.getId())
+                .param("dateFrom", String.valueOf(dateFrom)).param("dateTo", String.valueOf(dateTo)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.model().attributeExists("alerts"))
+                .andExpect(MockMvcResultMatchers.view().name("alert"))
+                .andExpect(MockMvcResultMatchers.model().attribute("alerts", Matchers.contains(alert1, alert2)));
     }
 
     @Test

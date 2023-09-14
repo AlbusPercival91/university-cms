@@ -32,16 +32,86 @@
                 </button>
             </form>
 
-            <!-- date search feature -->
+            <!-- date search-->
+            <h3>Look for Messages</h3>
+
+            <!-- date search feature Admin-->
+            <form th:action="@{/admin/selected-alert/{adminId}(adminId=${admin.id})}" method="get"
+                sec:authorize="hasRole('ROLE_ADMIN')">
+                <div class="form-group">
+                    <label for="dateFrom">From:</label>
+                    <input type="date" id="dateFrom" name="dateFrom" required class="date-input" />
+                </div>
+                <div class="form-group">
+                    <label for="dateTo">To:</label>
+                    <input type="date" id="dateTo" name="dateTo" required class="date-input" />
+                </div>
+
+                <button class="icon-button send-button">
+                    <i class="fas fa-search"></i>
+                </button>
+            </form>
+
+            <!-- date search feature Staff-->
+            <form th:action="@{/staff/selected-alert/{staffId}(staffId=${staff.id})}" method="get"
+                sec:authorize="hasRole('ROLE_STAFF')">
+                <div class="form-group">
+                    <label for="dateFrom">From:</label>
+                    <input type="date" id="dateFrom" name="dateFrom" required class="date-input" />
+                </div>
+                <div class="form-group">
+                    <label for="dateTo">To:</label>
+                    <input type="date" id="dateTo" name="dateTo" required class="date-input" />
+                </div>
+
+                <button class="icon-button send-button">
+                    <i class="fas fa-search"></i>
+                </button>
+            </form>
+
+            <!-- date search feature Staff-->
+            <form th:action="@{/teacher/selected-alert/{teacherId}(teacherId=${teacher.id})}" method="get"
+                sec:authorize="hasRole('ROLE_TEACHER')">
+                <div class="form-group">
+                    <label for="dateFrom">From:</label>
+                    <input type="date" id="dateFrom" name="dateFrom" required class="date-input" />
+                </div>
+                <div class="form-group">
+                    <label for="dateTo">To:</label>
+                    <input type="date" id="dateTo" name="dateTo" required class="date-input" />
+                </div>
+
+                <button class="icon-button send-button">
+                    <i class="fas fa-search"></i>
+                </button>
+            </form>
+
+            <!-- date search feature Staff-->
+            <form th:action="@{/student/selected-alert/{studentId}(studentId=${student.id})}" method="get"
+                sec:authorize="hasRole('ROLE_STUDENT')">
+                <div class="form-group">
+                    <label for="dateFrom">From:</label>
+                    <input type="date" id="dateFrom" name="dateFrom" required class="date-input" />
+                </div>
+                <div class="form-group">
+                    <label for="dateTo">To:</label>
+                    <input type="date" id="dateTo" name="dateTo" required class="date-input" />
+                </div>
+
+                <button class="icon-button send-button">
+                    <i class="fas fa-search"></i>
+                </button>
+            </form>
         </div>
 
         <div class="alerts-scroll-container">
             <div class="alert-container">
 
                 <!-- Admin Alerts -->
-                <div th:each="alert, rowStat : ${admin.alerts}" sec:authorize="hasRole('ROLE_ADMIN')" class="alert-box"
+                <div th:each="alert, rowStat : ${alerts}" sec:authorize="hasRole('ROLE_ADMIN')" class="alert-box"
                     th:class="${alert.read ? 'alert-box' : 'alert-box unread'}">
-                    <div class="alert-timestamp" th:text="${#temporals.format(alert.timestamp, 'dd-MMM-yy HH:mm')}">
+                    <div class="alert-timestamp"
+                        th:text="${#temporals.format(alert.timestamp, 'dd-MMM-yy HH:mm') + ' from: ' + alert.sender}">
                     </div>
                     <div class="alert-message" th:text="${alert.message}"></div>
 
@@ -62,9 +132,10 @@
                 </div>
 
                 <!-- Teacher Alerts -->
-                <div th:each="alert, rowStat : ${teacher.alerts}" sec:authorize="hasRole('ROLE_TEACHER')"
-                    class="alert-box" th:class="${alert.read ? 'alert-box' : 'alert-box unread'}">
-                    <div class="alert-timestamp" th:text="${#temporals.format(alert.timestamp, 'dd-MMM-yy HH:mm')}">
+                <div th:each="alert, rowStat : ${alerts}" sec:authorize="hasRole('ROLE_TEACHER')" class="alert-box"
+                    th:class="${alert.read ? 'alert-box' : 'alert-box unread'}">
+                    <div class="alert-timestamp"
+                        th:text="${#temporals.format(alert.timestamp, 'dd-MMM-yy HH:mm') + ' from: ' + alert.sender}">
                     </div>
                     <div class="alert-message" th:text="${alert.message}"></div>
 
@@ -85,9 +156,10 @@
                 </div>
 
                 <!-- Student Alerts -->
-                <div th:each="alert, rowStat : ${student.alerts}" sec:authorize="hasRole('ROLE_STUDENT')"
-                    class="alert-box" th:class="${alert.read ? 'alert-box' : 'alert-box unread'}">
-                    <div class="alert-timestamp" th:text="${#temporals.format(alert.timestamp, 'dd-MMM-yy HH:mm')}">
+                <div th:each="alert, rowStat : ${alerts}" sec:authorize="hasRole('ROLE_STUDENT')" class="alert-box"
+                    th:class="${alert.read ? 'alert-box' : 'alert-box unread'}">
+                    <div class="alert-timestamp"
+                        th:text="${#temporals.format(alert.timestamp, 'dd-MMM-yy HH:mm') + ' from: ' + alert.sender}">
                     </div>
                     <div class="alert-message" th:text="${alert.message}"></div>
 
@@ -108,9 +180,10 @@
                 </div>
 
                 <!-- Staff Alerts -->
-                <div th:each="alert, rowStat : ${staff.alerts}" sec:authorize="hasRole('ROLE_STAFF')" class="alert-box"
+                <div th:each="alert, rowStat : ${alerts}" sec:authorize="hasRole('ROLE_STAFF')" class="alert-box"
                     th:class="${alert.read ? 'alert-box' : 'alert-box unread'}">
-                    <div class="alert-timestamp" th:text="${#temporals.format(alert.timestamp, 'dd-MMM-yy HH:mm')}">
+                    <div class="alert-timestamp"
+                        th:text="${#temporals.format(alert.timestamp, 'dd-MMM-yy HH:mm') + ' from: ' + alert.sender}">
                     </div>
                     <div class="alert-message" th:text="${alert.message}"></div>
 

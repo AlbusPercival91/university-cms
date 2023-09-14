@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import ua.foxminded.university.dao.entities.Faculty;
 import ua.foxminded.university.dao.service.AlertService;
 import ua.foxminded.university.dao.service.FacultyService;
+import ua.foxminded.university.security.UserAuthenticationService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
 import ua.foxminded.university.validation.Message;
 
@@ -34,6 +35,9 @@ class FacultyControllerTest {
 
     @MockBean
     private AlertService alertService;
+
+    @MockBean
+    private UserAuthenticationService authenticationService;
 
     @Test
     @WithMockUser(roles = { "ADMIN", "STAFF" })

@@ -17,62 +17,58 @@
     <div class="container">
         <h2>Search Panel</h2>
 
-        <div class="search-block">
-            <div class="search-container">
+        <div class="search-container">
 
-                <!-- Search by Id -->
-                <div class="search-section">
-                    <div class="search-square">
-                        <h3>Find Timetable by ID</h3>
-                        <form th:action="@{/timetable/search-result}" method="get">
-                            <input type="hidden" name="searchType" value="timetable" />
-                            <label for="timetableId">Time-Table ID:</label>
-                            <input type="text" id="timetableId" name="timetableId" required />
-                            <button type="submit">Search</button>
-                        </form>
-                    </div>
+            <!-- Search by Id -->
+            <div class="search-section">
+                <div class="search-square">
+                    <h3>Find Timetable by ID</h3>
+                    <form th:action="@{/timetable/search-result}" method="get">
+                        <input type="hidden" name="searchType" value="timetable" />
+                        <input type="text" id="timetableId" name="timetableId" placeholder="Timetable ID" required />
+                        <button type="submit">Search</button>
+                    </form>
                 </div>
-
-                <!-- Search by Course Name -->
-                <div class="search-section">
-                    <div class="search-square">
-                        <h3>Find Timetable by Course</h3>
-                        <form th:action="@{/timetable/search-result}" method="get">
-                            <input type="hidden" name="searchType" value="course" />
-                            <label for="courseName">Course Name:</label>
-                            <input type="text" id="courseName" name="courseName" required />
-                            <button type="submit">Search</button>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- Search by Group Name -->
-                <div class="search-section">
-                    <div class="search-square">
-                        <h3>Find Timetable by Group</h3>
-                        <form th:action="@{/timetable/search-result}" method="get">
-                            <input type="hidden" name="searchType" value="group" />
-                            <label for="groupName">Group Name:</label>
-                            <input type="text" id="groupName" name="groupName" required />
-                            <button type="submit">Search</button>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- Search by Date -->
-                <div class="search-section">
-                    <div class="search-square">
-                        <h3>Find Timetable by Date</h3>
-                        <form th:action="@{/timetable/search-result}" method="get">
-                            <input type="hidden" name="searchType" value="date" />
-                            <label for="date">Date:</label>
-                            <input type="date" id="date" name="date" required class="date-input" />
-                            <button type="submit">Search</button>
-                        </form>
-                    </div>
-                </div>
-
             </div>
+
+            <!-- Search by Course Name -->
+            <div class="search-section">
+                <div class="search-square">
+                    <h3>Find Timetable by Course</h3>
+                    <form th:action="@{/timetable/search-result}" method="get">
+                        <input type="hidden" name="searchType" value="course" />
+                        <input type="text" id="courseName" name="courseName" placeholder="Course Name" required />
+                        <button type="submit">Search</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Search by Group Name -->
+            <div class="search-section">
+                <div class="search-square">
+                    <h3>Find Timetable by Group</h3>
+                    <form th:action="@{/timetable/search-result}" method="get">
+                        <input type="hidden" name="searchType" value="group" />
+                        <input type="text" id="groupName" name="groupName" placeholder="Group Name" required />
+                        <button type="submit">Search</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Search by Date -->
+            <div class="search-section">
+                <div class="search-square">
+                    <h3>Find Timetable by Date</h3>
+                    <form th:action="@{/timetable/search-result}" method="get">
+                        <input type="hidden" name="searchType" value="date" />
+                        <input type="date" id="dateFrom" name="dateFrom" placeholder="Date From" required
+                            class="date-input" />
+                        <input type="date" id="dateTo" name="dateTo" required class="date-input" />
+                        <button type="submit">Search</button>
+                    </form>
+                </div>
+            </div>
+
         </div>
     </div>
 

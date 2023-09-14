@@ -17,15 +17,15 @@
     <div class="container">
         <h2>Search Panel</h2>
 
-        <div class="search-block">
+        <div class="search-container">
+
             <!-- Search Group by ID -->
             <div class="search-section">
                 <div class="search-square">
                     <h3>Find Group by ID</h3>
                     <form th:action="@{/group/search-result}" method="get">
                         <input type="hidden" name="searchType" value="group" />
-                        <label for="groupId">Group ID:</label>
-                        <input type="text" id="grouptId" name="groupId" required />
+                        <input type="text" id="grouptId" name="groupId" placeholder="Group ID" required />
                         <button type="submit">Search</button>
                     </form>
                 </div>
@@ -37,8 +37,7 @@
                     <h3>Find Group by Name</h3>
                     <form th:action="@{/group/search-result}" method="get">
                         <input type="hidden" name="searchType" value="groupName" />
-                        <label for="groupName">Group Name:</label>
-                        <input type="text" id="groupName" name="groupName" required />
+                        <input type="text" id="groupName" name="groupName" placeholder="Group Name" required />
                         <button type="submit">Search</button>
                     </form>
                 </div>
@@ -50,12 +49,12 @@
                     <h3>Find Group by Faculty</h3>
                     <form th:action="@{/group/search-result}" method="get">
                         <input type="hidden" name="searchType" value="faculty" />
-                        <label for="facultyName">Faculty Name:</label>
-                        <input type="text" id="facultyName" name="facultyName" required />
+                        <input type="text" id="facultyName" name="facultyName" placeholder="Faculty Name" required />
                         <button type="submit">Search</button>
                     </form>
                 </div>
             </div>
+
         </div>
     </div>
 

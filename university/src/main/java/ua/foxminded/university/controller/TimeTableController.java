@@ -34,6 +34,7 @@ import ua.foxminded.university.dao.service.GroupService;
 import ua.foxminded.university.dao.service.StudentService;
 import ua.foxminded.university.dao.service.TeacherService;
 import ua.foxminded.university.dao.service.TimeTableService;
+import ua.foxminded.university.validation.IdCollector;
 import ua.foxminded.university.validation.Message;
 
 @Controller
@@ -56,6 +57,9 @@ public class TimeTableController {
 
     @Autowired
     private StudentService studentService;
+
+    @Autowired
+    private IdCollector idCollector;
 
     @RolesAllowed({ "ADMIN", "STAFF" })
     @GetMapping("/timetable/course-timetable-form")
@@ -285,20 +289,22 @@ public class TimeTableController {
 
     @GetMapping("/timetable/search-result")
     public String searchTimeTables(@RequestParam("searchType") String searchType,
-            @RequestParam(required = false) Integer timetableId, @RequestParam(required = false) String courseName,
+            @RequestParam(required = false) String timetableId, @RequestParam(required = false) String courseName,
             @RequestParam(required = false) String groupName,
-            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date, Model model) {
+            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateFrom,
+            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateTo, Model model) {
         List<TimeTable> timetables = new ArrayList<>();
 
         if ("timetable".equals(searchType)) {
-            Optional<TimeTable> optionalTimeTable = timeTableService.findTimeTableById(timetableId);
+            Optional<TimeTable> optionalTimeTable = timeTableService
+                    .findTimeTableById(idCollector.collect(timetableId));
             timetables = optionalTimeTable.map(Collections::singletonList).orElse(Collections.emptyList());
         } else if ("group".equals(searchType)) {
             timetables = timeTableService.findTimeTableByGroupName(groupName);
         } else if ("course".equals(searchType)) {
             timetables = timeTableService.findTimeTableByCourseName(courseName);
         } else if ("date".equals(searchType)) {
-            timetables = timeTableService.findTimeTablesByDate(date);
+            timetables = timeTableService.findTimeTablesByDate(dateFrom, dateTo);
         }
 
         for (TimeTable timetable : timetables) {

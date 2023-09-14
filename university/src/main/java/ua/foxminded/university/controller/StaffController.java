@@ -1,6 +1,8 @@
 package ua.foxminded.university.controller;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -9,8 +11,7 @@ import java.util.Optional;
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,7 +26,9 @@ import ua.foxminded.university.dao.entities.Alert;
 import ua.foxminded.university.dao.entities.Staff;
 import ua.foxminded.university.dao.service.AlertService;
 import ua.foxminded.university.dao.service.StaffService;
+import ua.foxminded.university.security.UserAuthenticationService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
+import ua.foxminded.university.validation.IdCollector;
 import ua.foxminded.university.validation.Message;
 
 @Controller
@@ -38,18 +41,20 @@ public class StaffController {
     private AlertService alertService;
 
     @Autowired
+    private UserAuthenticationService authenticationService;
+
+    @Autowired
     private ControllerBindingValidator bindingValidator;
+
+    @Autowired
+    private IdCollector idCollector;
 
     @GetMapping("/staff/main")
     public String staffDashboard(Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.isAuthenticated()) {
-            String email = authentication.getName();
-            Optional<Staff> staff = staffService.findStaffByEmail(email);
-            if (staff.isPresent()) {
-                model.addAttribute("staff", staff.get());
-                return "staff/main";
-            }
+        Optional<Staff> staff = staffService.findStaffByEmail(authenticationService.getAuthenticatedUsername());
+        if (staff.isPresent()) {
+            model.addAttribute("staff", staff.get());
+            return "staff/main";
         }
         return "redirect:/login";
     }
@@ -92,9 +97,7 @@ public class StaffController {
 
     @GetMapping("/staff/alert")
     public String openStaffAlerts(Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
-        Optional<Staff> staff = staffService.findStaffByEmail(email);
+        Optional<Staff> staff = staffService.findStaffByEmail(authenticationService.getAuthenticatedUsername());
 
         if (staff.isPresent()) {
             List<Alert> alerts = alertService.getAllStaffAlerts(staff.get());
@@ -107,8 +110,10 @@ public class StaffController {
     @PostMapping("/staff/send-alert/{staffId}")
     public String sendStaffAlert(@PathVariable int staffId, @RequestParam String alertMessage,
             RedirectAttributes redirectAttributes) {
+        String sender = authenticationService.getAuthenticatedUserNameAndRole();
+
         try {
-            alertService.createStaffAlert(LocalDateTime.now(), staffId, alertMessage);
+            alertService.createStaffAlert(LocalDateTime.now(), sender, staffId, alertMessage);
 
             if (alertMessage != null) {
                 redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.ALERT_SUCCESS);
@@ -128,13 +133,21 @@ public class StaffController {
         } catch (NoSuchElementException ex) {
             redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
         }
-        return "redirect:/staff/alert";
+        String referrer = request.getHeader("referer");
+
+        if (referrer == null || referrer.isEmpty()) {
+            return "redirect:/staff/alert";
+        }
+        return "redirect:" + referrer;
     }
 
     @PostMapping("/staff/send-broadcast")
-    public String sendBroadcastAlert(@RequestParam String alertMessage, RedirectAttributes redirectAttributes) {
+    public String sendBroadcastAlert(@RequestParam String alertMessage, RedirectAttributes redirectAttributes,
+            HttpServletRequest request) {
+        String sender = authenticationService.getAuthenticatedUserNameAndRole();
+
         try {
-            alertService.createBroadcastAlert(LocalDateTime.now(), alertMessage);
+            alertService.createBroadcastAlert(LocalDateTime.now(), sender, alertMessage);
 
             if (alertMessage != null) {
                 redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.ALERT_SUCCESS);
@@ -142,17 +155,45 @@ public class StaffController {
         } catch (NoSuchElementException ex) {
             redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
         }
-        return "redirect:/staff/alert";
+        String referrer = request.getHeader("referer");
+
+        if (referrer == null || referrer.isEmpty()) {
+            return "redirect:/staff/alert";
+        }
+        return "redirect:" + referrer;
     }
 
     @PostMapping("/staff/mark-alert-as-read/{alertId}")
-    public String toggleStaffAlert(@PathVariable int alertId, RedirectAttributes redirectAttributes) {
+    public String toggleStaffAlert(@PathVariable int alertId, RedirectAttributes redirectAttributes,
+            HttpServletRequest request) {
         try {
             alertService.toggleRead(alertId);
         } catch (NoSuchElementException ex) {
             redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
         }
-        return "redirect:/staff/alert";
+        String referrer = request.getHeader("referer");
+
+        if (referrer == null || referrer.isEmpty()) {
+            return "redirect:/staff/alert";
+        }
+        return "redirect:" + referrer;
+    }
+
+    @GetMapping("/staff/selected-alert/{staffId}")
+    public String getSelectedDateStaffAlerts(@PathVariable("staffId") int staffId,
+            @RequestParam("dateFrom") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateFrom,
+            @RequestParam("dateTo") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateTo, Model model) {
+        Optional<Staff> staff = staffService.findStaffById(staffId);
+
+        LocalDateTime from = dateFrom.atStartOfDay();
+        LocalDateTime to = dateTo.atTime(LocalTime.MAX);
+
+        if (staff.isPresent()) {
+            List<Alert> alerts = alertService.findByStaffAndDateBetween(staffId, from, to);
+            model.addAttribute("staff", staff.get());
+            model.addAttribute("alerts", alerts);
+        }
+        return "alert";
     }
 
     @RolesAllowed("ADMIN")
@@ -209,13 +250,13 @@ public class StaffController {
 
     @GetMapping("/staff/search-result")
     public String searchStaff(@RequestParam("searchType") String searchType,
-            @RequestParam(required = false) Integer staffId, @RequestParam(required = false) String firstName,
+            @RequestParam(required = false) String staffId, @RequestParam(required = false) String firstName,
             @RequestParam(required = false) String lastName, @RequestParam(required = false) String position,
             Model model) {
         List<Staff> staffList = new ArrayList<>();
 
         if ("staff".equals(searchType)) {
-            Optional<Staff> optionalStaff = staffService.findStaffById(staffId);
+            Optional<Staff> optionalStaff = staffService.findStaffById(idCollector.collect(staffId));
             staffList = optionalStaff.map(Collections::singletonList).orElse(Collections.emptyList());
         } else if ("firstNameAndLastName".equals(searchType)) {
             staffList = staffService.findStaffByName(firstName, lastName);

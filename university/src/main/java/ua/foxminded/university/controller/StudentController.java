@@ -1,6 +1,8 @@
 package ua.foxminded.university.controller;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -9,8 +11,7 @@ import java.util.Optional;
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -30,7 +31,9 @@ import ua.foxminded.university.dao.service.AlertService;
 import ua.foxminded.university.dao.service.CourseService;
 import ua.foxminded.university.dao.service.GroupService;
 import ua.foxminded.university.dao.service.StudentService;
+import ua.foxminded.university.security.UserAuthenticationService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
+import ua.foxminded.university.validation.IdCollector;
 import ua.foxminded.university.validation.Message;
 
 @Controller
@@ -49,23 +52,25 @@ public class StudentController {
     private AlertService alertService;
 
     @Autowired
+    private UserAuthenticationService authenticationService;
+
+    @Autowired
     private ControllerBindingValidator bindingValidator;
+
+    @Autowired
+    private IdCollector idCollector;
 
     @GetMapping("/student/main")
     public String studentDashboard(Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.isAuthenticated()) {
-            String email = authentication.getName();
-            Optional<Student> student = studentService.findStudentByEmail(email);
+        Optional<Student> student = studentService.findStudentByEmail(authenticationService.getAuthenticatedUsername());
 
-            if (student.isPresent()) {
-                List<Course> courses = courseService.getAllCourses();
-                List<Group> groups = groupService.getAllGroups();
-                model.addAttribute("student", student.get());
-                model.addAttribute("courses", courses);
-                model.addAttribute("groups", groups);
-                return "student/main";
-            }
+        if (student.isPresent()) {
+            List<Course> courses = courseService.getAllCourses();
+            List<Group> groups = groupService.getAllGroups();
+            model.addAttribute("student", student.get());
+            model.addAttribute("courses", courses);
+            model.addAttribute("groups", groups);
+            return "student/main";
         }
         return "redirect:/login";
     }
@@ -108,9 +113,7 @@ public class StudentController {
 
     @GetMapping("/student/alert")
     public String openStudentAlerts(Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
-        Optional<Student> student = studentService.findStudentByEmail(email);
+        Optional<Student> student = studentService.findStudentByEmail(authenticationService.getAuthenticatedUsername());
 
         if (student.isPresent()) {
             List<Alert> alerts = alertService.getAllStudentAlerts(student.get());
@@ -123,8 +126,10 @@ public class StudentController {
     @PostMapping("/student/send-alert/{studentId}")
     public String sendStudentAlert(@PathVariable int studentId, @RequestParam String alertMessage,
             RedirectAttributes redirectAttributes) {
+        String sender = authenticationService.getAuthenticatedUserNameAndRole();
+
         try {
-            alertService.createStudentAlert(LocalDateTime.now(), studentId, alertMessage);
+            alertService.createStudentAlert(LocalDateTime.now(), sender, studentId, alertMessage);
 
             if (alertMessage != null) {
                 redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.ALERT_SUCCESS);
@@ -144,17 +149,45 @@ public class StudentController {
         } catch (NoSuchElementException ex) {
             redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
         }
-        return "redirect:/student/alert";
+        String referrer = request.getHeader("referer");
+
+        if (referrer == null || referrer.isEmpty()) {
+            return "redirect:/student/alert";
+        }
+        return "redirect:" + referrer;
     }
 
     @PostMapping("/student/mark-alert-as-read/{alertId}")
-    public String toggleStudentAlert(@PathVariable int alertId, RedirectAttributes redirectAttributes) {
+    public String toggleStudentAlert(@PathVariable int alertId, RedirectAttributes redirectAttributes,
+            HttpServletRequest request) {
         try {
             alertService.toggleRead(alertId);
         } catch (NoSuchElementException ex) {
             redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
         }
-        return "redirect:/student/alert";
+        String referrer = request.getHeader("referer");
+
+        if (referrer == null || referrer.isEmpty()) {
+            return "redirect:/student/alert";
+        }
+        return "redirect:" + referrer;
+    }
+
+    @GetMapping("/student/selected-alert/{studentId}")
+    public String getSelectedDateStudentAlerts(@PathVariable("studentId") int studentId,
+            @RequestParam("dateFrom") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateFrom,
+            @RequestParam("dateTo") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateTo, Model model) {
+        Optional<Student> student = studentService.findStudentById(studentId);
+
+        LocalDateTime from = dateFrom.atStartOfDay();
+        LocalDateTime to = dateTo.atTime(LocalTime.MAX);
+
+        if (student.isPresent()) {
+            List<Alert> alerts = alertService.findByStudentAndDateBetween(studentId, from, to);
+            model.addAttribute("student", student.get());
+            model.addAttribute("alerts", alerts);
+        }
+        return "alert";
     }
 
     @GetMapping("/student/student-list")
@@ -234,9 +267,9 @@ public class StudentController {
     @GetMapping("/student/search-result")
     public String searchStudent(@RequestParam("searchType") String searchType,
             @RequestParam(required = false) String courseName, @RequestParam(required = false) String facultyName,
-            @RequestParam(required = false) String groupName, @RequestParam(required = false) Integer facultyId,
-            @RequestParam(required = false) Integer studentId, @RequestParam(required = false) String firstName,
-            @RequestParam(required = false) String lastName, Model model) {
+            @RequestParam(required = false) String groupName, @RequestParam(required = false) String studentId,
+            @RequestParam(required = false) String firstName, @RequestParam(required = false) String lastName,
+            Model model) {
         List<Student> students = new ArrayList<>();
 
         if ("course".equals(searchType)) {
@@ -246,7 +279,7 @@ public class StudentController {
         } else if ("group".equals(searchType)) {
             students = studentService.findAllByGroupName(groupName);
         } else if ("student".equals(searchType)) {
-            Optional<Student> optionalStudent = studentService.findStudentById(studentId);
+            Optional<Student> optionalStudent = studentService.findStudentById(idCollector.collect(studentId));
             students = optionalStudent.map(Collections::singletonList).orElse(Collections.emptyList());
         } else if ("firstNameAndLastName".equals(searchType)) {
             students = studentService.findStudentByName(firstName, lastName);

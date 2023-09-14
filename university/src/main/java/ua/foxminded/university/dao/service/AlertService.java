@@ -43,47 +43,47 @@ public class AlertService {
     private final FacultyRepository facultyRepository;
     private final DepartmentRepository departmentRepository;
 
-    public void createTeacherAlert(LocalDateTime timestamp, int teacherId, String message) {
+    public void createTeacherAlert(LocalDateTime timestamp, String sender, int teacherId, String message) {
         Optional<Teacher> optionalTeacher = teacherRepository.findById(teacherId);
 
         if (optionalTeacher.isEmpty()) {
             throw new NoSuchElementException(Message.TEACHER_NOT_FOUND);
         }
-        Alert alert = new Alert(timestamp, optionalTeacher.get(), message);
+        Alert alert = new Alert(timestamp, sender, optionalTeacher.get(), message);
         alertRepository.save(alert);
     }
 
-    public void createStudentAlert(LocalDateTime timestamp, int studentId, String message) {
+    public void createStudentAlert(LocalDateTime timestamp, String sender, int studentId, String message) {
         Optional<Student> optionalStudent = studentRepository.findById(studentId);
 
         if (optionalStudent.isEmpty()) {
             throw new NoSuchElementException(Message.STUDENT_NOT_FOUND);
         }
-        Alert alert = new Alert(timestamp, optionalStudent.get(), message);
+        Alert alert = new Alert(timestamp, sender, optionalStudent.get(), message);
         alertRepository.save(alert);
     }
 
-    public void createStaffAlert(LocalDateTime timestamp, int staffId, String message) {
+    public void createStaffAlert(LocalDateTime timestamp, String sender, int staffId, String message) {
         Optional<Staff> optionalStaff = staffRepository.findById(staffId);
 
         if (optionalStaff.isEmpty()) {
             throw new NoSuchElementException(Message.STAFF_NOT_FOUND);
         }
-        Alert alert = new Alert(timestamp, optionalStaff.get(), message);
+        Alert alert = new Alert(timestamp, sender, optionalStaff.get(), message);
         alertRepository.save(alert);
     }
 
-    public void createAdminAlert(LocalDateTime timestamp, int adminId, String message) {
+    public void createAdminAlert(LocalDateTime timestamp, String sender, int adminId, String message) {
         Optional<Admin> optionalAdmin = adminRepository.findById(adminId);
 
         if (optionalAdmin.isEmpty()) {
             throw new NoSuchElementException(Message.ADMIN_NOT_FOUND);
         }
-        Alert alert = new Alert(timestamp, optionalAdmin.get(), message);
+        Alert alert = new Alert(timestamp, sender, optionalAdmin.get(), message);
         alertRepository.save(alert);
     }
 
-    public void createGroupAlert(LocalDateTime timestamp, int groupId, String message) {
+    public void createGroupAlert(LocalDateTime timestamp, String sender, int groupId, String message) {
         Optional<Group> optionalGroup = groupRepository.findById(groupId);
 
         if (optionalGroup.isEmpty()) {
@@ -91,10 +91,10 @@ public class AlertService {
         }
         List<Student> students = studentRepository
                 .findAllByGroupGroupNameOrderByIdAsc(optionalGroup.get().getGroupName());
-        students.forEach(student -> createStudentAlert(timestamp, student.getId(), message));
+        students.forEach(student -> createStudentAlert(timestamp, sender, student.getId(), message));
     }
 
-    public void createCourseAlert(LocalDateTime timestamp, int courseId, String message) {
+    public void createCourseAlert(LocalDateTime timestamp, String sender, int courseId, String message) {
         Optional<Course> optionalCourse = courseRepository.findById(courseId);
 
         if (optionalCourse.isEmpty()) {
@@ -102,14 +102,14 @@ public class AlertService {
         }
         List<Student> students = studentRepository
                 .findStudentsRelatedToCourseOrderByIdAsc(optionalCourse.get().getCourseName());
-        students.forEach(student -> createStudentAlert(timestamp, student.getId(), message));
+        students.forEach(student -> createStudentAlert(timestamp, sender, student.getId(), message));
 
         List<Teacher> teachers = teacherRepository
                 .findTeachersRelatedToCourseOrderByIdAsc(optionalCourse.get().getCourseName());
-        teachers.forEach(teacher -> createTeacherAlert(timestamp, teacher.getId(), message));
+        teachers.forEach(teacher -> createTeacherAlert(timestamp, sender, teacher.getId(), message));
     }
 
-    public void createFacultyAlert(LocalDateTime timestamp, int facultyId, String message) {
+    public void createFacultyAlert(LocalDateTime timestamp, String sender, int facultyId, String message) {
         Optional<Faculty> optionalFaculty = facultyRepository.findById(facultyId);
 
         if (optionalFaculty.isEmpty()) {
@@ -117,14 +117,14 @@ public class AlertService {
         }
         List<Student> students = studentRepository
                 .findAllByGroupFacultyFacultyNameOrderByIdAsc(optionalFaculty.get().getFacultyName());
-        students.forEach(student -> createStudentAlert(timestamp, student.getId(), message));
+        students.forEach(student -> createStudentAlert(timestamp, sender, student.getId(), message));
 
         List<Teacher> teachers = teacherRepository
                 .findAllByDepartmentFacultyFacultyNameOrderByIdAsc(optionalFaculty.get().getFacultyName());
-        teachers.forEach(teacher -> createTeacherAlert(timestamp, teacher.getId(), message));
+        teachers.forEach(teacher -> createTeacherAlert(timestamp, sender, teacher.getId(), message));
     }
 
-    public void createDepartmentAlert(LocalDateTime timestamp, int departmentId, String message) {
+    public void createDepartmentAlert(LocalDateTime timestamp, String sender, int departmentId, String message) {
         Optional<Department> optionalDepartment = departmentRepository.findById(departmentId);
 
         if (optionalDepartment.isEmpty()) {
@@ -132,34 +132,34 @@ public class AlertService {
         }
         List<Teacher> teachers = teacherRepository.findAllByDepartmentIdAndDepartmentFacultyIdOrderByIdAsc(
                 optionalDepartment.get().getId(), optionalDepartment.get().getFaculty().getId());
-        teachers.forEach(teacher -> createTeacherAlert(timestamp, teacher.getId(), message));
+        teachers.forEach(teacher -> createTeacherAlert(timestamp, sender, teacher.getId(), message));
     }
 
-    private void createAlertsForStudents(LocalDateTime timestamp, String message) {
+    private void createAlertsForStudents(LocalDateTime timestamp, String sender, String message) {
         List<Student> students = studentRepository.findAll();
-        students.forEach(student -> createStudentAlert(timestamp, student.getId(), message));
+        students.forEach(student -> createStudentAlert(timestamp, sender, student.getId(), message));
     }
 
-    private void createAlertsForTeachers(LocalDateTime timestamp, String message) {
+    private void createAlertsForTeachers(LocalDateTime timestamp, String sender, String message) {
         List<Teacher> teachers = teacherRepository.findAll();
-        teachers.forEach(teacher -> createTeacherAlert(timestamp, teacher.getId(), message));
+        teachers.forEach(teacher -> createTeacherAlert(timestamp, sender, teacher.getId(), message));
     }
 
-    private void createAlertsForStaff(LocalDateTime timestamp, String message) {
+    private void createAlertsForStaff(LocalDateTime timestamp, String sender, String message) {
         List<Staff> staffMembers = staffRepository.findAll();
-        staffMembers.forEach(staff -> createStaffAlert(timestamp, staff.getId(), message));
+        staffMembers.forEach(staff -> createStaffAlert(timestamp, sender, staff.getId(), message));
     }
 
-    private void createAlertsForAdmins(LocalDateTime timestamp, String message) {
+    private void createAlertsForAdmins(LocalDateTime timestamp, String sender, String message) {
         List<Admin> admins = adminRepository.findAll();
-        admins.forEach(admin -> createAdminAlert(timestamp, admin.getId(), message));
+        admins.forEach(admin -> createAdminAlert(timestamp, sender, admin.getId(), message));
     }
 
-    public void createBroadcastAlert(LocalDateTime timestamp, String message) {
-        createAlertsForStudents(timestamp, message);
-        createAlertsForTeachers(timestamp, message);
-        createAlertsForStaff(timestamp, message);
-        createAlertsForAdmins(timestamp, message);
+    public void createBroadcastAlert(LocalDateTime timestamp, String sender, String message) {
+        createAlertsForStudents(timestamp, sender, message);
+        createAlertsForTeachers(timestamp, sender, message);
+        createAlertsForStaff(timestamp, sender, message);
+        createAlertsForAdmins(timestamp, sender, message);
     }
 
     public int deleteAlertById(int alertId) {
@@ -174,22 +174,6 @@ public class AlertService {
         return alertId;
     }
 
-    public List<Alert> getAllTeacherAlerts(Teacher teacher) {
-        return alertRepository.findByTeacher(teacher);
-    }
-
-    public List<Alert> getAllStudentAlerts(Student student) {
-        return alertRepository.findByStudent(student);
-    }
-
-    public List<Alert> getAllAdminAlerts(Admin admin) {
-        return alertRepository.findByAdmin(admin);
-    }
-
-    public List<Alert> getAllStaffAlerts(Staff staff) {
-        return alertRepository.findByStaff(staff);
-    }
-
     public void toggleRead(int alertId) {
         Optional<Alert> optionalAlert = alertRepository.findById(alertId);
 
@@ -198,5 +182,37 @@ public class AlertService {
             alert.setRead(!alert.isRead());
             alertRepository.save(alert);
         }
+    }
+
+    public List<Alert> getAllTeacherAlerts(Teacher teacher) {
+        return alertRepository.findByTeacherOrderByTimestampDesc(teacher);
+    }
+
+    public List<Alert> getAllStudentAlerts(Student student) {
+        return alertRepository.findByStudentOrderByTimestampDesc(student);
+    }
+
+    public List<Alert> getAllAdminAlerts(Admin admin) {
+        return alertRepository.findByAdminOrderByTimestampDesc(admin);
+    }
+
+    public List<Alert> getAllStaffAlerts(Staff staff) {
+        return alertRepository.findByStaffOrderByTimestampDesc(staff);
+    }
+
+    public List<Alert> findByTeacherAndDateBetween(int teacherId, LocalDateTime from, LocalDateTime to) {
+        return alertRepository.findByTeacherIdAndTimestampBetweenOrderByTimestampDesc(teacherId, from, to);
+    }
+
+    public List<Alert> findByStudentAndDateBetween(int studentId, LocalDateTime from, LocalDateTime to) {
+        return alertRepository.findByStudentIdAndTimestampBetweenOrderByTimestampDesc(studentId, from, to);
+    }
+
+    public List<Alert> findByAdminAndDateBetween(int adminId, LocalDateTime from, LocalDateTime to) {
+        return alertRepository.findByAdminIdAndTimestampBetweenOrderByTimestampDesc(adminId, from, to);
+    }
+
+    public List<Alert> findByStaffAndDateBetween(int staffId, LocalDateTime from, LocalDateTime to) {
+        return alertRepository.findByStaffIdAndTimestampBetweenOrderByTimestampDesc(staffId, from, to);
     }
 }

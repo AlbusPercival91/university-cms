@@ -2,6 +2,9 @@ package ua.foxminded.university.controller;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -15,23 +18,21 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import ua.foxminded.university.dao.entities.Alert;
 import ua.foxminded.university.dao.entities.Staff;
 import ua.foxminded.university.dao.service.AlertService;
 import ua.foxminded.university.dao.service.StaffService;
-import ua.foxminded.university.security.UserRole;
+import ua.foxminded.university.security.UserAuthenticationService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
+import ua.foxminded.university.validation.IdCollector;
 import ua.foxminded.university.validation.Message;
 
-@WebMvcTest({ StaffController.class, ControllerBindingValidator.class })
+@WebMvcTest({ StaffController.class, ControllerBindingValidator.class, IdCollector.class })
 @ActiveProfiles("test-container")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class StaffControllerTest {
@@ -45,16 +46,16 @@ class StaffControllerTest {
     @MockBean
     private AlertService alertService;
 
+    @MockBean
+    private UserAuthenticationService authenticationService;
+
     @Test
+    @WithMockUser(roles = "STAFF")
     void testStaffDashboard_WhenUserAuthenticated() throws Exception {
         Staff staff = new Staff();
-        staff.setEmail("staff@example.ua");
 
-        when(staffService.findStaffByEmail(staff.getEmail())).thenReturn(Optional.of(staff));
-
-        Authentication auth = new UsernamePasswordAuthenticationToken(staff.getEmail(), null,
-                AuthorityUtils.createAuthorityList("ROLE_" + UserRole.STAFF));
-        SecurityContextHolder.getContext().setAuthentication(auth);
+        when(staffService.findStaffByEmail(authenticationService.getAuthenticatedUsername()))
+                .thenReturn(Optional.of(staff));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/staff/main")).andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("staff/main"))
@@ -177,13 +178,9 @@ class StaffControllerTest {
     @WithMockUser(roles = "STAFF")
     void testOpenStaffAlerts() throws Exception {
         Staff staff = new Staff();
-        staff.setEmail("staff@example.ua");
 
-        when(staffService.findStaffByEmail(staff.getEmail())).thenReturn(Optional.of(staff));
-
-        Authentication auth = new UsernamePasswordAuthenticationToken(staff.getEmail(), null,
-                AuthorityUtils.createAuthorityList("ROLE_" + UserRole.STAFF));
-        SecurityContextHolder.getContext().setAuthentication(auth);
+        when(staffService.findStaffByEmail(authenticationService.getAuthenticatedUsername()))
+                .thenReturn(Optional.of(staff));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/staff/alert")).andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("alert"))
@@ -234,6 +231,32 @@ class StaffControllerTest {
                 MockMvcRequestBuilders.post("/staff/mark-alert-as-read/{alertId}", alertId).with(csrf().asHeader()))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/staff/alert"));
+    }
+
+    @ParameterizedTest
+    @CsvSource({ "2023-09-01, 2023-10-01, TestSender, Test Message" })
+    @WithMockUser(roles = "STAFF")
+    void testGetSelectedDateStaffAlerts(LocalDate dateFrom, LocalDate dateTo, String sender, String message)
+            throws Exception {
+        Staff staff = new Staff();
+        staff.setId(1);
+
+        LocalDateTime from = dateFrom.atStartOfDay();
+        LocalDateTime to = dateTo.atTime(LocalTime.MAX);
+
+        Alert alert1 = new Alert(from, sender, staff, message);
+        Alert alert2 = new Alert(to, sender, staff, message);
+        List<Alert> alerts = Arrays.asList(alert1, alert2);
+
+        when(staffService.findStaffById(staff.getId())).thenReturn(Optional.of(staff));
+        when(alertService.findByStaffAndDateBetween(staff.getId(), from, to)).thenReturn(alerts);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/staff/selected-alert/{staffId}", staff.getId())
+                .param("dateFrom", String.valueOf(dateFrom)).param("dateTo", String.valueOf(dateTo)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.model().attributeExists("alerts"))
+                .andExpect(MockMvcResultMatchers.view().name("alert"))
+                .andExpect(MockMvcResultMatchers.model().attribute("alerts", Matchers.contains(alert1, alert2)));
     }
 
     @Test

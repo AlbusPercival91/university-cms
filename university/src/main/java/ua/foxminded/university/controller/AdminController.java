@@ -1,14 +1,15 @@
 package ua.foxminded.university.controller;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,6 +24,7 @@ import ua.foxminded.university.dao.entities.Admin;
 import ua.foxminded.university.dao.entities.Alert;
 import ua.foxminded.university.dao.service.AdminService;
 import ua.foxminded.university.dao.service.AlertService;
+import ua.foxminded.university.security.UserAuthenticationService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
 import ua.foxminded.university.validation.Message;
 
@@ -36,18 +38,18 @@ public class AdminController {
     private AlertService alertService;
 
     @Autowired
+    private UserAuthenticationService authenticationService;
+
+    @Autowired
     private ControllerBindingValidator bindingValidator;
 
     @GetMapping("/admin/main")
     public String adminDashboard(Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.isAuthenticated()) {
-            String email = authentication.getName();
-            Optional<Admin> admin = adminService.findAdminByEmail(email);
-            if (admin.isPresent()) {
-                model.addAttribute("admin", admin.get());
-                return "admin/main";
-            }
+        Optional<Admin> admin = adminService.findAdminByEmail(authenticationService.getAuthenticatedUsername());
+
+        if (admin.isPresent()) {
+            model.addAttribute("admin", admin.get());
+            return "admin/main";
         }
         return "redirect:/login";
     }
@@ -90,9 +92,7 @@ public class AdminController {
 
     @GetMapping("/admin/alert")
     public String openAdminAlerts(Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
-        Optional<Admin> admin = adminService.findAdminByEmail(email);
+        Optional<Admin> admin = adminService.findAdminByEmail(authenticationService.getAuthenticatedUsername());
 
         if (admin.isPresent()) {
             List<Alert> alerts = alertService.getAllAdminAlerts(admin.get());
@@ -105,8 +105,10 @@ public class AdminController {
     @PostMapping("/admin/send-alert/{adminId}")
     public String sendAdminAlert(@PathVariable int adminId, @RequestParam String alertMessage,
             RedirectAttributes redirectAttributes) {
+        String sender = authenticationService.getAuthenticatedUserNameAndRole();
+
         try {
-            alertService.createAdminAlert(LocalDateTime.now(), adminId, alertMessage);
+            alertService.createAdminAlert(LocalDateTime.now(), sender, adminId, alertMessage);
 
             if (alertMessage != null) {
                 redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.ALERT_SUCCESS);
@@ -126,13 +128,21 @@ public class AdminController {
         } catch (NoSuchElementException ex) {
             redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
         }
-        return "redirect:/admin/alert";
+        String referrer = request.getHeader("referer");
+
+        if (referrer == null || referrer.isEmpty()) {
+            return "redirect:/admin/alert";
+        }
+        return "redirect:" + referrer;
     }
 
     @PostMapping("/admin/send-broadcast")
-    public String sendBroadcastAlert(@RequestParam String alertMessage, RedirectAttributes redirectAttributes) {
+    public String sendBroadcastAlert(@RequestParam String alertMessage, RedirectAttributes redirectAttributes,
+            HttpServletRequest request) {
+        String sender = authenticationService.getAuthenticatedUserNameAndRole();
+
         try {
-            alertService.createBroadcastAlert(LocalDateTime.now(), alertMessage);
+            alertService.createBroadcastAlert(LocalDateTime.now(), sender, alertMessage);
 
             if (alertMessage != null) {
                 redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.ALERT_SUCCESS);
@@ -140,17 +150,45 @@ public class AdminController {
         } catch (NoSuchElementException ex) {
             redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
         }
-        return "redirect:/admin/alert";
+        String referrer = request.getHeader("referer");
+
+        if (referrer == null || referrer.isEmpty()) {
+            return "redirect:/admin/alert";
+        }
+        return "redirect:" + referrer;
     }
 
     @PostMapping("/admin/mark-alert-as-read/{alertId}")
-    public String toggleAdminAlert(@PathVariable int alertId, RedirectAttributes redirectAttributes) {
+    public String toggleAdminAlert(@PathVariable int alertId, RedirectAttributes redirectAttributes,
+            HttpServletRequest request) {
         try {
             alertService.toggleRead(alertId);
         } catch (NoSuchElementException ex) {
             redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
         }
-        return "redirect:/admin/alert";
+        String referrer = request.getHeader("referer");
+
+        if (referrer == null || referrer.isEmpty()) {
+            return "redirect:/admin/alert";
+        }
+        return "redirect:" + referrer;
+    }
+
+    @GetMapping("/admin/selected-alert/{adminId}")
+    public String getSelectedDateAdminAlerts(@PathVariable("adminId") int adminId,
+            @RequestParam("dateFrom") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateFrom,
+            @RequestParam("dateTo") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateTo, Model model) {
+        Optional<Admin> admin = adminService.findAdminById(adminId);
+
+        LocalDateTime from = dateFrom.atStartOfDay();
+        LocalDateTime to = dateTo.atTime(LocalTime.MAX);
+
+        if (admin.isPresent()) {
+            List<Alert> alerts = alertService.findByAdminAndDateBetween(adminId, from, to);
+            model.addAttribute("admin", admin.get());
+            model.addAttribute("alerts", alerts);
+        }
+        return "alert";
     }
 
     @RolesAllowed({ "ADMIN", "STAFF" })

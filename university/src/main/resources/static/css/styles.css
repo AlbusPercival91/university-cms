@@ -33,19 +33,6 @@ nav ul li a {
     text-decoration: none;
 }
 
-/* Hero section styles */
-.hero {
-    background-image: url('path/to/hero-image.jpg');
-    background-size: cover;
-    background-position: center;
-    height: 250px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    color: #fff;
-}
-
 /* Features section styles */
 .features {
     display: flex;
@@ -216,15 +203,10 @@ button.icon-button.remove-button[type="submit"] {
 }
 
 /* Search styles */
-.search-block {
-    display: flex;
-    flex-direction: row;
-}
-
 .search-container {
     display: flex;
     justify-content: center;
-    margin-top: 20px;
+    font-size: 13px;
 }
 
 .search-section {
@@ -249,7 +231,7 @@ button.icon-button.remove-button[type="submit"] {
 }
 
 .search-square label {
-    display: block;
+    display: flex;
     margin-top: 10px;
 }
 
@@ -257,12 +239,11 @@ button.icon-button.remove-button[type="submit"] {
 .search-square select {
     width: 100%;
     padding: 5px;
-    margin-top: 5px;
     box-sizing: border-box;
 }
 
 .search-square button {
-    width: 100%;
+    width: 90%;
     padding: 8px;
     margin-top: 10px;
     background-color: #333;
@@ -273,11 +254,6 @@ button.icon-button.remove-button[type="submit"] {
 
 .search-square button:hover {
     background-color: #555;
-}
-
-#searchResults {
-    margin-top: 20px;
-    text-align: center;
 }
 
 /* Styles in Create Entity page */
@@ -326,7 +302,7 @@ button[type="submit"] {
     cursor: pointer;
 }
 
-/* Style for buttons */
+/* Style for common buttons */
 .button-common-style {
     padding: 8px 20px;
     background-color: #333;
@@ -335,6 +311,10 @@ button[type="submit"] {
     border-radius: 4px;
     cursor: pointer;
     margin: 5px;
+}
+
+.button-common-style:hover {
+    background-color: #555;
 }
 
 /* information message styles when success or error ops */
@@ -404,7 +384,7 @@ button[type="submit"] {
 
 .courses select,
 .courses button {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .entity-timetable {
@@ -508,6 +488,7 @@ button[type="submit"] {
     border: none;
     padding: 8px 12px;
     border-radius: 5px;
+    margin-bottom: 5%;
     cursor: pointer;
     transition: background-color 0.3s ease;
     font-size: 14px;
@@ -515,4 +496,54 @@ button[type="submit"] {
 
 .send-button:hover {
     background-color: rgb(58, 193, 56);
+}
+
+/* Styles for contacts page */
+.contacts-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+}
+
+.info-box {
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    padding: 12px;
+    margin: 12px;
+    padding-left: 16px;
+    border-radius: 5px;
+    max-width: 95%;
+}
+
+.contact-info {
+    box-shadow: 0 2px 5px rgb(98, 160, 234);
+    margin: 12px;
+    padding: 12px;
+    border-radius: 5px;
+}
+
+.image-box img {
+    max-width: 60vh;
+}
+
+.contact-image-container {
+    position: relative;
+    max-width: 60vh;
+}
+
+/* Styles for home page */
+.home-image-box {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vh;
+    height: 100vh;
+    z-index: -1;
+    align-items: center;
+}
+
+.home-image-container img {
+    width: 95vh;
+    height: 95vh;
+    object-fit: cover;
 }

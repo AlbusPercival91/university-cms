@@ -1,6 +1,8 @@
 package ua.foxminded.university.controller;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -9,8 +11,7 @@ import java.util.Optional;
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,7 +23,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.UriComponentsBuilder;
-
 import ua.foxminded.university.dao.entities.Alert;
 import ua.foxminded.university.dao.entities.Course;
 import ua.foxminded.university.dao.entities.Department;
@@ -31,7 +31,9 @@ import ua.foxminded.university.dao.service.AlertService;
 import ua.foxminded.university.dao.service.CourseService;
 import ua.foxminded.university.dao.service.DepartmentService;
 import ua.foxminded.university.dao.service.TeacherService;
+import ua.foxminded.university.security.UserAuthenticationService;
 import ua.foxminded.university.validation.ControllerBindingValidator;
+import ua.foxminded.university.validation.IdCollector;
 import ua.foxminded.university.validation.Message;
 
 @Controller
@@ -50,23 +52,25 @@ public class TeacherController {
     private AlertService alertService;
 
     @Autowired
+    private UserAuthenticationService authenticationService;
+
+    @Autowired
     private ControllerBindingValidator bindingValidator;
+
+    @Autowired
+    private IdCollector idCollector;
 
     @GetMapping("/teacher/main")
     public String teacherDashboard(Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.isAuthenticated()) {
-            String email = authentication.getName();
-            Optional<Teacher> teacher = teacherService.findTeacherByEmail(email);
+        Optional<Teacher> teacher = teacherService.findTeacherByEmail(authenticationService.getAuthenticatedUsername());
 
-            if (teacher.isPresent()) {
-                List<Course> courses = courseService.getAllCourses();
-                List<Department> departments = departmentService.getAllDepartments();
-                model.addAttribute("teacher", teacher.get());
-                model.addAttribute("courses", courses);
-                model.addAttribute("departments", departments);
-                return "teacher/main";
-            }
+        if (teacher.isPresent()) {
+            List<Course> courses = courseService.getAllCourses();
+            List<Department> departments = departmentService.getAllDepartments();
+            model.addAttribute("teacher", teacher.get());
+            model.addAttribute("courses", courses);
+            model.addAttribute("departments", departments);
+            return "teacher/main";
         }
         return "redirect:/login";
     }
@@ -109,9 +113,7 @@ public class TeacherController {
 
     @GetMapping("/teacher/alert")
     public String openTeacherAlerts(Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
-        Optional<Teacher> teacher = teacherService.findTeacherByEmail(email);
+        Optional<Teacher> teacher = teacherService.findTeacherByEmail(authenticationService.getAuthenticatedUsername());
 
         if (teacher.isPresent()) {
             List<Alert> alerts = alertService.getAllTeacherAlerts(teacher.get());
@@ -124,8 +126,10 @@ public class TeacherController {
     @PostMapping("/teacher/send-alert/{teacherId}")
     public String sendTeacherAlert(@PathVariable int teacherId, @RequestParam String alertMessage,
             RedirectAttributes redirectAttributes) {
+        String sender = authenticationService.getAuthenticatedUserNameAndRole();
+
         try {
-            alertService.createTeacherAlert(LocalDateTime.now(), teacherId, alertMessage);
+            alertService.createTeacherAlert(LocalDateTime.now(), sender, teacherId, alertMessage);
 
             if (alertMessage != null) {
                 redirectAttributes.addFlashAttribute(Message.SUCCESS, Message.ALERT_SUCCESS);
@@ -145,17 +149,44 @@ public class TeacherController {
         } catch (NoSuchElementException ex) {
             redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
         }
-        return "redirect:/teacher/alert";
+        String referrer = request.getHeader("referer");
+
+        if (referrer == null || referrer.isEmpty()) {
+            return "redirect:/teacher/alert";
+        }
+        return "redirect:" + referrer;
     }
 
     @PostMapping("/teacher/mark-alert-as-read/{alertId}")
-    public String toggleTeacherAlert(@PathVariable int alertId, RedirectAttributes redirectAttributes) {
+    public String toggleTeacherAlert(@PathVariable int alertId, RedirectAttributes redirectAttributes,
+            HttpServletRequest request) {
         try {
             alertService.toggleRead(alertId);
         } catch (NoSuchElementException ex) {
             redirectAttributes.addFlashAttribute(Message.ERROR, ex.getLocalizedMessage());
         }
-        return "redirect:/teacher/alert";
+        String referrer = request.getHeader("referer");
+
+        if (referrer == null || referrer.isEmpty()) {
+            return "redirect:/teacher/alert";
+        }
+        return "redirect:" + referrer;
+    }
+
+    @GetMapping("/teacher/selected-alert/{teacherId}")
+    public String getSelectedDateTeacherAlerts(@PathVariable("teacherId") int teacherId,
+            @RequestParam("dateFrom") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateFrom,
+            @RequestParam("dateTo") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateTo, Model model) {
+        Optional<Teacher> teacher = teacherService.findTeacherById(teacherId);
+        LocalDateTime from = dateFrom.atStartOfDay();
+        LocalDateTime to = dateTo.atTime(LocalTime.MAX);
+
+        if (teacher.isPresent()) {
+            List<Alert> alerts = alertService.findByTeacherAndDateBetween(teacherId, from, to);
+            model.addAttribute("teacher", teacher.get());
+            model.addAttribute("alerts", alerts);
+        }
+        return "alert";
     }
 
     @RolesAllowed("ADMIN")
@@ -220,8 +251,8 @@ public class TeacherController {
     @GetMapping("/teacher/search-result")
     public String searchTeachers(@RequestParam("searchType") String searchType,
             @RequestParam(required = false) String courseName, @RequestParam(required = false) String facultyName,
-            @RequestParam(required = false) Integer departmentId, @RequestParam(required = false) Integer facultyId,
-            @RequestParam(required = false) Integer teacherId, @RequestParam(required = false) String firstName,
+            @RequestParam(required = false) String departmentId, @RequestParam(required = false) String facultyId,
+            @RequestParam(required = false) String teacherId, @RequestParam(required = false) String firstName,
             @RequestParam(required = false) String lastName, Model model) {
         List<Teacher> teachers = new ArrayList<>();
 
@@ -230,9 +261,10 @@ public class TeacherController {
         } else if ("faculty".equals(searchType)) {
             teachers = teacherService.findAllByFacultyName(facultyName);
         } else if ("department".equals(searchType)) {
-            teachers = teacherService.findAllByDepartmentIdAndDepartmentFacultyId(departmentId, facultyId);
+            teachers = teacherService.findAllByDepartmentIdAndDepartmentFacultyId(idCollector.collect(departmentId),
+                    idCollector.collect(facultyId));
         } else if ("teacher".equals(searchType)) {
-            Optional<Teacher> optionalTeacher = teacherService.findTeacherById(teacherId);
+            Optional<Teacher> optionalTeacher = teacherService.findTeacherById(idCollector.collect(teacherId));
             teachers = optionalTeacher.map(Collections::singletonList).orElse(Collections.emptyList());
         } else if ("firstNameAndLastName".equals(searchType)) {
             teachers = teacherService.findTeacherByName(firstName, lastName);

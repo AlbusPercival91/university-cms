@@ -112,6 +112,7 @@ CREATE TABLE IF NOT EXISTS university.timetable (
 CREATE TABLE alert (
     alert_id SERIAL PRIMARY KEY,
     alert_timestamp TIMESTAMP(0) NOT NULL,
+    sender VARCHAR(80),
     teacher_id INT,
     student_id INT,
     staff_id INT,
@@ -123,3 +124,5 @@ CREATE TABLE alert (
     FOREIGN KEY (staff_id) REFERENCES university.staff (id),
     FOREIGN KEY (admin_id) REFERENCES university.admin (id)
 );
+
+

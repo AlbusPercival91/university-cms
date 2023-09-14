@@ -35,9 +35,10 @@ import ua.foxminded.university.dao.service.GroupService;
 import ua.foxminded.university.dao.service.StudentService;
 import ua.foxminded.university.dao.service.TeacherService;
 import ua.foxminded.university.dao.service.TimeTableService;
+import ua.foxminded.university.validation.IdCollector;
 import ua.foxminded.university.validation.Message;
 
-@WebMvcTest(TimeTableController.class)
+@WebMvcTest({ TimeTableController.class, IdCollector.class })
 @ActiveProfiles("test-container")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class TimeTableControllerTest {
@@ -402,10 +403,11 @@ class TimeTableControllerTest {
         TimeTable timetable = new TimeTable(date, timeFrom, timeTo, new Teacher(), new Course(), new Group(),
                 new ClassRoom());
 
-        when(timeTableService.findTimeTablesByDate(date)).thenReturn(Collections.singletonList(timetable));
+        when(timeTableService.findTimeTablesByDate(date, date)).thenReturn(Collections.singletonList(timetable));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/timetable/search-result").param("searchType", "date").param("date",
-                String.valueOf(date))).andExpect(MockMvcResultMatchers.status().isOk())
+        mockMvc.perform(MockMvcRequestBuilders.get("/timetable/search-result").param("searchType", "date")
+                .param("dateFrom", String.valueOf(date)).param("dateTo", String.valueOf(date)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("timetable/timetable"))
                 .andExpect(MockMvcResultMatchers.model().attributeExists("timetables"))
                 .andExpect(MockMvcResultMatchers.model().attribute("timetables", Matchers.hasSize(1)))
