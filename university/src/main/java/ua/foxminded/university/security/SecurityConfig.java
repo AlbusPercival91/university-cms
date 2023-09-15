@@ -13,14 +13,14 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableGlobalMethodSecurity(jsr250Enabled = true)
 public class SecurityConfig {
     private static final String[] staticResources = { "/css/**", "/js/**", "/img/**" };
-    private static final String[] allowedPages = { "/", "/about", "/contacts", "/course/course-list" };
+    private static final String[] allowedPages = { "/home", "/about", "/contacts", "/course/course-list" };
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests().mvcMatchers(staticResources).permitAll().mvcMatchers(allowedPages)
                 .permitAll().anyRequest().authenticated().and().formLogin().loginPage("/login")
                 .successHandler(customAuthenticationSuccessHandler()).permitAll().and().logout().logoutUrl("/logout")
-                .logoutSuccessUrl("/").invalidateHttpSession(true).deleteCookies("JSESSIONID").and().build();
+                .logoutSuccessUrl("/home").invalidateHttpSession(true).deleteCookies("JSESSIONID").and().build();
     }
 
     @Bean

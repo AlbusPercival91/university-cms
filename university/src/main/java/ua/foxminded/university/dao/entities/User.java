@@ -23,46 +23,46 @@ import ua.foxminded.university.security.UserRole;
 @MappedSuperclass
 public class User {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private int id;
 
-	@Column(name = "first_name")
-	private String firstName;
+    @Column(name = "first_name")
+    private String firstName;
 
-	@Column(name = "last_name")
-	private String lastName;
+    @Column(name = "last_name")
+    private String lastName;
 
-	@Column(name = "active")
-	private boolean isActive;
+    @Column(name = "active")
+    private boolean isActive;
 
-	@Column(name = "email")
-	private String email;
+    @Column(name = "email")
+    private String email;
 
-	@ToString.Exclude
-	@Column(name = "password")
-	private String hashedPassword;
+    @ToString.Exclude
+    @Column(name = "password")
+    private String hashedPassword;
 
-	@Enumerated(EnumType.STRING)
-	@Column(name = "role")
-	private UserRole role;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role")
+    private UserRole role;
 
-	public User(String firstName, String lastName, boolean isActive, String email, String password) {
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.isActive = isActive;
-		this.email = email;
-		setPassword(password);
-	}
+    public User(String firstName, String lastName, boolean isActive, String email, String password) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.isActive = isActive;
+        this.email = email;
+        setPassword(password);
+    }
 
-	public void setPassword(String password) {
-		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-		this.hashedPassword = passwordEncoder.encode(password);
-	}
+    public void setPassword(String password) {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        this.hashedPassword = passwordEncoder.encode(password);
+    }
 
-	public boolean isPasswordValid(String password) {
-		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-		return passwordEncoder.matches(password, hashedPassword);
-	}
+    public boolean isPasswordValid(String password) {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        return passwordEncoder.matches(password, hashedPassword);
+    }
 }

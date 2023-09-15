@@ -28,7 +28,7 @@ class SecurityControllerTest {
     void testLogout() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/logout"))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrl("/"));
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/home"));
     }
 
 }

@@ -18,7 +18,7 @@ class WelcomeControllerTest {
 
     @Test
     void testWelcome() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/")).andExpect(MockMvcResultMatchers.status().isOk())
+        mockMvc.perform(MockMvcRequestBuilders.get("/home")).andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("home"));
     }
 

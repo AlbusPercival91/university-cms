@@ -25,6 +25,6 @@ public class SecurityController {
     @GetMapping("/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         new SecurityContextLogoutHandler().logout(request, response, authentication);
-        return "redirect:/";
+        return "redirect:/home";
     }
 }
