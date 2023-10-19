@@ -26,7 +26,7 @@
 ## Installation
 - Download the source code
 - Import as Maven Project to your IDE
-- Change username and password for pgAdmin in class UniversityApplication, method initializeDatabase():
+- Change password for pgAdmin in class UniversityApplication, method initializeDatabase():
 ```java
 @SpringBootApplication
 public class UniversityApplication extends SpringBootServletInitializer {
