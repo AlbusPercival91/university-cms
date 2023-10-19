@@ -66,7 +66,7 @@ public class UniversityApplication extends SpringBootServletInitializer {
 
 }
 ``` 
-- Run in IDE or package as executable .jar using mvn package
+- Run in your IDE or package as .war using mvn package
 - Visit http://localhost:8080
 
 ## Authorization, use one of the following credentials: 
